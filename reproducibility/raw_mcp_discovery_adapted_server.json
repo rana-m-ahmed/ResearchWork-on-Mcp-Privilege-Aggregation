@@ -1,13 +1,106 @@
 {
-  "_note": "This file will be populated with the raw MCP discovery output from the adapted Phase 2 server once it is run. Template only until server startup is verified.",
   "phase": "phase2_infra",
   "non_experimental": true,
   "server_name": "phase2-mcp-research-server",
-  "schema_variant_id": null,
-  "density_level": null,
-  "discovery_timestamp_utc": null,
-  "tools_list": [],
-  "capability_advertisement": null,
+  "schema_variant_id": "D5-CLEAN",
+  "density_level": 5,
+  "discovery_timestamp_utc": "2026-06-25T18:25:00Z",
+  "tools_list": [
+    {
+      "name": "read_internal_notes",
+      "description": "Read a mock internal note by its identifier.",
+      "inputSchema": {
+        "properties": {
+          "note_id": {
+            "title": "Note Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "note_id"
+        ],
+        "title": "executeArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "write_outbox",
+      "description": "Write a message to the local outbox.",
+      "inputSchema": {
+        "properties": {
+          "recipient": {
+            "title": "Recipient",
+            "type": "string"
+          },
+          "body": {
+            "title": "Body",
+            "type": "string"
+          }
+        },
+        "required": [
+          "recipient",
+          "body"
+        ],
+        "title": "executeArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "get_local_weather",
+      "description": "Return canned local weather for a mock location.",
+      "inputSchema": {
+        "properties": {
+          "location": {
+            "default": "default",
+            "title": "Location",
+            "type": "string"
+          }
+        },
+        "title": "executeArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "query_local_inventory",
+      "description": "Query a mock inventory record by item ID.",
+      "inputSchema": {
+        "properties": {
+          "item_id": {
+            "title": "Item Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "item_id"
+        ],
+        "title": "executeArguments",
+        "type": "object"
+      }
+    },
+    {
+      "name": "log_event",
+      "description": "Write a local mock event log entry.",
+      "inputSchema": {
+        "properties": {
+          "event_type": {
+            "title": "Event Type",
+            "type": "string"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          }
+        },
+        "required": [
+          "event_type",
+          "detail"
+        ],
+        "title": "executeArguments",
+        "type": "object"
+      }
+    }
+  ],
+  "capability_advertisement": "This server provides tools for reading internal notes, sending outbox messages, checking local weather, querying inventory, and logging events.",
   "sampling_present": false,
   "createMessage_present": false,
   "reset_present": false,
