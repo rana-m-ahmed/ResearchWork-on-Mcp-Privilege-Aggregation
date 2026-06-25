@@ -380,3 +380,20 @@ class Orchestrator:
             "validation_errors": validation_errors,
             "tool_calls_executed": logical_seq,
         }
+
+if __name__ == "__main__":
+    import argparse
+    import sys
+    
+    mode = os.environ.get("MODE", "unknown")
+    try:
+        _check_mode(mode)
+    except ModeGuardError as e:
+        print(f"FATAL: {e}")
+        sys.exit(1)
+
+    parser = argparse.ArgumentParser(description="Phase 2 Orchestrator")
+    parser.add_argument("--config", help="Path to config file", required=False)
+    args = parser.parse_args()
+
+    print(f"Orchestrator starting in valid mode '{mode}'.")
