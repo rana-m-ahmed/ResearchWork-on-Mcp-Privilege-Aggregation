@@ -1,0 +1,15 @@
+{
+  "_note": "This file will be populated with the raw MCP discovery output from the adapted Phase 2 server once it is run. Template only until server startup is verified.",
+  "phase": "phase2_infra",
+  "non_experimental": true,
+  "server_name": "phase2-mcp-research-server",
+  "schema_variant_id": null,
+  "density_level": null,
+  "discovery_timestamp_utc": null,
+  "tools_list": [],
+  "capability_advertisement": null,
+  "sampling_present": false,
+  "createMessage_present": false,
+  "reset_present": false,
+  "forbidden_names_found": []
+}

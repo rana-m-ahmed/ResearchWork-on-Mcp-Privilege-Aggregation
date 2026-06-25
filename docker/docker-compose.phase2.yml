@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  mcp_server:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.mcp_server
+    user: "mcpuser"
+    # No privileged, no host network, read-only where feasible
+    read_only: true
+    volumes:
+      # /tmp/mcp_trial as container-only scratch
+      - type: tmpfs
+        target: /tmp/mcp_trial
+    networks:
+      - phase2_net
+
+  orchestrator:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.orchestrator
+    user: "mcpuser"
+    read_only: true
+    volumes:
+      # /tmp/mcp_trial as container-only scratch
+      - type: tmpfs
+        target: /tmp/mcp_trial
+      # /output_logs as the only narrow output mount
+      - ../logs/output_logs:/output_logs
+    networks:
+      - phase2_net
+
+# Mode A default network
+networks:
+  phase2_net:
+    driver: bridge
