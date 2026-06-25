@@ -3,5 +3,5 @@
 # Phase 2 infrastructure images — to be populated after docker build
 # Format: image_name  digest  build_date
 
-# TBD: Run `docker images --digests` after building Phase 2 images
-# and record the SHA-256 digests here.
+docker-mcp_server  sha256:6ae50465d7dad46a9acabd4a702aaf169864eb307d16a7f2b12310c3eb902f3a  2026-06-25
+docker-orchestrator  sha256:d857e80f1c4e54af1351dbe3bfa6c61dfa91ed56ca3713bcdd4f57fdce9da57b  2026-06-25
