@@ -1,0 +1,16 @@
+# Phase 2 Scripted Infrastructure Smoke Test Configuration
+# Phase: phase2_infra | Non-experimental: true
+#
+# Uses ScriptedFakeModel — no LLM required.
+# Required coverage: D1-CLEAN, D3-CLEAN, D5-CLEAN
+# Proves: MCP discovery, routing, tool execution, logical/exposed mapping,
+#         logging, reset/teardown
+
+mode: smoke_test
+backend: scripted_fake_model
+log_file: phase2_scripted_smoke.jsonl
+
+variants:
+  - D1-CLEAN
+  - D3-CLEAN
+  - D5-CLEAN

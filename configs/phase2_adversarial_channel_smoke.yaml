@@ -1,0 +1,31 @@
+# Phase 2 Adversarial-Channel Placeholder Smoke Test Configuration
+# Phase: phase2_infra | Non-experimental: true
+#
+# Uses placeholder material ONLY (not Phase 1 approved payloads).
+# is_placeholder_payload: true for every row.
+#
+# FORBIDDEN outputs:
+#   - ASR
+#   - attack_success
+#   - critical_exploit
+#   - exploit_found
+#   - TID
+#   - Any taxonomy label
+#   - Any manuscript result
+#   - Any success-rate calculation
+#
+# ALLOWED result labels:
+#   - adversarial_channel_logged
+#   - adversarial_channel_not_logged
+#   - pipeline_error
+
+mode: smoke_test
+backend: scripted_fake_model
+log_file: phase2_adversarial_channel_smoke.jsonl
+payload_file: configs/placeholder_payload.txt
+
+variants:
+  - D3-POISON-TD
+  - D5-POISON-TD
+  - D3-POISON-CA
+  - D5-POISON-CA

@@ -1,0 +1,22 @@
+# Phase 2 LLM Benign Integration Smoke Test Configuration
+# Phase: phase2_infra | Non-experimental: true
+#
+# Uses one local model call (Ollama or llama.cpp).
+# Minimum pass: endpoint connects and one benign task completes
+#   or fails cleanly with valid logs.
+# Target pass: benign task succeeds at D1, D3, D5 clean.
+#
+# IMPORTANT: Do NOT fail Phase 2 solely because the LLM is weak.
+# IMPORTANT: NEVER count these rows toward Phase 3 competence baseline.
+
+mode: smoke_test
+backend: ollama
+endpoint: "http://ollama:11434"  # Mode A default
+model: "llama3.2:1b"
+backend_mode: containerized
+log_file: phase2_llm_benign_smoke.jsonl
+
+variants:
+  - D1-CLEAN
+  - D3-CLEAN
+  - D5-CLEAN

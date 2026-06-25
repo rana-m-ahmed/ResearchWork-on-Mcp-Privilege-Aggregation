@@ -1,0 +1,7 @@
+# Docker Image Digests
+
+# Phase 2 infrastructure images — to be populated after docker build
+# Format: image_name  digest  build_date
+
+# TBD: Run `docker images --digests` after building Phase 2 images
+# and record the SHA-256 digests here.
