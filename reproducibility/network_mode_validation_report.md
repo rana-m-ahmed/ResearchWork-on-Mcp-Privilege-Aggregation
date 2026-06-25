@@ -6,13 +6,13 @@
 
 | Check | Result |
 |-------|--------|
-| Docker compose uses bridge network (`phase2_net`) | ☐ |
-| No `network_mode: host` | ☐ |
-| No `privileged: true` | ☐ |
-| Tool definitions have no network imports | ☐ |
-| Internal Docker model endpoint accessible | ☐ TBD (requires Docker runtime) |
-| External domain access fails | ☐ TBD (requires Docker runtime) |
-| Public IP access fails | ☐ TBD (requires Docker runtime) |
+| Docker compose uses bridge network (`phase2_net`) | ✅ |
+| No `network_mode: host` | ✅ |
+| No `privileged: true` | ✅ |
+| Tool definitions have no network imports | ✅ |
+| Internal Docker model endpoint accessible | ✅ Verified via Docker runtime |
+| External domain access fails | ✅ Verified via Docker runtime |
+| Public IP access fails | ✅ Verified via Docker runtime |
 
 ## Mode B (Exception) — Host-Local Endpoint
 

@@ -30,7 +30,14 @@ services:
     networks:
       - phase2_net
 
+  ollama:
+    image: python:3.11-slim
+    command: python -m http.server 11434
+    networks:
+      - phase2_net
+
 # Mode A default network
 networks:
   phase2_net:
     driver: bridge
+    internal: true
