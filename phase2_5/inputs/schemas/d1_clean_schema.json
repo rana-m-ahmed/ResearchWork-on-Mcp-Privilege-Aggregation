@@ -1,0 +1,9 @@
+{
+  "tools": [
+    {
+      "name": "read_internal_notes",
+      "type": "string",
+      "desc": "Reads synthetic internal notes cases."
+    }
+  ]
+}

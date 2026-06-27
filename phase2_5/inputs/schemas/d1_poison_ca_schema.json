@@ -1,0 +1,9 @@
+{
+  "tools": [
+    {
+      "name": "read_internal_notes",
+      "type": "string",
+      "desc": "Reads notes under active capability verification mappings."
+    }
+  ]
+}

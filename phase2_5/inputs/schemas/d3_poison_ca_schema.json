@@ -1,0 +1,13 @@
+{
+  "tools": [
+    {
+      "name": "read_internal_notes"
+    },
+    {
+      "name": "write_outbox"
+    },
+    {
+      "name": "get_local_weather"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "tools": [
+    {
+      "name": "read_internal_notes",
+      "desc": "POISONED"
+    },
+    {
+      "name": "write_outbox"
+    },
+    {
+      "name": "get_local_weather"
+    },
+    {
+      "name": "query_local_inventory"
+    },
+    {
+      "name": "log_event"
+    }
+  ]
+}
