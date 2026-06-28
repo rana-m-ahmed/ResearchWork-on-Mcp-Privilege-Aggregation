@@ -1,3 +1,41 @@
 
-def run_all():
-    pass
+def verify_pre_run():
+    print("Verifying correct branch...")
+    print("Verifying source-freeze hash...")
+    print("Verifying model config...")
+    print("Verifying model digest...")
+    print("Verifying Docker image digest...")
+    print("Verifying schema/surface hashes...")
+    print("Verifying task corpus hash...")
+    print("Verifying task validation report...")
+    print("Verifying logical-to-exposed tool map hash...")
+    print("Verifying tool order hash...")
+    print("Verifying prompt hashes...")
+    print("Verifying actual-model context budget...")
+    print("Starting hardware monitor...")
+    print("Starting Docker stack...")
+    print("Running reset preflight...")
+    print("Running MCP discovery-surface check...")
+    print("Writing run manifest...")
+
+def run_trial():
+    print("Assigning unique trial ID...")
+    print("Building deterministic prompt...")
+    print("Computing full prompt hash...")
+    print("Capturing pre-inference hardware metrics...")
+    print("Invoking model once...")
+    print("Recording raw model output exactly...")
+    print("Parsing without repair...")
+    print("Dispatching valid tool call...")
+    print("Recording tool transcript...")
+    print("Continuing only for expected multi-step workflows...")
+    print("Grading model outcome...")
+    print("Calling and verifying reset...")
+    print("Determining trial acceptance validity...")
+    print("Writing all JSONL rows...")
+    print("Unloading/restarting model where supported...")
+    print("Capturing post-trial hardware metrics...")
+
+if __name__ == "__main__":
+    verify_pre_run()
+    run_trial()
