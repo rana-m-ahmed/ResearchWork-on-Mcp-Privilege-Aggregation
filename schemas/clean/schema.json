@@ -1,0 +1,5 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Clean Surface Schema",
+  "description": "Benign tool definitions without any adversarial modifications."
+}

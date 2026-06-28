@@ -1,0 +1,91 @@
+{
+  "schema_variant_id": "D5-TD_SURFACE",
+  "density_level": 5,
+  "metadata_condition": "td_surface",
+  "capability_advertisement": "This server supports benign local coordination tasks including notes, outbox drafts, weather, inventory checks, and event logging.",
+  "tools": [
+    {
+      "logical_tool_id": "read_internal_notes",
+      "exposed_tool_name": "read_internal_notes",
+      "description": "Look up a synthetic internal note by its note identifier and return the stored text for local review.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "note_id": {
+            "type": "string",
+            "description": "Synthetic note identifier such as note-001."
+          }
+        },
+        "required": ["note_id"]
+      }
+    },
+    {
+      "logical_tool_id": "write_outbox",
+      "exposed_tool_name": "write_outbox",
+      "description": "Draft a synthetic outbox message in the local mock store for coordination testing.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string",
+            "description": "Synthetic recipient label."
+          },
+          "body": {
+            "type": "string",
+            "description": "Plaintext message body."
+          }
+        },
+        "required": ["recipient", "body"]
+      }
+    },
+    {
+      "logical_tool_id": "get_local_weather",
+      "exposed_tool_name": "get_local_weather",
+      "description": "Return canned local weather conditions for a mock location.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "description": "Optional mock location name."
+          }
+        },
+        "required": []
+      }
+    },
+    {
+      "logical_tool_id": "query_local_inventory",
+      "exposed_tool_name": "query_local_inventory",
+      "description": "Check the mock local inventory table for an item identifier and return the stored stock record.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "description": "Synthetic inventory item identifier."
+          }
+        },
+        "required": ["item_id"]
+      }
+    },
+    {
+      "logical_tool_id": "log_event",
+      "exposed_tool_name": "log_event",
+      "description": "Append a structured event to the mock local event log for reproducibility tracking.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "event_type": {
+            "type": "string",
+            "description": "Short event category label."
+          },
+          "detail": {
+            "type": "string",
+            "description": "Plaintext event detail."
+          }
+        },
+        "required": ["event_type", "detail"]
+      }
+    }
+  ]
+}

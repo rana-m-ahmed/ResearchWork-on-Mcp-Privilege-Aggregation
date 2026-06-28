@@ -1,0 +1,35 @@
+phase: "phase3_competence"
+security_evaluation: false
+benign_competence_only: true
+adversarial_payload_present: false
+phase1_payload_hash: null
+payload_condition: "NONE_PHASE3_BENIGN"
+
+models:
+  - id: "M1"
+    config: "model_1.yaml"
+  - id: "M2"
+    config: "model_2.yaml"
+  - id: "M3"
+    config: "model_3.yaml"
+  - id: "M4"
+    config: "model_4.yaml"
+
+trials:
+  warmups_per_model: 10
+  official_per_cell: 50
+  cells_per_model: 9
+  total_official_per_model: 450
+  total_official_all_models: 1800
+
+densities:
+  - "D1"
+  - "D3"
+  - "D5"
+
+surfaces:
+  - "CLEAN_SURFACE"
+  - "TD_SURFACE"
+  - "CA_SURFACE"
+
+# TODO_BEFORE_OFFICIAL_RUN: Fill in actual hashes and hardware specifications

@@ -1,0 +1,6 @@
+{
+  "tool": "<tool_name>",
+  "arguments": {
+    "<parameter_name>": "<parameter_value>"
+  }
+}

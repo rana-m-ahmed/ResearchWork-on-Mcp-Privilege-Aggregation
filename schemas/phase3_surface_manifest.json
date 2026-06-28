@@ -1,0 +1,7 @@
+{
+  "clean": "schemas/clean/schema.json",
+  "td_surface": "schemas/phase3_surface/td_surface/schema.json",
+  "ca_surface": "schemas/phase3_surface/ca_surface/schema.json",
+  "poisoned_tool_description": "archival",
+  "poisoned_capability_advertisement": "archival"
+}

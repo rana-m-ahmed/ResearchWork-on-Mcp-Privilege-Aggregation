@@ -1,0 +1,5 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TD Surface Schema",
+  "description": "Benign tool descriptions embedded with standard benign metadata for testing TD surface variations."
+}
