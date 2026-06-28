@@ -1,0 +1,52 @@
+branches:
+  - branch_name: phase3-model-1
+    source_freeze_commit: "phase3-source-freeze-v1"
+    model_slot: M1
+    allowed_editable_files:
+      - "phase3/configs/model_1.yaml"
+      - "phase3/runs/M1/*"
+      - "phase3/reports/phase3_model_1_competence_report.md"
+      - "phase3/validation/model_1_*.md"
+    disallowed_source_drift: "Any changes to common source files outside of allowed_editable_files"
+    run_directory: "phase3/runs/M1/"
+    report_path: "phase3/reports/phase3_model_1_competence_report.md"
+    completion_tag: "phase3-model-1-complete"
+
+  - branch_name: phase3-model-2
+    source_freeze_commit: "phase3-source-freeze-v1"
+    model_slot: M2
+    allowed_editable_files:
+      - "phase3/configs/model_2.yaml"
+      - "phase3/runs/M2/*"
+      - "phase3/reports/phase3_model_2_competence_report.md"
+      - "phase3/validation/model_2_*.md"
+    disallowed_source_drift: "Any changes to common source files outside of allowed_editable_files"
+    run_directory: "phase3/runs/M2/"
+    report_path: "phase3/reports/phase3_model_2_competence_report.md"
+    completion_tag: "phase3-model-2-complete"
+
+  - branch_name: phase3-model-3
+    source_freeze_commit: "phase3-source-freeze-v1"
+    model_slot: M3
+    allowed_editable_files:
+      - "phase3/configs/model_3.yaml"
+      - "phase3/runs/M3/*"
+      - "phase3/reports/phase3_model_3_competence_report.md"
+      - "phase3/validation/model_3_*.md"
+    disallowed_source_drift: "Any changes to common source files outside of allowed_editable_files"
+    run_directory: "phase3/runs/M3/"
+    report_path: "phase3/reports/phase3_model_3_competence_report.md"
+    completion_tag: "phase3-model-3-complete"
+
+  - branch_name: phase3-model-4
+    source_freeze_commit: "phase3-source-freeze-v1"
+    model_slot: M4
+    allowed_editable_files:
+      - "phase3/configs/model_4.yaml"
+      - "phase3/runs/M4/*"
+      - "phase3/reports/phase3_model_4_competence_report.md"
+      - "phase3/validation/model_4_*.md"
+    disallowed_source_drift: "Any changes to common source files outside of allowed_editable_files"
+    run_directory: "phase3/runs/M4/"
+    report_path: "phase3/reports/phase3_model_4_competence_report.md"
+    completion_tag: "phase3-model-4-complete"

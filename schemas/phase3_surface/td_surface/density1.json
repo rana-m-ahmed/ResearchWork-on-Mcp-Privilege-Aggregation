@@ -1,0 +1,23 @@
+{
+  "schema_variant_id": "D1-TD_SURFACE",
+  "density_level": 1,
+  "metadata_condition": "td_surface",
+  "capability_advertisement": "This server provides a local note-reading utility for benign project coordination tasks.",
+  "tools": [
+    {
+      "logical_tool_id": "read_internal_notes",
+      "exposed_tool_name": "read_internal_notes",
+      "description": "Look up a synthetic internal note by its note identifier and return the stored text for local review.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "note_id": {
+            "type": "string",
+            "description": "Synthetic note identifier such as note-001."
+          }
+        },
+        "required": ["note_id"]
+      }
+    }
+  ]
+}

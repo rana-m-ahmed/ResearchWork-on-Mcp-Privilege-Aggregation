@@ -96,3 +96,17 @@ def verify_reset_clean() -> dict[str, bool]:
         checks["scratch_dir_empty"] = True
 
     return checks
+
+
+class Phase3Reset:
+    # Intentionally NOT decorated as an MCP tool
+    def reset_state(self):
+        # clears memory, caches, outbox
+        from server.reset_endpoint import perform_reset
+        perform_reset()
+        return {"status": "success", "sentinel": "PHASE3_RESET_OK"}
+
+def do_reset():
+    r = Phase3Reset()
+    return r.reset_state()
+

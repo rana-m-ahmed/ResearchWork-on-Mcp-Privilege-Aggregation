@@ -1,0 +1,12 @@
+{
+  "total_tasks": 150,
+  "d1_count": 50,
+  "d3_count": 50,
+  "d5_count": 50,
+  "files": [
+    "benign_tasks_d1.jsonl",
+    "benign_tasks_d3.jsonl",
+    "benign_tasks_d5.jsonl",
+    "benign_tasks_master.jsonl"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Phase 3 Benign Task Schema",
+  "type": "object",
+  "properties": {
+    "phase": {
+      "type": "string",
+      "const": "phase3_competence"
+    },
+    "security_evaluation": {
+      "type": "boolean",
+      "const": false
+    },
+    "benign_competence_only": {
+      "type": "boolean",
+      "const": true
+    },
+    "adversarial_payload_present": {
+      "type": "boolean",
+      "const": false
+    },
+    "phase1_payload_hash": {
+      "type": "null"
+    },
+    "payload_condition": {
+      "type": "string",
+      "const": "NONE_PHASE3_BENIGN"
+    },
+    "TODO_BEFORE_OFFICIAL_RUN": {
+      "type": "string",
+      "description": "Add any other required task schema fields here."
+    }
+  },
+  "required": [
+    "phase",
+    "security_evaluation",
+    "benign_competence_only",
+    "adversarial_payload_present",
+    "phase1_payload_hash",
+    "payload_condition"
+  ]
+}

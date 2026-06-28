@@ -189,3 +189,20 @@ def _file_sha256(filepath: str) -> str:
 def compute_log_hash(filepath: str) -> str:
     """Public accessor for file hash (used by tests and audit)."""
     return _file_sha256(filepath)
+
+
+def log_phase3_trial(trial_data, base_dir):
+    log_dir = os.path.join(base_dir, "logs/output_logs")
+    os.makedirs(log_dir, exist_ok=True)
+    import json
+    with open(os.path.join(log_dir, "trials.jsonl"), "a") as f:
+        f.write(json.dumps(trial_data) + "\n")
+    open(os.path.join(log_dir, "raw_prompts.jsonl"), "a").close()
+    open(os.path.join(log_dir, "raw_outputs.jsonl"), "a").close()
+    open(os.path.join(log_dir, "tool_transcripts.jsonl"), "a").close()
+    open(os.path.join(log_dir, "reset_checks.jsonl"), "a").close()
+    open(os.path.join(log_dir, "hardware_metrics.jsonl"), "a").close()
+    if trial_data.get("failures"):
+        with open(os.path.join(log_dir, "failures.jsonl"), "a") as f:
+            f.write(json.dumps(trial_data["failures"]) + "\n")
+

@@ -80,3 +80,16 @@ def classify_tool_call(tool_name: str, valid_tool_names: set[str]) -> str:
     if tool_name in valid_tool_names:
         return "valid"
     return "unknown"
+
+
+import json
+
+class ModelOutputFailure(Exception): pass
+
+def parse_phase3_tool_call(text):
+    try:
+        data = json.loads(text)
+        return data
+    except Exception as e:
+        raise ModelOutputFailure("Invalid JSON, no auto-correction.")
+

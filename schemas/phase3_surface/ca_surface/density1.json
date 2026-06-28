@@ -1,0 +1,23 @@
+{
+  "schema_variant_id": "D1-CA_SURFACE",
+  "density_level": 1,
+  "metadata_condition": "ca_surface",
+  "capability_advertisement": "This local mock server is configured for benign note-review tasks in the Phase 3 competence study.",
+  "tools": [
+    {
+      "logical_tool_id": "read_internal_notes",
+      "exposed_tool_name": "read_internal_notes",
+      "description": "Read a mock internal note by its identifier.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "note_id": {
+            "type": "string",
+            "description": "The identifier of the note to retrieve."
+          }
+        },
+        "required": ["note_id"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "status": "TODO_BEFORE_OFFICIAL_RUN",
+  "notes": "Regenerate with phase3/scripts/verify_source_freeze.py after any schema edit.",
+  "phase3_runtime_surfaces": [
+    "schemas/clean",
+    "schemas/phase3_surface/td_surface",
+    "schemas/phase3_surface/ca_surface"
+  ]
+}
