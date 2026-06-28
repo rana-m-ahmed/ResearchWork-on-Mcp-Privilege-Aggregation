@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-06-27T17:04:46.472940Z",
+  "operating_system": "Windows 10",
+  "python_version": "3.11.9",
+  "ollama_version": "0.30.11",
+  "model_target": "phi3.5:3.8b-mini-instruct-q4_K_M",
+  "hardware_tier": "Tier 3 (Host Boundary Constraints Active)",
+  "network_interconnect_mode": "Mode B (Host-Routed Core Access)"
+}
