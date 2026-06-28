@@ -1,8 +1,8 @@
 {
-  "timestamp": "2026-06-28T09:52:08.191328Z",
-  "operating_system": "Windows 11",
-  "python_version": "3.12.10",
-  "ollama_version": "0.30.11",
+  "timestamp": "2026-06-28T14:01:30Z",
+  "operating_system": "Windows 10",
+  "python_version": "3.x",
+  "ollama_version": "unknown",
   "model_target": "phi3.5:3.8b-mini-instruct-q4_K_M",
   "hardware_tier": "Tier 3 (Host Boundary Constraints Active)",
   "network_interconnect_mode": "Mode B (Host-Routed Core Access)"

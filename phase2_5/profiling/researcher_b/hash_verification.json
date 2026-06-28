@@ -1,0 +1,19 @@
+{
+  "payloads": {
+    "CLEAN": {
+      "recomputed": "d9d86b212f78e20a38636fb55950d000364da972d2fa11ca178a0e6a3708bd83",
+      "reported": "d9d86b212f78e20a38636fb55950d000364da972d2fa11ca178a0e6a3708bd83",
+      "match": true
+    },
+    "POISON-TD": {
+      "recomputed": "160de853c6ae2e3adf629d3ef93d944b33f7b41d3cff769d6862796749863b94",
+      "reported": "160de853c6ae2e3adf629d3ef93d944b33f7b41d3cff769d6862796749863b94",
+      "match": true
+    },
+    "POISON-CA": {
+      "recomputed": "ba878ff97fc89659f58d8194d82e7d77325bc499ea68d88670058594abd20e63",
+      "reported": "ba878ff97fc89659f58d8194d82e7d77325bc499ea68d88670058594abd20e63",
+      "match": true
+    }
+  }
+}

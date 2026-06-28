@@ -1,0 +1,38 @@
+==========================================================
+?? STARTING AUTOMATED PHASE 2.5 MASTER EXECUTION PIPELINE
+==========================================================
+
+?? [1/5] Mapping Local System Environment Snapshots...
+   ? Snapshot saved to 'phase2_5/reproducibility/environment_snapshot.json'
+
+?? [2/5] Validating Local Tokenizer Gateway...
+   ? Waking up model weights in memory...
+   ? Tokenizer Gateway verified online. Counted: 14 tokens.
+
+?? [3/5] Ingesting Frozen Repository Schemas & Executing Profiling Matrix...
+
+Cond  | Source Schema File         | Payload   | Total | Util%  | Drift
+-------------------------------------------------------------------
+C1    | d1_clean_schema.json       | CLEAN     | 128   | 3.6% | -5   
+C2    | d1_poison_td_schema.json   | POISON-TD | 192   | 5.4% | -5   
+C3    | d1_poison_ca_schema.json   | POISON-CA | 161   | 4.5% | -5   
+C4    | d3_clean_schema.json       | CLEAN     | 131   | 3.7% | -5   
+C5    | d3_poison_td_schema.json   | POISON-TD | 190   | 5.3% | -5   
+C6    | d3_poison_ca_schema.json   | POISON-CA | 160   | 4.5% | -5   
+C7    | d5_clean_schema.json       | CLEAN     | 148   | 4.1% | -5   
+C8    | d5_poison_td_schema.json   | POISON-TD | 207   | 5.8% | -5   
+C9    | d5_poison_ca_schema.json   | POISON-CA | 177   | 4.9% | -5   
+
+?? [4/5] Exporting Consolidated Machine-Readable Datasets...
+   ? Machine-readable JSON and safe CSV records successfully frozen.
+
+?? [5/5] Checking Thresholds and Generating Markdown Deliverables...
+   ? Dynamic Token Profile Report generated successfully with programmatic drift validation.
+   ? Dynamic Budget Decision Report generated successfully.
+   ?? Optimization Metrics: Handled 55 metric calls via 24 network checks (Saved 31 tokenization requests).
+
+==========================================================
+?? PIPELINE EXECUTION SUCCESSFUL. FINAL DECISION: GO
+==========================================================
+
+?? Note for Windows Users: If you see broken characters in your terminal console, execute 'chcp 65001' to enable full UTF-8 encoding.

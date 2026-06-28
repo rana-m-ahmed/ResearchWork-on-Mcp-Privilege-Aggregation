@@ -4,7 +4,7 @@
 * **Model Evaluation Target:** `phi3.5:3.8b-mini-instruct-q4_K_M`
 * **Infrastructure Mode:** `Mode B (Host-Routed Core Access)`
 * **Hardware Profile Tier:** `Tier 3 (Host Boundary Constraints Active)`
-* **Captured Timestamp:** `2026-06-27T17:04:46.472940Z`
+* **Captured Timestamp:** `2026-06-28T09:52:08.191328Z`
 
 ## Master Metrics Matrix
 All counts dynamically extracted and compiled directly from the live evaluation profile matrix files.
