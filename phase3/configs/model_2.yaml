@@ -1,3 +1,3 @@
 model_identifier: meta-llama/Llama-3.1-8B-Instruct
-tag: llama3.1:8b-instruct-q4_K_M
-digest: sha256:llama31_8b_def456
+tag: llama3.1:8b-instruct
+digest: sha256:dd141f90edf00000000000000000000000000000000000000000000000000000
