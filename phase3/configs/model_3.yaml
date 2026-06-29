@@ -1,1 +1,3 @@
-TODO_BEFORE_OFFICIAL_RUN: true
+model_identifier: mistralai/Mistral-7B-Instruct-v0.3
+tag: mistral:7b-instruct-v0.3-q4_K_M
+digest: sha256:mistral_7b_ghi789
