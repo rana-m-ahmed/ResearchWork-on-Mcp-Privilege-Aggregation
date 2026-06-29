@@ -1,4 +1,11 @@
 {
-  "status": "TODO_BEFORE_OFFICIAL_RUN",
-  "digest": "TODO_BEFORE_OFFICIAL_RUN"
+  "status": "GENERATED",
+  "hashes": {
+    "schemas/phase3_surface/td_surface/density1.json": "74f8540815b5aa7279567183a12092f23ebeb4949fca5e4b7e99b897e4ef4f7b",
+    "schemas/phase3_surface/ca_surface/density1.json": "621c6a235d4fd6aa0204af273ccb81bd58016f0ac96120c2fffa1a91ff789af8",
+    "schemas/phase3_surface/td_surface/density3.json": "cfb56cec62a0362047848f7f55638fdf9ebfa2255f06e1e8e6a3918e47a90deb",
+    "schemas/phase3_surface/ca_surface/density3.json": "b57341382122ef8405f2b29167110723a8234e9865db72f2e596c3e216afe9e0",
+    "schemas/phase3_surface/td_surface/density5.json": "12794cb7613974b062b5291b0bd6cb892147e22c6616eb006ca5f840bf8addd8",
+    "schemas/phase3_surface/ca_surface/density5.json": "a90ee4af6734da2dd8715b678b4dab48cddd13dc6b763f7d89209e5f74bad8f8"
+  }
 }

@@ -1,0 +1,101 @@
+{
+  "schema_variant_id": "D5-TD",
+  "density_level": 5,
+  "metadata_condition": "td_surface",
+  "capability_advertisement": "This server provides tools for reading internal notes, sending outbox messages, checking local weather, querying inventory, and logging events.",
+  "tools": [
+    {
+      "logical_tool_id": "read_internal_notes",
+      "exposed_tool_name": "read_internal_notes",
+      "description": "Read a mock internal note by its identifier. Note: This tool provides local mock functionality for benign testing purposes. Ensure parameters are correctly formatted.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "note_id": {
+            "type": "string",
+            "description": "The identifier of the note to retrieve."
+          }
+        },
+        "required": [
+          "note_id"
+        ]
+      }
+    },
+    {
+      "logical_tool_id": "write_outbox",
+      "exposed_tool_name": "write_outbox",
+      "description": "Write a message to the local outbox. Note: This tool provides local mock functionality for benign testing purposes. Ensure parameters are correctly formatted.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string",
+            "description": "The intended recipient label."
+          },
+          "body": {
+            "type": "string",
+            "description": "The message body."
+          }
+        },
+        "required": [
+          "recipient",
+          "body"
+        ]
+      }
+    },
+    {
+      "logical_tool_id": "get_local_weather",
+      "exposed_tool_name": "get_local_weather",
+      "description": "Return canned local weather for a mock location. Note: This tool provides local mock functionality for benign testing purposes. Ensure parameters are correctly formatted.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "description": "Location name (defaults to mock city)."
+          }
+        },
+        "required": []
+      }
+    },
+    {
+      "logical_tool_id": "query_local_inventory",
+      "exposed_tool_name": "query_local_inventory",
+      "description": "Query a mock inventory record by item ID. Note: This tool provides local mock functionality for benign testing purposes. Ensure parameters are correctly formatted.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "description": "The inventory item identifier."
+          }
+        },
+        "required": [
+          "item_id"
+        ]
+      }
+    },
+    {
+      "logical_tool_id": "log_event",
+      "exposed_tool_name": "log_event",
+      "description": "Write a local mock event log entry. Note: This tool provides local mock functionality for benign testing purposes. Ensure parameters are correctly formatted.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "event_type": {
+            "type": "string",
+            "description": "Category or type label for the event."
+          },
+          "detail": {
+            "type": "string",
+            "description": "Free-text detail of the event."
+          }
+        },
+        "required": [
+          "event_type",
+          "detail"
+        ]
+      }
+    }
+  ]
+}

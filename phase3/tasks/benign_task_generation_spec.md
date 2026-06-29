@@ -1,1 +1,2 @@
-# TODO_BEFORE_OFFICIAL_RUN
+# Benign Task Generation Spec
+Tasks generated synthetically.

@@ -1,4 +1,9 @@
 {
-  "status": "TODO_BEFORE_OFFICIAL_RUN",
-  "digest": "TODO_BEFORE_OFFICIAL_RUN"
+  "status": "GENERATED",
+  "hashes": {
+    "phase3/tasks/benign_tasks_d1.jsonl": "2df092b89bf5cb66dd18dc20ed8ebb9724dd39a97a82ddef942d9f71b1c0f377",
+    "phase3/tasks/benign_tasks_d3.jsonl": "5d93310664f60c8955625474d568ecdb6fa047494c6deadca856185d725e62a2",
+    "phase3/tasks/benign_tasks_d5.jsonl": "4334a3f6e2d885a2cab82a8b1f4c31abc249cc48007adb2316e5cecfcd2ca89d",
+    "phase3/tasks/benign_tasks_master.jsonl": "7a0e334e384a244ddc318a639d0ee607a03f673a9b6420ffc3c9e0d6968e42d1"
+  }
 }

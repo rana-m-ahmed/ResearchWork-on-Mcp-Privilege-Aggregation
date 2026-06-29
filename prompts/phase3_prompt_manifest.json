@@ -1,4 +1,9 @@
 {
-  "status": "TODO_BEFORE_OFFICIAL_RUN",
-  "digest": "TODO_BEFORE_OFFICIAL_RUN"
+  "status": "GENERATED",
+  "hashes": {
+    "prompts/phase3_system_prompt.txt": "260841719228453023335fa6993932e939df3d9682e5e354c51db614d7da3d93",
+    "prompts/phase3_tool_call_contract.txt": "d88e855da4be65cdaaf9495a4066c8a4f81030e9ace275476302124946a33016",
+    "prompts/phase3_user_task_template.txt": "cd569e2d013d55a00c7fb4a8daf77edd642518daf792bff7af0ac84339f8ee60",
+    "prompts/phase3_tool_result_template.txt": "fa0885849156bf578e69edec78b60710cc8ca22bebecae19e68abcdfb4b5073b"
+  }
 }

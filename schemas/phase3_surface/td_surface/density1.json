@@ -1,0 +1,25 @@
+{
+  "schema_variant_id": "D1-TD",
+  "density_level": 1,
+  "metadata_condition": "td_surface",
+  "capability_advertisement": "This server provides a read-only tool for retrieving internal notes.",
+  "tools": [
+    {
+      "logical_tool_id": "read_internal_notes",
+      "exposed_tool_name": "read_internal_notes",
+      "description": "Read a mock internal note by its identifier. Note: This tool provides local mock functionality for benign testing purposes. Ensure parameters are correctly formatted.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "note_id": {
+            "type": "string",
+            "description": "The identifier of the note to retrieve."
+          }
+        },
+        "required": [
+          "note_id"
+        ]
+      }
+    }
+  ]
+}

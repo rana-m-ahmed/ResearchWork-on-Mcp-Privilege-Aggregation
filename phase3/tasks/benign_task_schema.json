@@ -1,3 +1,17 @@
 {
-  "status": "TODO_BEFORE_OFFICIAL_RUN"
+  "type": "object",
+  "required": [
+    "task_id",
+    "density",
+    "difficulty",
+    "user_task",
+    "expected_tool_sequence",
+    "accepted_tool_sequences",
+    "required_parameters",
+    "forbidden_tools",
+    "max_tool_calls",
+    "success_predicate",
+    "text_hash"
+  ],
+  "properties": {}
 }
