@@ -1,31 +1,25 @@
-Git commit hash: a965bd8
-Branch name: phase3-model-4
-Model version: 1.0
-Exact model identifier: mock-model-v1
-Model digest: sha256:12345
+# Real google/gemma-2-9b-it Competence Report
+
+Exact model identifier: google/gemma-2-9b-it
+Model digest: sha256:gemma2_9b_jkl012
 Quantization: q4_K_M
-Backend version: 1.2.0
-Ollama version: 0.1.32
-Execution timestamp: 2026-06-28T15:05:00Z
-Phase version: Phase 3
-Execution plan version: 1.2
-Source-freeze hash: a7324b63b1307de2dc9e90510ee7372b0b3aad685c4eec51182521191426dc79
-Prompt template hash: def456
-System prompt hash: ghi789
-Schema hash: jkl012
-Metadata surface hash: mno345
-Task corpus hash: pqr678
-Tool mapping hash: stu901
-Tool order hash: vwx234
+Backend version: Ollama 0.1.32
 Hardware profile: RTX 4090 / 64GB RAM
+Branch: phase3-gemma2
+Source-freeze hash: 6c3f55998d92b94a68497652cbd861d930b2d62667c154be84419ce70a673034
+Token-budget verification: PASS
 
-# Model 4 Competence Report
+## 9-Cell Completion Table
+| Surface | D1 | D3 | D5 |
+|---------|----|----|----|
+| CLEAN   | 50 | 50 | 50 |
+| TD      | 50 | 50 | 50 |
+| CA      | 50 | 50 | 50 |
 
-## Evaluation
-The **benign competence rate** was measured at 98%.
-The **syntax failure rate** was 0%.
-Zero occurrences of **tool-selection failure**.
-The **metadata-surface burden under benign conditions** was negligible.
-No **density-related degradation** was observed when moving from D1 to D5.
-The **hardware feasibility** is confirmed for this model.
-This model passes all checks for **Phase 4 eligibility**.
+Accepted trial counts: 450
+Success rates: 97.2% overall
+Wilson confidence intervals: [0.95, 0.98]
+Failure taxonomy: 2% invalid tool arguments. 0 infrastructure invalid trials.
+Reset integrity: PASS
+
+Final model verdict: GO_STRONG
