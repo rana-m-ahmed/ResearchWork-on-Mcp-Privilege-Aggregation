@@ -1,8 +1,7 @@
-
 import os
 import hashlib
 
-base_dir = r"d:\research-work\ResearchWork-on-Mcp-Privilege-Aggregation"
+base_dir = "."
 
 def hash_dir(directory):
     h = hashlib.sha256()

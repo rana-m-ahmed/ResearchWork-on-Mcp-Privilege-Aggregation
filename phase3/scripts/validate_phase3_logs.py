@@ -3,9 +3,9 @@ import os
 import json
 import argparse
 
-def validate_logs(dry_run=False):
-    base_dir = r"d:\research-work\ResearchWork-on-Mcp-Privilege-Aggregation"
-    log_path = os.path.join(base_dir, "logs/output_logs/trials.jsonl")
+def validate_logs(dry_run=False, model=None):
+    base_dir = os.environ.get("BASE_DIR", ".")
+    log_path = os.path.join(base_dir, f"phase3/runs/{model}/run_001/trials.jsonl") if model else os.path.join(base_dir, "logs/output_logs/trials.jsonl")
     
     if not os.path.exists(log_path):
         print("WARN: No trials.jsonl found. Assuming clean state for dry-run.")
@@ -40,5 +40,6 @@ def validate_logs(dry_run=False):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--model")
     args = parser.parse_args()
-    validate_logs(args.dry_run)
+    validate_logs(args.dry_run, args.model)

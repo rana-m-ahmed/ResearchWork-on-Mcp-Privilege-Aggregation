@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  mcp_server:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.mcp_server
+    user: "mcpuser"
+    # No privileged, no host network, read-only where feasible
+    read_only: false
+    volumes:
+      # /tmp/mcp_trial as container-only scratch
+      - type: tmpfs
+        target: /tmp/mcp_trial
+      - ../:/app
+    networks:
+      - phase3_net
+
+  orchestrator:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.orchestrator
+    user: "mcpuser"
+    command: tail -f /dev/null
+    volumes:
+      # /tmp/mcp_trial as container-only scratch
+      - type: tmpfs
+        target: /tmp/mcp_trial
+      - ../:/app
+      # /output_logs as the only narrow output mount
+      - ../logs/output_logs:/output_logs
+    working_dir: /app
+    networks:
+      - phase3_net
+    environment:
+      - HOST_OLLAMA_URL=http://host.docker.internal:11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+# Mode A default network
+networks:
+  phase3_net:
+    driver: bridge
+    internal: false
