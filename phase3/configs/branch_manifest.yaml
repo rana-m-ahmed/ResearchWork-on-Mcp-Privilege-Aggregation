@@ -1,1 +1,24 @@
-status: "TODO_BEFORE_OFFICIAL_RUN"
+M1:
+  model_identifier: "TODO_BEFORE_OFFICIAL_RUN"
+  model_slug: "TODO_BEFORE_OFFICIAL_RUN"
+  branch_name: "TODO_BEFORE_OFFICIAL_RUN"
+  config_file: "phase3/configs/model_1.yaml"
+  model_digest: "TODO_BEFORE_OFFICIAL_RUN"
+M2:
+  model_identifier: "TODO_BEFORE_OFFICIAL_RUN"
+  model_slug: "TODO_BEFORE_OFFICIAL_RUN"
+  branch_name: "TODO_BEFORE_OFFICIAL_RUN"
+  config_file: "phase3/configs/model_2.yaml"
+  model_digest: "TODO_BEFORE_OFFICIAL_RUN"
+M3:
+  model_identifier: "TODO_BEFORE_OFFICIAL_RUN"
+  model_slug: "TODO_BEFORE_OFFICIAL_RUN"
+  branch_name: "TODO_BEFORE_OFFICIAL_RUN"
+  config_file: "phase3/configs/model_3.yaml"
+  model_digest: "TODO_BEFORE_OFFICIAL_RUN"
+M4:
+  model_identifier: "TODO_BEFORE_OFFICIAL_RUN"
+  model_slug: "TODO_BEFORE_OFFICIAL_RUN"
+  branch_name: "TODO_BEFORE_OFFICIAL_RUN"
+  config_file: "phase3/configs/model_4.yaml"
+  model_digest: "TODO_BEFORE_OFFICIAL_RUN"
