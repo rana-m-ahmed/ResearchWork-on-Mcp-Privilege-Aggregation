@@ -1,1 +1,6 @@
-TODO_BEFORE_OFFICIAL_RUN: true
+model_slot: M1
+exact_model_identifier: qwen2.5:7b-instruct
+model_digest: dd141f90edf0
+quantization: Q4_K_M
+backend: ollama
+backend_version: local
