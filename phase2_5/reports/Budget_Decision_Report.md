@@ -1,18 +1,26 @@
 # Phase 2.5 Budget Decision Report
 
-## Operational Gate Progression Vector
-Following the strict procedural mapping of the Phase 2.5 Standalone Specification, the token footprints of all nine experimental conditions have been compiled and verified dynamically.
+## Condition Threshold Decisions
+Max utilization: 207 tokens (5.8%)
 
-### Summary Evaluation Mapping
-* **Total Conditions Profiled:** 9 / 9
-* **Maximum Consumption Observed:** 207 Tokens
-* **Dynamic Gate Status Assessment:** GO
+* **C1**: GO (SAFE at 3.6%)
+* **C2**: GO (SAFE at 5.4%)
+* **C3**: GO (SAFE at 4.5%)
+* **C4**: GO (SAFE at 3.7%)
+* **C5**: GO (SAFE at 5.3%)
+* **C6**: GO (SAFE at 4.5%)
+* **C7**: GO (SAFE at 4.1%)
+* **C8**: GO (SAFE at 5.8%)
+* **C9**: GO (SAFE at 4.9%)
+
+## Payload Hash Lock (CR-02)
+FAIL: No Phase 1 payload provenance ledger exists in the repository. The payload_approved_set.json cannot be formally verified against a locked registry.
+
+## Mode B Justification
+Due to GPU offloading requirements and environment constraints, Mode B is selected as the secure execution perimeter.
 
 ## Final Computed Resolution
 > **RESOLUTION: GO**
 
-This resolution was computed programmatically. Entry into **Phase 3 competence-baseline work** is granted if and only if the status is GO.
-
 ## Authorization Core Sign-Off
-* **System Automation Engine:** [VERIFIED]
-* **Repository Infrastructure State Lock:** [FROZEN]
+* **Lead Researcher Approval:** PENDING-HUMAN-SIGNOFF: [Lead Researcher] — Date: [unsigned]

@@ -1,0 +1,9 @@
+{"timestamp": "2026-06-29T10:43:25.534080Z", "phase": "phase2_5_profiling", "non_experimental": true, "condition": "C1", "total_tokens": 128, "status": "SAFE"}
+{"timestamp": "2026-06-29T10:43:25.534080Z", "phase": "phase2_5_profiling", "non_experimental": true, "condition": "C2", "total_tokens": 192, "status": "SAFE"}
+{"timestamp": "2026-06-29T10:43:25.534080Z", "phase": "phase2_5_profiling", "non_experimental": true, "condition": "C3", "total_tokens": 161, "status": "SAFE"}
+{"timestamp": "2026-06-29T10:43:25.534080Z", "phase": "phase2_5_profiling", "non_experimental": true, "condition": "C4", "total_tokens": 131, "status": "SAFE"}
+{"timestamp": "2026-06-29T10:43:25.534080Z", "phase": "phase2_5_profiling", "non_experimental": true, "condition": "C5", "total_tokens": 190, "status": "SAFE"}
+{"timestamp": "2026-06-29T10:43:25.534080Z", "phase": "phase2_5_profiling", "non_experimental": true, "condition": "C6", "total_tokens": 160, "status": "SAFE"}
+{"timestamp": "2026-06-29T10:43:25.534080Z", "phase": "phase2_5_profiling", "non_experimental": true, "condition": "C7", "total_tokens": 148, "status": "SAFE"}
+{"timestamp": "2026-06-29T10:43:25.534080Z", "phase": "phase2_5_profiling", "non_experimental": true, "condition": "C8", "total_tokens": 207, "status": "SAFE"}
+{"timestamp": "2026-06-29T10:43:25.534080Z", "phase": "phase2_5_profiling", "non_experimental": true, "condition": "C9", "total_tokens": 177, "status": "SAFE"}

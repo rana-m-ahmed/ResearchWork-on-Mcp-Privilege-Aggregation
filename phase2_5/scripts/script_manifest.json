@@ -1,0 +1,30 @@
+[
+  {
+    "file": "generate_ledger.py",
+    "sha256": "74caedcbc1acef4eafc2e7347e62daabb0f9df31d2d8e06a6b15e5b025360424"
+  },
+  {
+    "file": "profile_matrix.py",
+    "sha256": "f08f7dc9973ac9c102dfb4c5023e8a2ba41190dd1309aa51a359e74fbe800f75"
+  },
+  {
+    "file": "prompt_builder.py",
+    "sha256": "aa2dd70cbe1fcf8a23caa623a391aa10f635920b9c5528a04a8128f253401fa7"
+  },
+  {
+    "file": "run_phase25.py",
+    "sha256": "ed8698d02247d1cfb248d1d68cf18af287b2599eda5d6b333051a6ccf3834891"
+  },
+  {
+    "file": "test_determinism.py",
+    "sha256": "eecc2d4ce6f726bb8712a4e42a9d1adb1aee35d8d1c25775767ac3e9a088273c"
+  },
+  {
+    "file": "validate_tokenizer.py",
+    "sha256": "126e964445f287444e2559e70a1951ba1d6ebd89d99470fcc306586507706b99"
+  },
+  {
+    "file": "verify_codebase.py",
+    "sha256": "eeb774bb08aa6f098653ef592cb524fd0e5fc959a29a928b215c96edd34c358b"
+  }
+]

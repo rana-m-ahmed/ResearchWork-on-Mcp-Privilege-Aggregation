@@ -1,0 +1,38 @@
+[
+  {
+    "file": "d1_clean_schema.json",
+    "sha256": "e65a20dde39fa35cb1737c4f490e34660f232f1c87c26f72ea220f454eeeecfb"
+  },
+  {
+    "file": "d1_poison_ca_schema.json",
+    "sha256": "21ee6b88389a7a27f38f684a361c07045d6693ed67a5643a2837acff1c826620"
+  },
+  {
+    "file": "d1_poison_td_schema.json",
+    "sha256": "a0bfe66339e3fd082ede3cae0640e1e22440c5245d12d4e1d317ad43f1f9e236"
+  },
+  {
+    "file": "d3_clean_schema.json",
+    "sha256": "fc1a5c3a7736accc97f46b8b4116bf893db49191878c5dd23384446e0c321907"
+  },
+  {
+    "file": "d3_poison_ca_schema.json",
+    "sha256": "fc1a5c3a7736accc97f46b8b4116bf893db49191878c5dd23384446e0c321907"
+  },
+  {
+    "file": "d3_poison_td_schema.json",
+    "sha256": "980dee4617e04bb9c572575d04bb1f5308e5be438688f5eba9df5d73f80a6c45"
+  },
+  {
+    "file": "d5_clean_schema.json",
+    "sha256": "76fa920667a8da89cc89dfbebff9dc507d4abe2bb4da03d42f2acd5fffdc613a"
+  },
+  {
+    "file": "d5_poison_ca_schema.json",
+    "sha256": "76fa920667a8da89cc89dfbebff9dc507d4abe2bb4da03d42f2acd5fffdc613a"
+  },
+  {
+    "file": "d5_poison_td_schema.json",
+    "sha256": "2527f915a39cb6b05d9e116fcdfbbad7ed5b7826e45164d389d931c011340e7c"
+  }
+]
