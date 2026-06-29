@@ -1,0 +1,10 @@
+Hello, world!
+This is a simple test sentence.
+{"name": "test", "value": 123}
+```python\ndef test():\n    return True\n```
+def complex_function(a, b): return a + b * 2
+The quick brown fox jumps over the lazy dog.
+1234567890
+<xml><tag>content</tag></xml>
+/path/to/some/file.txt
+{"schema": {"type": "object", "properties": {"id": {"type": "string"}}}}

@@ -1,0 +1,31 @@
+{
+  "environment": {
+    "timestamp": "2026-06-29T09:44:56.813371Z",
+    "operating_system": "Windows 11",
+    "python_version": "3.12.10",
+    "ollama_version": "0.30.11",
+    "model_target": "phi3.5:3.8b-mini-instruct-q4_K_M",
+    "hardware_tier": "Tier 3 (Host Boundary Constraints Active)",
+    "network_interconnect_mode": "Mode B (Host-Routed Core Access)"
+  },
+  "matrix": [
+    {
+      "Condition": "C5",
+      "SchemaFile": "d3_poison_td_schema.json",
+      "MetadataCondition": "POISON-TD",
+      "SystemTokens": 25,
+      "SchemaTokens": 49,
+      "CapAdvTokens": 10,
+      "PayloadTokens": 89,
+      "TaskTokens": 22,
+      "TotalTokens": 190,
+      "ComponentSum": 195,
+      "AlignmentDrift": -5,
+      "BudgetUtilization": "5.3%",
+      "Status": "SAFE",
+      "Schema_SHA256": "fee07f71ea0b441f0184ea350086caddcce1278d0c03e6161b55e42565a11e4b",
+      "Payload_SHA256": "160de853c6ae2e3adf629d3ef93d944b33f7b41d3cff769d6862796749863b94",
+      "Prompt_SHA256": "89524eeca63ff339341843064d5d2a6cac985a28869b26179c82ff477c37411e"
+    }
+  ]
+}

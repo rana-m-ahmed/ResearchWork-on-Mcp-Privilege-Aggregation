@@ -4,11 +4,8 @@
 * **Model Evaluation Target:** `phi3.5:3.8b-mini-instruct-q4_K_M`
 * **Infrastructure Mode:** `Mode B (Host-Routed Core Access)`
 * **Hardware Profile Tier:** `Tier 3 (Host Boundary Constraints Active)`
-* **Captured Timestamp:** `2026-06-28T09:52:08.191328Z`
 
 ## Master Metrics Matrix
-All counts dynamically extracted and compiled directly from the live evaluation profile matrix files.
-
 | Condition | Source Schema File | Payload Family | System | Schemas | CapAdv | Payload | Task | Total | Drift | Budget % | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **C1** | d1_clean_schema.json | CLEAN | 25 | 39 | 10 | 37 | 22 | **128** | -5 | 3.6% | SAFE |
@@ -21,10 +18,6 @@ All counts dynamically extracted and compiled directly from the live evaluation 
 | **C8** | d5_poison_td_schema.json | POISON-TD | 25 | 66 | 10 | 89 | 22 | **207** | -5 | 5.8% | SAFE |
 | **C9** | d5_poison_ca_schema.json | POISON-CA | 25 | 59 | 15 | 61 | 22 | **177** | -5 | 4.9% | SAFE |
 
-## Methodological Observations
-* **Alignment Drift Verification:** The sum of independently tokenized prompt components differs from the fully assembled prompt by a constant -5 tokens due to tokenizer boundary effects introduced when components are concatenated. This constraint is programmatically verified and asserted by the execution harness.
-
 ## Verification Signatures
-* **Prompt Determinism Test:** PASS
-* **Tokenizer Availability Check:** PASS
-* **Schema Pruning Verification:** NOT_REQUIRED (All real configurations fall natively within SAFE boundaries)
+* **Researcher A Verification:** PENDING-HUMAN-SIGNOFF: [Researcher A] — Date: [unsigned]
+* **Researcher B Verification:** PENDING-HUMAN-SIGNOFF: [Researcher B] — Date: [unsigned]
