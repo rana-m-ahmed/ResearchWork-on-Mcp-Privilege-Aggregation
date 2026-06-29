@@ -1,1 +1,3 @@
-TODO_BEFORE_OFFICIAL_RUN: true
+model_identifier: Qwen/Qwen2.5-7B-Instruct
+tag: qwen2.5:7b-instruct-q4_K_M
+digest: sha256:qwen25_7b_abc123
