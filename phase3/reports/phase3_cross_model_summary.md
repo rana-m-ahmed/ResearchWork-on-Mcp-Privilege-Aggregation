@@ -1,3 +1,5 @@
+> **RECLASSIFICATION NOTICE:** Phase 3 infrastructure dry-run / mock-run validation only. Not real model competence evidence. Not eligible for Phase 4 model-set freeze. Not eligible for Phase 5 planning evidence.
+
 Git commit hash: a965bd8
 Branch name: phase3-source-freeze
 Model version: 1.0
