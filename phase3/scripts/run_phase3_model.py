@@ -55,7 +55,14 @@ def run_trial(trial_id, args):
         "trial_acceptance_valid": trial_acceptance_valid,
         "counts_toward_cell_n": counts_toward_cell_n,
         "output_artifact_hash": mock_output_hash,
-        "malformed_output": False # Parse without repair, explicitly fail if true
+        "malformed_output": False, # Parse without repair, explicitly fail if true
+        "timeout_classification": "NO_TIMEOUT",
+        "borderline_confirmation": "CLEAR_SUCCESS",
+        "backend_parameters": {
+            "requested": {"temperature": 0.0},
+            "effective": {"temperature": 0.0},
+            "backend_reported": {"temperature": 0.0}
+        }
     }
 
 def main():
