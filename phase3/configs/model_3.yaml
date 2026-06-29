@@ -1,2 +1,2 @@
-model_name: "TODO_BEFORE_OFFICIAL_RUN"
-model_digest: "TODO_BEFORE_OFFICIAL_RUN"
+model_name: "mistralai/Mistral-7B-Instruct-v0.3"
+model_digest: "sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
