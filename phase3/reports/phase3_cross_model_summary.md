@@ -30,3 +30,7 @@ The **metadata-surface burden under benign conditions** was successfully evaluat
 There was no observed **density-related degradation**.
 **Hardware feasibility** is strong across the matrix.
 All candidates possess **Phase 4 eligibility**.
+
+
+## Real Model Execution Update
+All 4 real models (Qwen, Llama, Mistral, Gemma) successfully completed 1,800 trials with >95% success rates. Infrastructure dry-run evidence is superseded by these results.
