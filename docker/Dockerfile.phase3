@@ -1,0 +1,16 @@
+# Dockerfile for Phase 3 Execution Environment
+FROM python:3.11-slim
+
+# Create a non-root user for security and isolation
+RUN useradd -m -s /bin/bash mcpuser
+
+# Set working directory
+WORKDIR /app
+
+# Switch to non-root user
+USER mcpuser
+
+# Note: The repository source will be mounted read-only via docker-compose
+# However, we copy it here to ensure the image contains the necessary code 
+# if run independently of compose.
+COPY --chown=mcpuser:mcpuser . .

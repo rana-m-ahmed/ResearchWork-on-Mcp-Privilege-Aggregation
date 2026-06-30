@@ -1,0 +1,11 @@
+model,density,surface,task_id,is_warmup
+M3,1,CLEAN,task_0,false
+M3,1,CLEAN,task_1,false
+M3,1,CLEAN,task_2,false
+M3,1,CLEAN,task_3,false
+M3,1,CLEAN,task_4,false
+M3,1,CLEAN,task_5,false
+M3,1,CLEAN,task_6,false
+M3,1,CLEAN,task_7,false
+M3,1,CLEAN,task_8,false
+M3,1,CLEAN,task_9,false

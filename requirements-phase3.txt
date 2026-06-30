@@ -1,0 +1,1 @@
+# No external python dependencies required for Phase 3 orchestrator scaffold
