@@ -2,7 +2,7 @@ import logging
 import os
 from typing import Any, Dict
 from .base_backend import LLMBackend
-from .ollama_backend import OllamaBackend
+from .transformers_backend import TransformersBackend
 from ..utils.exceptions import ConfigurationError
 
 logger = logging.getLogger(__name__)
@@ -29,7 +29,7 @@ def create_backend(config_path: str = None, config_dict: Dict[str, Any] = None) 
         cfg = parse_yaml_naive(config_path)
     
     # Defaults to OllamaBackend for Phase 3 based on current constraints
-    backend = OllamaBackend()
+    backend = TransformersBackend()
     
     if 'model_name' in cfg:
         # We don't automatically load the model here, the orchestrator manages loading/unloading
