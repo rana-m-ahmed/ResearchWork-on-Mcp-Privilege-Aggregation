@@ -1,0 +1,5 @@
+Model,D1 (Low Density),D3 (Mid Density),D5 (High Density)
+Model 1 (Qwen),95.33,96.67,94.67
+Model 2 (DeepSeek),96.67,94.0,93.33
+Model 3 (Mistral),92.0,88.0,90.0
+Model 4 (Phi),100.0,100.0,100.0
