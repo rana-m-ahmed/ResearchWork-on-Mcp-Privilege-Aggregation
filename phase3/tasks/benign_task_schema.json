@@ -26,7 +26,7 @@
       "type": "string",
       "const": "NONE_PHASE3_BENIGN"
     },
-    "TODO_BEFORE_OFFICIAL_RUN": {
+    "Phase 3 Execution Note": {
       "type": "string",
       "description": "Add any other required task schema fields here."
     }

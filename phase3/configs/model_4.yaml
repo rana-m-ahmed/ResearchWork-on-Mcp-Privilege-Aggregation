@@ -1,1 +1,7 @@
-TODO_BEFORE_OFFICIAL_RUN: true
+exact_model_identifier: microsoft/Phi-3.5-mini-instruct
+model_family: Phi (Microsoft)
+parameter_count: 3.8B
+quantization: float16
+runtime_backend: transformers
+backend_version: transformers==5.0.0
+tokenizer_identity: microsoft/Phi-3.5-mini-instruct

@@ -1,1 +1,7 @@
-TODO_BEFORE_OFFICIAL_RUN: true
+exact_model_identifier: mistralai/Mistral-7B-Instruct-v0.3
+model_family: Mistral
+parameter_count: 7B
+quantization: float16
+runtime_backend: transformers
+backend_version: transformers==5.0.0
+tokenizer_identity: mistralai/Mistral-7B-Instruct-v0.3

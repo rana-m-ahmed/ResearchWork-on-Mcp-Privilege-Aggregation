@@ -14,7 +14,7 @@
 - [x] **Model Config Completeness Check**: Verified stubs existing.
 
 ## Unresolved TODOs
-*Note: TODO_BEFORE_OFFICIAL_RUN strings currently exist inside global configurations requesting live API keys or empirical baseline hardware measurements. These must be replaced prior to invoking the true batch.*
+*Note: Phase 3 Execution Note strings currently exist inside global configurations requesting live API keys or empirical baseline hardware measurements. These must be replaced prior to invoking the true batch.*
 
 ## Final Verdict
 **PASS**: The scaffold is fully sound and preflight logic holds true. Proceeding to official run pending empirical TODO completion.

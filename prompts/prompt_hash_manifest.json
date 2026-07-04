@@ -1,3 +1,6 @@
 {
-  "TODO_BEFORE_OFFICIAL_RUN": "Generate hashes"
+  "phase3_system_prompt.txt": "81e09dc698d4d36c7bc04859485fa554dc269b2729c3ceb10b0588ae5e632003",
+  "phase3_tool_call_contract.txt": "d88e855da4be65cdaaf9495a4066c8a4f81030e9ace275476302124946a33016",
+  "phase3_tool_result_template.txt": "2e6c79d99f381168a38052c9b0b7c508db454c52109a817bc79c81d6664bea8e",
+  "phase3_user_task_template.txt": "ed4514830ed0b180ce2a643cc3af8bb19b6ba8ec94d5c1a13c558660d8705da4"
 }

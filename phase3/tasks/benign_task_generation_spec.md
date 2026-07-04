@@ -24,4 +24,4 @@ All tasks generated must conform strictly to the `benign_task_schema.json`, spec
 }
 ```
 
-TODO_BEFORE_OFFICIAL_RUN: Document the specific prompts and deterministic seeds used for generation.
+Phase 3 Execution Note: Document the specific prompts and deterministic seeds used for generation.

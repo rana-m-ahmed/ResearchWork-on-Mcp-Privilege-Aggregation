@@ -1,0 +1,14 @@
+version: "1.0"
+status: "FROZEN"
+primary_analysis: "firth_penalized_logistic_regression"
+alpha: 0.05
+multiple_comparison_correction: "benjamini_hochberg"
+variables:
+  dependent: "success"
+  independent:
+    - "metadata_surface_condition"
+    - "density"
+    - "defense_condition"
+    - "model_id"
+missing_data_handling: "impute_zero_flag_error"
+effect_size_metric: "odds_ratio"

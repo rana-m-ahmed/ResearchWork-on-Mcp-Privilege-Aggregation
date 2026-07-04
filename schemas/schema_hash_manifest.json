@@ -1,9 +1,5 @@
 {
-  "status": "TODO_BEFORE_OFFICIAL_RUN",
-  "notes": "Regenerate with phase3/scripts/verify_source_freeze.py after any schema edit.",
-  "phase3_runtime_surfaces": [
-    "schemas/clean",
-    "schemas/phase3_surface/td_surface",
-    "schemas/phase3_surface/ca_surface"
-  ]
+  "schemas/clean": "a614c717064721e9c4dfcfaa4994e692f85d802865b28f7e69fbad89b8173568",
+  "schemas/phase3_surface/td_surface": "08149bc22dec5bfd7a5bb8a438bd3c3b4c239b8d5a53989b5658b565cfc3a240",
+  "schemas/phase3_surface/ca_surface": "8c7e21e79364a3878854a2a0d7389ac60206aa494f2b7b81cf5acec0259a6d5c"
 }

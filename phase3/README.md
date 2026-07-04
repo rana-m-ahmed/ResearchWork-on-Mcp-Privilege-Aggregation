@@ -33,4 +33,4 @@ Every official Phase 3 trial must include the following metadata:
 Target: 50 valid accepted trials per cell, 9 cells per model, 4 models = 1,800 valid accepted official trials total.
 Plus 10 warmups per model (official_trial = false, warmup = true).
 
-TODO_BEFORE_OFFICIAL_RUN: Complete any remaining environment specifics in the matrix CSVs.
+Phase 3 Execution Note: Complete any remaining environment specifics in the matrix CSVs.

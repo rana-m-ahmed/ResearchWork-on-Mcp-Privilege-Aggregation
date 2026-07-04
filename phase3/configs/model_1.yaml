@@ -1,1 +1,7 @@
-TODO_BEFORE_OFFICIAL_RUN: true
+exact_model_identifier: Qwen/Qwen2.5-7B-Instruct
+model_family: Qwen (Alibaba)
+parameter_count: 7B
+quantization: float16
+runtime_backend: transformers
+backend_version: transformers==5.0.0
+tokenizer_identity: Qwen/Qwen2.5-7B-Instruct

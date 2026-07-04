@@ -1,1 +1,8 @@
-TODO_BEFORE_OFFICIAL_RUN: true
+exact_model_identifier: deepseek-ai/DeepSeek-R1-Distill-Llama-8B
+model_family: DeepSeek-R1 (Llama-3 architecture based)
+parameter_count: 8B
+quantization: float16
+runtime_backend: transformers
+backend_version: transformers==5.0.0
+torch_version: 2.10.0+cu128
+tokenizer_identity: deepseek-ai/DeepSeek-R1-Distill-Llama-8B

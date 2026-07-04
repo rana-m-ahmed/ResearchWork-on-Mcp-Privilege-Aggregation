@@ -2,4 +2,4 @@
 
 *This report will be populated dynamically by the trial runner upon executing models, measuring token consumption per context.*
 
-TODO_BEFORE_OFFICIAL_RUN: Populate with empirical runs.
+Phase 3 Execution Note: Populate with empirical runs.

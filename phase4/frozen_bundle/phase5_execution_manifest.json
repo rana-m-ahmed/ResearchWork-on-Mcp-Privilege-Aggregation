@@ -1,0 +1,27 @@
+{
+  "repository_version": "1.0.0",
+  "schema_version": "1.2",
+  "dependencies": {
+    "model_freeze": "phase4/configs/model_set_freeze.yaml",
+    "payload_map": "phase4/configs/payload_reference_map.json",
+    "defense_freeze": "phase4/configs/defense_config_freeze.yaml",
+    "statistical_plan": "phase4/configs/statistical_plan.yaml",
+    "trial_order": "phase4/frozen_bundle/trial_order_core.csv"
+  },
+  "execution_groups": [
+    "benign_baseline",
+    "adversarial_core",
+    "adversarial_defense",
+    "utility_preservation"
+  ],
+  "expected_outputs": {
+    "required_reports": [
+      "phase5_final_evaluation_report.md",
+      "phase5_attack_success_rate_summary.md"
+    ],
+    "required_csvs": [
+      "phase5_results_core.csv",
+      "phase5_results_defense.csv"
+    ]
+  }
+}
