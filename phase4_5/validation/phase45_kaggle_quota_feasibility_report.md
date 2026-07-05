@@ -1,10 +1,8 @@
 # Phase 4.5 Kaggle Quota Feasibility Report
 
-- Status: `REVISE_PHASE45`
-- Reason: `REVISE_PHASE45 until Kaggle smoke metrics are available.`
-- Kaggle smoke metrics available: `false`
+- Status: `PENDING_REVIEW`
+- Metric rows ingested: `24`
 
 ## Notes
-- No Kaggle runtime measurements were found locally.
-- No runtime estimate was invented.
-- This report remains provisional until Kaggle execution returns metrics to GitHub.
+- Kaggle metrics were found locally and can be summarized in a later review pass.
+- No Phase 5 claim is made in this scaffold.

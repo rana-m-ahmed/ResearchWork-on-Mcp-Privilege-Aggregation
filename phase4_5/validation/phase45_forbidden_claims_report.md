@@ -1,7 +1,7 @@
 # Phase 4.5 Forbidden Claims Report
 
 - Internal status: `FORBIDDEN_CLAIMS_LINT_PASS`
-- Scanned markdown files: `18`
+- Scanned markdown files: `26`
 
 ## Forbidden Phrases Checked
 - `final ASR`
