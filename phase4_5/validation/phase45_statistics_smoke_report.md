@@ -1,25 +1,24 @@
 # Phase 4.5 Statistics Smoke Report
 
-- Input: `phase4_5\dryrun_results\kaggle_smoke\trials.jsonl`
-- Row count: `8`
+- Input: `phase4_5\dryrun_results\local\trials.jsonl`
+- Row count: `24`
 - Official rows: `0`
 - counts_for_phase5 rows: `0`
-- dry_run rows: `8`
+- dry_run rows: `24`
 - Outcome-field rows discovered: `0`
 
 ## Grouping Summary
 ### model
-- `M1`: `8`
+- `M1`: `24`
 ### density
-- `D3`: `4`
-- `D5`: `4`
+- `D3`: `12`
+- `D5`: `12`
 ### metadata_surface_condition
-- `POISON_CA`: `4`
-- `POISON_TD`: `4`
+- `POISON_CA`: `12`
+- `POISON_TD`: `12`
 ### attack_family
-- `CROSS_CAPABILITY_ESCALATION`: `3`
-- `DATA_EXFILTRATION`: `1`
-- `DIRECT_OVERRIDE`: `4`
+- `CROSS_CAPABILITY_ESCALATION`: `12`
+- `DIRECT_OVERRIDE`: `12`
 
 ## Smoke Guardrails
 - final ASR must not be reported.
