@@ -1,0 +1,15 @@
+checkpoint_order:
+  - phase45_branch_start_report
+  - phase45_preflight_report
+  - phase45_local_dryrun
+  - phase45_kaggle_smoke
+  - phase45_kaggle_model_loader_smoke
+
+resume_policy:
+  on_revise: fix scaffold only; do not alter Phase 4 frozen artifacts
+  on_pass: proceed to Kaggle smoke preparation
+  on_no_go: halt and document blockers
+
+notes:
+  - Phase 4.5 remains non-official.
+  - Resume does not authorize Phase 5 execution.

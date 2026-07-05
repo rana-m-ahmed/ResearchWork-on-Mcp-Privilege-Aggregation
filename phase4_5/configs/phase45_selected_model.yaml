@@ -1,0 +1,8 @@
+model_slot: M1
+exact_model_identifier: Qwen/Qwen2.5-7B-Instruct
+model_family: Qwen2.5
+frozen_source: phase4/configs/model_set_freeze.yaml
+selection_purpose: phase4_5_kaggle_smoke
+official_trial: false
+counts_for_phase5: false
+notes: Single-model smoke selection only. Not an official Phase 5 selection.

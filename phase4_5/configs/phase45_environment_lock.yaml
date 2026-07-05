@@ -1,0 +1,21 @@
+source_of_truth: github
+local_validation_enabled: true
+kaggle_execution_enabled: true
+return_outputs_to_github: true
+non_official_boundary: true
+no_model_weights: true
+no_caches: true
+no_env_files: true
+no_credentials: true
+no_absolute_paths: true
+do_not_commit:
+  - model weights
+  - caches
+  - .env files
+  - credentials
+  - local absolute paths
+allowed_outputs:
+  - markdown reports
+  - hashes
+  - run manifests
+  - notebook artifacts

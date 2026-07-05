@@ -1,0 +1,2 @@
+# Phase 4.5 Kaggle smoke runner uses standard library only.
+# Pin extra packages here when a future smoke dependency is introduced.

@@ -1,0 +1,12 @@
+pipeline: phase4_5_kaggle_smoke
+source_of_truth: github
+execution_surface: kaggle
+official_trial: false
+counts_for_phase5: false
+notebook: phase45_kaggle_runner.ipynb
+python_runner: phase45_kaggle_runner.py
+smoke_checks:
+  - environment_bootstrap
+  - runner_import
+  - loader_visibility
+  - output_return_path
