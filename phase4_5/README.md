@@ -75,6 +75,6 @@ If the environment uses `python3`, use that instead.
 
 ## Current Readiness Status
 
-`REVISE_PHASE45`
+`READY_FOR_EXTERNAL_AUDIT` / `PHASE_4.5_COMPLETE`
 
-Reason: Kaggle smoke, Kaggle all-model loader smoke, quota feasibility, and external audit are still pending.
+Reason: Authentic Kaggle GPU timing metrics have successfully been ingested, analyzed, and approved by the strict independent auditor. The repository is authorized to branch to Phase 5.
