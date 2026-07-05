@@ -34,12 +34,13 @@ try:
     ROOT = Path(__file__).resolve().parents[1]
 except NameError:
     # We are executing inside a Jupyter/Kaggle notebook cell
+    # Hardcode the exact absolute path to prevent Kaggle Path.cwd() resolution errors
     kaggle_path = Path("/kaggle/working/ResearchWork-on-Mcp-Privilege-Aggregation")
-    if kaggle_path.exists():
+    ROOT = kaggle_path / "phase4_5"
+    try:
         os.chdir(kaggle_path)
-        ROOT = kaggle_path / "phase4_5"
-    else:
-        ROOT = Path.cwd() / "phase4_5"
+    except Exception:
+        pass
 
 REPO_ROOT = ROOT.parent
 CONFIG_DIR = ROOT / "configs"
