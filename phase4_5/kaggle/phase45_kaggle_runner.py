@@ -22,7 +22,25 @@ from typing import Any
 import yaml
 
 
-ROOT = Path(__file__).resolve().parents[1]
+try:
+    # Attempt to load Hugging Face token from Kaggle Secrets if in Kaggle
+    from kaggle_secrets import UserSecretsClient
+    user_secrets = UserSecretsClient()
+    os.environ["HF_TOKEN"] = user_secrets.get_secret("HF_TOKEN")
+except Exception:
+    pass
+
+try:
+    ROOT = Path(__file__).resolve().parents[1]
+except NameError:
+    # We are executing inside a Jupyter/Kaggle notebook cell
+    kaggle_path = Path("/kaggle/working/ResearchWork-on-Mcp-Privilege-Aggregation")
+    if kaggle_path.exists():
+        os.chdir(kaggle_path)
+        ROOT = kaggle_path / "phase4_5"
+    else:
+        ROOT = Path.cwd() / "phase4_5"
+
 REPO_ROOT = ROOT.parent
 CONFIG_DIR = ROOT / "configs"
 MATRIX_DIR = ROOT / "matrices"
