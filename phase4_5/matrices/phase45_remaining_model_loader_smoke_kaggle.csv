@@ -1,1 +1,5 @@
-model_slot,check_name,status,notes
+model_slot,exact_model_identifier,loader_status,execution_surface,notes
+M1,Qwen/Qwen2.5-7B-Instruct,PENDING_KAGGLE_SMOKE,kaggle,No fake execution; this is a planning matrix only.
+M2,deepseek-ai/DeepSeek-R1-Distill-Llama-8B,PENDING_KAGGLE_SMOKE,kaggle,No fake execution; this is a planning matrix only.
+M3,mistralai/Mistral-7B-Instruct-v0.3,PENDING_KAGGLE_SMOKE,kaggle,No fake execution; this is a planning matrix only.
+M4,microsoft/Phi-3.5-mini-instruct,PENDING_KAGGLE_SMOKE,kaggle,No fake execution; this is a planning matrix only.

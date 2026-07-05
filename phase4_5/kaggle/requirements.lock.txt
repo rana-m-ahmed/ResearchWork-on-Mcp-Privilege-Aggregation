@@ -1,2 +1,17 @@
-# Phase 4.5 Kaggle smoke runner uses standard library only.
-# Pin extra packages here when a future smoke dependency is introduced.
+# Phase 4.5 Kaggle smoke runner scaffold.
+Python==3.12.10
+torch==2.10.0+cu128
+transformers==5.0.0
+accelerate==1.13.0
+bitsandbytes==TO_VERIFY_ON_KAGGLE
+sentencepiece==0.2.1
+protobuf==TO_VERIFY_ON_KAGGLE
+pandas==TO_VERIFY_ON_KAGGLE
+numpy==2.4.6
+jsonschema==4.26.0
+pydantic==2.13.4
+PyYAML==6.0.2
+mcp==TO_VERIFY_ON_KAGGLE
+fastmcp==TO_VERIFY_ON_KAGGLE
+ollama==TO_VERIFY_ON_KAGGLE
+llama_cpp_python==TO_VERIFY_ON_KAGGLE

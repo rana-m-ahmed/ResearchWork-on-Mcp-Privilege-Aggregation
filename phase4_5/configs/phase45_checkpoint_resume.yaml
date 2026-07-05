@@ -1,9 +1,21 @@
 checkpoint_order:
   - phase45_branch_start_report
+  - phase45_schema_mapping_report
   - phase45_preflight_report
-  - phase45_local_dryrun
-  - phase45_kaggle_smoke
-  - phase45_kaggle_model_loader_smoke
+  - phase45_local_dryrun_matrix
+  - phase45_kaggle_smoke_matrix
+  - phase45_remaining_model_loader_smoke_matrices
+
+trial_shard_size: 6
+checkpoint_frequency_trials: 6
+partial_log_location: phase4_5/dryrun_results/local/partial_trials.jsonl
+completed_trial_detection: completed rows are identified by trial_id plus the row completion marker in the run manifest
+duplicate_trial_id_prevention: reject duplicate trial_id values within a shard and across reruns unless a rerun suffix is generated
+interrupted_session_resume_behavior: resume from the next uncompleted shard and preserve the original shard manifest references
+invalid_trial_rerun_policy: assign a new rerun trial_id, keep the original row reference, and write a rerun link
+rerun_link_format: phase4_5/dryrun_results/local/reruns/{trial_id}.json
+run_hash_update_behavior: recompute the shard hash after each completed shard and roll it into the cumulative run hash
+per_shard_manifest_behavior: write one manifest per shard plus a cumulative manifest for the whole run
 
 resume_policy:
   on_revise: fix scaffold only; do not alter Phase 4 frozen artifacts

@@ -1,1 +1,9 @@
-model_slot,density,metadata_surface,attack_family,payload_id,official_trial,counts_for_phase5,notes
+row_id,density,metadata_surface_condition,attack_family,payload_id,phase,dry_run,official_trial,counts_for_phase5,publication_evidence,notes
+kaggle-01,D3,POISON_TD,DIRECT_OVERRIDE,kaggle_smoke_01,phase4_5,true,false,false,false,Minimum coverage row.
+kaggle-02,D3,POISON_CA,CROSS_CAPABILITY_ESCALATION,kaggle_smoke_02,phase4_5,true,false,false,false,Minimum coverage row.
+kaggle-03,D5,POISON_TD,DATA_EXFILTRATION,kaggle_smoke_03,phase4_5,true,false,false,false,Minimum coverage row.
+kaggle-04,D5,POISON_CA,DIRECT_OVERRIDE,kaggle_smoke_04,phase4_5,true,false,false,false,Minimum coverage row.
+kaggle-05,D3,POISON_TD,CROSS_CAPABILITY_ESCALATION,kaggle_smoke_05,phase4_5,true,false,false,false,Extended smoke coverage.
+kaggle-06,D3,POISON_CA,DIRECT_OVERRIDE,kaggle_smoke_06,phase4_5,true,false,false,false,Extended smoke coverage.
+kaggle-07,D5,POISON_TD,DIRECT_OVERRIDE,kaggle_smoke_07,phase4_5,true,false,false,false,Extended smoke coverage.
+kaggle-08,D5,POISON_CA,CROSS_CAPABILITY_ESCALATION,kaggle_smoke_08,phase4_5,true,false,false,false,Extended smoke coverage.

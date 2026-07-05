@@ -1,4 +1,7 @@
 source_of_truth: github
+python_version: 3.12.10
+cuda_availability_expected: TO_VERIFY_ON_KAGGLE
+cuda_version: TO_VERIFY_ON_KAGGLE
 local_validation_enabled: true
 kaggle_execution_enabled: true
 return_outputs_to_github: true
@@ -8,6 +11,23 @@ no_caches: true
 no_env_files: true
 no_credentials: true
 no_absolute_paths: true
+package_versions:
+  torch: 2.10.0+cu128
+  transformers: 5.0.0
+  accelerate: 1.13.0
+  bitsandbytes: TO_VERIFY_ON_KAGGLE
+  sentencepiece: 0.2.1
+  protobuf: TO_VERIFY_ON_KAGGLE
+  pandas: TO_VERIFY_ON_KAGGLE
+  numpy: 2.4.6
+  jsonschema: 4.26.0
+  pydantic: 2.13.4
+  pyyaml: 6.0.2
+  mcp: TO_VERIFY_ON_KAGGLE
+  fastmcp: TO_VERIFY_ON_KAGGLE
+backend_packages:
+  ollama: TO_VERIFY_ON_KAGGLE
+  llama_cpp_python: TO_VERIFY_ON_KAGGLE
 do_not_commit:
   - model weights
   - caches

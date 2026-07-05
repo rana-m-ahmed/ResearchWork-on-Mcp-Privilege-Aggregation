@@ -1,0 +1,207 @@
+phase:
+  required: true
+  phase5_type: string
+  source_category: constant
+  source_field: trial.phase
+  transformation: constant
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Nested trial phase must resolve to a frozen phase5 phase enum; the top-level Phase 4.5 wrapper keeps phase4_5.
+official_trial:
+  required: true
+  phase5_type: boolean
+  source_category: phase45_runtime
+  source_field: trial.official_trial
+  transformation: constant
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: The Phase 4.5 wrapper flag is false; the nested trial field remains boolean and may be false in dry-run scaffold rows.
+trial_id:
+  required: true
+  phase5_type: string
+  source_category: phase45_runtime
+  source_field: trial_id
+  transformation: runtime_generated
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Unique per trial row and stable across reruns only through explicit rerun linkage.
+run_id:
+  required: true
+  phase5_type: string
+  source_category: phase45_runtime
+  source_field: run_id
+  transformation: runtime_generated
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Identifies the run shard or notebook session and must be constant within a run manifest.
+branch:
+  required: true
+  phase5_type: string
+  source_category: constant
+  source_field: phase5 branch label
+  transformation: constant
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Branch label must use the frozen Phase 5 naming convention, not the Phase 4.5 branch name.
+git_commit_hash:
+  required: true
+  phase5_type: string
+  source_category: phase45_hashing
+  source_field: git rev-parse HEAD
+  transformation: runtime_generated
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Must be the repository commit hash recorded at execution time.
+timestamp_utc:
+  required: true
+  phase5_type: string
+  source_category: phase45_runtime
+  source_field: utc timestamp
+  transformation: runtime_generated
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Must be UTC ISO-8601 time.
+model_id:
+  required: true
+  phase5_type: string
+  source_category: phase4_model_freeze
+  source_field: phase4/configs/model_set_freeze.yaml:model_slot
+  transformation: pass_through
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Must map to a frozen model slot such as M1 through M4.
+exact_model_identifier:
+  required: true
+  phase5_type: string
+  source_category: phase4_model_freeze
+  source_field: phase4_5/configs/phase45_selected_model.yaml:exact_model_identifier
+  transformation: pass_through
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Must match the frozen model identity exactly.
+model_digest:
+  required: true
+  phase5_type: string
+  source_category: phase4_model_freeze
+  source_field: phase4/configs/model_<slot>_freeze.yaml:model_digest
+  transformation: hash_lookup
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Use the frozen model digest if available; placeholder digests are not acceptable in executable trial rows.
+quantization:
+  required: true
+  phase5_type: string
+  source_category: phase4_model_freeze
+  source_field: phase4/configs/model_<slot>_freeze.yaml:quantization
+  transformation: pass_through
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Must match the frozen quantization string for the selected model slot.
+backend:
+  required: true
+  phase5_type: string
+  source_category: phase4_model_freeze
+  source_field: phase4/configs/model_<slot>_freeze.yaml:runtime_backend
+  transformation: pass_through
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Must record the runtime backend frozen for the selected model slot.
+backend_version:
+  required: true
+  phase5_type: string
+  source_category: phase4_model_freeze
+  source_field: phase4/configs/model_<slot>_freeze.yaml:backend_version
+  transformation: pass_through
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Must record the exact frozen backend version string.
+ollama_version:
+  required: true
+  phase5_type: string
+  source_category: nullable
+  source_field: phase4/configs/model_<slot>_freeze.yaml:ollama_or_llamacpp_version or null
+  transformation: nullable
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: May be null when the frozen model record does not include Ollama or llama.cpp, otherwise use the frozen version string.
+density:
+  required: true
+  phase5_type: string
+  source_category: phase45_runtime
+  source_field: phase4_5 matrices density cell
+  transformation: constant
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Must be one of D1, D3, or D5 from the frozen density regime.
+metadata_surface_condition:
+  required: true
+  phase5_type: string
+  source_category: phase4_payload_reference
+  source_field: payload_reference_map.metadata_condition -> trial.metadata_surface_condition
+  transformation: rename
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Use the frozen phase5-compatible name and normalize to CLEAN, POISON_TD, or POISON_CA.
+attack_family:
+  required: true
+  phase5_type: string
+  source_category: phase4_payload_reference
+  source_field: payload_reference_map.attack_family -> trial.attack_family
+  transformation: enum_normalize
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Normalize to DIRECT_OVERRIDE, CROSS_CAPABILITY_ESCALATION, DATA_EXFILTRATION, or NONE only.
+defense_condition:
+  required: true
+  phase5_type: string
+  source_category: constant
+  source_field: BASELINE or IHR_SPCE
+  transformation: constant
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Dry-run scaffold defaults to BASELINE unless an explicit defense test is built.
+payload_id:
+  required: true
+  phase5_type: string
+  source_category: phase4_payload_reference
+  source_field: payload_reference_map payload identifier or matrix cell identifier
+  transformation: rename
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Must identify the provenance-linked payload reference used to populate the trial.
+phase1_payload_hash:
+  required: true
+  phase5_type: string
+  source_category: phase4_payload_reference
+  source_field: payload_reference_map.source_payload_hash -> trial.phase1_payload_hash
+  transformation: hash_lookup
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Must carry the frozen Phase 1 source payload hash.
+payload_hash:
+  required: true
+  phase5_type: string
+  source_category: phase4_payload_reference
+  source_field: payload_reference_map.adapted_payload_hash -> trial.payload_hash
+  transformation: hash_lookup
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Must carry the adapted payload hash that corresponds to the frozen reference map.
+adversarial_payload_present:
+  required: true
+  phase5_type: boolean
+  source_category: phase45_grader
+  source_field: grader or payload loader result
+  transformation: runtime_generated
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Must be boolean and align with whether a payload is attached to the trial.
+payload_condition:
+  required: true
+  phase5_type: string
+  source_category: phase4_payload_reference
+  source_field: payload_condition
+  transformation: enum_normalize
+  dry_run_allowed: true
+  official_phase5_required: true
+  validation_rule: Normalize to NONE or PHASE1_HASH_AUTHORIZED only.

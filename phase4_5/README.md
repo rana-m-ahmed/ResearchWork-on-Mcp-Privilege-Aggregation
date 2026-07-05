@@ -75,4 +75,4 @@ If the environment uses `python3`, use that instead.
 
 ## Current Readiness Status
 
-`LOCAL_PREFLIGHT_PASS`
+`SCHEMA_VALIDATION_PASS`
