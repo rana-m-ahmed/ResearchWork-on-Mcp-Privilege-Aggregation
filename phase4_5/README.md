@@ -75,4 +75,6 @@ If the environment uses `python3`, use that instead.
 
 ## Current Readiness Status
 
-`SCHEMA_VALIDATION_PASS`
+`REVISE_PHASE45`
+
+Reason: Kaggle smoke, Kaggle all-model loader smoke, quota feasibility, and external audit are still pending.
