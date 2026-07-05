@@ -1,15 +1,16 @@
-"""Estimate Kaggle runtime feasibility from available smoke metrics."""
+"""Estimate Kaggle runtime feasibility from authentic Phase 4.5B smoke metrics."""
 
 from __future__ import annotations
 
 import argparse
 import json
 from pathlib import Path
+import statistics
 
 from _phase45_utils import DRYRUN_KAGGLE_DIR, DRYRUN_LOADER_DIR, VALIDATION_DIR
 
 
-def load_metric_rows(path: Path) -> list[dict[str, object]]:
+def load_hardware_metrics(path: Path) -> list[dict[str, object]]:
     if not path.exists():
         return []
     rows = []
@@ -21,53 +22,80 @@ def load_metric_rows(path: Path) -> list[dict[str, object]]:
     return rows
 
 
-def collect_metric_files() -> list[Path]:
-    candidates: list[Path] = []
-    for directory in (DRYRUN_KAGGLE_DIR, DRYRUN_LOADER_DIR):
-        if directory.exists():
-            candidates.extend(sorted(directory.glob("*.jsonl")))
-            candidates.extend(sorted(directory.glob("*.json")))
-    return candidates
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description="Estimate Phase 5 Kaggle runtime feasibility")
     parser.add_argument("--report", default=str(VALIDATION_DIR / "phase45_kaggle_quota_feasibility_report.md"))
     args = parser.parse_args()
 
-    metric_files = collect_metric_files()
-    metric_rows = []
-    for path in metric_files:
-        metric_rows.extend(load_metric_rows(path))
+    # We specifically want the expanded smoke inference times
+    metrics_path = DRYRUN_KAGGLE_DIR / "hardware_metrics.jsonl"
+    metrics = load_hardware_metrics(metrics_path)
 
-    if not metric_rows:
+    report_path = Path(args.report)
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+
+    if not metrics:
         lines = [
             "# Phase 4.5 Kaggle Quota Feasibility Report",
             "",
             "- Status: `REVISE_PHASE45`",
-            "- Reason: `REVISE_PHASE45 until Kaggle smoke metrics are available.`",
-            "- Kaggle smoke metrics available: `false`",
+            "- Reason: `REVISE_PHASE45 until Kaggle authentic smoke metrics are available.`",
+            "- Kaggle authentic metrics available: `false`",
             "",
             "## Notes",
-            "- No Kaggle runtime measurements were found locally.",
+            "- No authentic Kaggle runtime measurements were found locally.",
             "- No runtime estimate was invented.",
-            "- This report remains provisional until Kaggle execution returns metrics to GitHub.",
+            "- This report remains provisional until the authentic Kaggle Phase 4.5B executor returns metrics to GitHub.",
         ]
-    else:
-        total_rows = len(metric_rows)
-        lines = [
-            "# Phase 4.5 Kaggle Quota Feasibility Report",
-            "",
-            "- Status: `PENDING_REVIEW`",
-            f"- Metric rows ingested: `{total_rows}`",
-            "",
-            "## Notes",
-            "- Kaggle metrics were found locally and can be summarized in a later review pass.",
-            "- No Phase 5 claim is made in this scaffold.",
-        ]
+        report_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        print("\n".join(lines))
+        return 0
 
-    report_path = Path(args.report)
-    report_path.parent.mkdir(parents=True, exist_ok=True)
+    inference_times = [m.get("inference_time_seconds", 0) for m in metrics if "inference_time_seconds" in m]
+    
+    if not inference_times:
+        print("Metrics found, but missing inference_time_seconds.")
+        return 0
+
+    mean_time = statistics.mean(inference_times)
+    p95_time = statistics.quantiles(inference_times, n=20)[18] if len(inference_times) > 1 else mean_time
+
+    core_trials = 5400 # 4 models * 3 densities * 3 metadata * 150 accepted trials
+    
+    # Calculate Phase 5 requirements
+    total_seconds_mean = core_trials * mean_time
+    total_hours_mean = total_seconds_mean / 3600
+    
+    total_seconds_p95 = core_trials * p95_time
+    total_hours_p95 = total_seconds_p95 / 3600
+
+    # Kaggle allows max 12 hours per GPU session
+    sessions_needed_mean = total_hours_mean / 11.0 # 11 hours safe buffer
+    
+    lines = [
+        "# Phase 4.5 Kaggle Quota Feasibility Report",
+        "",
+        "- Status: `PENDING_REVIEW`",
+        f"- Sample metric rows ingested: `{len(inference_times)}`",
+        "",
+        "## Real Timing Data",
+        f"- Mean trial inference time: `{mean_time:.2f}s`",
+        f"- P95 trial inference time: `{p95_time:.2f}s`",
+        "",
+        "## Phase 5 Core Trial Projections",
+        "- Estimated total core trials: `5,400`",
+        f"- Projected total runtime (mean): `{total_hours_mean:.2f} hours`",
+        f"- Projected total runtime (P95): `{total_hours_p95:.2f} hours`",
+        "",
+        "## Quota Strategy",
+        f"- Estimated Kaggle 12-hour sessions required: `{int(sessions_needed_mean) + 1}`",
+        "- Checkpointing is required. Trials must be sharded across sessions to avoid timeout loss.",
+        "",
+        "## Notes",
+        "- The above figures are calculated from the authentic Phase 4.5B Kaggle executor.",
+        "- No Phase 5 claim is made in this report.",
+    ]
+
     report_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print("\n".join(lines))
     return 0
