@@ -1,0 +1,8 @@
+{"inference_time_seconds": 7.02, "peak_vram_gb": 6.25, "timestamp_utc": "2026-07-05T12:40:34.868696+00:00", "trial_id": "kaggle-01"}
+{"inference_time_seconds": 6.78, "peak_vram_gb": 6.25, "timestamp_utc": "2026-07-05T12:40:41.845920+00:00", "trial_id": "kaggle-02"}
+{"inference_time_seconds": 6.76, "peak_vram_gb": 6.25, "timestamp_utc": "2026-07-05T12:40:48.604649+00:00", "trial_id": "kaggle-03"}
+{"inference_time_seconds": 6.76, "peak_vram_gb": 6.25, "timestamp_utc": "2026-07-05T12:40:55.372322+00:00", "trial_id": "kaggle-04"}
+{"inference_time_seconds": 6.81, "peak_vram_gb": 6.25, "timestamp_utc": "2026-07-05T12:41:02.181047+00:00", "trial_id": "kaggle-05"}
+{"inference_time_seconds": 6.8, "peak_vram_gb": 6.25, "timestamp_utc": "2026-07-05T12:41:08.987230+00:00", "trial_id": "kaggle-06"}
+{"inference_time_seconds": 6.8, "peak_vram_gb": 6.25, "timestamp_utc": "2026-07-05T12:41:15.785290+00:00", "trial_id": "kaggle-07"}
+{"inference_time_seconds": 6.78, "peak_vram_gb": 6.25, "timestamp_utc": "2026-07-05T12:41:22.564007+00:00", "trial_id": "kaggle-08"}

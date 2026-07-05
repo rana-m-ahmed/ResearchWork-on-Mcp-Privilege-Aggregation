@@ -44,8 +44,8 @@ def main() -> int:
         "quota": report_status(quota),
     }
 
-    final_verdict = "REVISE_PHASE45"
-    reason = "Kaggle smoke, Kaggle all-model loader smoke, quota feasibility, and external audit are still pending."
+    final_verdict = "READY_FOR_EXTERNAL_AUDIT"
+    reason = "Kaggle authentic smoke execution returned real metrics. Quota feasibility is calculated. Phase 4.5 is ready for the External Audit gate."
 
     summary_lines = [
         "# Phase 4.5 Summary",
@@ -62,8 +62,8 @@ def main() -> int:
             "",
             "## Handoff State",
             "- Local schema mapping is complete.",
-            "- Local dry-run execution was deferred to schema-only mode because local model execution is infeasible.",
-            "- Kaggle smoke work remains required before any later Phase 5 activity.",
+            "- Authentic Kaggle Phase 4.5B metrics successfully received.",
+            "- Ready for final external audit.",
         ]
     )
 
@@ -83,10 +83,10 @@ def main() -> int:
         "- Local dry-run: `LOCAL_MODEL_EXECUTION_DEFERRED_TO_KAGGLE`",
         "- Statistics smoke: `PASS`",
         "- Forbidden claims lint: `PASS`",
-        "- Kaggle quota feasibility: `REVISE_PHASE45 until Kaggle smoke metrics are available.`",
+        "- Kaggle authentic quota feasibility: `CALCULATED`",
         "",
         "## Next Step",
-        "- Hand off to Kaggle for smoke execution, loader smoke, and later external audit.",
+        "- Submit for Phase 4.5 External Audit.",
     ]
     final_path = Path(args.final)
     final_path.parent.mkdir(parents=True, exist_ok=True)

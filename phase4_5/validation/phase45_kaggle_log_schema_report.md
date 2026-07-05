@@ -1,7 +1,7 @@
 # Phase 4.5 Log Schema Report
 
 - Input: `phase4_5\dryrun_results\kaggle_smoke\trials.jsonl`
-- Row count: `24`
+- Row count: `8`
 - Allow empty: `False`
 - Internal status: `SCHEMA_VALIDATION_PASS`
 - Verdict: `PASS`

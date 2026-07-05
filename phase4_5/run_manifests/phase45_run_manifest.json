@@ -1,13 +1,10 @@
 {
   "counts_for_phase5": false,
   "dry_run": true,
-  "git_commit_hash": "dd0cc9288a39001b9d744c90bd071493a1b1de89",
+  "git_commit_hash": "3a92c2d7e2987290b801cee95ae3c506254ff8f6",
   "kaggle_matrix_rows": 8,
-  "loader_rows": 4,
-  "local_matrix_rows": 24,
   "no_phase5_claims": true,
   "official_trial": false,
   "phase": "phase4_5",
-  "publication_evidence": false,
-  "timestamp_utc": "2026-07-05T11:49:40.396181+00:00"
+  "timestamp_utc": "2026-07-05T12:41:22.864137+00:00"
 }

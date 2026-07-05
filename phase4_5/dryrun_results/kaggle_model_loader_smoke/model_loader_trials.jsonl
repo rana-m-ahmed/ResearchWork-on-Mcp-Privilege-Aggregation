@@ -1,0 +1,4 @@
+{"backend_drift": "", "exact_model_identifier": "Qwen/Qwen2.5-7B-Instruct", "model_slot": "M1", "notes": "Model loaded perfectly in FP16.", "status": "LOAD_SUCCESS"}
+{"backend_drift": "", "exact_model_identifier": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B", "model_slot": "M2", "notes": "Model loaded perfectly in FP16.", "status": "LOAD_SUCCESS"}
+{"backend_drift": "", "exact_model_identifier": "mistralai/Mistral-7B-Instruct-v0.3", "model_slot": "M3", "notes": "Model loaded perfectly in FP16.", "status": "LOAD_SUCCESS"}
+{"backend_drift": "", "exact_model_identifier": "microsoft/Phi-3.5-mini-instruct", "model_slot": "M4", "notes": "type object 'DynamicCache' has no attribute 'from_legacy_cache'", "status": "LOAD_FAILURE"}
