@@ -61,7 +61,10 @@ def current_utc() -> str:
 
 
 def record_git_commit() -> str:
-    return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, text=True).strip()
+    try:
+        return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, text=True).strip()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return "UNKNOWN_KAGGLE_COMMIT"
 
 
 def verify_environment_lock() -> dict[str, str]:
