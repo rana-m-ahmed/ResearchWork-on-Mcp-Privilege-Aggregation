@@ -1,0 +1,13 @@
+{
+  "canonical_count": 223,
+  "csv_sha256": "7b51f6affdd12f7a29440223f29ac8ee606b9a391865c5ba3e3879bf371319ad",
+  "duplicate_count": 11,
+  "execution_uuid": "6eaf9a44-96e3-4de3-b37d-70cea0e66df9",
+  "generator_version": "1.0.0",
+  "ledger_sha256": "f14cfd12ec249fbd5af192aa0997147d5843a8854fe918b8906f65630bab3e90",
+  "payload_count": 234,
+  "phase25_ledger_sha256": "f14cfd12ec249fbd5af192aa0997147d5843a8854fe918b8906f65630bab3e90",
+  "repository_commit": "4058d284b44fa2692262fc6ce5660efaf76f5852",
+  "schema_version": "1.0.0",
+  "timestamp": "2026-07-06T20:02:31.993482+00:00"
+}
