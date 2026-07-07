@@ -25,5 +25,9 @@ jobs:
       - name: Freeze guard positive path
         run: python phase5/scripts/check_phase5_frozen_paths.py --changed phase5/implementation/reports/P01_implementation_report.md
       - name: Freeze guard negative fixture
-        run: python phase5/scripts/check_phase5_frozen_paths.py --changed phase4/configs/phase5_schema_freeze.json
-
+        run: |
+          if python phase5/scripts/check_phase5_frozen_paths.py --changed phase4/configs/phase5_schema_freeze.json; then
+            echo "phase5 frozen path guard unexpectedly passed" >&2
+            exit 1
+          fi
+          echo "phase5 frozen path guard: expected rejection observed"

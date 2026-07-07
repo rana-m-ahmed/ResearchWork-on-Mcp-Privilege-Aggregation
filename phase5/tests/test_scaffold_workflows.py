@@ -38,6 +38,7 @@ def test_evidence_integrity_workflow_targets_checkpoint_manifest() -> None:
     text = _workflow_text("phase5-evidence-integrity.yml").read_text(encoding="utf-8")
     assert "P01_checkpoint.json" in text
     assert "P01_implementation_report.md" not in text
+    assert "expected rejection observed" in text
 
 
 def test_checkpoint_manifest_schema_is_present() -> None:
@@ -80,3 +81,11 @@ def test_checkpoint_manifest_missing_key_fails_closed(tmp_path: Path) -> None:
         ],
     )
     assert missing == ["workload", "run_id"]
+
+
+def test_negative_fixture_workflows_assert_rejection() -> None:
+    freeze_guard = _workflow_text("phase5-freeze-guard.yml").read_text(encoding="utf-8")
+    evidence = _workflow_text("phase5-evidence-integrity.yml").read_text(encoding="utf-8")
+
+    assert "phase5 frozen path guard unexpectedly passed" in freeze_guard
+    assert "phase5 evidence staging guard unexpectedly passed" in evidence
