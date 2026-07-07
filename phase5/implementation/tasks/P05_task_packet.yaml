@@ -1,0 +1,67 @@
+task_id: P05
+title: Batch Partition, Resume Resolver, and Kaggle Run Planner
+parent_requirements:
+  - Phase5_Revised_Execution_Plan_v3_2.md
+  - Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+  - P00 repository reality audit
+allowed_paths:
+  - phase5/queues/batch_partitioner.py
+  - phase5/queues/pending_resolver.py
+  - phase5/kaggle/
+  - phase5/cli.py
+  - phase5/manifests/
+  - phase5/validation/
+  - phase5/tests/
+  - phase5/implementation/tasks/
+  - phase5/implementation/reports/
+forbidden_paths:
+  - phase4/
+  - phase4_5/
+  - client/
+  - server/
+  - docs/
+  - configs/
+  - schemas/
+  - reproducibility/
+  - prompts/
+inputs:
+  - docs/Phase5_Revised_Execution_Plan_v3_2.md
+  - docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+  - phase4_5/validation/phase45_kaggle_quota_feasibility_report.md
+  - phase4_5/dryrun_results/kaggle_smoke/hardware_metrics.jsonl
+  - phase4_5/dryrun_results/kaggle_smoke/invalid_trials.jsonl
+  - phase4_5/dryrun_results/kaggle_smoke/failures.jsonl
+  - phase4_5/dryrun_results/kaggle_model_loader_smoke/model_loader_outputs.jsonl
+  - phase4_5/dryrun_results/kaggle_model_loader_smoke/model_loader_trials.jsonl
+  - phase4_5/configs/phase45_checkpoint_resume.yaml
+deliverables:
+  - deterministic contiguous batch partitioner
+  - immutable batch partition manifest
+  - pending/accepted/orphan resume resolver
+  - Kaggle run planner CLI and schemas
+  - batch partition manifest outputs
+  - Kaggle run plan JSON and Markdown outputs
+  - P05 task packet and implementation report
+  - positive, negative, invariant, and fault-path tests
+required_tests:
+  - partition preserves all rows exactly once
+  - same input produces identical manifest
+  - no queue mixing
+  - changed partition after freeze rejected
+  - accepted target not selected
+  - orphan receives next attempt index
+  - divergent checkpoint histories fail
+  - timing formula unit tests
+  - zero or invalid timing data fails closed
+  - scenario tests for one and multiple sessions per model
+acceptance_criteria:
+  - Partition manifest covers exactly 10,200 frozen targets.
+  - Resume is idempotent and duplicate-safe.
+  - Run planner consumes real Phase 4.5 evidence.
+  - No outcome field influences planning.
+commit_message: phase5(P05): add deterministic batches resume and run planner
+notes:
+  - The task is operational and must not rebalance the scientific queue order or invent missing frozen values.
+  - Phase 4 and Phase 4.5 artifacts remain read-only.

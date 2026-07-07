@@ -1,0 +1,142 @@
+{
+  "task_id": "P05",
+  "status": "PASS",
+  "generated_utc": "2026-07-07T20:45:44.6773879Z",
+  "summary": "Implemented deterministic batch partitioning, fail-closed resume resolution, and real-evidence Kaggle run planning with immutable outputs.",
+  "files_changed": [
+    "phase5/cli.py",
+    "phase5/kaggle/__init__.py",
+    "phase5/kaggle/run_planner.py",
+    "phase5/queues/__init__.py",
+    "phase5/queues/batch_partitioner.py",
+    "phase5/queues/pending_resolver.py",
+    "phase5/tests/test_cli_contract.py",
+    "phase5/tests/test_scaffold_imports.py",
+    "phase5/tests/test_batch_partition_and_planner.py",
+    "phase5/manifests/batch_partition_manifest.json",
+    "phase5/manifests/batch_partition_manifest.md",
+    "phase5/validation/kaggle_run_plan.json",
+    "phase5/validation/kaggle_run_plan.md",
+    "phase5/implementation/tasks/P05_task_packet.yaml",
+    "phase5/implementation/reports/P05_implementation_report.md",
+    "phase5/implementation/reports/P05_implementation_report.json"
+  ],
+  "frozen_inputs_consumed": [
+    {
+      "path": "docs/Phase5_Revised_Execution_Plan_v3_2.md",
+      "sha256": "DBCB49047AF17ED3C179D80F3BE0DD0536CD57015473791CF21A5FEF3A0D3953"
+    },
+    {
+      "path": "docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md",
+      "sha256": "5C9CCD4A0B93E894FE1DC0DF1ADC311AA34C59C3CBBC524D85523C612939AAB0"
+    },
+    {
+      "path": "phase5/configs/upstream_artifact_registry.json",
+      "sha256": "332DD39DEBD845E7CC222131EDDD058AB45D64BB8856BDFAA971055ACEC50E7B"
+    },
+    {
+      "path": "phase4_5/validation/phase45_kaggle_quota_feasibility_report.md",
+      "sha256": "B9C7BCB0984A7A8A703FDEF6D7AA2B786B13A8970BEB0E2615B0CEA4CF4239B5"
+    },
+    {
+      "path": "phase4_5/dryrun_results/kaggle_smoke/hardware_metrics.jsonl",
+      "sha256": "A4695CE5194C2B29D3F01D190969C7FBE1AAF25B8B6A529DFA76B18A085C2BB4"
+    },
+    {
+      "path": "phase4_5/dryrun_results/kaggle_smoke/invalid_trials.jsonl",
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "path": "phase4_5/dryrun_results/kaggle_smoke/failures.jsonl",
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "path": "phase4_5/dryrun_results/kaggle_model_loader_smoke/model_loader_outputs.jsonl",
+      "sha256": "22E899E07862DF949BBCAFCF3EFEF1D5980B7B2F1979B3C5729D979C7E6C48E6"
+    },
+    {
+      "path": "phase4_5/dryrun_results/kaggle_model_loader_smoke/model_loader_trials.jsonl",
+      "sha256": "5723E739080E302B028F533AEAFA960A8EEC5B72C8EC9509BCD4E251868C8EB9"
+    },
+    {
+      "path": "phase4_5/configs/phase45_checkpoint_resume.yaml",
+      "sha256": "5179194DDEFDA724865DD5C25DBEFD1966C9B5988EBB383BF8ABC162CD01CC92"
+    }
+  ],
+  "validation_outputs": [
+    "phase5/manifests/batch_partition_manifest.json",
+    "phase5/manifests/batch_partition_manifest.md",
+    "phase5/validation/kaggle_run_plan.json",
+    "phase5/validation/kaggle_run_plan.md"
+  ],
+  "run_plan_summary": {
+    "dataset_version": "P5-DV-1.0.0-A7C91E42",
+    "batch_size": 50,
+    "total_targets": 10200,
+    "total_batches": 204,
+    "projected_total_sessions": 4,
+    "projected_total_gpu_hours": 20.36,
+    "safe_session_hours": 7.5,
+    "checkpoint_frequency_trials": 6,
+    "p95_trial_seconds": 7.14,
+    "invalid_attempt_rate": 0.0
+  },
+  "batch_manifest_summary": {
+    "total_targets": 10200,
+    "total_batches": 204,
+    "batch_size": 50,
+    "total_batches_per_model": 51
+  },
+  "validation_results": [
+    {
+      "command": "python -m phase5 plan-kaggle-runs --timing-report phase4_5/validation/phase45_kaggle_quota_feasibility_report.md --safe-session-hours 7.5 --output phase5/validation/kaggle_run_plan.json",
+      "result": "PASS"
+    },
+    {
+      "command": "python -m pytest phase5/tests -q",
+      "result": "96 passed, 2 warnings"
+    },
+    {
+      "command": "python -m compileall phase5",
+      "result": "PASS"
+    },
+    {
+      "command": "python phase5/scripts/check_phase5_frozen_paths.py --changed phase5/cli.py phase5/kaggle/__init__.py phase5/kaggle/run_planner.py phase5/queues/__init__.py phase5/queues/batch_partitioner.py phase5/queues/pending_resolver.py phase5/tests/test_cli_contract.py phase5/tests/test_scaffold_imports.py phase5/tests/test_batch_partition_and_planner.py phase5/manifests/batch_partition_manifest.json phase5/manifests/batch_partition_manifest.md phase5/validation/kaggle_run_plan.json phase5/validation/kaggle_run_plan.md phase5/implementation/tasks/P05_task_packet.yaml phase5/implementation/reports/P05_implementation_report.md phase5/implementation/reports/P05_implementation_report.json",
+      "result": "phase5 frozen path guard: PASS"
+    },
+    {
+      "command": "python phase5/scripts/lint_phase5_secrets.py",
+      "result": "phase5 secret lint: PASS"
+    },
+    {
+      "command": "python phase5/scripts/check_phase5_instructions.py",
+      "result": "phase5 instruction hierarchy: PASS"
+    },
+    {
+      "command": "python phase5/scripts/check_phase5_evidence_staging.py",
+      "result": "phase5 evidence staging guard: PASS"
+    },
+    {
+      "command": "pytest phase5/tests/test_protocol_lint.py -q",
+      "result": "4 passed, 2 warnings"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS with line-ending warnings only"
+    }
+  ],
+  "fault_tests": [
+    "Immutable manifest rejects changed content",
+    "Accepted target is not re-selected for pending resolution",
+    "Orphan rows receive the next attempt index",
+    "Divergent checkpoint histories fail closed",
+    "Empty timing evidence fails closed",
+    "Invalid timing evidence fails closed",
+    "Exclusive P95 helper fails closed on empty input",
+    "One-session and multi-session scenario planning tests pass"
+  ],
+  "findings": [
+    "M4 loader smoke reported LOAD_FAILURE; recorded as an operational note only"
+  ],
+  "remaining_blockers": []
+}

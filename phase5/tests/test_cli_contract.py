@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import subprocess
 import sys
+from pathlib import Path
 
 from phase5.cli import PLANNED_COMMANDS, build_parser
 from phase5.domain import BatchId, DefenseCondition, Density, MetadataSurfaceCondition, ModelSlot, TrialPhase
@@ -61,3 +62,29 @@ def test_module_help_and_not_implemented_command() -> None:
     )
     assert result.returncode == 90
     assert "NOT_IMPLEMENTED" in result.stderr
+
+
+def test_plan_kaggle_runs_cli_writes_outputs(tmp_path: Path) -> None:
+    output = tmp_path / "kaggle_run_plan.json"
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "phase5",
+            "plan-kaggle-runs",
+            "--timing-report",
+            "phase4_5/validation/phase45_kaggle_quota_feasibility_report.md",
+            "--safe-session-hours",
+            "7.5",
+            "--output",
+            str(output),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0
+    assert output.is_file()
+    assert output.with_suffix(".md").is_file()
+    assert (Path("phase5/manifests/batch_partition_manifest.json")).is_file()

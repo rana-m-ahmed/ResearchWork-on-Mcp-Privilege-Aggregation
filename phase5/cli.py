@@ -9,6 +9,7 @@ from typing import Sequence
 
 from . import __version__
 from .gate0 import run_gate0
+from .kaggle import plan_kaggle_runs
 from .domain.errors import ExitCode, NotImplementedCommandError, Phase5Error
 
 
@@ -29,7 +30,7 @@ PLANNED_COMMANDS = (
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="phase5",
-        description="Phase 5 scaffold CLI. Gate 0 is implemented; other commands remain not implemented.",
+        description="Phase 5 scaffold CLI. Gate 0 and Kaggle run planning are implemented; other commands remain not implemented.",
     )
     parser.add_argument("--version", action="version", version=f"phase5 {__version__}")
 
@@ -121,6 +122,23 @@ def main(argv: Sequence[str] | None = None) -> int:
             return int(ExitCode.SUCCESS)
         except Phase5Error as exc:
             print(f"GATE0_FAILURE: {exc}", file=sys.stderr)
+            return int(exc.exit_code)
+
+    if args.command == "plan-kaggle-runs":
+        try:
+            root = Path.cwd()
+            timing_report = Path(args.timing_report) if getattr(args, "timing_report", None) else None
+            safe_session_hours = getattr(args, "safe_session_hours", None)
+            output = Path(args.output) if getattr(args, "output", None) else None
+            plan_kaggle_runs(
+                root=root,
+                timing_report_path=timing_report,
+                safe_session_hours=safe_session_hours,
+                output_path=output,
+            )
+            return int(ExitCode.SUCCESS)
+        except Phase5Error as exc:
+            print(f"PLAN_FAILURE: {exc}", file=sys.stderr)
             return int(exc.exit_code)
 
     try:

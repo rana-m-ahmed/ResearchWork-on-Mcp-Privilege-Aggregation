@@ -12,3 +12,6 @@ def test_phase5_import_smoke() -> None:
 def test_required_phase5_packages_exist() -> None:
     assert (Path("phase5") / "__init__.py").is_file()
     assert (Path("phase5") / "guards.py").is_file()
+    assert (Path("phase5") / "queues" / "batch_partitioner.py").is_file()
+    assert (Path("phase5") / "queues" / "pending_resolver.py").is_file()
+    assert (Path("phase5") / "kaggle" / "run_planner.py").is_file()
