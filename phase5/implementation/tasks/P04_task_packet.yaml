@@ -1,0 +1,57 @@
+task_id: P04
+title: Frozen Queue Loading and Exact Order Validation
+parent_requirements:
+  - Phase5_Revised_Execution_Plan_v3_2.md
+  - Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+  - P00 repository reality audit
+allowed_paths:
+  - phase5/queues/
+  - phase5/tests/
+  - phase5/implementation/tasks/
+  - phase5/implementation/reports/
+forbidden_paths:
+  - phase4/
+  - phase4_5/
+  - client/
+  - server/
+  - docs/
+  - configs/
+  - schemas/
+  - reproducibility/
+  - prompts/
+inputs:
+  - phase5/configs/upstream_artifact_registry.json
+  - phase4/frozen_bundle/cryptographic_lock_manifest.json
+  - phase4/frozen_bundle/phase5_execution_manifest.json
+  - phase4/frozen_bundle/trial_order_core.csv
+  - phase4/frozen_bundle/trial_order_defense.csv
+  - phase4/frozen_bundle/trial_order_utility.csv
+  - phase4/configs/defense_config_freeze.yaml
+  - phase4/configs/payload_reference_map.json
+deliverables:
+  - read-only frozen queue loaders
+  - queue-domain adapters and bundle iterator
+  - queue-separation and order-validation report
+  - P04 implementation report
+  - task packet and regression tests
+required_tests:
+  - exact core queue load and hash verification
+  - defense and utility header-only validation
+  - no concatenation
+  - no reorder
+  - duplicate identity rejection
+  - malformed or missing field rejection
+  - payload reference mismatch rejection
+  - utility semantics and D1 structural checks
+  - deterministic iteration
+  - deterministic report rendering
+acceptance_criteria:
+  - The frozen queue files are loaded read-only and validated against the registry.
+  - Queue boundaries remain separate through the public API.
+  - Order is preserved exactly as frozen in the queue files.
+  - Validation fails closed on any missing, ambiguous, or hash-invalid frozen input.
+  - Phase 4 and Phase 4.5 artifacts remain unmodified.
+commit_message: phase5(P04): load and verify frozen trial queues
+notes:
+  - The current frozen repository state records a populated core queue and header-only defense and utility queues; the loader must honor the frozen file contracts exactly and must not infer a different queue shape from prose.

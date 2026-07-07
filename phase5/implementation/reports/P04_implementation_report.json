@@ -1,0 +1,79 @@
+{
+  "blocks": [],
+  "commands_run": [
+    "pytest phase5/tests/test_queues.py -q",
+    "python -m compileall phase5/queues phase5/tests/test_queues.py",
+    "pytest phase5/tests -q",
+    "python phase5/scripts/check_phase5_frozen_paths.py --changed phase5/queues/__init__.py phase5/queues/frozen_queue_loader.py phase5/tests/test_queues.py phase5/implementation/tasks/P04_task_packet.yaml phase5/implementation/reports/P04_queue_separation_and_order_validation.md phase5/implementation/reports/P04_queue_separation_and_order_validation.json phase5/implementation/reports/P04_implementation_report.md phase5/implementation/reports/P04_implementation_report.json",
+    "python phase5/scripts/lint_phase5_secrets.py",
+    "python -c \"from phase5.queues import validate_frozen_queue_bundle; from pathlib import Path; validate_frozen_queue_bundle(report_dir=Path('phase5/implementation/reports'))\""
+  ],
+  "fault_and_negative_tests": [
+    "Duplicate core-row identity rejected",
+    "Missing or malformed queue field rejected",
+    "Payload reference mismatch rejected",
+    "Hash mismatch rejected",
+    "No concatenation test passed",
+    "No reorder test passed",
+    "Utility-row semantic checks passed",
+    "D1 structural checks passed"
+  ],
+  "frozen_inputs_consumed": [
+    {
+      "path": "phase5/configs/upstream_artifact_registry.json",
+      "sha256": "332dd39debd845e7cc222131eddd058ab45d64bb8856bdfaa971055acec50e7b"
+    },
+    {
+      "path": "phase4/frozen_bundle/cryptographic_lock_manifest.json",
+      "sha256": "09122acabc4ea034aae2ea43adfbfb9b6b370e926db1222861d11d37e87cd11f"
+    },
+    {
+      "path": "phase4/frozen_bundle/phase5_execution_manifest.json",
+      "sha256": "290a397e795a40dc97f497ada3a6c42c1d5ffdec2bdeb03046565996c2b350c2"
+    },
+    {
+      "path": "phase4/frozen_bundle/trial_order_core.csv",
+      "sha256": "2c0e96bd07245b95021c6521b7730db645acbd7686af6bb8127e7d36f3fb426f"
+    },
+    {
+      "path": "phase4/frozen_bundle/trial_order_defense.csv",
+      "sha256": "cd483dcece127f48ff911239dfc1ee68c2696aaaec384a495c617d76cb53d182"
+    },
+    {
+      "path": "phase4/frozen_bundle/trial_order_utility.csv",
+      "sha256": "66f088402c2a494a12fadd542477c6f1463583508e492217816e9fca15f79de7"
+    },
+    {
+      "path": "phase4/configs/defense_config_freeze.yaml",
+      "sha256": "5934137bd5e741b1ce700879691040d215648b409316c3cf09bc559b098d47a8"
+    },
+    {
+      "path": "phase4/configs/payload_reference_map.json",
+      "sha256": "a14fb6217f7484135c71530cf2521fd149b35b5e60f73a8340fdef0adbaebafe"
+    }
+  ],
+  "queue_report_paths": [
+    "phase5/implementation/reports/P04_queue_separation_and_order_validation.md",
+    "phase5/implementation/reports/P04_queue_separation_and_order_validation.json"
+  ],
+  "status": "PASS",
+  "summary": "Implemented read-only frozen queue loaders with exact queue separation, hash verification, deterministic iteration, and regression coverage.",
+  "tests_run": [
+    {
+      "name": "phase5/tests/test_queues.py",
+      "result": "10 passed, 2 warnings"
+    },
+    {
+      "name": "phase5/tests",
+      "result": "88 passed, 2 warnings"
+    },
+    {
+      "name": "frozen-path guard",
+      "result": "PASS"
+    },
+    {
+      "name": "secret lint",
+      "result": "PASS"
+    }
+  ]
+}
