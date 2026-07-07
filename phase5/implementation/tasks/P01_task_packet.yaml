@@ -1,0 +1,71 @@
+task_id: P01
+title: Codex Governance, Instructions, Task Infrastructure, and CI Scaffold
+parent_requirements:
+  - Phase5_Revised_Execution_Plan_v3_2.md
+  - Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+  - P00 repository reality audit
+allowed_paths:
+  - AGENTS.md
+  - .codex/skills/phase5-verified-implementation/
+  - .github/workflows/phase5-source-ci.yml
+  - .github/workflows/phase5-freeze-guard.yml
+  - .github/workflows/phase5-evidence-integrity.yml
+  - phase5/AGENTS.md
+  - phase5/runtime/AGENTS.md
+  - phase5/kaggle/AGENTS.md
+  - phase5/scripts/AGENTS.md
+  - phase5/tests/AGENTS.md
+  - phase5/implementation/
+  - phase5/__init__.py
+  - phase5/guards.py
+  - phase5/runtime/__init__.py
+  - phase5/kaggle/__init__.py
+  - phase5/scripts/__init__.py
+  - phase5/scripts/*.py
+  - phase5/tests/__init__.py
+  - phase5/tests/*.py
+  - phase5/implementation/prompts/
+  - phase5/implementation/tasks/
+  - phase5/implementation/reports/
+forbidden_paths:
+  - phase4/
+  - phase4_5/
+  - client/
+  - server/
+  - docs/
+  - configs/
+  - schemas/
+  - reproducibility/
+  - prompts/
+inputs:
+  - docs/Phase5_Revised_Execution_Plan_v3_2.md
+  - docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+deliverables:
+  - root and subtree AGENTS files
+  - reusable Phase 5 Codex skill
+  - task packet and report templates
+  - minimal Phase 5 package skeleton
+  - frozen-path guard
+  - forbidden-analysis lint hook
+  - CI scaffold workflows
+required_tests:
+  - package import smoke test
+  - instruction hierarchy test
+  - workflow YAML parse test
+  - guardrail unit tests
+required_fault_tests:
+  - frozen path mutation rejected
+  - source staging rejected by evidence guard
+  - secret pattern rejected
+  - forbidden-analysis phrase rejected
+acceptance_criteria:
+  - AGENTS hierarchy exists and is internally consistent
+  - phase5 imports from the repository root
+  - guard scripts fail closed
+  - workflow files parse as valid YAML
+  - no frozen artifact is modified
+commit_message: phase5(P01): add governance and verified task scaffold
+dependencies:
+  - P00

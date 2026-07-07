@@ -1,0 +1,49 @@
+name: phase5-source-ci
+
+on:
+  push:
+    paths:
+      - "AGENTS.md"
+      - ".codex/skills/phase5-verified-implementation/**"
+      - ".github/workflows/phase5-source-ci.yml"
+      - ".github/workflows/phase5-freeze-guard.yml"
+      - ".github/workflows/phase5-evidence-integrity.yml"
+      - "phase5/**"
+  pull_request:
+    paths:
+      - "AGENTS.md"
+      - ".codex/skills/phase5-verified-implementation/**"
+      - ".github/workflows/phase5-source-ci.yml"
+      - ".github/workflows/phase5-freeze-guard.yml"
+      - ".github/workflows/phase5-evidence-integrity.yml"
+      - "phase5/**"
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependencies
+        run: python -m pip install --upgrade pip pyyaml pytest
+      - name: Type and import smoke
+        run: python -m compileall phase5
+      - name: Instruction hierarchy
+        run: python phase5/scripts/check_phase5_instructions.py
+      - name: Unit tests
+        run: python -m pytest phase5/tests
+      - name: Forbidden analysis lint
+        run: python phase5/scripts/lint_phase5_forbidden_analysis.py --root phase5
+      - name: Secret lint
+        run: python phase5/scripts/lint_phase5_secrets.py --root phase5
+      - name: Workflow syntax parse
+        run: |
+          python - <<'PY'
+          import pathlib
+          import yaml
+          for path in pathlib.Path(".github/workflows").glob("phase5-*.yml"):
+              yaml.safe_load(path.read_text(encoding="utf-8"))
+          print("workflow syntax: PASS")
+          PY

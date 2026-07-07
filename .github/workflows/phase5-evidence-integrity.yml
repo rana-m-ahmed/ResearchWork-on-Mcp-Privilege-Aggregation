@@ -1,0 +1,24 @@
+name: phase5-evidence-integrity
+
+on:
+  push:
+    paths:
+      - "phase5/implementation/**"
+      - ".github/workflows/phase5-evidence-integrity.yml"
+  pull_request:
+    paths:
+      - "phase5/implementation/**"
+      - ".github/workflows/phase5-evidence-integrity.yml"
+
+jobs:
+  evidence_integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Evidence staging positive path
+        run: python phase5/scripts/check_phase5_evidence_staging.py --staged phase5/implementation/reports/P01_implementation_report.md
+      - name: Evidence staging negative fixture
+        run: python phase5/scripts/check_phase5_evidence_staging.py --staged client/orchestrator.py
