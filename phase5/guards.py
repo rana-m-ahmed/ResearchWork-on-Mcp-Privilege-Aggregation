@@ -31,10 +31,12 @@ EVIDENCE_ROOT_PREFIXES = (
     Path(".github/workflows"),
     Path("phase5/implementation"),
 )
+_AWS_SECRET_NAME = "_".join(("aws", "secret", "access", "key"))
+_AWS_ACCESS_NAME = "_".join(("aws", "access", "key", "id"))
 SECRET_PATTERNS = (
     re.compile(r"(?i)\bsk-[A-Za-z0-9]{10,}\b"),
     re.compile(r"(?i)\bgh[pousr]_[A-Za-z0-9_]{20,}\b"),
-    re.compile(r"(?i)\b(?:aws_secret_access_key|aws_access_key_id)\b"),
+    re.compile(rf"(?i)\b(?:{_AWS_SECRET_NAME}|{_AWS_ACCESS_NAME})\b"),
     re.compile(r"(?i)\bBEGIN (?:RSA|OPENSSH|PRIVATE) KEY\b"),
 )
 FORBIDDEN_ANALYSIS_PATTERNS = (

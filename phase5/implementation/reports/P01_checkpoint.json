@@ -1,0 +1,18 @@
+{
+  "dataset_version": "<pending>",
+  "model_slot": "<pending>",
+  "workload": "<pending>",
+  "run_id": "<pending>",
+  "batch_id": "<pending>",
+  "source_commit": "<pending>",
+  "phase4_lock_hash": "<pending>",
+  "phase45_go_hash": "<pending>",
+  "expected_remote_head_before_push": "<pending>",
+  "accepted_finalized_count": 0,
+  "invalid_attempt_count": 0,
+  "orphan_attempt_count": 0,
+  "batch_manifest_sha256": "<pending>",
+  "evidence_index_sha256": "<pending>",
+  "session_seal_closed": false,
+  "no_more_official_execution_in_session": false
+}

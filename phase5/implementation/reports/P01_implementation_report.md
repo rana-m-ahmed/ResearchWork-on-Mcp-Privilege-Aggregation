@@ -67,8 +67,8 @@
 
 - Frozen-path guard rejected `phase4/configs/phase5_schema_freeze.json`.
 - Evidence-staging guard rejected `client/orchestrator.py`.
-- Secret lint rejected a secret-like token string.
-- Forbidden-analysis lint rejected `p-values and confidence intervals`.
+- Secret lint rejected a redacted token fixture.
+- Forbidden-analysis lint rejected a redacted analysis fixture.
 - CLI guard script returned a non-zero exit code for a frozen-path violation.
 
 ## Remaining Blockers

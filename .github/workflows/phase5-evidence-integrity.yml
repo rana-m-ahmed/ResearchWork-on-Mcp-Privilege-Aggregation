@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Evidence staging positive path
-        run: python phase5/scripts/check_phase5_evidence_staging.py --staged phase5/implementation/reports/P01_implementation_report.md
+      - name: Checkpoint manifest validation
+        run: python -c "from pathlib import Path; from phase5.guards import validate_report_json; required=['dataset_version','model_slot','workload','run_id','batch_id','source_commit','phase4_lock_hash','phase45_go_hash','expected_remote_head_before_push','accepted_finalized_count','invalid_attempt_count','orphan_attempt_count','batch_manifest_sha256','evidence_index_sha256','session_seal_closed','no_more_official_execution_in_session']; issues=validate_report_json(Path('phase5/implementation/reports/P01_checkpoint.json'), required); raise SystemExit(1 if issues else 0)"
       - name: Evidence staging negative fixture
         run: python phase5/scripts/check_phase5_evidence_staging.py --staged client/orchestrator.py

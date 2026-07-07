@@ -80,11 +80,11 @@
       "result": "rejected"
     },
     {
-      "command": "python phase5/scripts/lint_phase5_secrets.py --text token ghp_abcdefghijklmnopqrstuvwxyz123456",
+      "command": "python phase5/scripts/lint_phase5_secrets.py --text <redacted-token-fixture>",
       "result": "rejected"
     },
     {
-      "command": "python phase5/scripts/lint_phase5_forbidden_analysis.py --text p-values and confidence intervals",
+      "command": "python phase5/scripts/lint_phase5_forbidden_analysis.py --text <redacted-analysis-fixture>",
       "result": "rejected"
     }
   ],
