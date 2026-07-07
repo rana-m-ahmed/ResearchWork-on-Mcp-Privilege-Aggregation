@@ -36,13 +36,13 @@
                                                          "status":  "FOUND_VERIFIED",
                                                          "notes":  "Exact repository file found."
                                                      },
-                                                     {
-                                                         "label":  "Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md",
-                                                         "path":  "docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md",
-                                                         "sha256":  "57FCC7A86C0BF56EAFA31F092F6E054B266871BDF36AD0AC7335DFA7B4888025",
-                                                         "status":  "FOUND_VERIFIED",
-                                                         "notes":  "Exact repository file found; title normalized to Version 1.1.0."
-                                                     }
+                                                         {
+                                                             "label":  "Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md",
+                                                             "path":  "docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md",
+                                                             "sha256":  "5C9CCD4A0B93E894FE1DC0DF1ADC311AA34C59C3CBBC524D85523C612939AAB0",
+                                                             "status":  "FOUND_VERIFIED",
+                                                             "notes":  "Exact repository file found; title normalized to Version 1.1.0."
+                                                         }
                                                  ],
                            "phase4_frozen_artifacts":  [
                                                            {
