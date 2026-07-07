@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifact_index_path": {
+      "type": "string"
+    },
+    "attempt_id": {
+      "type": "string"
+    },
+    "attempt_index": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "attempt_status": {
+      "type": "string"
+    },
+    "batch_id": {
+      "type": "string"
+    },
+    "created_utc": {
+      "type": "string"
+    },
+    "dataset_version": {
+      "type": "string"
+    },
+    "event_log_path": {
+      "type": "string"
+    },
+    "frozen_row_id": {
+      "type": "string"
+    },
+    "lineage_path": {
+      "type": "string"
+    },
+    "manifest_path": {
+      "type": "string"
+    },
+    "parent_attempt_id": {
+      "type": ["string", "null"]
+    },
+    "raw_attempt_directory": {
+      "type": "string"
+    },
+    "required_artifacts": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "required_artifact_paths": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "target_trial_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "dataset_version",
+    "frozen_row_id",
+    "target_trial_id",
+    "attempt_id",
+    "attempt_index",
+    "parent_attempt_id",
+    "run_id",
+    "batch_id",
+    "attempt_status",
+    "raw_attempt_directory",
+    "event_log_path",
+    "lineage_path",
+    "manifest_path",
+    "artifact_index_path",
+    "created_utc"
+  ],
+  "title": "Phase 5 attempt workspace metadata",
+  "type": "object"
+}

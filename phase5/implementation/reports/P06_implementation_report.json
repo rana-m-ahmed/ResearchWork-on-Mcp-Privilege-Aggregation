@@ -1,0 +1,106 @@
+{
+  "fault_and_negative_tests": [
+    "Crash after PREPARED leaves a durable prefix and does not become orphaned.",
+    "Crash after DISPATCHED becomes orphaned.",
+    "Crash after model-output capture is detected and recoverable.",
+    "Crash after tool-event capture is detected and recoverable.",
+    "Crash after reset-event capture is detected and recoverable.",
+    "Crash before the final row is detected and recoverable.",
+    "Crash during manifest/lineage write leaves no partially committed snapshot.",
+    "Partial JSONL lines are rejected.",
+    "Duplicate finalization is rejected.",
+    "Raw artifact corruption is detected by hash verification.",
+    "Orphan recovery is idempotent.",
+    "Replacement lineage retains the parent attempt id."
+  ],
+  "files_changed": [
+    "phase5/guards.py",
+    "phase5/evidence/__init__.py",
+    "phase5/evidence/io.py",
+    "phase5/evidence/events.py",
+    "phase5/evidence/artifacts.py",
+    "phase5/evidence/workspace.py",
+    "phase5/attempts/__init__.py",
+    "phase5/attempts/schema.py",
+    "phase5/attempts/lineage.py",
+    "phase5/attempts/recovery.py",
+    "phase5/attempts/schemas/attempt_lineage.schema.json",
+    "phase5/attempts/schemas/attempt_workspace_metadata.schema.json",
+    "phase5/attempts/templates/attempt_lineage.csv",
+    "phase5/attempts/templates/attempt_workspace_metadata.json",
+    "phase5/tests/test_evidence_primitives.py",
+    "phase5/tests/test_scaffold_guards.py",
+    "phase5/tests/test_scaffold_imports.py",
+    "phase5/implementation/tasks/P06_task_packet.yaml",
+    "phase5/implementation/reports/P06_implementation_report.md",
+    "phase5/implementation/reports/P06_implementation_report.json"
+  ],
+  "frozen_inputs_consumed": [
+    {
+      "path": "docs/Phase5_Revised_Execution_Plan_v3_2.md",
+      "sha256": "DBCB49047AF17ED3C179D80F3BE0DD0536CD57015473791CF21A5FEF3A0D3953"
+    },
+    {
+      "path": "docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md",
+      "sha256": "5C9CCD4A0B93E894FE1DC0DF1ADC311AA34C59C3CBBC524D85523C612939AAB0"
+    },
+    {
+      "path": "phase5/configs/upstream_artifact_registry.json",
+      "sha256": "332DD39DEBD845E7CC222131EDDD058AB45D64BB8856BDFAA971055ACEC50E7B"
+    }
+  ],
+  "generated_utc": "2026-07-07T21:17:45.2029762Z",
+  "remaining_blockers": "none",
+  "scope": [
+    "Append-only write-ahead event writer with flush and fsync.",
+    "Content-addressed raw artifact writer.",
+    "Per-attempt workspace metadata and manifest helpers.",
+    "Transactional attempt lineage store.",
+    "Orphan discovery and replacement planning.",
+    "Crash-safe temporary-to-final operations."
+  ],
+  "status": "PASS",
+  "task_id": "P06",
+  "tests_run": [
+    {
+      "command": "pytest phase5/tests/test_evidence_primitives.py -q",
+      "result": "12 passed, 2 warnings"
+    },
+    {
+      "command": "pytest phase5/tests/test_scaffold_imports.py -q",
+      "result": "2 passed, 2 warnings"
+    },
+    {
+      "command": "pytest phase5/tests/test_scaffold_guards.py phase5/tests/test_protocol_lint.py -q",
+      "result": "13 passed, 2 warnings"
+    },
+    {
+      "command": "pytest phase5/tests -q",
+      "result": "109 passed, 2 warnings"
+    },
+    {
+      "command": "python -m compileall phase5",
+      "result": "PASS"
+    },
+    {
+      "command": "python phase5/scripts/check_phase5_instructions.py",
+      "result": "phase5 instruction hierarchy: PASS"
+    },
+    {
+      "command": "python phase5/scripts/lint_phase5_secrets.py",
+      "result": "phase5 secret lint: PASS"
+    },
+    {
+      "command": "python phase5/scripts/check_phase5_evidence_staging.py --staged phase5/evidence/attempts/P5ATT-trial-001-A000-ABCDEF12/attempt_manifest.json phase5/attempts/attempt_lineage.csv",
+      "result": "phase5 evidence staging guard: PASS"
+    },
+    {
+      "command": "python phase5/scripts/check_phase5_frozen_paths.py --changed phase5/guards.py phase5/tests/test_scaffold_guards.py phase5/tests/test_scaffold_imports.py phase5/attempts phase5/evidence phase5/implementation/tasks/P06_task_packet.yaml phase5/tests/test_evidence_primitives.py",
+      "result": "phase5 frozen path guard: PASS"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS with line-ending warnings only"
+    }
+  ]
+}

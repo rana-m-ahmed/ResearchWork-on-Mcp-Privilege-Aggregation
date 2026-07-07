@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accepted_attempt": {
+      "type": "boolean"
+    },
+    "attempt_id": {
+      "type": "string"
+    },
+    "attempt_index": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "attempt_status": {
+      "type": "string"
+    },
+    "batch_id": {
+      "type": "string"
+    },
+    "counts_toward_cell_n": {
+      "type": "boolean"
+    },
+    "dataset_version": {
+      "type": "string"
+    },
+    "frozen_row_id": {
+      "type": "string"
+    },
+    "invalid_reason": {
+      "type": ["string", "null"]
+    },
+    "parent_attempt_id": {
+      "type": ["string", "null"]
+    },
+    "raw_attempt_directory": {
+      "type": "string"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "target_trial_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "dataset_version",
+    "frozen_row_id",
+    "target_trial_id",
+    "attempt_id",
+    "attempt_index",
+    "parent_attempt_id",
+    "run_id",
+    "batch_id",
+    "attempt_status",
+    "invalid_reason",
+    "counts_toward_cell_n",
+    "accepted_attempt",
+    "raw_attempt_directory"
+  ],
+  "title": "Phase 5 attempt lineage record",
+  "type": "object"
+}

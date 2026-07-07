@@ -1,0 +1,19 @@
+"""Shared lineage column definitions."""
+
+from __future__ import annotations
+
+LINEAGE_COLUMNS = (
+    "dataset_version",
+    "frozen_row_id",
+    "target_trial_id",
+    "attempt_id",
+    "attempt_index",
+    "parent_attempt_id",
+    "run_id",
+    "batch_id",
+    "attempt_status",
+    "invalid_reason",
+    "counts_toward_cell_n",
+    "accepted_attempt",
+    "raw_attempt_directory",
+)

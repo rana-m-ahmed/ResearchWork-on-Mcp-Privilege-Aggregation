@@ -30,6 +30,11 @@ def test_evidence_guard_allows_reporting_paths() -> None:
     assert reject_evidence_source_staging(["phase5/implementation/reports/P01_implementation_report.md"]) == []
 
 
+def test_evidence_guard_allows_phase5_evidence_and_attempt_paths() -> None:
+    assert reject_evidence_source_staging(["phase5/evidence/attempts/P5ATT-trial-001-A000-ABCDEF12/attempt_manifest.json"]) == []
+    assert reject_evidence_source_staging(["phase5/attempts/attempt_lineage.csv"]) == []
+
+
 def test_secret_lint_detects_secret_like_text() -> None:
     findings = scan_text_for_secrets("token ghp_abcdefghijklmnopqrstuvwxyz123456")
     assert findings
@@ -63,4 +68,3 @@ def test_frozen_guard_cli_rejects_phase4_paths() -> None:
         check=False,
     )
     assert result.returncode == 1
-

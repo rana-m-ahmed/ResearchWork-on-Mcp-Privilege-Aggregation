@@ -1,0 +1,56 @@
+task_id: P06
+title: Write-Ahead Events, Raw Evidence, Attempt Lineage, and Orphan Recovery
+parent_requirements:
+  - Phase5_Revised_Execution_Plan_v3_2.md
+  - Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+  - P00 repository reality audit
+allowed_paths:
+  - phase5/evidence/
+  - phase5/attempts/
+  - phase5/tests/
+  - phase5/implementation/tasks/
+  - phase5/implementation/reports/
+forbidden_paths:
+  - phase4/
+  - phase4_5/
+  - client/
+  - server/
+  - docs/
+  - configs/
+  - schemas/
+  - reproducibility/
+  - prompts/
+inputs:
+  - docs/Phase5_Revised_Execution_Plan_v3_2.md
+  - docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+deliverables:
+  - append-only write-ahead event writer with flush and fsync
+  - content-addressed raw artifact writer
+  - per-attempt workspace metadata and manifest helpers
+  - transactional attempt lineage store
+  - orphan discovery and replacement planning
+  - crash-safe temporary-to-final operations
+  - P06 task packet and implementation report
+  - positive, negative, invariant, and fault-path tests
+required_tests:
+  - DISPATCHED durability precedes callback execution
+  - after PREPARED crash is recoverable and non-orphan
+  - after DISPATCHED crash becomes an orphan
+  - model-output, tool-event, reset, and pre-final-row crashes are detected
+  - partial JSONL lines fail closed
+  - duplicate finalization is rejected
+  - raw artifact corruption is detected
+  - orphan recovery is idempotent
+  - manifest and lineage writes are crash-safe
+acceptance_criteria:
+  - Every dispatched attempt is discoverable after a simulated crash.
+  - Orphans never count as accepted.
+  - Replacement lineage is complete.
+  - Partial writes are detected and never silently accepted.
+  - No evidence is silently deleted or rewritten.
+commit_message: phase5(P06): add durable evidence and attempt lineage
+notes:
+  - Phase 4 and Phase 4.5 artifacts remain read-only.
+  - The task is operational and must not invent any frozen scientific values or alter the trial matrix.
