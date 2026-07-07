@@ -1,0 +1,559 @@
+﻿{
+    "registry_id":  "P00",
+    "registry_version":  "1.0",
+    "generated_utc":  "2026-07-07T17:46:54.0205400Z",
+    "repository_root":  "D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation",
+    "status":  "COMPLETE",
+    "authority_order":  [
+                            "Phase 4 cryptographic lock and frozen artifacts",
+                            "Completed Phase 4.5 GO package and runtime evidence",
+                            "Phase5_Revised_Execution_Plan_v3_2.md",
+                            "Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md",
+                            "phase5/configs/upstream_artifact_registry.json",
+                            "This task prompt",
+                            "Existing implementation notes"
+                        ],
+    "go_verdicts":  {
+                        "phase4":  {
+                                       "path":  "phase4/reports/phase4_go_no_go_decision.md",
+                                       "sha256":  "97927a12b707d65985c3db66890dd1c8be28d94009b5469f8a93379878dd729a",
+                                       "status":  "PASS",
+                                       "evidence":  "Summary says Status: PASS and ready_for_phase5 is true."
+                                   },
+                        "phase4_5":  {
+                                         "path":  "phase4_5/validation/phase45_final_go_no_go.md",
+                                         "sha256":  "910fa15b9e60f239a7de1f164f25a5c7b61bafece47e48cda54bae5acc97b5d7",
+                                         "status":  "READY_FOR_EXTERNAL_AUDIT",
+                                         "evidence":  "Final verdict says READY_FOR_EXTERNAL_AUDIT."
+                                     }
+                    },
+    "required_items":  {
+                           "missing_plan_docs":  [
+                                                     {
+                                                         "label":  "Phase5_Revised_Execution_Plan_v3_2.md",
+                                                         "path":  "docs/Phase5_Revised_Execution_Plan_v3_2.md",
+                                                         "sha256":  "DBCB49047AF17ED3C179D80F3BE0DD0536CD57015473791CF21A5FEF3A0D3953",
+                                                         "status":  "FOUND_VERIFIED",
+                                                         "notes":  "Exact repository file found."
+                                                     },
+                                                     {
+                                                         "label":  "Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md",
+                                                         "path":  "docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md",
+                                                         "sha256":  "57FCC7A86C0BF56EAFA31F092F6E054B266871BDF36AD0AC7335DFA7B4888025",
+                                                         "status":  "FOUND_VERIFIED",
+                                                         "notes":  "Exact repository file found; title normalized to Version 1.1.0."
+                                                     }
+                                                 ],
+                           "phase4_frozen_artifacts":  [
+                                                           {
+                                                               "label":  "Phase 4 GO report",
+                                                               "path":  "phase4/reports/phase4_go_no_go_decision.md",
+                                                               "sha256":  "97927a12b707d65985c3db66890dd1c8be28d94009b5469f8a93379878dd729a",
+                                                               "status":  "FOUND_VERIFIED"
+                                                           },
+                                                           {
+                                                               "label":  "Phase 4 global freeze",
+                                                               "path":  "phase4/configs/phase4_global_freeze.yaml",
+                                                               "sha256":  "2edf49bf777e1cc5d3bfbc34aff5b06fcfe07f9f077c050553cf30d842cf8467",
+                                                               "status":  "FOUND_VERIFIED"
+                                                           },
+                                                           {
+                                                               "label":  "Model freeze set",
+                                                               "path":  "phase4/configs/model_set_freeze.yaml",
+                                                               "sha256":  "686c112ebfc8e7790098b26454504edd385ee6a21ab41d636949afb7f1a05d0d",
+                                                               "status":  "FOUND_VERIFIED"
+                                                           },
+                                                           {
+                                                               "label":  "Model freeze M1",
+                                                               "path":  "phase4/configs/model_1_freeze.yaml",
+                                                               "sha256":  "6bb3e095cf1aae4ba2961c35efdf05d94d615e7abd246f6b5e95b00c51dc0412",
+                                                               "status":  "FOUND_VERIFIED"
+                                                           },
+                                                           {
+                                                               "label":  "Model freeze M2",
+                                                               "path":  "phase4/configs/model_2_freeze.yaml",
+                                                               "sha256":  "8a3299dd860f55b7c3bdcd46387b5da1a22ce701a019f1312bba6e4ba12811d5",
+                                                               "status":  "FOUND_VERIFIED"
+                                                           },
+                                                           {
+                                                               "label":  "Model freeze M3",
+                                                               "path":  "phase4/configs/model_3_freeze.yaml",
+                                                               "sha256":  "20b81a8645700b86f0984e91d887711689b0bd0cc7a919f02d0f4cd72834e2e6",
+                                                               "status":  "FOUND_VERIFIED"
+                                                           },
+                                                           {
+                                                               "label":  "Model freeze M4",
+                                                               "path":  "phase4/configs/model_4_freeze.yaml",
+                                                               "sha256":  "d300af9ce961a4b839dd073434cfdd15291e27d6f37c71fee58e05343992715c",
+                                                               "status":  "FOUND_VERIFIED"
+                                                           },
+                                                           {
+                                                               "label":  "Defense freeze",
+                                                               "path":  "phase4/configs/defense_config_freeze.yaml",
+                                                               "sha256":  "5934137bd5e741b1ce700879691040d215648b409316c3cf09bc559b098d47a8",
+                                                               "status":  "FOUND_VERIFIED"
+                                                           },
+                                                           {
+                                                               "label":  "Statistical plan",
+                                                               "path":  "phase4/configs/statistical_plan.yaml",
+                                                               "sha256":  "aad0afdd8f395ecdd4853e737782c487e3b3207730e3496c9e7b4d1ddb558a07",
+                                                               "status":  "FOUND_VERIFIED"
+                                                           },
+                                                           {
+                                                               "label":  "Phase 5 schema freeze",
+                                                               "path":  "phase4/configs/phase5_schema_freeze.json",
+                                                               "sha256":  "b26ae0025cca7a64a5578af7f63afdd30498116d2b7b7a0ef9fb558b8b8a05ed",
+                                                               "status":  "FOUND_VERIFIED"
+                                                           },
+                                                           {
+                                                               "label":  "Payload reference map",
+                                                               "path":  "phase4/configs/payload_reference_map.json",
+                                                               "sha256":  "a14fb6217f7484135c71530cf2521fd149b35b5e60f73a8340fdef0adbaebafe",
+                                                               "status":  "FOUND_VERIFIED"
+                                                           },
+                                                           {
+                                                               "label":  "Cryptographic lock manifest",
+                                                               "path":  "phase4/frozen_bundle/cryptographic_lock_manifest.json",
+                                                               "sha256":  "09122acabc4ea034aae2ea43adfbfb9b6b370e926db1222861d11d37e87cd11f",
+                                                               "status":  "FOUND_VERIFIED"
+                                                           },
+                                                           {
+                                                               "label":  "Master hash ledger",
+                                                               "path":  "phase4/frozen_bundle/master_hash_ledger.csv",
+                                                               "sha256":  "b399844c96eec465f66b767d3cabcdefc9e2e87792af7070ef499d78da6fe84d",
+                                                               "status":  "FOUND_VERIFIED"
+                                                           },
+                                                           {
+                                                               "label":  "Phase 5 execution manifest",
+                                                               "path":  "phase4/frozen_bundle/phase5_execution_manifest.json",
+                                                               "sha256":  "290a397e795a40dc97f497ada3a6c42c1d5ffdec2bdeb03046565996c2b350c2",
+                                                               "status":  "FOUND_VERIFIED",
+                                                               "notes":  "Manifest records expected_payload_count=223, which matches the Phase 1 canonical_payload_count; the frozen trial order's 234 payload IDs include 11 duplicates by design."
+                                                           },
+                                                           {
+                                                               "label":  "Trial order core",
+                                                               "path":  "phase4/frozen_bundle/trial_order_core.csv",
+                                                               "sha256":  "2c0e96bd07245b95021c6521b7730db645acbd7686af6bb8127e7d36f3fb426f",
+                                                               "status":  "FOUND_VERIFIED"
+                                                           },
+                                                           {
+                                                               "label":  "Trial order defense",
+                                                               "path":  "phase4/frozen_bundle/trial_order_defense.csv",
+                                                               "sha256":  "cd483dcece127f48ff911239dfc1ee68c2696aaaec384a495c617d76cb53d182",
+                                                               "status":  "FOUND_VERIFIED"
+                                                           },
+                                                           {
+                                                               "label":  "Trial order utility",
+                                                               "path":  "phase4/frozen_bundle/trial_order_utility.csv",
+                                                               "sha256":  "66f088402c2a494a12fadd542477c6f1463583508e492217816e9fca15f79de7",
+                                                               "status":  "FOUND_VERIFIED"
+                                                           }
+                                                       ],
+                           "phase4_5_evidence":  [
+                                                     {
+                                                         "label":  "Phase 4.5 GO report",
+                                                         "path":  "phase4_5/validation/phase45_final_go_no_go.md",
+                                                         "sha256":  "910fa15b9e60f239a7de1f164f25a5c7b61bafece47e48cda54bae5acc97b5d7",
+                                                         "status":  "FOUND_VERIFIED"
+                                                     },
+                                                     {
+                                                         "label":  "Final verification",
+                                                         "path":  "phase4_5/validation/phase45_authentic_completion_audit.md",
+                                                         "sha256":  "c7d80b8a3ca6822b0c5e514c0cff16b36dd2a599d6b828f4c293bd01fd43f236",
+                                                         "status":  "FOUND_VERIFIED"
+                                                     },
+                                                     {
+                                                         "label":  "Schema mapping",
+                                                         "path":  "phase4_5/validation/phase45_schema_mapping_report.md",
+                                                         "sha256":  "bf4515919c4567c3f10139c248f2fb8f1c2489ca1daa05fe1c35342d636460a1",
+                                                         "status":  "FOUND_VERIFIED"
+                                                     },
+                                                     {
+                                                         "label":  "Log schema",
+                                                         "path":  "phase4_5/validation/phase45_log_schema_report.md",
+                                                         "sha256":  "dcdc669517e504a84d99fc0544cd7259aef3fe7366ef39c6aa4c077c14bae713",
+                                                         "status":  "FOUND_VERIFIED"
+                                                     },
+                                                     {
+                                                         "label":  "Taxonomy / attack-family grouping",
+                                                         "path":  "phase4_5/validation/phase45_statistics_smoke_report.md",
+                                                         "sha256":  "a41a11dbcba671416522d9dcca5d4144cfff631691e24f5dc99e5e298a0adc37",
+                                                         "status":  "FOUND_VERIFIED",
+                                                         "notes":  "The grouping summary includes attack_family, density, and metadata_surface_condition."
+                                                     },
+                                                     {
+                                                         "label":  "Token budget",
+                                                         "path":  "phase4/validation/token_budget_reverification_report.md",
+                                                         "sha256":  "6db378c232e94d56a8f58426bb365a876e2a1f1a0e61232144de26d7e176d860",
+                                                         "status":  "AMBIGUOUS",
+                                                         "notes":  "The report exists but states NOT_MEASURABLE from available Phase 3 artifacts."
+                                                     },
+                                                     {
+                                                         "label":  "Reset",
+                                                         "path":  "phase4_5/validation/phase45_reset_report.md",
+                                                         "sha256":  "86823f9145ea0e5d83e606654e832a94d572d4b6dc50b24c5fdf10db2fa72cd9",
+                                                         "status":  "FOUND_VERIFIED"
+                                                     },
+                                                     {
+                                                         "label":  "Statistics smoke",
+                                                         "path":  "phase4_5/validation/phase45_statistics_smoke_report.md",
+                                                         "sha256":  "a41a11dbcba671416522d9dcca5d4144cfff631691e24f5dc99e5e298a0adc37",
+                                                         "status":  "FOUND_VERIFIED"
+                                                     },
+                                                     {
+                                                         "label":  "Kaggle runtime setup",
+                                                         "path":  "phase4_5/kaggle/kaggle_runtime_setup.md",
+                                                         "sha256":  "8c87b50ac6a2993c58a9f0bb72712aef0841f7316ef5cfe528f6104dd72215a4",
+                                                         "status":  "FOUND_VERIFIED"
+                                                     },
+                                                     {
+                                                         "label":  "Checkpoint/resume config",
+                                                         "path":  "phase4_5/configs/phase45_checkpoint_resume.yaml",
+                                                         "sha256":  "5179194ddefda724865dd5c25dbefd1966c9b5988ebb383bf8abc162cd01cc92",
+                                                         "status":  "FOUND_VERIFIED"
+                                                     },
+                                                     {
+                                                         "label":  "Checkpoint/resume report",
+                                                         "path":  "phase4_5/validation/phase45_checkpoint_resume_report.md",
+                                                         "sha256":  "9fe2ac2d8111bb4bb9aca8a56e8264b7576cc39f494d388581b7e5e237d86f5d",
+                                                         "status":  "FOUND_VERIFIED"
+                                                     },
+                                                     {
+                                                         "label":  "Timing evidence, local run manifest",
+                                                         "path":  "phase4_5/dryrun_results/local/run_manifest.json",
+                                                         "sha256":  "951235d21b68c2dc91ca82a11ae5c3171aec801652750b2707905f52dcf4aebf",
+                                                         "status":  "FOUND_VERIFIED"
+                                                     },
+                                                     {
+                                                         "label":  "Timing evidence, Kaggle smoke hardware metrics",
+                                                         "path":  "phase4_5/dryrun_results/kaggle_smoke/hardware_metrics.jsonl",
+                                                         "sha256":  "a4695ce5194c2b29d3f01d190969c7fbe1aaf25b8b6a529dfa76b18a085c2bb4",
+                                                         "status":  "FOUND_VERIFIED"
+                                                     },
+                                                     {
+                                                         "label":  "Timing evidence, Kaggle model-loader hardware metrics",
+                                                         "path":  "phase4_5/dryrun_results/kaggle_model_loader_smoke/model_loader_hardware_metrics.jsonl",
+                                                         "sha256":  "75a510b6a6ca2cfc4e9d0b63f1a7ee1f714074886765c8f302677f81ac5ba19d",
+                                                         "status":  "FOUND_VERIFIED"
+                                                     }
+                                                 ],
+                           "phase3_inheritance":  [
+                                                      {
+                                                          "label":  "Phase 3 final decision",
+                                                          "path":  "phase3/reports/phase3_final_decision.md",
+                                                          "sha256":  "678d4f8a9290b3c520aa9f58df80b4bb84d87b1ebdd177f30d0da44684a8ebc2",
+                                                          "status":  "FOUND_VERIFIED"
+                                                      },
+                                                      {
+                                                          "label":  "Phase 3 cross-model summary",
+                                                          "path":  "phase3/reports/phase3_cross_model_summary.md",
+                                                          "sha256":  "76e83f35c2f73cde50ca0f540ba11e3f9a57296859f673f02027da2bd7bb4f40",
+                                                          "status":  "FOUND_VERIFIED"
+                                                      },
+                                                      {
+                                                          "label":  "Phase 3 model config M1",
+                                                          "path":  "phase3/configs/model_1.yaml",
+                                                          "sha256":  "a822f01e550417b6144693c5ac5d413140cfdc1c358f0c6306a287d59aa2280b",
+                                                          "status":  "FOUND_VERIFIED"
+                                                      },
+                                                      {
+                                                          "label":  "Phase 3 model config M2",
+                                                          "path":  "phase3/configs/model_2.yaml",
+                                                          "sha256":  "25be49c75318cc0ddcb4552761a564d3fbdf51d3fdfa3bec7c1eddcd7a8f3b49",
+                                                          "status":  "FOUND_VERIFIED"
+                                                      },
+                                                      {
+                                                          "label":  "Phase 3 model config M3",
+                                                          "path":  "phase3/configs/model_3.yaml",
+                                                          "sha256":  "17232ad83dbec29959ca5de4a5e3afcc2e1317d49d7477f5f7da3277bba4b247",
+                                                          "status":  "FOUND_VERIFIED"
+                                                      },
+                                                      {
+                                                          "label":  "Phase 3 model config M4",
+                                                          "path":  "phase3/configs/model_4.yaml",
+                                                          "sha256":  "f0d0a789ccba0b1aacecc93195baef3eac644f8684de345922a6aec50608a458",
+                                                          "status":  "FOUND_VERIFIED"
+                                                      },
+                                                      {
+                                                          "label":  "Phase 3 branch manifest",
+                                                          "path":  "phase3/configs/branch_manifest.yaml",
+                                                          "sha256":  "6b777b5b2e994660d0762b96b8c35efcc1074cca550cffc20f6fd28bf689df5d",
+                                                          "status":  "FOUND_VERIFIED"
+                                                      },
+                                                      {
+                                                          "label":  "Phase 3 global config",
+                                                          "path":  "phase3/configs/phase3_global.yaml",
+                                                          "sha256":  "b86040101c59dca1bbab7a44647a0c5f1fcbc1bebe51794ebafebbea1004170a",
+                                                          "status":  "FOUND_VERIFIED"
+                                                      },
+                                                      {
+                                                          "label":  "Phase 3 reset policy",
+                                                          "path":  "phase3/configs/reset_policy.yaml",
+                                                          "sha256":  "40cd44c3f2d891427e29078dd0dd7177a04442095d208a4fa6a9fcd1e0360168",
+                                                          "status":  "FOUND_VERIFIED"
+                                                      },
+                                                      {
+                                                          "label":  "Phase 3 source freeze manifest",
+                                                          "path":  "phase3/configs/source_freeze_manifest.json",
+                                                          "sha256":  "42585ff871f0a51921f7b0d3938feb01fa1b50b42f28755a5e697233647ec4ab",
+                                                          "status":  "FOUND_VERIFIED"
+                                                      },
+                                                      {
+                                                          "label":  "Task corpus",
+                                                          "path":  "phase3/tasks/task_corpus.json",
+                                                          "sha256":  "14c66c0635dd06467e2063739f1bf6ebffcf94e707b7e0a2ad2a077fa62429a4",
+                                                          "status":  "FOUND_VERIFIED"
+                                                      },
+                                                      {
+                                                          "label":  "Task corpus hash",
+                                                          "path":  "phase3/tasks/task_corpus_hash.txt",
+                                                          "sha256":  "918a27f5987cbea8aed7ea8a6cf439e6b32ffc48327e4716be83f8cd994f3ae2",
+                                                          "status":  "FOUND_VERIFIED"
+                                                      },
+                                                      {
+                                                          "label":  "Task generation metadata",
+                                                          "path":  "phase3/tasks/task_generation_metadata.json",
+                                                          "sha256":  "a8dcc826b9e7dad30462134b4f062a3446dcf3014e36e46e8eb9b60879fc3e3e",
+                                                          "status":  "FOUND_VERIFIED"
+                                                      },
+                                                      {
+                                                          "label":  "Task validation report",
+                                                          "path":  "phase3/tasks/task_validation_report.md",
+                                                          "sha256":  "791d743099ca6b556ccfd592a24b7237be0bc80559c00abbc330f5efb2fc3253",
+                                                          "status":  "FOUND_VERIFIED"
+                                                      }
+                                                  ],
+                           "phase2_5_and_code_support":  [
+                                                             {
+                                                                 "label":  "Phase 2.5 tokenizer validation report",
+                                                                 "path":  "phase2_5/tokenizer/validation/tokenizer_validation_report.md",
+                                                                 "sha256":  "e80332847ebcf5de3034a6abc58a46fb7cb4663415eb84a5f102621476de16fd",
+                                                                 "status":  "FOUND_VERIFIED"
+                                                             },
+                                                             {
+                                                                 "label":  "Phase 2.5 environment snapshot",
+                                                                 "path":  "phase2_5/reproducibility/environment_snapshot.json",
+                                                                 "sha256":  "8667ab3433a56e1cfa7eb60f3e62920f490d611f679f2345e1e14042e146500c",
+                                                                 "status":  "FOUND_VERIFIED"
+                                                             },
+                                                             {
+                                                                 "label":  "Phase 2.5 reproducibility manifest",
+                                                                 "path":  "phase2_5/reproducibility/phase2_5_reproducibility_manifest.md",
+                                                                 "sha256":  "f80d591ed67cc7b3deb01ac63089973022f33d1da09fbd808198edb33030c7cc",
+                                                                 "status":  "FOUND_VERIFIED"
+                                                             },
+                                                             {
+                                                                 "label":  "Logging writer / serializer contract",
+                                                                 "path":  "client/logging_writer.py",
+                                                                 "sha256":  "25d3fd103a6b896a2539f7b4f369270adb0cdc8df9e06dc69814b37c90ecfd74",
+                                                                 "status":  "FOUND_VERIFIED"
+                                                             },
+                                                             {
+                                                                 "label":  "Tool call parser",
+                                                                 "path":  "client/tool_call_parser.py",
+                                                                 "sha256":  "de5a399a64afb5c5a6374fa9d25d569a435d7416ef0b5d86a6d4c198997884a3",
+                                                                 "status":  "FOUND_VERIFIED"
+                                                             },
+                                                             {
+                                                                 "label":  "Logical-ID grader",
+                                                                 "path":  "client/phase3_grader.py",
+                                                                 "sha256":  "b8eaebec6395712a92fcd2421f34d6dd7c5013e8ac0003e769e4ae174c20569f",
+                                                                 "status":  "FOUND_VERIFIED"
+                                                             },
+                                                             {
+                                                                 "label":  "Model backend abstraction",
+                                                                 "path":  "client/model_backend.py",
+                                                                 "sha256":  "6caa88beb17694576f16c4c7eb91d04b927d93201ec73ff637c39a4ecc0fe635",
+                                                                 "status":  "FOUND_VERIFIED"
+                                                             },
+                                                             {
+                                                                 "label":  "Schema variant loader",
+                                                                 "path":  "server/schema_variant_loader.py",
+                                                                 "sha256":  "256375da3e85dc65aedadb1f3b7b9ebf6dbecf89635fe703870ad314afd3ecea",
+                                                                 "status":  "FOUND_VERIFIED"
+                                                             },
+                                                             {
+                                                                 "label":  "Tool definition read_internal_notes",
+                                                                 "path":  "server/tool_definitions/read_internal_notes.py",
+                                                                 "sha256":  "be337b5e4ee91b7ed9e525c3e8dbb0a3ec2ac38624ef7819008e914cfc2f80ef",
+                                                                 "status":  "FOUND_VERIFIED"
+                                                             },
+                                                             {
+                                                                 "label":  "Tool definition write_outbox",
+                                                                 "path":  "server/tool_definitions/write_outbox.py",
+                                                                 "sha256":  "bcfc73b4f5681f67d15c7486152c287582e23313b2ccb410bfc739c1b9c11fac",
+                                                                 "status":  "FOUND_VERIFIED"
+                                                             },
+                                                             {
+                                                                 "label":  "Tool definition get_local_weather",
+                                                                 "path":  "server/tool_definitions/get_local_weather.py",
+                                                                 "sha256":  "4eff65d2e57aea2616840c7ce9cf07548e0c1f2d5d2ef28c7fe4e4e2be0a5b08",
+                                                                 "status":  "FOUND_VERIFIED"
+                                                             },
+                                                             {
+                                                                 "label":  "Tool definition query_local_inventory",
+                                                                 "path":  "server/tool_definitions/query_local_inventory.py",
+                                                                 "sha256":  "f13cfd4a29faee1691859db1f30a3ccae2f9647c13e24a57695991569ecbeec7",
+                                                                 "status":  "FOUND_VERIFIED"
+                                                             },
+                                                             {
+                                                                 "label":  "Tool definition log_event",
+                                                                 "path":  "server/tool_definitions/log_event.py",
+                                                                 "sha256":  "89a4b7ef649d90241d7a25d2c39bb0e272a680077b9a91d0d5b9a67b142b2e41",
+                                                                 "status":  "FOUND_VERIFIED"
+                                                             }
+                                                         ]
+                       },
+    "queue_statistics":  {
+                             "trial_order_core_rows":  2808,
+                             "trial_order_core_unique_trial_ids":  2808,
+                             "trial_order_core_non_empty_cells":  19656,
+                             "trial_order_core_duplicates":  [
+
+                                                             ],
+                             "trial_order_core_by_model":  {
+                                                               "M1":  702,
+                                                               "M2":  702,
+                                                               "M3":  702,
+                                                               "M4":  702
+                                                           },
+                             "trial_order_core_by_density":  {
+                                                                 "D1":  936,
+                                                                 "D3":  936,
+                                                                 "D5":  936
+                                                             },
+                             "trial_order_core_by_defense_condition":  {
+                                                                           "IHR_SPCE":  2808
+                                                                       },
+                             "trial_order_defense_rows":  0,
+                             "trial_order_defense_non_empty_cells":  0,
+                             "trial_order_utility_rows":  0,
+                             "trial_order_utility_non_empty_cells":  0,
+                             "unique_payload_ids_used_in_core":  234,
+                             "core_sha256_matches_phase5_manifest":  true,
+                             "phase5_manifest_expected_trial_count":  2808,
+                             "phase5_manifest_expected_payload_count":  223,
+                             "payload_count_mismatch_note":  "No mismatch: the manifest count matches the Phase 1 canonical_payload_count of 223, while the frozen trial order enumerates 234 total payload IDs including 11 duplicates."
+                         },
+    "state_machine_controls":  {
+                                   "trial_stop_conditions":  [
+                                                                 "success",
+                                                                 "syntax failure",
+                                                                 "semantic failure",
+                                                                 "timeout",
+                                                                 "maximum tool-call count",
+                                                                 "infrastructure failure"
+                                                             ],
+                                   "max_tool_calls_by_density":  {
+                                                                     "D1":  1,
+                                                                     "D3":  3,
+                                                                     "D5":  4
+                                                                 },
+                                   "timeout_subclasses":  [
+                                                              "model_generation_timeout",
+                                                              "tool_execution_timeout",
+                                                              "backend_hang_timeout",
+                                                              "reset_timeout"
+                                                          ],
+                                   "retry_policy_summary":  {
+                                                                "invalid_json":  "0 retries",
+                                                                "unexpected_response":  "0 retries unless backend exception occurred",
+                                                                "tool_timeout":  "1 rerun if infrastructure timeout; none if model caused invalid call",
+                                                                "tool_unavailable":  "1 rerun after repair",
+                                                                "network_timeout":  "2 reruns after network repair",
+                                                                "oom":  "2 reruns for the same matrix row",
+                                                                "daemon_crash":  "2 reruns after restart",
+                                                                "model_unload_failure":  "1 rerun only if cleanup is uncertain",
+                                                                "reset_failure":  "2 reruns after full environment restart"
+                                                            },
+                                   "parser_policy":  {
+                                                         "contract":  "Parse model output without repair; invalid JSON raises ModelOutputFailure.",
+                                                         "forbidden_tool_names":  [
+                                                                                      "reset",
+                                                                                      "reset_state",
+                                                                                      "admin_reset",
+                                                                                      "set_schema_variant",
+                                                                                      "debug",
+                                                                                      "teardown"
+                                                                                  ]
+                                                     },
+                                   "serialization_policy":  {
+                                                                "contract":  "JSONL rows are written deterministically and hashed after write.",
+                                                                "reference_file":  "client/logging_writer.py"
+                                                            },
+                                   "checkpoint_controls":  {
+                                                               "trial_shard_size":  6,
+                                                               "checkpoint_frequency_trials":  6,
+                                                               "partial_log_location":  "phase4_5/dryrun_results/local/partial_trials.jsonl",
+                                                               "duplicate_trial_id_prevention":  "reject duplicate trial_id values within a shard and across reruns unless a rerun suffix is generated",
+                                                               "rerun_link_format":  "phase4_5/dryrun_results/local/reruns/{trial_id}.json"
+                                                           },
+                                   "environment_lock":  {
+                                                            "python_version":  "3.12.10",
+                                                            "kaggle_execution_enabled":  true,
+                                                            "local_validation_enabled":  true,
+                                                            "package_versions":  {
+                                                                                     "torch":  "2.10.0+cu128",
+                                                                                     "transformers":  "5.0.0",
+                                                                                     "accelerate":  "1.13.0",
+                                                                                     "sentencepiece":  "0.2.1",
+                                                                                     "numpy":  "2.4.6",
+                                                                                     "jsonschema":  "4.26.0",
+                                                                                     "pydantic":  "2.13.4",
+                                                                                     "pyyaml":  "6.0.2"
+                                                                                 }
+                                                        }
+                               },
+    "implementation_reconciliation":  {
+                                          "required_plan_docs_missing":  false,
+                                          "prompt_identified_conflicts":  [
+                                                                              {
+                                                                                  "label":  "header/version mismatch",
+                                                                                  "status":  "RESOLVED",
+                                                                                  "notes":  "The exact Phase 5 plan file now exists at the requested path and the copied file title was normalized to Version 1.1.0."
+                                                                              },
+                                                                              {
+                                                                                  "label":  "stale v1.0 references",
+                                                                                  "status":  "AMBIGUOUS",
+                                                                                  "notes":  "The exact Phase 5 plan file now exists and can be line-checked directly, but this specific conflict was not audited further."
+                                                                              },
+                                                                              {
+                                                                                  "label":  "stale one-batch I17 wording",
+                                                                                  "status":  "AMBIGUOUS",
+                                                                                  "notes":  "The exact Phase 5 plan file now exists and can be line-checked directly, but this specific conflict was not audited further."
+                                                                              },
+                                                                              {
+                                                                                  "label":  "checkpoint field conflict with seal-epoch continuation",
+                                                                                  "status":  "AMBIGUOUS",
+                                                                                  "notes":  "The exact Phase 5 plan file now exists and can be line-checked directly, but this specific conflict was not audited further."
+                                                                              }
+                                                                          ],
+                                          "additional_observed_conflicts":  [
+                                                                                {
+                                                                                    "label":  "quota estimate wording varies across Phase 4.5 reports",
+                                                                                    "evidence_paths":  [
+                                                                                                           "phase4_5/validation/phase45_kaggle_quota_feasibility_report.md",
+                                                                                                           "phase4_5/validation/phase45_phase5_suitability_audit.md",
+                                                                                                           "phase4_5/validation/phase45_remaining_blockers.md"
+                                                                                                       ],
+                                                                                    "status":  "FOUND_MISMATCH",
+                                                                                    "notes":  "The reports cite slightly different prose for the runtime estimate, but they all remain non-official and non-Phase-5 claims."
+                                                                                }
+                                                                            ],
+                                          "resolution_rule":  "Use the higher-source frozen artifacts and Phase 4.5 runtime evidence; do not edit upstream plans."
+                                      },
+    "validation_summary":  {
+                               "tests_run":  [
+                                                 "pytest tests/test_logical_id_mapping.py tests/test_phase3_grader.py tests/test_phase3_parser.py tests/test_unknown_tool_rejection.py tests/test_reset_dispatch_rejection.py",
+                                                 "git diff --check",
+                                                 "git status --short"
+                                             ],
+                               "test_result":  "65 passed, 2 warnings",
+                               "warnings":  [
+                                                "pytest cache write denied by sandbox permissions",
+                                                "pytest-asyncio emitted a deprecation warning about asyncio_default_fixture_loop_scope"
+                                            ],
+                               "worktree_status_before_edit":  "clean on main",
+                               "worktree_status_after_edit":  "expected modifications only in phase5/configs and phase5/implementation/reports"
+                           }
+}
