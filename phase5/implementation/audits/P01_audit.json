@@ -1,0 +1,133 @@
+{
+  "task_id": "P01",
+  "audited_commit": "2e751a4b16e9d1d195eb60f17fc4e72604d9c5ba",
+  "parent_commit": "e42ae0c9f8c7dbd8c5f9d5602f7ec73d1e5968c1",
+  "current_head": "a124ff1705f1b321def2b3fbcd18a42a0b8bef2c",
+  "verdict": "FAIL",
+  "audit_timestamp_utc": "2026-07-07T18:21:24.7052947Z",
+  "requirements_checked": [
+    "AGENTS hierarchy and scope markers",
+    "frozen-path protection",
+    "evidence staging protection",
+    "instruction hierarchy validation",
+    "secret scan behavior",
+    "forbidden-analysis lint behavior",
+    "source CI workflow coverage",
+    "evidence-integrity workflow scope",
+    "task packet and report presence"
+  ],
+  "files_checked": [
+    "AGENTS.md",
+    "phase5/AGENTS.md",
+    "phase5/runtime/AGENTS.md",
+    "phase5/kaggle/AGENTS.md",
+    "phase5/scripts/AGENTS.md",
+    "phase5/tests/AGENTS.md",
+    "phase5/implementation/AGENTS.md",
+    ".codex/skills/phase5-verified-implementation/SKILL.md",
+    ".github/workflows/phase5-source-ci.yml",
+    ".github/workflows/phase5-freeze-guard.yml",
+    ".github/workflows/phase5-evidence-integrity.yml",
+    "phase5/guards.py",
+    "phase5/scripts/check_phase5_instructions.py",
+    "phase5/scripts/check_phase5_frozen_paths.py",
+    "phase5/scripts/check_phase5_evidence_staging.py",
+    "phase5/scripts/lint_phase5_forbidden_analysis.py",
+    "phase5/scripts/lint_phase5_secrets.py",
+    "phase5/tests/test_scaffold_imports.py",
+    "phase5/tests/test_scaffold_agreements.py",
+    "phase5/tests/test_scaffold_guards.py",
+    "phase5/implementation/tasks/P01_task_packet.yaml",
+    "phase5/implementation/reports/P01_implementation_report.md",
+    "phase5/implementation/reports/P01_implementation_report.json"
+  ],
+  "tests_rerun": [
+    {
+      "command": "python -m pytest phase5/tests",
+      "result": "13 passed, 2 warnings"
+    },
+    {
+      "command": "python -m compileall phase5",
+      "result": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    },
+    {
+      "command": "python phase5/scripts/check_phase5_instructions.py",
+      "result": "phase5 instruction hierarchy: PASS"
+    },
+    {
+      "command": "python phase5/scripts/check_phase5_frozen_paths.py --changed phase5/implementation/reports/P01_implementation_report.md",
+      "result": "phase5 frozen path guard: PASS"
+    },
+    {
+      "command": "python phase5/scripts/check_phase5_frozen_paths.py --changed phase4/configs/phase5_schema_freeze.json",
+      "result": "rejected"
+    },
+    {
+      "command": "python phase5/scripts/check_phase5_evidence_staging.py --staged phase5/implementation/reports/P01_implementation_report.md",
+      "result": "phase5 evidence staging guard: PASS"
+    },
+    {
+      "command": "python phase5/scripts/check_phase5_evidence_staging.py --staged client/orchestrator.py",
+      "result": "rejected"
+    },
+    {
+      "command": "python phase5/scripts/lint_phase5_secrets.py --text '<redacted-secret-fixture>'",
+      "result": "rejected"
+    },
+    {
+      "command": "python phase5/scripts/lint_phase5_forbidden_analysis.py --text '<redacted-analysis-fixture>'",
+      "result": "rejected"
+    },
+    {
+      "command": "python phase5/scripts/lint_phase5_secrets.py --root phase5",
+      "result": "failed"
+    },
+    {
+      "command": "python phase5/scripts/lint_phase5_forbidden_analysis.py --root phase5",
+      "result": "failed"
+    },
+    {
+      "command": "python -c \"import pathlib, yaml; [yaml.safe_load(p.read_text(encoding='utf-8')) for p in pathlib.Path('.github/workflows').glob('phase5-*.yml')]; print('workflow syntax: PASS')\"",
+      "result": "workflow syntax: PASS"
+    }
+  ],
+  "blocking_findings": [
+    {
+      "file": "phase5/guards.py",
+      "lines": "34-37",
+      "issue": "The secret tree scan self-triggers on the scaffold tree because the secret-pattern regex literals are themselves inside the scanned source tree.",
+      "evidence": "python phase5/scripts/lint_phase5_secrets.py --root phase5 -> flags the guard module itself"
+    },
+    {
+      "file": "phase5/implementation/reports/P01_implementation_report.md",
+      "lines": "66-72",
+      "issue": "The implementation report contains literal secret and forbidden-analysis fixture strings, so the root lints fail on committed evidence artifacts.",
+      "evidence": "python phase5/scripts/lint_phase5_secrets.py --root phase5 and python phase5/scripts/lint_phase5_forbidden_analysis.py --root phase5"
+    },
+    {
+      "file": ".github/workflows/phase5-source-ci.yml",
+      "lines": "29-49",
+      "issue": "The source CI scaffold is materially smaller than the parent plan requires and omits integration, schema, golden-vector, state-machine, and checkpoint/resume coverage.",
+      "evidence": "Parent plan lines 409-420 and 244-245 require those check classes."
+    },
+    {
+      "file": ".github/workflows/phase5-evidence-integrity.yml",
+      "lines": "21-24",
+      "issue": "Evidence integrity is scoped to the implementation report instead of compact checkpoint evidence, so it does not yet match the parent plan.",
+      "evidence": "Parent plan lines 428-430 describe committed checkpoint-manifest validation."
+    }
+  ],
+  "non_blocking_findings": [],
+  "frozen_artifact_integrity": {
+    "status": "PASS",
+    "details": "No phase4/ or phase4_5/ files changed in the audited commit; frozen-input hashes were verified against the parent plans and registry."
+  },
+  "secret_scope_result": {
+    "status": "FAIL",
+    "details": "The root secret scan fails on the scaffold tree as committed, so the secret guard is not yet passable in CI."
+  }
+}
