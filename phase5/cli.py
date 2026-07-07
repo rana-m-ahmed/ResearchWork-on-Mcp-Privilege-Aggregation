@@ -4,13 +4,16 @@ from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
 from typing import Sequence
 
 from . import __version__
+from .gate0 import run_gate0
 from .domain.errors import ExitCode, NotImplementedCommandError, Phase5Error
 
 
 PLANNED_COMMANDS = (
+    "gate0",
     "plan-kaggle-runs",
     "run-batch",
     "validate-batch",
@@ -26,11 +29,21 @@ PLANNED_COMMANDS = (
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="phase5",
-        description="Phase 5 scaffold CLI. Planned commands are listed, but execution is not implemented yet.",
+        description="Phase 5 scaffold CLI. Gate 0 is implemented; other commands remain not implemented.",
     )
     parser.add_argument("--version", action="version", version=f"phase5 {__version__}")
 
     subparsers = parser.add_subparsers(dest="command")
+
+    gate0 = subparsers.add_parser(
+        "gate0",
+        help="Run the strict Phase 5 entry gate.",
+        description="Run strict Gate 0 authorization and frozen-artifact verification.",
+    )
+    gate0.add_argument("--strict", action="store_true", help="Require a clean checkout.")
+    gate0.add_argument("--root", required=False)
+    gate0.add_argument("--report-dir", required=False)
+    gate0.set_defaults(command="gate0")
 
     def add_planned_command(name: str, help_text: str) -> argparse.ArgumentParser:
         command_parser = subparsers.add_parser(
@@ -90,6 +103,25 @@ def main(argv: Sequence[str] | None = None) -> int:
     if not getattr(args, "command", None):
         parser.print_help()
         return int(ExitCode.SUCCESS)
+
+    if args.command == "gate0":
+        try:
+            root = Path(args.root) if getattr(args, "root", None) else None
+            report_dir = (
+                Path(args.report_dir)
+                if getattr(args, "report_dir", None)
+                else (root or Path.cwd()) / "phase5" / "validation"
+            )
+            report = run_gate0(strict=bool(args.strict), report_dir=report_dir, root=root)
+            if report.status != "PASS":
+                print("GATE0_FAILURE:", file=sys.stderr)
+                for finding in report.findings:
+                    print(f"- {finding}", file=sys.stderr)
+                return int(ExitCode.GATE0_FAILURE)
+            return int(ExitCode.SUCCESS)
+        except Phase5Error as exc:
+            print(f"GATE0_FAILURE: {exc}", file=sys.stderr)
+            return int(exc.exit_code)
 
     try:
         return _handle_not_implemented(args.command)

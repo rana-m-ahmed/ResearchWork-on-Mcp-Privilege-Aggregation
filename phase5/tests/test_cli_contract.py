@@ -24,6 +24,17 @@ def test_module_help_and_not_implemented_command() -> None:
     for command in ("validate-batch", "run-batch", "sync-github"):
         assert command in help_result.stdout
 
+    assert "gate0" in help_result.stdout
+
+    gate0_help = subprocess.run(
+        [sys.executable, "-m", "phase5", "gate0", "--help"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert gate0_help.returncode == 0
+    assert "--strict" in gate0_help.stdout
+
     batch_id = BatchId.build(
         dataset="P5-DV-1.0.0-A7C91E42",
         workload=TrialPhase.PHASE5_ADVERSARIAL_CORE,
