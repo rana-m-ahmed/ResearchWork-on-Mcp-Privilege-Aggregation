@@ -18,16 +18,16 @@ def main():
     # The Phase 4.5 execution plan Section 20 strictly specifies:
     # 1 model, D3 and D5 only, POISON_TD and POISON_CA only.
     matrix = [
-        {"model_slot": "M1", "density": "D3", "metadata_surface": "POISON_TD", "attack_family": "DIRECT_OVERRIDE", "payload_id": "dry_run_payload_1"},
-        {"model_slot": "M1", "density": "D3", "metadata_surface": "POISON_CA", "attack_family": "DIRECT_OVERRIDE", "payload_id": "dry_run_payload_2"},
-        {"model_slot": "M1", "density": "D5", "metadata_surface": "POISON_TD", "attack_family": "CROSS_CAPABILITY_ESCALATION", "payload_id": "dry_run_payload_3"},
-        {"model_slot": "M1", "density": "D5", "metadata_surface": "POISON_CA", "attack_family": "CROSS_CAPABILITY_ESCALATION", "payload_id": "dry_run_payload_4"}
+        {"model_id": "M1", "density": "D3", "metadata_surface_condition": "POISON_TD", "attack_family": "DIRECT_OVERRIDE", "payload_id": "dry_run_payload_1"},
+        {"model_id": "M1", "density": "D3", "metadata_surface_condition": "POISON_CA", "attack_family": "DIRECT_OVERRIDE", "payload_id": "dry_run_payload_2"},
+        {"model_id": "M1", "density": "D5", "metadata_surface_condition": "POISON_TD", "attack_family": "CROSS_CAPABILITY_ESCALATION", "payload_id": "dry_run_payload_3"},
+        {"model_id": "M1", "density": "D5", "metadata_surface_condition": "POISON_CA", "attack_family": "CROSS_CAPABILITY_ESCALATION", "payload_id": "dry_run_payload_4"}
     ]
     
     os.makedirs(os.path.dirname(args.matrix_out), exist_ok=True)
     
     with open(args.matrix_out, "w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=["model_slot", "density", "metadata_surface", "attack_family", "payload_id"])
+        writer = csv.DictWriter(f, fieldnames=["model_id", "density", "metadata_surface_condition", "attack_family", "payload_id"])
         writer.writeheader()
         for row in matrix:
             writer.writerow(row)

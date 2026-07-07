@@ -47,7 +47,7 @@ def main():
     
     os.makedirs(os.path.dirname(args.schema_out), exist_ok=True)
     with open(args.schema_out, "w", encoding="utf-8") as f:
-        json.dump(schema, f, indent=2)
+        json.dump(schema, f, indent=2, sort_keys=True, ensure_ascii=False)
         
     try:
         # Validate that the generated JSON is valid natively

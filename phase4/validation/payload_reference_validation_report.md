@@ -1,23 +1,25 @@
 # Payload Reference Validation Report
 
-**Timestamp (UTC):** 2026-07-04T20:23:18.327254+00:00
+**Timestamp (UTC):** 2026-07-07T13:20:58.218392+00:00
 **Software Version:** 1.0.0
 
 ## Purpose
-Ensure payloads referenced in Phase 4 exist in the master ledger via exhaustive repository search.
+Ensure payloads referenced in Phase 4 exist in the master ledger via canonical Phase 1 metadata.
 
 ## Inputs Evaluated
-- Repository files matching '*payload*.json'
+- phase1/ledger/payload_provenance_ledger.json
 
 ## Checks Performed
-- Exhaustive filesystem traversal
-- JSON schema check for POISON tags
-- SHA-256 Hashing
+- Ledger file existence
+- JSON schema check for payload entries
+- Duplicate ID prevention
+- Extract ID and Hash dynamically
+- Metadata consistency cross-check
 
 ## Summary
 Status: PASS
 
-Payload references mapped successfully from repository discovery.
+Successfully validated and mapped 234 canonical payloads without duplicates.
 
 ## Failures
 No failures detected.
@@ -31,8 +33,6 @@ No warnings detected.
 ## Evidence Log
 ```json
 {
-  "payload_files_discovered": {
-    "./phase2_5/inputs/payload_approved_set.json": "b913d5ae30d568588539ee592a978420358a31f42263b8d7571e31ef0e7ab4c6"
-  }
+  "payloads_mapped_count": 234
 }
 ```

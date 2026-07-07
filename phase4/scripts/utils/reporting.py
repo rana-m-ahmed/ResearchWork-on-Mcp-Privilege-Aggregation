@@ -77,5 +77,5 @@ def generate_report(
         f.write("## Evidence Log\n")
         f.write("```json\n")
         import json
-        f.write(json.dumps(evidence, indent=2))
+        f.write(json.dumps(evidence, indent=2, sort_keys=True, ensure_ascii=False))
         f.write("\n```\n")

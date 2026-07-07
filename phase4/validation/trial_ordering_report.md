@@ -1,24 +1,27 @@
 # Trial Ordering Generation Report
 
-**Timestamp (UTC):** 2026-07-04T20:23:19.610366+00:00
+**Timestamp (UTC):** 2026-07-07T13:20:58.471849+00:00
 **Software Version:** 1.0.0
 
 ## Purpose
 Generate a strict deterministic trial schedule for Phase 5.
 
 ## Inputs Evaluated
-- phase3/tasks/task_corpus.json
-- phase2_5/inputs/payload_approved_set.json
+- phase4/configs/phase5_schema_freeze.json
+- phase1/ledger/payload_provenance_ledger.json
 - phase4/configs/model_set_freeze.yaml
+- phase4/configs/defense_config_freeze.yaml
 
 ## Checks Performed
 - Cross-product generation
-- Deterministic PRNG shuffle (seed 42)
+- Isolated PRNG shuffle (seed 42)
+- Trial uniqueness check
+- Payload integrity check
 
 ## Summary
 Status: PASS
 
-Generated 36 unique trial combinations successfully utilizing valid upstream artifacts.
+Generated 2808 unique trial combinations deterministically utilizing valid upstream artifacts.
 
 ## Failures
 No failures detected.
@@ -32,22 +35,22 @@ No warnings detected.
 ## Evidence Log
 ```json
 {
-  "total_trials": 36,
-  "models_included": [
-    "M1",
-    "M2",
-    "M3",
-    "M4"
+  "defenses_included": [
+    "IHR_SPCE"
   ],
   "densities_included": [
     "D1",
     "D3",
     "D5"
   ],
-  "payload_conditions": [
-    "CLEAN",
-    "POISON-TD",
-    "POISON-CA"
-  ]
+  "models_included": [
+    "M1",
+    "M2",
+    "M3",
+    "M4"
+  ],
+  "payload_count": 234,
+  "total_trials": 2808,
+  "trial_order_sha256": "2c0e96bd07245b95021c6521b7730db645acbd7686af6bb8127e7d36f3fb426f"
 }
 ```

@@ -5,6 +5,7 @@ Purpose: Reusable hashing functions for Phase 4 validation.
 import hashlib
 import os
 from typing import Dict
+from pathlib import Path
 
 def hash_file_sha256(filepath: str) -> str:
     """Computes the SHA-256 hash of a file."""
@@ -23,12 +24,13 @@ def hash_directory_sha256(dirpath: str, exclude_files: list = None) -> Dict[str,
         exclude_files = []
         
     hashes = {}
-    for root, _, files in os.walk(dirpath):
+    for root, dirs, files in os.walk(dirpath):
+        dirs.sort()
         for file in sorted(files):
             if file in exclude_files:
                 continue
             filepath = os.path.join(root, file)
             # Normalize path for cross-platform consistency
-            norm_path = filepath.replace('\\', '/')
+            norm_path = Path(filepath).as_posix()
             hashes[norm_path] = hash_file_sha256(filepath)
     return hashes
