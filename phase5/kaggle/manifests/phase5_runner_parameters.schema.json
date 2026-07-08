@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "approved_operational_limits": {
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint_barrier_interval_trials": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "safe_session_hours": {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        }
+      },
+      "required": [
+        "safe_session_hours",
+        "checkpoint_barrier_interval_trials"
+      ],
+      "type": "object"
+    },
+    "evidence_branch": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "model_branch": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "repository_branch": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "source_branch": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "repository_branch",
+    "source_branch",
+    "model_branch",
+    "evidence_branch",
+    "approved_operational_limits"
+  ],
+  "title": "Phase 5 Kaggle Runner Parameters",
+  "type": "object"
+}

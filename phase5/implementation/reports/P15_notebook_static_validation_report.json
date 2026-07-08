@@ -1,0 +1,32 @@
+{
+  "editable_parameter_keys": [
+    "repository_branch",
+    "source_branch",
+    "model_branch",
+    "evidence_branch",
+    "approved_operational_limits"
+  ],
+  "findings": [],
+  "forbidden_findings": [],
+  "notebook_path": "phase5/kaggle/phase5_runner.ipynb",
+  "public_cli_prefix": [
+    "C:\\Users\\ranam\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-m",
+    "phase5"
+  ],
+  "schema_path": "phase5/kaggle/manifests/phase5_runner_parameters.schema.json",
+  "secret_scan_findings": [],
+  "stage_sequence": [
+    "environment_identity",
+    "clone_checkout",
+    "preparation_gate0",
+    "campaign_plan",
+    "canary_placeholder",
+    "open_seal",
+    "unified_campaign",
+    "optional_sync_barriers",
+    "final_closure_sync",
+    "report"
+  ],
+  "status": "PASS"
+}

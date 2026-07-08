@@ -1,0 +1,61 @@
+task_id: P15
+title: Thin Kaggle Notebook, Bootstrap, Operator Runbook, and Handoff Contract
+parent_requirements:
+  - docs/Phase5_Revised_Execution_Plan_v3_2.md
+  - docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+  - P00 repository reality audit
+allowed_paths:
+  - phase5/kaggle/
+  - phase5/tests/
+  - phase5/implementation/tasks/
+  - phase5/implementation/reports/
+forbidden_paths:
+  - phase4/
+  - phase4_5/
+  - client/
+  - server/
+  - docs/
+  - configs/
+  - schemas/
+  - reproducibility/
+  - prompts/
+inputs:
+  - docs/Phase5_Revised_Execution_Plan_v3_2.md
+  - docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+  - phase5/manifests/batch_partition_manifest.json
+  - phase5/validation/gate0_authorization_report.md
+  - phase5/validation/kaggle_run_plan.json
+  - phase4_5/configs/phase45_checkpoint_resume.yaml
+  - phase4_5/validation/phase45_final_go_no_go.md
+  - phase4_5/validation/phase45_kaggle_quota_feasibility_report.md
+  - phase4_5/validation/phase45_authentic_completion_audit.md
+deliverables:
+  - phase5/kaggle/phase5_runner.ipynb
+  - thin Kaggle bootstrap/session/finalize/sync wrappers that only call public CLI
+  - Kaggle README and operator runbook
+  - editable parameter schema
+  - handoff contract and secret-name documentation
+  - notebook static validation report
+  - P15 implementation report
+required_tests:
+  - parse notebook JSON
+  - top-to-bottom command-order static test
+  - scientific-logic duplication scan
+  - secret literal scan
+  - editable-parameter whitelist
+  - only public CLI invocation
+  - forbidden outcome-display scan
+  - sync/reseal order test
+  - fake local notebook-wrapper smoke test without Kaggle
+  - bootstrap/session/finalize wrapper smoke tests
+  - fail-closed sync barrier on CLI failure
+acceptance_criteria:
+  - Notebook is thin and deterministic.
+  - It cannot bypass Gate 0, seal, finalization, sync guards, or re-verification.
+  - No Kaggle run is performed.
+  - Operator documentation is sufficient for handoff.
+commit_message: phase5(P15): prepare thin Kaggle handoff notebook
+notes:
+  - One model campaign is the target per Kaggle session; the actual count comes from P05 run planning.
