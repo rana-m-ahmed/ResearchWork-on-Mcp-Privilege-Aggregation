@@ -1,0 +1,22 @@
+{
+  "manifest": "frozen_bundle_supersession_manifest",
+  "date": "2026-07-08",
+  "superseded_path": "phase4/frozen_bundle/",
+  "supersession_status": "SUPERSEDED_SCIENTIFICALLY_INCOMPLETE",
+  "corrected_replacement_path": null,
+  "corrected_replacement_created": false,
+  "authorization_hashes": {
+    "governance/phase4_versioned_remediation_authorization.md": "d25231a798eee6550f1041b8eed705766a912ddb2875b702d04e89e4deb30b97",
+    "governance/phase4_versioned_remediation_authorization.json": "a53137a076ba81d1da7c705950fc541989fd37cc0a9c2050209199d14eb08a71"
+  },
+  "reason": {
+    "core_rows": 2808,
+    "defense_rows": 0,
+    "utility_rows": 0,
+    "approved_core_rows": 5400,
+    "approved_defense_rows": 2400,
+    "approved_utility_rows": 2400,
+    "core_defense_condition_observed": "IHR_SPCE",
+    "core_defense_condition_expected": "BASELINE"
+  }
+}

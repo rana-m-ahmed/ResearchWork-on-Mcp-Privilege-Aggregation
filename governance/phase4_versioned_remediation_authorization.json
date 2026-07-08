@@ -1,0 +1,31 @@
+{
+  "record": "phase4_versioned_remediation_authorization",
+  "date": "2026-07-08",
+  "authorization_scope": "additive_versioned_remediation_only",
+  "original_phase4_package": {
+    "path": "phase4/frozen_bundle/",
+    "status": "IMMUTABLE",
+    "may_rewrite": false,
+    "may_delete": false,
+    "may_replace": false
+  },
+  "scientific_incompleteness": {
+    "observed_core_rows": 2808,
+    "observed_defense_rows": 0,
+    "observed_utility_rows": 0,
+    "approved_core_target": 5400,
+    "approved_defense_target": 2400,
+    "approved_utility_target": 2400,
+    "approved_total_target": 10200
+  },
+  "corrected_artifacts": {
+    "must_use_new_paths": true,
+    "must_use_new_hashes": true,
+    "must_be_constructed_only_from_authoritative_inputs": true
+  },
+  "adoption_requirements": {
+    "new_phase4_verdict_required": true,
+    "phase4_5_revalidation_required": true,
+    "phase5_blocked_until_revalidation": true
+  }
+}

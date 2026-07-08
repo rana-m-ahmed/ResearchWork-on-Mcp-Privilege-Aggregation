@@ -1,0 +1,16 @@
+{
+  "status": "BLOCKED",
+  "corrected_package_created": false,
+  "old_package_counts": {
+    "core": 2808,
+    "defense": 0,
+    "utility": 0,
+    "total": 2808
+  },
+  "approved_targets": {
+    "core": 5400,
+    "defense": 2400,
+    "utility": 2400,
+    "total": 10200
+  }
+}

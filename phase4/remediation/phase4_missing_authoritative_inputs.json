@@ -1,0 +1,21 @@
+{
+  "verdict": "BLOCKED_MISSING_AUTHORITATIVE_INPUT",
+  "corrected_package_created": false,
+  "missing_or_ambiguous_inputs": [
+    "exact_task_allocation_rules",
+    "exact_payload_allocation_rules",
+    "exact_attack_family_allocation",
+    "exact_utility_task_allocation",
+    "corrected_trial_id_grammar",
+    "corrected_row_order_algorithm",
+    "corrected_random_seed",
+    "corrected_queue_schema_and_provenance_fields",
+    "corrected_expected_rows_per_cell",
+    "source_commit_containing_complete_corrected_package"
+  ],
+  "authorization_hashes": {
+    "governance/phase4_versioned_remediation_authorization.md": "d25231a798eee6550f1041b8eed705766a912ddb2875b702d04e89e4deb30b97",
+    "governance/phase4_versioned_remediation_authorization.json": "a53137a076ba81d1da7c705950fc541989fd37cc0a9c2050209199d14eb08a71"
+  },
+  "reason": "Available artifacts establish the target counts but do not provide deterministic construction rules for authentic queue generation."
+}

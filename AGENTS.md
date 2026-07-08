@@ -1,6 +1,7 @@
 # Repository Instructions
 
 - Treat `phase4/` and `phase4_5/` as frozen, read-only sources of truth.
+- Existing Phase 4 frozen artifacts remain immutable. Additive, versioned remediation artifacts under explicitly approved remediation/v2 paths are permitted. In-place modification or deletion of the original frozen package remains forbidden.
 - Do not invent missing scientific settings, model identities, trial counts, parser rules, or evidence values.
 - Keep Phase 5 changes task-scoped and fail closed when a frozen value is missing, ambiguous, or hash-invalid.
 - Add tests for every new behavior, including negative and fault-path coverage.

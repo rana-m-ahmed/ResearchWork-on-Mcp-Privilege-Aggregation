@@ -1,0 +1,25 @@
+{
+  "source_commit_inspected": "b0e7360ad91638e786dae453f585661f4852a4eb",
+  "deterministic_regeneration_possible": false,
+  "usable_inputs": [
+    {
+      "input_name": "four model identities",
+      "authoritative_path": "phase4/configs/model_set_freeze.yaml",
+      "source_commit": "2e751a4b16e9d1d195eb60f17fc4e72604d9c5ba",
+      "sha256": "686c112ebfc8e7790098b26454504edd385ee6a21ab41d636949afb7f1a05d0d",
+      "usable_for_deterministic_regeneration": true
+    }
+  ],
+  "blocking_inputs": [
+    "BASELINE not present in defense_config_freeze.yaml",
+    "task allocation rules absent",
+    "payload allocation rules absent",
+    "attack-family allocation absent",
+    "utility allocation absent",
+    "corrected trial-ID grammar absent",
+    "corrected row-order algorithm absent",
+    "corrected random seed absent",
+    "corrected queue schema/provenance fields absent",
+    "cell count definition ambiguous between Phase 4 150-per-cell prose and Phase 5 50-per-cell prose"
+  ]
+}

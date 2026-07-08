@@ -1,0 +1,19 @@
+{
+  "verdict": "BLOCKED_MISSING_AUTHORITATIVE_INPUT",
+  "corrected_package_created": false,
+  "queue_summary": {
+    "core": null,
+    "defense": null,
+    "utility": null,
+    "total": null,
+    "M1": null,
+    "M2": null,
+    "M3": null,
+    "M4": null
+  },
+  "authorization_hashes": {
+    "governance/phase4_versioned_remediation_authorization.md": "d25231a798eee6550f1041b8eed705766a912ddb2875b702d04e89e4deb30b97",
+    "governance/phase4_versioned_remediation_authorization.json": "a53137a076ba81d1da7c705950fc541989fd37cc0a9c2050209199d14eb08a71"
+  },
+  "next_authorized_step": "DO_NOT_PROCEED_AUTHORITATIVE_INPUT_RESOLUTION_REQUIRED"
+}

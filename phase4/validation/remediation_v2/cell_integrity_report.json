@@ -1,0 +1,16 @@
+{
+  "status": "BLOCKED",
+  "corrected_package_created": false,
+  "rejected_erroneous_counting": {
+    "rows": 2808,
+    "columns": 7,
+    "rows_times_columns": 19656,
+    "valid_scientific_cell_count": false
+  },
+  "missing_inputs": [
+    "scientific_cell_tuple_per_workload",
+    "expected_rows_per_corrected_cell",
+    "task_payload_attack_family_allocation_rules",
+    "corrected_row_order_and_trial_id_rules"
+  ]
+}

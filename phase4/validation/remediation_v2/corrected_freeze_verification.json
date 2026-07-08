@@ -1,0 +1,7 @@
+{
+  "status": "BLOCKED_MISSING_AUTHORITATIVE_INPUT",
+  "corrected_package_created": false,
+  "frozen_bundle_v2_path": null,
+  "determinism_verification_run": false,
+  "reason": "Authoritative deterministic construction inputs are missing or ambiguous."
+}
