@@ -1,0 +1,21 @@
+{
+  "allowed_staged_prefixes": [
+    "phase5/implementation/reports/",
+    "phase5/checkpoints/",
+    "phase5/evidence/",
+    "phase5/manifests/"
+  ],
+  "batch_id": "batch-001",
+  "branch": "evidence",
+  "commit_utc": "2026-07-08T00:00:00Z",
+  "common_source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "expected_remote_head_before_push": "3c5e7e22caed2e1ef3a624c474007eaabf2f48cd",
+  "frozen_hashes": {
+    "phase5/implementation/reports/artifact.json": "a574fda410d541fa299a21bc9ffdf23f81b116d03a508ff2f9b2e0ce5a48466b"
+  },
+  "remote_name": "origin",
+  "run_id": "run-001",
+  "runtime_config_path": "phase5/configs/runtime.json",
+  "runtime_config_sha256": "4ec8ddedb4ad5714fd68c96cbfeafa64b15e0959db47de6805e526debf8606a3",
+  "source_commit": "3c5e7e22caed2e1ef3a624c474007eaabf2f48cd"
+}

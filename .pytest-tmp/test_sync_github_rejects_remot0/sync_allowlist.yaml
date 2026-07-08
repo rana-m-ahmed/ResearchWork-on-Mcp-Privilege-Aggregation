@@ -1,0 +1,5 @@
+allowed_staged_prefixes:
+  - phase5/implementation/reports/
+  - phase5/checkpoints/
+  - phase5/evidence/
+  - phase5/manifests/
