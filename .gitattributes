@@ -5,3 +5,9 @@ phase3/** text eol=crlf
 phase4/** text eol=crlf
 phase4_5/** text eol=crlf
 server/** text eol=crlf
+
+client/model_backend.py text eol=lf
+docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md text eol=lf
+docs/Phase5_Revised_Execution_Plan_v3_2.md text eol=lf
+phase3/tasks/task_corpus_hash.txt text eol=lf
+phase3/tasks/task_generation_metadata.json text eol=lf

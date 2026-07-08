@@ -79,3 +79,8 @@ def test_frozen_phase4_artifacts_use_crlf_checkout_rules() -> None:
     assert "phase4/** text eol=crlf" in gitattributes
     assert "phase4_5/** text eol=crlf" in gitattributes
     assert "server/** text eol=crlf" in gitattributes
+    assert "client/model_backend.py text eol=lf" in gitattributes
+    assert "docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md text eol=lf" in gitattributes
+    assert "docs/Phase5_Revised_Execution_Plan_v3_2.md text eol=lf" in gitattributes
+    assert "phase3/tasks/task_corpus_hash.txt text eol=lf" in gitattributes
+    assert "phase3/tasks/task_generation_metadata.json text eol=lf" in gitattributes

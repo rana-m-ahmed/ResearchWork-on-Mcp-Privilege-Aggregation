@@ -1,15 +1,17 @@
 {
   "report_id": "P06_ci_line_ending_fix_report",
   "summary": [
-    "Scoped git attributes were added for all verified frozen text artifacts.",
+    "Scoped git attributes were added for verified frozen text artifacts.",
+    "Most verified files require CRLF checkout bytes, while five verified files retain LF checkout bytes because their registry hashes match the Git blob.",
     "The checkout policy preserves the verified SHA-256 values already recorded in the Phase 5 upstream artifact registry."
   ],
   "files_changed": [
     ".gitattributes",
+    "phase5/tests/test_domain_registry.py",
     "phase5/tests/test_scaffold_guards.py"
   ],
   "validation": [
-    "Added a guard test for the frozen checkout rules.",
+    "Added guard tests for the frozen checkout rules and registry/hash consistency.",
     "Re-ran the Phase 5 registry and test suite locally."
   ]
 }

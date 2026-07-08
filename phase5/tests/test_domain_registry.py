@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -39,3 +40,19 @@ def test_missing_frozen_setting_fails_closed(tmp_path: Path) -> None:
     registry = load_upstream_artifact_registry(registry_path, verify_verified_entries=False)
     with pytest.raises(MissingFrozenSettingError):
         registry.require("Phase 4 GO report")
+
+
+def test_verified_registry_hashes_match_checkout_attributes() -> None:
+    registry = load_upstream_artifact_registry(verify_verified_entries=False)
+
+    for entry in registry.entries:
+        if not entry.verified:
+            continue
+        for relative_path, expected_sha256 in zip(entry.actual_paths, entry.sha256, strict=True):
+            path_text = relative_path.as_posix()
+            eol = subprocess.check_output(["git", "check-attr", "eol", "--", path_text], text=True).strip()
+            blob = subprocess.check_output(["git", "show", f"HEAD:{path_text}"])
+            expected_bytes = blob.replace(b"\n", b"\r\n") if eol.endswith("crlf") else blob
+
+            actual_sha256 = hashlib.sha256(expected_bytes).hexdigest()
+            assert actual_sha256.lower() == expected_sha256.lower(), path_text
