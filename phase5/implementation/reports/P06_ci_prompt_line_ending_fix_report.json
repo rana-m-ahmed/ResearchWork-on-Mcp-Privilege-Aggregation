@@ -1,0 +1,20 @@
+{
+  "report_id": "P06_ci_prompt_line_ending_fix_report",
+  "summary": [
+    "CI prompt hash failures were traced to Linux checkout line endings for frozen prompt text assets.",
+    "The prompt text files and prompt hash manifest were not rewritten.",
+    ".gitattributes now forces prompts/*.txt to CRLF checkout bytes so CI materializes the frozen bytes used by the manifest."
+  ],
+  "files_changed": [
+    ".gitattributes",
+    "phase5/tests/test_scaffold_guards.py"
+  ],
+  "validation": [
+    "git check-attr confirmed prompts/*.txt resolves to text eol=crlf.",
+    "pytest -q phase5/tests/test_scaffold_guards.py phase5/tests/test_prompt_compiler_and_token_budget.py passed with 23 tests.",
+    "pytest -q phase5/tests passed with 142 tests.",
+    "python -m compileall phase5 completed successfully.",
+    "git diff --check completed successfully.",
+    "Prompt manifest hashes verified locally against prompts/prompt_hash_manifest.json."
+  ]
+}

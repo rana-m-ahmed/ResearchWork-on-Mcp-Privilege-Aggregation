@@ -4,6 +4,7 @@ phase2_5/** text eol=crlf
 phase3/** text eol=crlf
 phase4/** text eol=crlf
 phase4_5/** text eol=crlf
+prompts/*.txt text eol=crlf
 server/** text eol=crlf
 
 client/model_backend.py text eol=lf
