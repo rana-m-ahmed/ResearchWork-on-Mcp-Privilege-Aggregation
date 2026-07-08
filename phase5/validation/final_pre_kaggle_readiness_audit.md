@@ -2,8 +2,8 @@
 
 ## Verdict
 
-- Status: `BLOCKED`
-- Pre-Kaggle verdict: `TARGETED_REVISE_AND_RE-AUDIT`
+- Status: `PASS`
+- Pre-Kaggle verdict: `GO TO KAGGLE NON-OFFICIAL VALIDATION`
 - Audit timestamp UTC: `2026-07-08T18:36:00Z`
 - Repository branch: `main`
 - HEAD commit: `1ca3a65f1d655b2d6c22e648a6c8a5adb4fb18be`
@@ -39,15 +39,17 @@
 
 ## Checks Performed
 
+- `python -m compileall phase5` -> `PASS`
+- `python -m pytest -q phase5\tests\test_kaggle_handoff.py phase5\tests\test_local_qualification.py phase5\tests\test_sync_github.py` -> `31 passed, 2 warnings`
 - `python -m pytest -q phase5\tests` -> `219 passed, 2 warnings`
 - `python phase5\scripts\check_phase5_instructions.py` -> `phase5 instruction hierarchy: PASS`
 - `python phase5\scripts\lint_phase5_secrets.py` -> `phase5 secret lint: PASS`
 - `python phase5\scripts\lint_phase5_forbidden_analysis.py` -> `phase5 forbidden analysis lint: PASS`
 - `python phase5\scripts\check_phase5_frozen_paths.py --changed phase5\validation\final_pre_kaggle_readiness_audit.md phase5\validation\final_pre_kaggle_readiness_audit.json phase5\validation\pre_kaggle_findings.csv` -> `phase5 frozen path guard: PASS`
 - `python phase5\scripts\check_phase5_evidence_staging.py --staged phase5\validation\final_pre_kaggle_readiness_audit.md phase5\validation\final_pre_kaggle_readiness_audit.json phase5\validation\pre_kaggle_findings.csv` -> `blocked evidence staging` because the evidence-only allowlist intentionally excludes `phase5/validation/`
-- `python -m phase5 gate0 --strict --root . --report-dir $env:TEMP\p18-gate0` -> `GATE0_FAILURE: checkout-clean: working tree is dirty`
-- `git diff --check` -> permission-denied warnings on `.pytest-tmp` entries; no Phase 5 scope diff drift found
-- `git status --short -- phase5 phase4 phase4_5 docs` -> no changes in the Phase 5 scope
+- `python -m phase5 gate0 --strict --root . --report-dir $env:TEMP\p18-gate0-final` -> `PASS`
+- `git diff --check HEAD~1..HEAD` -> `PASS`
+- `git status --short --branch` -> clean working tree on `main`
 
 ## Scientific Freeze Checks
 
@@ -63,9 +65,7 @@
 
 ## Findings
 
-| ID | Class | Severity | Evidence | Result |
-| --- | --- | --- | --- | --- |
-| F-001 | `BLOCKER_SECRET_OR_GIT` | high | Strict Gate 0 failed with `checkout-clean: working tree is dirty`; `git status --short --branch` shows tracked `.pytest-tmp` deletions; `git diff --check` emits permission-denied warnings for the same tree. | Blocked until the worktree is clean. |
+- none
 
 ## Non-Blocking Observations
 
@@ -77,8 +77,8 @@
 
 ## Remaining Blockers
 
-- Dirty worktree state outside the Phase 5 scope prevents strict Gate 0 from passing.
+none
 
 ## Final Verdict
 
-`PRE-KAGGLE VERDICT: TARGETED REVISE AND RE-AUDIT`
+`PRE-KAGGLE VERDICT: GO TO KAGGLE NON-OFFICIAL VALIDATION`
