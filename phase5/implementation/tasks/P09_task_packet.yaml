@@ -1,0 +1,58 @@
+task_id: P09
+title: Frozen Model Backend Adapter and Runtime Identity Checks
+parent_requirements:
+  - Phase5_Revised_Execution_Plan_v3_2.md
+  - Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+  - P00 repository reality audit
+allowed_paths:
+  - phase5/runtime/__init__.py
+  - phase5/runtime/model_backend_adapter.py
+  - phase5/tests/
+  - phase5/implementation/tasks/
+  - phase5/implementation/reports/
+forbidden_paths:
+  - phase4/
+  - phase4_5/
+  - client/
+  - server/
+  - docs/
+  - configs/
+  - schemas/
+  - reproducibility/
+  - prompts/
+inputs:
+  - docs/Phase5_Revised_Execution_Plan_v3_2.md
+  - docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+  - phase4/configs/model_set_freeze.yaml
+  - phase4/configs/model_1_freeze.yaml
+  - phase4_5/configs/phase45_selected_model.yaml
+  - phase4_5/configs/phase45_local_dryrun.yaml
+  - phase4/validation/model_identity_freeze_report.md
+deliverables:
+  - frozen model backend identity loader
+  - runtime adapter with fail-closed identity validation
+  - selected-model and local-dry-run cross-checks
+  - task packet and implementation report
+  - positive, negative, invariant, and fault-path tests
+required_tests:
+  - frozen selected-model tuple loads exactly from verified artifacts
+  - exact runtime snapshot is accepted
+  - placeholder runtime digest is rejected
+  - missing runtime snapshot fields fail closed
+  - selected model and local dry-run divergence fail closed
+  - hash-invalid frozen model file fails closed
+  - missing selected model file fails closed
+  - malformed frozen model config fails closed
+acceptance_criteria:
+  - The frozen model/backend identity tuple is loaded from verified Phase 4 and Phase 4.5 inputs.
+  - Runtime identity validation fails closed on missing, mismatched, placeholder, or hash-invalid values.
+  - The adapter remains local, deterministic, and network-free.
+  - Phase 4 and Phase 4.5 artifacts remain unmodified.
+commit_message: phase5(P09): add frozen model backend identity checks
+dependencies:
+  - P08
+  - P07
+notes:
+  - The task is intentionally scoped to a loader/adapter and identity validation only; no model inference or network access is introduced.

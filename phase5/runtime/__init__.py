@@ -44,6 +44,12 @@ from .mcp_server_launcher import (
     is_loopback_host,
     probe_reset_dispatch,
 )
+from .model_backend_adapter import (
+    FrozenModelBackendAdapter,
+    FrozenModelBackendIdentity,
+    build_frozen_model_backend_adapter,
+    load_frozen_model_backend_identity,
+)
 from .reset_controller import ResetController, ResetOutcome, load_reset_failure_retry_limit
 from .workspace_isolation import AttemptWorkspaceIsolation, build_attempt_workspace_isolation
 
@@ -60,6 +66,8 @@ __all__ = [
     "FrozenPromptBundle",
     "FROZEN_MODEL_SLOT",
     "McpServerLauncher",
+    "FrozenModelBackendAdapter",
+    "FrozenModelBackendIdentity",
     "InfrastructureOversizeError",
     "OverflowClassification",
     "ResetController",
@@ -76,6 +84,7 @@ __all__ = [
     "build_exact_tokenizer",
     "build_validated_server",
     "build_attempt_workspace_isolation",
+    "build_frozen_model_backend_adapter",
     "classify_overflow",
     "compile_frozen_prompt",
     "discover_tool_names",
@@ -83,6 +92,7 @@ __all__ = [
     "enforce_token_budget",
     "is_loopback_host",
     "load_frozen_prompt_bundle",
+    "load_frozen_model_backend_identity",
     "load_frozen_tokenizer_identity",
     "load_reset_failure_retry_limit",
     "normalize_turns",

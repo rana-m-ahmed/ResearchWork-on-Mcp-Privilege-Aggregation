@@ -22,6 +22,7 @@ def test_required_phase5_packages_exist() -> None:
     assert (Path("phase5") / "attempts" / "templates" / "attempt_lineage.csv").is_file()
     assert (Path("phase5") / "attempts" / "templates" / "attempt_workspace_metadata.json").is_file()
     assert (Path("phase5") / "runtime" / "mcp_server_launcher.py").is_file()
+    assert (Path("phase5") / "runtime" / "model_backend_adapter.py").is_file()
     assert (Path("phase5") / "runtime" / "prompt_compiler.py").is_file()
     assert (Path("phase5") / "runtime" / "prompt_serialization.py").is_file()
     assert (Path("phase5") / "runtime" / "reset_controller.py").is_file()

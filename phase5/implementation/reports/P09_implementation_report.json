@@ -1,0 +1,95 @@
+{
+  "commit_sha": null,
+  "fault_and_negative_tests": [
+    "Frozen selected-model and local dry-run config values match exactly.",
+    "Exact runtime snapshots are accepted.",
+    "Placeholder runtime digests are rejected.",
+    "Missing runtime snapshot fields fail closed.",
+    "Selected-model and local dry-run divergence fails closed.",
+    "Hash-invalid frozen model files fail closed.",
+    "Missing selected-model files fail closed.",
+    "Malformed frozen model configs fail closed."
+  ],
+  "files_changed": [
+    "phase5/runtime/__init__.py",
+    "phase5/runtime/model_backend_adapter.py",
+    "phase5/tests/test_model_backend_adapter.py",
+    "phase5/tests/test_scaffold_imports.py",
+    "phase5/implementation/tasks/P09_task_packet.yaml",
+    "phase5/implementation/reports/P09_implementation_report.md",
+    "phase5/implementation/reports/P09_implementation_report.json"
+  ],
+  "frozen_inputs_consumed": [
+    {
+      "path": "docs/Phase5_Revised_Execution_Plan_v3_2.md",
+      "sha256": "DBCB49047AF17ED3C179D80F3BE0DD0536CD57015473791CF21A5FEF3A0D3953"
+    },
+    {
+      "path": "docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md",
+      "sha256": "5C9CCD4A0B93E894FE1DC0DF1ADC311AA34C59C3CBBC524D85523C612939AAB0"
+    },
+    {
+      "path": "phase5/configs/upstream_artifact_registry.json",
+      "sha256": "332DD39DEBD845E7CC222131EDDD058AB45D64BB8856BDFAA971055ACEC50E7B"
+    },
+    {
+      "path": "phase4/configs/model_set_freeze.yaml",
+      "sha256": "686C112EBFC8E7790098B26454504EDD385EE6A21AB41D636949AFB7F1A05D0D"
+    },
+    {
+      "path": "phase4/configs/model_1_freeze.yaml",
+      "sha256": "6BB3E095CF1AAE4BA2961C35EFDF05D94D615E7ABD246F6B5E95B00C51DC0412"
+    },
+    {
+      "path": "phase4_5/configs/phase45_selected_model.yaml",
+      "sha256": "BE05A5897C35B152974CFE3B64789D7A287F037DF19B58D9BF435A04D54A5AD2"
+    },
+    {
+      "path": "phase4_5/configs/phase45_local_dryrun.yaml",
+      "sha256": "EB8D05F75A2A3FA8D2F493C305A98B84A96D8DCC432E00317C5C9EE47F547DD9"
+    },
+    {
+      "path": "phase4/validation/model_identity_freeze_report.md",
+      "sha256": "37D77674C63EA9A25AD1CE15B472D02566814AD9422AB2A8DFD342B72C22042A"
+    }
+  ],
+  "generated_utc": "2026-07-08T09:06:06.0710680Z",
+  "remaining_blockers": "none",
+  "status": "PASS",
+  "summary": "Implemented a frozen Phase 5 model-backend adapter that resolves the selected model from verified Phase 4 and Phase 4.5 inputs, cross-checks the selected-model and local dry-run configuration, and validates runtime identity snapshots fail closed on missing, mismatched, placeholder, or hash-invalid values.",
+  "task_id": "P09",
+  "tests_run": [
+    {
+      "command": "pytest phase5/tests/test_model_backend_adapter.py -q",
+      "result": "9 passed, 2 warnings"
+    },
+    {
+      "command": "pytest phase5/tests/test_scaffold_imports.py -q",
+      "result": "2 passed, 2 warnings"
+    },
+    {
+      "command": "pytest phase5/tests -q",
+      "result": "141 passed, 2 warnings"
+    },
+    {
+      "command": "python phase5/scripts/check_phase5_instructions.py",
+      "result": "phase5 instruction hierarchy: PASS"
+    },
+    {
+      "command": "python phase5/scripts/lint_phase5_secrets.py",
+      "result": "phase5 secret lint: PASS"
+    },
+    {
+      "command": "python phase5/scripts/check_phase5_frozen_paths.py --changed phase5/runtime/__init__.py phase5/runtime/model_backend_adapter.py phase5/tests/test_model_backend_adapter.py phase5/tests/test_scaffold_imports.py",
+      "result": "phase5 frozen path guard: PASS"
+    },
+    {
+      "command": "python -m compileall phase5",
+      "result": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS with line-ending warnings only"
+    }
+  ]
+}
