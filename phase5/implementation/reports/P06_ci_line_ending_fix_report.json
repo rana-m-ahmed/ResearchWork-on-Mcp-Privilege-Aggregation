@@ -1,0 +1,15 @@
+{
+  "report_id": "P06_ci_line_ending_fix_report",
+  "summary": [
+    "Scoped git attributes were added for all verified frozen text artifacts.",
+    "The checkout policy preserves the verified SHA-256 values already recorded in the Phase 5 upstream artifact registry."
+  ],
+  "files_changed": [
+    ".gitattributes",
+    "phase5/tests/test_scaffold_guards.py"
+  ],
+  "validation": [
+    "Added a guard test for the frozen checkout rules.",
+    "Re-ran the Phase 5 registry and test suite locally."
+  ]
+}

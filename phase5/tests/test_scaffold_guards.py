@@ -68,3 +68,14 @@ def test_frozen_guard_cli_rejects_phase4_paths() -> None:
         check=False,
     )
     assert result.returncode == 1
+
+
+def test_frozen_phase4_artifacts_use_crlf_checkout_rules() -> None:
+    gitattributes = Path(".gitattributes").read_text(encoding="utf-8")
+    assert "client/** text eol=crlf" in gitattributes
+    assert "docs/** text eol=crlf" in gitattributes
+    assert "phase2_5/** text eol=crlf" in gitattributes
+    assert "phase3/** text eol=crlf" in gitattributes
+    assert "phase4/** text eol=crlf" in gitattributes
+    assert "phase4_5/** text eol=crlf" in gitattributes
+    assert "server/** text eol=crlf" in gitattributes
