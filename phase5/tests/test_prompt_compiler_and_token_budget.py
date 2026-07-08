@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -126,6 +127,54 @@ def test_hash_invalid_prompt_reference_fails_closed(tmp_path: Path, monkeypatch:
 
     with pytest.raises(FrozenArtifactHashError):
         load_frozen_prompt_bundle()
+
+
+def test_manifest_metadata_hash_is_line_ending_stable(tmp_path: Path) -> None:
+    def write_root(root: Path, manifest_newline: str) -> None:
+        prompts = root / "prompts"
+        prompts.mkdir(parents=True, exist_ok=True)
+        (root / ".git").mkdir()
+        assets = {
+            "phase3_system_prompt.txt": "system\r\n",
+            "phase3_tool_call_contract.txt": "contract\r\n",
+            "phase3_user_task_template.txt": "Task: {{task_description}}\r\nPlease execute the necessary tools to complete this task.\r\n",
+            "phase3_tool_result_template.txt": "Tool Result [{{tool_name}}]:\r\n{{tool_output}}\r\n",
+        }
+        for name, content in assets.items():
+            (prompts / name).write_text(content, encoding="utf-8", newline="")
+
+        manifest = {
+            "system_prompt": "prompts/phase3_system_prompt.txt",
+            "tool_call_contract": "prompts/phase3_tool_call_contract.txt",
+            "user_task_template": "prompts/phase3_user_task_template.txt",
+            "tool_result_template": "prompts/phase3_tool_result_template.txt",
+        }
+        manifest_text = json.dumps(manifest, indent=2)
+        (prompts / "phase3_prompt_manifest.json").write_text(
+            manifest_text.replace("\n", manifest_newline),
+            encoding="utf-8",
+            newline="",
+        )
+        (prompts / "prompt_hash_manifest.json").write_text(
+            json.dumps(
+                {
+                    name: hashlib.sha256(content.encode("utf-8")).hexdigest()
+                    for name, content in assets.items()
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    lf_root = tmp_path / "lf"
+    crlf_root = tmp_path / "crlf"
+    write_root(lf_root, "\n")
+    write_root(crlf_root, "\r\n")
+
+    lf_bundle = load_frozen_prompt_bundle(lf_root)
+    crlf_bundle = load_frozen_prompt_bundle(crlf_root)
+
+    assert lf_bundle.manifest_path.read_bytes() != crlf_bundle.manifest_path.read_bytes()
+    assert lf_bundle.to_mapping()["manifest_sha256"] == crlf_bundle.to_mapping()["manifest_sha256"]
 
 
 def test_null_payload_compile_matches_golden_fixture() -> None:

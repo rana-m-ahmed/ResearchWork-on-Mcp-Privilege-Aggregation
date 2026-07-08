@@ -39,6 +39,11 @@ def _sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def _sha256_canonical_json(mapping: Mapping[str, Any]) -> str:
+    payload = json.dumps(mapping, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return _sha256_bytes(payload)
+
+
 def _load_json(path: Path) -> Mapping[str, Any]:
     data = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(data, dict):
@@ -169,7 +174,6 @@ def load_frozen_prompt_bundle(root: Path | None = None) -> FrozenPromptBundle:
     if not hash_manifest_path.is_file():
         raise MissingFrozenSettingError(f"prompt hash manifest is missing: {hash_manifest_path.as_posix()}")
 
-    manifest_bytes = manifest_path.read_bytes()
     manifest = _load_json(manifest_path)
     hash_manifest = _load_json(hash_manifest_path)
     if set(manifest.keys()) != set(EXPECTED_PROMPT_KEYS):
@@ -209,7 +213,7 @@ def load_frozen_prompt_bundle(root: Path | None = None) -> FrozenPromptBundle:
     return FrozenPromptBundle(
         manifest_path=manifest_path,
         hash_manifest_path=hash_manifest_path,
-        manifest_sha256=_sha256_bytes(manifest_bytes),
+        manifest_sha256=_sha256_canonical_json(manifest),
         system_prompt=assets["system_prompt"],
         tool_call_contract=assets["tool_call_contract"],
         user_task_template=assets["user_task_template"],
