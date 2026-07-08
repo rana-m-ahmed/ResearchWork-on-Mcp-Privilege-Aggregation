@@ -101,6 +101,7 @@ def _write_sync_manifest(repo: Path, *, source_commit: str, remote_head: str, ma
 def _write_pre_receive_hook(remote: Path) -> None:
     hook = remote / "hooks" / "pre-receive"
     hook.write_text("#!/bin/sh\nexit 1\n", encoding="utf-8")
+    hook.chmod(0o755)
 
 
 def _write_post_receive_reset_hook(remote: Path, branch: str, sha: str) -> None:
@@ -110,6 +111,7 @@ def _write_post_receive_reset_hook(remote: Path, branch: str, sha: str) -> None:
         f"git update-ref refs/heads/{branch} {sha}\n",
         encoding="utf-8",
     )
+    hook.chmod(0o755)
 
 
 def test_sync_allowlist_blocks_source_paths() -> None:
