@@ -3,27 +3,37 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 from typing import Sequence
 
 from . import __version__
+from .campaign import build_dashboard, build_resume_plan, run_campaign
 from .gate0 import run_gate0
 from .kaggle import plan_kaggle_runs
 from .domain.errors import ExitCode, NotImplementedCommandError, Phase5Error
+from .domain.enums import ModelSlot
+from .domain.identifiers import BatchId
 from .domain.session import Phase5Session
+from .runtime.session import CampaignSession
 from .sync.github_checkpoint import perform_session_reverify, perform_sync_github
 
 
 PLANNED_COMMANDS = (
     "gate0",
     "plan-kaggle-runs",
-    "run-batch",
-    "validate-batch",
-    "validate-phase",
+    "checkpoint-status",
+    "resume-plan",
+    "run-campaign",
+    "session-open",
+    "session-close-seal",
     "session-seal",
     "session-reverify",
     "sync-github",
+    "run-batch",
+    "validate-batch",
+    "validate-phase",
     "generate-qa-sample",
     "build-phase6-handoff",
 )
@@ -62,6 +72,36 @@ def build_parser() -> argparse.ArgumentParser:
     plan.add_argument("--safe-session-hours", required=False, type=float)
     plan.add_argument("--output", required=False)
 
+    status = add_planned_command("checkpoint-status", "Render the operational-only dashboard.")
+    status.add_argument("--model-slot", required=True)
+    status.add_argument("--run-id", required=False)
+    status.add_argument("--batch-manifest", required=False, default="phase5/manifests/batch_partition_manifest.json")
+    status.add_argument("--run-plan", required=False, default="phase5/validation/kaggle_run_plan.json")
+    status.add_argument("--output", required=False)
+
+    resume = add_planned_command("resume-plan", "Render the next contiguous campaign slice.")
+    resume.add_argument("--model-slot", required=True)
+    resume.add_argument("--run-id", required=False)
+    resume.add_argument("--batch-manifest", required=False, default="phase5/manifests/batch_partition_manifest.json")
+    resume.add_argument("--run-plan", required=False, default="phase5/validation/kaggle_run_plan.json")
+    resume.add_argument("--output", required=False)
+
+    run_campaign = add_planned_command("run-campaign", "Run the unified long-running campaign loop.")
+    run_campaign.add_argument("--model-slot", required=True)
+    run_campaign.add_argument("--run-id", required=False)
+    run_campaign.add_argument("--utcdate", required=False)
+    run_campaign.add_argument("--until-safety-horizon", action="store_true")
+    run_campaign.add_argument("--batch-manifest", required=False, default="phase5/manifests/batch_partition_manifest.json")
+    run_campaign.add_argument("--run-plan", required=False, default="phase5/validation/kaggle_run_plan.json")
+    run_campaign.add_argument("--output", required=False)
+
+    session_open = add_planned_command("session-open", "Open a new operational campaign session.")
+    session_open.add_argument("--model-slot", required=True)
+    session_open.add_argument("--batch-id", required=True)
+    session_open.add_argument("--run-id", required=False)
+    session_open.add_argument("--utcdate", required=False)
+    session_open.add_argument("--output", required=False)
+
     run_batch = add_planned_command("run-batch", "Execute a single frozen batch.")
     run_batch.add_argument("--batch-id", required=False)
 
@@ -75,10 +115,16 @@ def build_parser() -> argparse.ArgumentParser:
     session_seal = add_planned_command("session-seal", "Open a new seal epoch.")
     session_seal.add_argument("--run-id", required=False)
     session_seal.add_argument("--seal-epoch", required=False, type=int)
+    session_seal.add_argument("--output", required=False)
+
+    session_close = add_planned_command("session-close-seal", "Close the active seal after finalization.")
+    session_close.add_argument("--run-id", required=False)
+    session_close.add_argument("--output", required=False)
 
     session_reverify = add_planned_command("session-reverify", "Reverify source/frozen hashes after sync.")
     session_reverify.add_argument("--repo", required=False, default=".")
     session_reverify.add_argument("--receipt", required=True)
+    session_reverify.add_argument("--output", required=False)
 
     sync = add_planned_command("sync-github", "Synchronize finalized evidence after seal closure.")
     sync.add_argument("--repo", required=False, default=".")
@@ -94,6 +140,78 @@ def build_parser() -> argparse.ArgumentParser:
     handoff.add_argument("--output", required=False)
 
     return parser
+
+
+def _default_json_report_path(output: str | None, default_path: Path) -> tuple[Path, Path]:
+    if output:
+        output_path = Path(output)
+        if output_path.suffix.lower() == ".md":
+            return output_path.with_suffix(".json"), output_path
+        if output_path.suffix.lower() == ".json":
+            return output_path, output_path.with_suffix(".md")
+        return output_path, output_path.with_suffix(".md")
+    return default_path, default_path.with_suffix(".md")
+
+
+def _write_json_md_report(report: object, output: str | None, default_path: Path) -> None:
+    json_path, md_path = _default_json_report_path(output, default_path)
+    to_mapping = getattr(report, "to_mapping", None)
+    to_markdown = getattr(report, "to_markdown", None)
+    if not callable(to_mapping) or not callable(to_markdown):
+        raise Phase5Error("report object must provide to_mapping() and to_markdown()")
+    json_path.parent.mkdir(parents=True, exist_ok=True)
+    json_path.write_text(json.dumps(to_mapping(), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    md_path.write_text(to_markdown(), encoding="utf-8")
+
+
+def _session_state_payload(command: str, session: Phase5Session, *, run_id: str | None = None) -> dict[str, object]:
+    payload: dict[str, object] = {
+        "command": command,
+        "phase5_session": {
+            "seal_epoch": session.seal_epoch,
+            "state": session.state.value,
+            "sync_epoch": session.sync_epoch,
+        },
+    }
+    if run_id is not None:
+        payload["run_id"] = run_id
+    return payload
+
+
+def _session_state_markdown(payload: dict[str, object]) -> str:
+    session = payload["phase5_session"]
+    assert isinstance(session, dict)
+    lines = [
+        "# P14 Session Report",
+        "",
+        f"- Command: `{payload['command']}`",
+    ]
+    if "run_id" in payload:
+        lines.append(f"- Run ID: `{payload['run_id']}`")
+    lines.extend(
+        [
+            f"- Session state: `{session['state']}`",
+            f"- Seal epoch: `{session['seal_epoch']}`",
+            f"- Sync epoch: `{session['sync_epoch']}`",
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
+def _write_session_report(session: Phase5Session, command: str, output: str | None, default_path: Path, *, run_id: str | None = None) -> None:
+    payload = _session_state_payload(command, session, run_id=run_id)
+    json_path, md_path = _default_json_report_path(output, default_path)
+    json_path.parent.mkdir(parents=True, exist_ok=True)
+    json_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    md_path.write_text(_session_state_markdown(payload), encoding="utf-8")
+
+
+def _parse_model_slot(value: str) -> ModelSlot:
+    return ModelSlot.from_value(value)
+
+
+def _parse_batch_id(value: str) -> BatchId:
+    return BatchId.parse(value)
 
 
 def _handle_not_implemented(command: str) -> int:
@@ -147,6 +265,68 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(f"PLAN_FAILURE: {exc}", file=sys.stderr)
             return int(exc.exit_code)
 
+    if args.command == "checkpoint-status":
+        try:
+            report = build_dashboard(
+                model_slot=_parse_model_slot(args.model_slot),
+                run_id=getattr(args, "run_id", None),
+                run_plan_path=Path(args.run_plan),
+                batch_manifest_path=Path(args.batch_manifest),
+            )
+            _write_json_md_report(report, getattr(args, "output", None), Path("phase5/validation/checkpoint_status.json"))
+            return int(ExitCode.SUCCESS)
+        except Phase5Error as exc:
+            print(f"STATUS_FAILURE: {exc}", file=sys.stderr)
+            return int(exc.exit_code)
+
+    if args.command == "resume-plan":
+        try:
+            report = build_resume_plan(
+                model_slot=_parse_model_slot(args.model_slot),
+                run_id=getattr(args, "run_id", None),
+                run_plan_path=Path(args.run_plan),
+                batch_manifest_path=Path(args.batch_manifest),
+            )
+            _write_json_md_report(report, getattr(args, "output", None), Path("phase5/validation/campaign_resume_plan.json"))
+            return int(ExitCode.SUCCESS)
+        except Phase5Error as exc:
+            print(f"RESUME_FAILURE: {exc}", file=sys.stderr)
+            return int(exc.exit_code)
+
+    if args.command == "run-campaign":
+        try:
+            session, report = run_campaign(
+                model_slot=_parse_model_slot(args.model_slot),
+                run_id=getattr(args, "run_id", None),
+                utcdate=getattr(args, "utcdate", None),
+                until_safety_horizon=bool(args.until_safety_horizon),
+                batch_manifest_path=Path(args.batch_manifest),
+                run_plan_path=Path(args.run_plan),
+                root=Path.cwd(),
+                session=None,
+            )
+            _write_json_md_report(report, getattr(args, "output", None), Path("phase5/validation/campaign_run_report.json"))
+            return int(ExitCode.SUCCESS)
+        except Phase5Error as exc:
+            print(f"CAMPAIGN_FAILURE: {exc}", file=sys.stderr)
+            return int(exc.exit_code)
+
+    if args.command == "session-open":
+        try:
+            batch_id = _parse_batch_id(args.batch_id)
+            session = CampaignSession.open(
+                model_slot=_parse_model_slot(args.model_slot),
+                batch_id=batch_id,
+                run_id=getattr(args, "run_id", None),
+                utcdate=getattr(args, "utcdate", None),
+                time_to_safety_horizon_seconds=None,
+            )
+            _write_json_md_report(session, getattr(args, "output", None), Path("phase5/validation/session_open_report.json"))
+            return int(ExitCode.SUCCESS)
+        except Phase5Error as exc:
+            print(f"SESSION_OPEN_FAILURE: {exc}", file=sys.stderr)
+            return int(exc.exit_code)
+
     if args.command == "sync-github":
         try:
             session, _receipt = perform_sync_github(
@@ -171,11 +351,51 @@ def main(argv: Sequence[str] | None = None) -> int:
                 repo=Path(args.repo),
                 receipt_path=Path(args.receipt),
             )
+            _write_session_report(
+                session,
+                "session-reverify",
+                getattr(args, "output", None),
+                Path("phase5/validation/session_reverify_report.json"),
+            )
             if session.state.value != "REVERIFIED_AFTER_SYNC":
                 raise Phase5Error("session-reverify did not transition to REVERIFIED_AFTER_SYNC")
             return int(ExitCode.SUCCESS)
         except Phase5Error as exc:
             print(f"REVERIFY_FAILURE: {exc}", file=sys.stderr)
+            return int(exc.exit_code)
+
+    if args.command == "session-seal":
+        try:
+            session = Phase5Session.initial().seal()
+            if args.seal_epoch is not None and args.seal_epoch != session.seal_epoch:
+                raise Phase5Error(
+                    f"requested seal epoch {args.seal_epoch} does not match the frozen transition result {session.seal_epoch}"
+                )
+            _write_session_report(
+                session,
+                "session-seal",
+                getattr(args, "output", None),
+                Path("phase5/validation/session_seal_report.json"),
+                run_id=getattr(args, "run_id", None),
+            )
+            return int(ExitCode.SUCCESS)
+        except Phase5Error as exc:
+            print(f"SEAL_FAILURE: {exc}", file=sys.stderr)
+            return int(exc.exit_code)
+
+    if args.command == "session-close-seal":
+        try:
+            session = Phase5Session.initial().seal().close_after_finalization()
+            _write_session_report(
+                session,
+                "session-close-seal",
+                getattr(args, "output", None),
+                Path("phase5/validation/session_close_seal_report.json"),
+                run_id=getattr(args, "run_id", None),
+            )
+            return int(ExitCode.SUCCESS)
+        except Phase5Error as exc:
+            print(f"CLOSE_SEAL_FAILURE: {exc}", file=sys.stderr)
             return int(exc.exit_code)
 
     try:

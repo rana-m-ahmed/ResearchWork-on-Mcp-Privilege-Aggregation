@@ -1,0 +1,95 @@
+{
+  "task_id": "P14",
+  "status": "PASS",
+  "generated_utc": "2026-07-08T14:20:05.7838013Z",
+  "summary": "Implemented a unified long-running Phase 5 campaign controller with an operational session wrapper, seal-epoch barrier helper, and outcome-blind dashboard/report path. The new CLI surface supports campaign execution, session open/seal/close/reverify, checkpoint status, and resume planning. The campaign loop loads the frozen batch partition and Kaggle run plan, preserves queue order, stops before the safety horizon using a frozen-margin controller, and records seal-epoch hashes. Operational batch identifiers are tracked as strings so MIX-scoped utility slices can remain representable without forcing them through the canonical BatchId enum grammar.",
+  "files_changed": [
+    "phase5/cli.py",
+    "phase5/campaign.py",
+    "phase5/runtime/session.py",
+    "phase5/runtime/__init__.py",
+    "phase5/seal.py",
+    "phase5/tests/test_campaign_runner.py",
+    "phase5/tests/test_cli_contract.py",
+    "phase5/tests/test_scaffold_imports.py",
+    "phase5/implementation/tasks/P14_task_packet.yaml",
+    "phase5/implementation/reports/P14_implementation_report.md",
+    "phase5/implementation/reports/P14_implementation_report.json"
+  ],
+  "frozen_inputs_consumed": [
+    {
+      "path": "docs/Phase5_Revised_Execution_Plan_v3_2.md",
+      "sha256": "DBCB49047AF17ED3C179D80F3BE0DD0536CD57015473791CF21A5FEF3A0D3953"
+    },
+    {
+      "path": "docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md",
+      "sha256": "5C9CCD4A0B93E894FE1DC0DF1ADC311AA34C59C3CBBC524D85523C612939AAB0"
+    },
+    {
+      "path": "phase5/configs/upstream_artifact_registry.json",
+      "sha256": "332DD39DEBD845E7CC222131EDDD058AB45D64BB8856BDFAA971055ACEC50E7B"
+    },
+    {
+      "path": "phase5/manifests/batch_partition_manifest.json",
+      "sha256": "E8AD89556E6EB24E7E3C0FF8267EE1234E01CD81CB0F113D74571CBC386AD7E6"
+    },
+    {
+      "path": "phase5/validation/kaggle_run_plan.json",
+      "sha256": "EDBAF655FB8E771D757BFFCF2E62884AB3AB88C9E1A3CA019EC33BAE0898E549"
+    }
+  ],
+  "validation_results": [
+    {
+      "command": "python -m compileall phase5",
+      "result": "PASS"
+    },
+    {
+      "command": "python -m pytest -q phase5\\tests\\test_campaign_runner.py phase5\\tests\\test_cli_contract.py phase5\\tests\\test_scaffold_imports.py",
+      "result": "14 passed, 2 warnings"
+    },
+    {
+      "command": "python -m pytest -q phase5\\tests",
+      "result": "197 passed, 2 warnings"
+    },
+    {
+      "command": "python -m pytest -q phase5\\tests\\test_protocol_lint.py",
+      "result": "4 passed, 2 warnings"
+    },
+    {
+      "command": "python phase5/scripts/check_phase5_instructions.py",
+      "result": "phase5 instruction hierarchy: PASS"
+    },
+    {
+      "command": "python phase5/scripts/lint_phase5_secrets.py",
+      "result": "phase5 secret lint: PASS"
+    },
+    {
+      "command": "python phase5/scripts/check_phase5_frozen_paths.py --changed phase5/campaign.py phase5/cli.py phase5/runtime/session.py phase5/seal.py phase5/runtime/__init__.py phase5/tests/test_campaign_runner.py phase5/tests/test_cli_contract.py phase5/tests/test_scaffold_imports.py phase5/implementation/tasks/P14_task_packet.yaml phase5/implementation/reports/P14_implementation_report.md phase5/implementation/reports/P14_implementation_report.json",
+      "result": "phase5 frozen path guard: PASS"
+    },
+    {
+      "command": "python phase5/scripts/lint_phase5_forbidden_analysis.py",
+      "result": "phase5 forbidden analysis lint: PASS"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS with line-ending warnings only"
+    },
+    {
+      "command": "python phase5/scripts/check_phase5_evidence_staging.py --staged phase5/campaign.py phase5/cli.py phase5/runtime/session.py phase5/seal.py phase5/runtime/__init__.py phase5/tests/test_campaign_runner.py phase5/tests/test_cli_contract.py phase5/tests/test_scaffold_imports.py phase5/implementation/tasks/P14_task_packet.yaml phase5/implementation/reports/P14_implementation_report.md phase5/implementation/reports/P14_implementation_report.json",
+      "result": "blocked evidence staging: source paths are intentionally outside the evidence-only allowlist"
+    }
+  ],
+  "fault_and_negative_tests": [
+    "CampaignBarrierController rejects non-positive horizon inputs.",
+    "CampaignSession refuses invalid state transitions and duplicate batch processing.",
+    "Campaign run rejects the LOAD_FAILURE model slot.",
+    "Campaign stop logic rejects continuation when the safety horizon margin would be exceeded.",
+    "Post-sync reverify fails closed when hashes do not match.",
+    "Dashboard and resume reports exclude forbidden outcome-analysis fields.",
+    "Queue-order preservation is checked against the frozen batch manifest."
+  ],
+  "remaining_blockers": "none",
+  "commit_sha": null,
+  "push_status": "not pushed"
+}

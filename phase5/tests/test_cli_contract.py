@@ -22,7 +22,7 @@ def test_module_help_and_not_implemented_command() -> None:
         check=False,
     )
     assert help_result.returncode == 0
-    for command in ("validate-batch", "run-batch", "sync-github", "session-reverify"):
+    for command in ("validate-batch", "run-batch", "sync-github", "session-reverify", "run-campaign", "checkpoint-status"):
         assert command in help_result.stdout
 
     assert "gate0" in help_result.stdout
@@ -88,3 +88,83 @@ def test_plan_kaggle_runs_cli_writes_outputs(tmp_path: Path) -> None:
     assert output.is_file()
     assert output.with_suffix(".md").is_file()
     assert (Path("phase5/manifests/batch_partition_manifest.json")).is_file()
+
+
+def test_campaign_cli_smoke_writes_operational_reports(tmp_path: Path) -> None:
+    session_output = tmp_path / "session_open.json"
+    status_output = tmp_path / "checkpoint_status.md"
+    campaign_output = tmp_path / "campaign_run.json"
+
+    batch_id = BatchId.build(
+        dataset="P5-DV-1.0.0-A7C91E42",
+        workload=TrialPhase.PHASE5_ADVERSARIAL_CORE,
+        model=ModelSlot.M1,
+        density_or_mix=Density.D3,
+        surface_or_mix=MetadataSurfaceCondition.POISON_TD,
+        defense=DefenseCondition.BASELINE,
+        run_token="ABCDEF12",
+        slice_token="1A2B",
+    )
+    open_result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "phase5",
+            "session-open",
+            "--model-slot",
+            "M1",
+            "--batch-id",
+            str(batch_id),
+            "--output",
+            str(session_output),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert open_result.returncode == 0
+    assert session_output.is_file()
+    assert session_output.with_suffix(".md").is_file()
+
+    status_result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "phase5",
+            "checkpoint-status",
+            "--model-slot",
+            "M1",
+            "--output",
+            str(status_output),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert status_result.returncode == 0
+    assert status_output.is_file()
+    assert status_output.with_suffix(".json").is_file()
+
+    campaign_result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "phase5",
+            "run-campaign",
+            "--model-slot",
+            "M1",
+            "--run-id",
+            "P5RUN-P5-DV-1.0.0-A7C91E42-M1-20260708-ABCDEF12",
+            "--utcdate",
+            "20260708",
+            "--until-safety-horizon",
+            "--output",
+            str(campaign_output),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert campaign_result.returncode == 0
+    assert campaign_output.is_file()
+    assert campaign_output.with_suffix(".md").is_file()

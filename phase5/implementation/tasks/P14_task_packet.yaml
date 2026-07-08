@@ -1,0 +1,62 @@
+task_id: P14
+title: Unified Long-Running Campaign CLI, Seal Epochs, and Operational Dashboard
+parent_requirements:
+  - docs/Phase5_Revised_Execution_Plan_v3_2.md
+  - docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+  - P00 repository reality audit
+allowed_paths:
+  - phase5/cli.py
+  - phase5/campaign.py
+  - phase5/runtime/session.py
+  - phase5/runtime/__init__.py
+  - phase5/seal.py
+  - phase5/tests/
+  - phase5/implementation/tasks/
+  - phase5/implementation/reports/
+forbidden_paths:
+  - phase4/
+  - phase4_5/
+  - client/
+  - server/
+  - docs/
+  - configs/
+  - schemas/
+  - reproducibility/
+  - prompts/
+inputs:
+  - docs/Phase5_Revised_Execution_Plan_v3_2.md
+  - docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+  - phase5/manifests/batch_partition_manifest.json
+  - phase5/validation/kaggle_run_plan.json
+  - phase5/validation/gate0_authorization_report.md
+  - phase5/implementation/reports/P13_implementation_report.md
+deliverables:
+  - unified long-running campaign CLI
+  - operational session open/seal/close/reverify commands
+  - safety-horizon controller
+  - many-batch campaign loop
+  - optional predeclared sync-barrier transition helper
+  - operational-only dashboard
+  - P14 implementation report
+required_tests:
+  - multiple batches in one session
+  - safety-horizon stop
+  - checkpoint threshold
+  - sync and successful reseal
+  - failed post-sync reverify
+  - no continuation while credential/sync active
+  - no source pull/change
+  - interrupted campaign/resume
+  - dashboard forbidden-field tests
+  - queue-order preservation
+  - no outcome-driven control flow
+acceptance_criteria:
+  - One invocation can process all safe contiguous batches for one model.
+  - All seal epochs are recorded and hash-bound.
+  - Campaign remains outcome-blind.
+  - Resume is duplicate-safe.
+notes:
+  - Utility batch slices use MIX-scoped operational metadata, so the campaign controller records operational batch identifiers as strings instead of forcing every slice through the canonical BatchId enum grammar.
+commit_message: phase5(P14): add unified long-running campaign runner

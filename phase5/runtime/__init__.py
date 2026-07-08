@@ -60,6 +60,7 @@ from .parser_adapter import (
     parse_model_output,
     serialize_parsed_output,
 )
+from .session import CampaignSession
 from .model_backend_adapter import (
     FrozenModelBackendAdapter,
     FrozenModelBackendIdentity,
@@ -82,6 +83,7 @@ from .workspace_isolation import AttemptWorkspaceIsolation, build_attempt_worksp
 
 __all__ = [
     "CompiledPromptArtifact",
+    "CampaignSession",
     "AttemptWorkspaceIsolation",
     "AgentLoopExecutionRecord",
     "ConversationTurn",
