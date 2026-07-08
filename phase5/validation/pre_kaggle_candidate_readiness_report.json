@@ -1,0 +1,48 @@
+{
+  "candidate_verdict": "READY_FOR_INDEPENDENT_PRE_KAGGLE_AUDIT",
+  "generated_utc": "2026-07-08T15:43:30.3108894Z",
+  "official_ready": false,
+  "package_files": [
+    "phase5/handoff/candidate_source_manifest.json",
+    "phase5/handoff/candidate_source_manifest.md",
+    "phase5/handoff/candidate_kaggle_handoff_manifest.json",
+    "phase5/handoff/candidate_kaggle_handoff_manifest.md",
+    "phase5/handoff/local_implementation_completeness_matrix.md",
+    "phase5/handoff/requirement_to_code_test_traceability_matrix.md",
+    "phase5/handoff/unresolved_risk_registry.md",
+    "phase5/handoff/future_non_official_validation_commands.md"
+  ],
+  "required_secret_names": [
+    "GITHUB_READ_TOKEN_PHASE5",
+    "GITHUB_WRITE_TOKEN_PHASE5"
+  ],
+  "source_manifest_common_hash": "280cf05bcdcb459b589dc1f036d7cffd51ca58406f53a975bb1e3271fff95cb3",
+  "status": "PASS",
+  "summary": "The locally qualified Phase 5 implementation has been consolidated into a candidate Kaggle handoff package. The package remains non-official and defers final authorization to P18.",
+  "frozen_inputs_consumed": [
+    {
+      "path": "phase5/validation/gate0_authorization_report.md",
+      "sha256": "06283dee1b66abf3df77d9639a8359b823b8aa1474e344b01a54eb3ee1568a5f"
+    },
+    {
+      "path": "phase5/validation/gate0_authorization_report.json",
+      "sha256": "38284f6526da36eebca20ba9d1ff2c8c45351acdadbd20b61b6865f55d670c97"
+    },
+    {
+      "path": "phase5/validation/kaggle_run_plan.md",
+      "sha256": "94cbee1f2e39a051130581863db6a88d7b03776b2db54f16dce3cf729267de98"
+    },
+    {
+      "path": "phase5/validation/kaggle_run_plan.json",
+      "sha256": "edbaf655fb8e771d757bffcf2e62884ab3ab88c9e1a3ca019ec33bae0898e549"
+    },
+    {
+      "path": "phase5/implementation/reports/P16_local_qualification_report.md",
+      "sha256": "0bff25880b370b260b9058f052addf57c8cb59d196dc3d9c753a36b1243268ca"
+    },
+    {
+      "path": "phase5/implementation/reports/P16_local_qualification_report.json",
+      "sha256": "1339fd8625259efbb823ad92d0c2cec5ba2a911f5229562f1fd9e2389b2efd15"
+    }
+  ]
+}
