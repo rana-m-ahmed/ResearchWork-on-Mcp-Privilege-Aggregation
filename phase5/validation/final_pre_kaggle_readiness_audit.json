@@ -1,12 +1,12 @@
 {
   "audit_id": "P18",
-  "generated_utc": "2026-07-08T18:36:00Z",
-  "status": "PASS",
-  "pre_kaggle_verdict": "GO_TO_KAGGLE_NON_OFFICIAL_VALIDATION",
+  "generated_utc": "2026-07-08T18:06:01.9002523Z",
+  "status": "BLOCKED_UPSTREAM",
+  "pre_kaggle_verdict": "RETURN_TO_PHASE_4_5",
   "repository": {
     "branch": "main",
-    "head_commit": "1ca3a65f1d655b2d6c22e648a6c8a5adb4fb18be",
-    "origin_main_commit": "d6b82447739ad4e8b98125e5c54c1e85430939d9",
+    "head_commit": "f82ea0d960dae609eca21d570fa776df53a24054",
+    "origin_main_commit": "f82ea0d960dae609eca21d570fa776df53a24054",
     "candidate_source_commit": "d9cdb073aa343824823c4eb9e8d8db2bbb5c0071",
     "phase5_scope_clean": true,
     "worktree_clean": true
@@ -14,7 +14,11 @@
   "allowed_write_paths": [
     "phase5/validation/final_pre_kaggle_readiness_audit.md",
     "phase5/validation/final_pre_kaggle_readiness_audit.json",
-    "phase5/validation/pre_kaggle_findings.csv"
+    "phase5/validation/pre_kaggle_findings.csv",
+    "phase5/validation/queue_integrity_report.md",
+    "phase5/validation/queue_integrity_report.json",
+    "phase5/validation/candidate_commit_resolution.md",
+    "phase5/validation/candidate_commit_resolution.json"
   ],
   "frozen_inputs_consumed": [
     {
@@ -67,7 +71,7 @@
     },
     {
       "path": "phase4_5/validation/phase45_final_go_no_go.md",
-      "sha256": "910FA15B9E60F239A7DE1F164F25A5C7B61BAFECE47E48CDA54BAEACC97B5D7"
+      "sha256": "910FA15B9E60F239A7DE1F164F25A5C7B61BAFECE47E48CDA54BAE5ACC97B5D7"
     },
     {
       "path": "phase4_5/validation/phase45_authentic_completion_audit.md",
@@ -107,28 +111,24 @@
       "result": "PASS"
     },
     {
-      "command": "python -m pytest -q phase5\\\\tests\\\\test_kaggle_handoff.py phase5\\\\tests\\\\test_local_qualification.py phase5\\\\tests\\\\test_sync_github.py",
-      "result": "31 passed, 2 warnings"
-    },
-    {
       "command": "python -m pytest -q phase5\\tests",
       "result": "219 passed, 2 warnings"
     },
     {
       "command": "python phase5\\scripts\\check_phase5_instructions.py",
-      "result": "phase5 instruction hierarchy: PASS"
+      "result": "PASS"
     },
     {
       "command": "python phase5\\scripts\\lint_phase5_secrets.py",
-      "result": "phase5 secret lint: PASS"
+      "result": "PASS"
     },
     {
       "command": "python phase5\\scripts\\lint_phase5_forbidden_analysis.py",
-      "result": "phase5 forbidden analysis lint: PASS"
+      "result": "PASS"
     },
     {
-      "command": "python phase5\\scripts\\check_phase5_frozen_paths.py --changed phase5\\validation\\final_pre_kaggle_readiness_audit.md phase5\\validation\\final_pre_kaggle_readiness_audit.json phase5\\validation\\pre_kaggle_findings.csv",
-      "result": "phase5 frozen path guard: PASS"
+      "command": "python phase5\\scripts\\check_phase5_frozen_paths.py --changed phase5\\validation\\final_pre_kaggle_readiness_audit.md phase5\\validation\\final_pre_kaggle_readiness_audit.json phase5\\validation\\pre_kaggle_findings.csv phase5\\validation\\queue_integrity_report.md phase5\\validation\\queue_integrity_report.json phase5\\validation\\candidate_commit_resolution.md phase5\\validation\\candidate_commit_resolution.json",
+      "result": "PASS"
     },
     {
       "command": "python phase5\\scripts\\check_phase5_evidence_staging.py --staged phase5\\validation\\final_pre_kaggle_readiness_audit.md phase5\\validation\\final_pre_kaggle_readiness_audit.json phase5\\validation\\pre_kaggle_findings.csv",
@@ -139,21 +139,20 @@
       "result": "PASS"
     },
     {
-      "command": "git diff --check HEAD~1..HEAD",
+      "command": "git diff --check",
       "result": "PASS"
-    },
-    {
-      "command": "git status --short --branch",
-      "result": "clean working tree on main"
     }
   ],
-  "findings": [],
-  "observations": [
-    "Phase 5 regression tests passed.",
-    "Secret and forbidden-analysis lints passed.",
-    "Frozen-path guard passed for the audit outputs.",
-    "Evidence staging rejection for phase5/validation behaved as expected.",
-    "Strict Gate 0 passed on the final clean tree."
+  "findings": [
+    "The frozen upstream bundle is internally consistent but scientifically incomplete versus the approved Phase 5 design.",
+    "The 19656 figure is a row-field count, not a three-workload queue total.",
+    "No authoritative frozen 5400 / 2400 / 2400 queue package was located in the Phase 4/Phase 4.5 evidence."
   ],
-  "remaining_blockers": []
+  "observations": [
+    "The evidence-staging rejection for phase5/validation/ is expected for the evidence-only guard.",
+    "The candidate source commit is remotely reachable, so remote reachability is not the blocker."
+  ],
+  "remaining_blockers": [
+    "The approved Phase 5 three-workload queue package is absent from the authoritative frozen upstream artifacts."
+  ]
 }

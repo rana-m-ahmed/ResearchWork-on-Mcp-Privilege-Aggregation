@@ -2,23 +2,20 @@
 
 ## Verdict
 
-- Status: `PASS`
-- Pre-Kaggle verdict: `GO TO KAGGLE NON-OFFICIAL VALIDATION`
-- Audit timestamp UTC: `2026-07-08T18:36:00Z`
+- Status: `BLOCKED_UPSTREAM`
+- Pre-Kaggle verdict: `RETURN TO PHASE 4/4.5`
+- Audit timestamp UTC: `2026-07-08T18:06:01.9002523Z`
 - Repository branch: `main`
-- HEAD commit: `1ca3a65f1d655b2d6c22e648a6c8a5adb4fb18be`
-- `origin/main`: `d6b82447739ad4e8b98125e5c54c1e85430939d9`
+- HEAD commit at audit time: `f82ea0d960dae609eca21d570fa776df53a24054`
+- `origin/main` at audit time: `f82ea0d960dae609eca21d570fa776df53a24054`
 - Candidate source commit from the package: `d9cdb073aa343824823c4eb9e8d8db2bbb5c0071`
 
 ## Scope
 
-- Verified frozen Phase 4 and Phase 4.5 inputs without modifying them.
-- Verified the Phase 5 candidate handoff package, guardrails, and regression tests.
-- Did not run Kaggle and did not modify any frozen `phase4/` or `phase4_5/` artifact.
-- Allowed write paths for this audit were limited to:
-  - `phase5/validation/final_pre_kaggle_readiness_audit.md`
-  - `phase5/validation/final_pre_kaggle_readiness_audit.json`
-  - `phase5/validation/pre_kaggle_findings.csv`
+- Verified the frozen Phase 4 and Phase 4.5 package without modifying any frozen file.
+- Recomputed the queue inventory directly from the authoritative frozen bundle.
+- Reconciled the prior `2808 / 0 / 0` report against the approved `5400 / 2400 / 2400` Phase 5 design.
+- Confirmed the evidence-staging rejection for `phase5/validation/` is expected evidence-only behavior.
 
 ## Frozen Inputs Consumed
 
@@ -40,16 +37,14 @@
 ## Checks Performed
 
 - `python -m compileall phase5` -> `PASS`
-- `python -m pytest -q phase5\tests\test_kaggle_handoff.py phase5\tests\test_local_qualification.py phase5\tests\test_sync_github.py` -> `31 passed, 2 warnings`
 - `python -m pytest -q phase5\tests` -> `219 passed, 2 warnings`
-- `python phase5\scripts\check_phase5_instructions.py` -> `phase5 instruction hierarchy: PASS`
-- `python phase5\scripts\lint_phase5_secrets.py` -> `phase5 secret lint: PASS`
-- `python phase5\scripts\lint_phase5_forbidden_analysis.py` -> `phase5 forbidden analysis lint: PASS`
-- `python phase5\scripts\check_phase5_frozen_paths.py --changed phase5\validation\final_pre_kaggle_readiness_audit.md phase5\validation\final_pre_kaggle_readiness_audit.json phase5\validation\pre_kaggle_findings.csv` -> `phase5 frozen path guard: PASS`
-- `python phase5\scripts\check_phase5_evidence_staging.py --staged phase5\validation\final_pre_kaggle_readiness_audit.md phase5\validation\final_pre_kaggle_readiness_audit.json phase5\validation\pre_kaggle_findings.csv` -> `blocked evidence staging` because the evidence-only allowlist intentionally excludes `phase5/validation/`
+- `python phase5\scripts\check_phase5_instructions.py` -> `PASS`
+- `python phase5\scripts\lint_phase5_secrets.py` -> `PASS`
+- `python phase5\scripts\lint_phase5_forbidden_analysis.py` -> `PASS`
+- `python phase5\scripts\check_phase5_frozen_paths.py --changed phase5\validation\final_pre_kaggle_readiness_audit.md phase5\validation\final_pre_kaggle_readiness_audit.json phase5\validation\pre_kaggle_findings.csv phase5\validation\queue_integrity_report.md phase5\validation\queue_integrity_report.json phase5\validation\candidate_commit_resolution.md phase5\validation\candidate_commit_resolution.json` -> `PASS`
+- `python phase5\scripts\check_phase5_evidence_staging.py --staged phase5\validation\final_pre_kaggle_readiness_audit.md phase5\validation\final_pre_kaggle_readiness_audit.json phase5\validation\pre_kaggle_findings.csv` -> `blocked evidence staging because the evidence-only allowlist intentionally excludes phase5/validation/`
 - `python -m phase5 gate0 --strict --root . --report-dir $env:TEMP\p18-gate0-final` -> `PASS`
-- `git diff --check HEAD~1..HEAD` -> `PASS`
-- `git status --short --branch` -> clean working tree on `main`
+- `git diff --check` -> `PASS`
 
 ## Scientific Freeze Checks
 
@@ -61,24 +56,24 @@
 - Per-defense counts: `IHR_SPCE=2808`
 - Defense queue rows: `0`
 - Utility queue rows: `0`
-- Non-empty core cells: `19656`
+- Row-wise non-empty cells: `19656`
+- Unique row tuples: `2808`
 
 ## Findings
 
-- none
+- The frozen upstream bundle is internally consistent but scientifically incomplete versus the approved Phase 5 design.
+- The `19656` figure is a row-field count, not a three-workload queue total.
+- No authoritative frozen `5400 / 2400 / 2400` queue package was located in the Phase 4/Phase 4.5 evidence.
 
 ## Non-Blocking Observations
 
-- Phase 5 regression tests passed in full.
-- Secret and forbidden-analysis lints passed.
-- Frozen-path guard passed for the proposed audit outputs.
-- Evidence staging rejection for `phase5/validation/` behaved as expected and confirmed the staging guard remains fail-closed.
-- The frozen queue counts and model identities match the prior readiness evidence.
+- The evidence-staging rejection for `phase5/validation/` is expected for the evidence-only guard.
+- The candidate source commit is remotely reachable, so remote reachability is not the blocker.
 
 ## Remaining Blockers
 
-none
+- The approved Phase 5 three-workload queue package is absent from the authoritative frozen upstream artifacts.
 
 ## Final Verdict
 
-`PRE-KAGGLE VERDICT: GO TO KAGGLE NON-OFFICIAL VALIDATION`
+`PRE-KAGGLE VERDICT: RETURN TO PHASE 4/4.5`

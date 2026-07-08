@@ -1,0 +1,13 @@
+{
+  "audited_branch": "main",
+  "audited_local_commit": "f82ea0d960dae609eca21d570fa776df53a24054",
+  "remote_branch": "origin/main",
+  "remote_commit": "f82ea0d960dae609eca21d570fa776df53a24054",
+  "candidate_source_commit": "d9cdb073aa343824823c4eb9e8d8db2bbb5c0071",
+  "remote_reachability": {
+    "contains_on_remote_branch": true,
+    "contains_on_origin_main": true,
+    "merge_base_ancestor_check": "yes"
+  },
+  "conclusion": "The candidate source commit is reachable, but the frozen upstream queue package still blocks a Kaggle GO verdict."
+}

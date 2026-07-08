@@ -1,1 +1,5 @@
-finding_id,class,severity,summary,evidence,recommendation
+issue,evidence,conclusion
+"Frozen upstream queue package is incomplete","phase4/frozen_bundle/trial_order_core.csv has 2808 rows and the defense/utility files are header-only","Return to Phase 4/4.5"
+"Previous 19656 figure is row-field counting","2808 rows x 7 columns = 19656","Not a scientifically meaningful queue total"
+"Candidate source commit is reachable","origin/main contains d9cdb073aa343824823c4eb9e8d8db2bbb5c0071","Reachability is not the blocker"
+"Evidence staging rejection is expected","phase5/scripts/check_phase5_evidence_staging.py intentionally rejects phase5/validation/ in evidence-only mode","No repair needed for the observed rejection"

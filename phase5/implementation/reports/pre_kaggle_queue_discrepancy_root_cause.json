@@ -1,0 +1,41 @@
+{
+  "audit_timestamp_utc": "2026-07-08T18:06:01.9002523Z",
+  "decision": "RETURN TO PHASE 4/4.5",
+  "root_cause_group": "Case D - Frozen upstream artifact defect",
+  "frozen_package_summary": {
+    "core": {
+      "path": "phase4/frozen_bundle/trial_order_core.csv",
+      "sha256": "2c0e96bd07245b95021c6521b7730db645acbd7686af6bb8127e7d36f3fb426f",
+      "row_count": 2808,
+      "unique_trial_ids": 2808,
+      "per_model_counts": {
+        "M1": 702,
+        "M2": 702,
+        "M3": 702,
+        "M4": 702
+      },
+      "per_density_counts": {
+        "D1": 936,
+        "D3": 936,
+        "D5": 936
+      },
+      "per_defense_counts": {
+        "IHR_SPCE": 2808
+      }
+    },
+    "defense": {
+      "path": "phase4/frozen_bundle/trial_order_defense.csv",
+      "sha256": "cd483dcece127f48ff911239dfc1ee68c2696aaaec384a495c617d76cb53d182",
+      "row_count": 0
+    },
+    "utility": {
+      "path": "phase4/frozen_bundle/trial_order_utility.csv",
+      "sha256": "66f088402c2a494a12fadd542477c6f1463583508e492217816e9fca15f79de7",
+      "row_count": 0
+    }
+  },
+  "root_cause_summary": "The authoritative frozen bundle contains 2808 core rows and header-only defense/utility placeholders. No hidden three-workload package matching the approved 5400/2400/2400 design was located in Phase 4/Phase 4.5 evidence.",
+  "cell_count_note": "The 19656 figure is a row-field count (2808 x 7), not a scientifically meaningful 10,200-row queue total.",
+  "semantic_conclusion": "All core rows use IHR_SPCE because the frozen defense configuration resolves to that value.",
+  "blocker": true
+}
