@@ -1,0 +1,64 @@
+{
+  "task": "P08 prompt bundle metadata relative paths fix",
+  "verdict": "PASS",
+  "summary": [
+    "Prompt bundle metadata no longer serializes checkout-local absolute manifest paths.",
+    "The null-payload golden metadata fixture now uses repository-relative prompt manifest paths.",
+    "Regression coverage asserts manifest metadata paths remain relative."
+  ],
+  "files_changed": [
+    "phase5/runtime/prompt_compiler.py",
+    "phase5/tests/test_prompt_compiler_and_token_budget.py",
+    "phase5/tests/fixtures/p08/compiled_prompt_null_payload_metadata.json",
+    "phase5/implementation/reports/P08_prompt_bundle_metadata_relative_paths_fix_report.md",
+    "phase5/implementation/reports/P08_prompt_bundle_metadata_relative_paths_fix_report.json"
+  ],
+  "frozen_inputs": [
+    "prompts/phase3_prompt_manifest.json",
+    "prompts/prompt_hash_manifest.json",
+    "prompts/phase3_system_prompt.txt",
+    "prompts/phase3_tool_call_contract.txt",
+    "prompts/phase3_user_task_template.txt",
+    "prompts/phase3_tool_result_template.txt",
+    "phase4/configs/model_4_freeze.yaml",
+    "phase5/configs/upstream_artifact_registry.json"
+  ],
+  "validation": [
+    {
+      "command": "pytest -q phase5\\tests\\test_prompt_compiler_and_token_budget.py::test_frozen_prompt_bundle_matches_hash_manifest phase5\\tests\\test_prompt_compiler_and_token_budget.py::test_null_payload_compile_matches_golden_fixture",
+      "result": "2 passed"
+    },
+    {
+      "command": "pytest -q phase5\\tests\\test_prompt_compiler_and_token_budget.py",
+      "result": "14 passed"
+    },
+    {
+      "command": "python phase5\\scripts\\check_phase5_instructions.py",
+      "result": "phase5 instruction hierarchy: PASS"
+    },
+    {
+      "command": "python phase5\\scripts\\lint_phase5_secrets.py",
+      "result": "phase5 secret lint: PASS"
+    },
+    {
+      "command": "python phase5\\scripts\\check_phase5_frozen_paths.py --changed phase5/runtime/prompt_compiler.py phase5/tests/test_prompt_compiler_and_token_budget.py phase5/tests/fixtures/p08/compiled_prompt_null_payload_metadata.json",
+      "result": "phase5 frozen path guard: PASS"
+    },
+    {
+      "command": "pytest -q phase5\\tests",
+      "result": "143 passed"
+    },
+    {
+      "command": "python -m compileall phase5",
+      "result": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS with line-ending warnings only"
+    }
+  ],
+  "notes": [
+    "Pytest emitted cache-write warnings because .pytest_cache is not writable in this checkout.",
+    "No Phase 4 or Phase 4.5 files were modified."
+  ]
+}

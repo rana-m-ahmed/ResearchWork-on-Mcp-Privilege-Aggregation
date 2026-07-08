@@ -101,8 +101,8 @@ class FrozenPromptBundle:
     def to_mapping(self) -> dict[str, Any]:
         return {
             "assets": {asset.label: asset.to_mapping() for asset in self.assets},
-            "hash_manifest_path": self.hash_manifest_path.as_posix(),
-            "manifest_path": self.manifest_path.as_posix(),
+            "hash_manifest_path": PROMPT_HASH_MANIFEST_PATH.as_posix(),
+            "manifest_path": PROMPT_MANIFEST_PATH.as_posix(),
             "manifest_sha256": self.manifest_sha256,
         }
 

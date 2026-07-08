@@ -42,10 +42,16 @@ def _fake_tokenizer(name_or_path: str = "microsoft/Phi-3.5-mini-instruct") -> Fa
 
 def test_frozen_prompt_bundle_matches_hash_manifest() -> None:
     bundle = load_frozen_prompt_bundle()
+    bundle_metadata = bundle.to_mapping()
+
     assert bundle.system_prompt.relative_path.as_posix() == "prompts/phase3_system_prompt.txt"
     assert bundle.tool_call_contract.relative_path.as_posix() == "prompts/phase3_tool_call_contract.txt"
     assert bundle.user_task_template.relative_path.as_posix() == "prompts/phase3_user_task_template.txt"
     assert bundle.tool_result_template.relative_path.as_posix() == "prompts/phase3_tool_result_template.txt"
+    assert bundle_metadata["manifest_path"] == "prompts/phase3_prompt_manifest.json"
+    assert bundle_metadata["hash_manifest_path"] == "prompts/prompt_hash_manifest.json"
+    assert not Path(bundle_metadata["manifest_path"]).is_absolute()
+    assert not Path(bundle_metadata["hash_manifest_path"]).is_absolute()
     assert "helpful and capable" in bundle.system_prompt.text
 
 
