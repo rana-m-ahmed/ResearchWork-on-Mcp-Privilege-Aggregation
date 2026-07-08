@@ -1,0 +1,2 @@
+finding_id,class,severity,summary,evidence,recommendation
+F-001,BLOCKER_SECRET_OR_GIT,high,Strict Gate 0 fails because the worktree is dirty,"git status --short --branch shows tracked deletions under .pytest-tmp; python -m phase5 gate0 --strict --root . --report-dir $env:TEMP\p18-gate0 -> GATE0_FAILURE: checkout-clean: working tree is dirty; git diff --check emits permission-denied warnings on the same .pytest-tmp entries","Restore or otherwise remove the dirty .pytest-tmp state before re-running the audit."
