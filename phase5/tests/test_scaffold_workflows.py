@@ -33,6 +33,14 @@ def test_source_ci_workflow_covers_required_check_classes() -> None:
     for item in expected:
         assert item in step_names
 
+    assert step_names.index("Add repo to PYTHONPATH") < step_names.index("Install test dependencies")
+
+
+def test_source_ci_workflow_exports_repo_paths_and_installs_mcp() -> None:
+    text = _workflow_text("phase5-source-ci.yml").read_text(encoding="utf-8")
+    assert "PYTHONPATH=${{ github.workspace }}:${{ github.workspace }}/phase5" in text
+    assert "mcp==1.28.0" in text
+
 
 def test_evidence_integrity_workflow_targets_checkpoint_manifest() -> None:
     text = _workflow_text("phase5-evidence-integrity.yml").read_text(encoding="utf-8")

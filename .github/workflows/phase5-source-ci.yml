@@ -26,8 +26,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Add repo to PYTHONPATH
+        run: echo "PYTHONPATH=${{ github.workspace }}:${{ github.workspace }}/phase5" >> $GITHUB_ENV
       - name: Install test dependencies
-        run: python -m pip install --upgrade pip pyyaml pytest
+        run: python -m pip install --upgrade pip pyyaml pytest mcp==1.28.0
       - name: Formatting and lint
         run: python -m compileall phase5
       - name: Type checks
