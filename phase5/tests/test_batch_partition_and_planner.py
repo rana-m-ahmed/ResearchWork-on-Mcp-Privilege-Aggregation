@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import pytest
 
 from phase5.domain.errors import FrozenArtifactHashError, SchemaInvariantError
 from phase5.kaggle.run_planner import (
+    FROZEN_TIMING_EVIDENCE_GENERATED_UTC,
     TimingEvidence,
     _exclusive_p95,
     build_kaggle_run_plan,
@@ -152,6 +154,17 @@ def test_timing_formula_uses_real_phase45_evidence() -> None:
     assert all(model.projected_sessions == 1 for model in plan.model_plans)
     assert all(model.batches_per_session == 51 for model in plan.model_plans)
     assert plan.projected_total_gpu_hours > 0
+
+
+def test_timing_evidence_timestamp_ignores_checkout_mtime(tmp_path: Path) -> None:
+    source = Path("phase4_5/validation/phase45_kaggle_quota_feasibility_report.md")
+    timing_report = tmp_path / source.name
+    timing_report.write_bytes(source.read_bytes())
+    os.utime(timing_report, (0, 0))
+
+    evidence = load_timing_evidence(root=Path.cwd(), timing_report_path=timing_report)
+
+    assert evidence.evidence_generated_utc == FROZEN_TIMING_EVIDENCE_GENERATED_UTC
 
 
 def test_synthetic_timing_plans_one_and_multiple_sessions_per_model() -> None:

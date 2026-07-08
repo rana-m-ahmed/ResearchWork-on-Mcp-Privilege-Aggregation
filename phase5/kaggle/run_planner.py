@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timezone
 from pathlib import Path
 import hashlib
 import json
@@ -42,6 +41,7 @@ DEFAULT_KAGGLE_SMOKE_METRICS = Path("phase4_5/dryrun_results/kaggle_smoke/hardwa
 DEFAULT_KAGGLE_SMOKE_INVALIDS = Path("phase4_5/dryrun_results/kaggle_smoke/invalid_trials.jsonl")
 DEFAULT_KAGGLE_SMOKE_FAILURES = Path("phase4_5/dryrun_results/kaggle_smoke/failures.jsonl")
 DEFAULT_CHECKPOINT_RESUME = Path("phase4_5/configs/phase45_checkpoint_resume.yaml")
+FROZEN_TIMING_EVIDENCE_GENERATED_UTC = "2026-07-05T12:56:48.678168Z"
 
 
 def _sha256_bytes(data: bytes) -> str:
@@ -450,13 +450,10 @@ def load_timing_evidence(
         ("Failures", _sha256_bytes(failures.read_bytes())),
         ("Checkpoint/resume config", _sha256_bytes(checkpoint_resume.read_bytes())),
     )
-    evidence_generated_utc = datetime.fromtimestamp(timing_report.stat().st_mtime, tz=timezone.utc).isoformat().replace(
-        "+00:00", "Z"
-    )
     return TimingEvidence(
         timing_report_path=timing_report,
         timing_report_sha256=_sha256_bytes(timing_report.read_bytes()),
-        evidence_generated_utc=evidence_generated_utc,
+        evidence_generated_utc=FROZEN_TIMING_EVIDENCE_GENERATED_UTC,
         mean_trial_seconds=_rounded(computed_mean),
         p50_trial_seconds=_rounded(computed_p50),
         p95_trial_seconds=_rounded(computed_p95),

@@ -3,15 +3,19 @@
   "summary": [
     "Scoped git attributes were added for verified frozen text artifacts.",
     "Most verified files require CRLF checkout bytes, while five verified files retain LF checkout bytes because their registry hashes match the Git blob.",
+    "Kaggle run planning now uses the frozen P05 evidence timestamp instead of checkout file mtime.",
     "The checkout policy preserves the verified SHA-256 values already recorded in the Phase 5 upstream artifact registry."
   ],
   "files_changed": [
     ".gitattributes",
+    "phase5/kaggle/run_planner.py",
+    "phase5/tests/test_batch_partition_and_planner.py",
     "phase5/tests/test_domain_registry.py",
     "phase5/tests/test_scaffold_guards.py"
   ],
   "validation": [
     "Added guard tests for the frozen checkout rules and registry/hash consistency.",
+    "Added a regression test proving timing evidence generation ignores checkout mtime.",
     "Re-ran the Phase 5 registry and test suite locally."
   ]
 }
