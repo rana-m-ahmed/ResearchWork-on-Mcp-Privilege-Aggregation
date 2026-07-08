@@ -1,0 +1,56 @@
+task_id: P07
+title: FastMCP Process, Workspace Isolation, and Reset Control
+parent_requirements:
+  - Phase5_Revised_Execution_Plan_v3_2.md
+  - Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+  - P00 repository reality audit
+allowed_paths:
+  - phase5/runtime/
+  - phase5/tests/
+  - phase5/implementation/tasks/
+  - phase5/implementation/reports/
+forbidden_paths:
+  - phase4/
+  - phase4_5/
+  - client/
+  - server/
+  - docs/
+  - configs/
+  - schemas/
+  - reproducibility/
+  - prompts/
+inputs:
+  - docs/Phase5_Revised_Execution_Plan_v3_2.md
+  - docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+  - phase4_5/validation/phase45_reset_report.md
+  - phase4_5/kaggle/kaggle_runtime_setup.md
+  - phase4_5/validation/phase45_checkpoint_resume_report.md
+deliverables:
+  - loopback-only FastMCP launcher wrapper
+  - per-attempt workspace isolation helper
+  - internal reset controller with restart fallback
+  - reset discovery and non-dispatchability verifier
+  - reset pre/post snapshot capture
+  - task packet and implementation report
+  - positive, negative, invariant, and fault-path tests
+required_tests:
+  - loopback binding acceptance and rejection
+  - discovery surface hides reset
+  - direct reset dispatch is rejected as unknown tool
+  - sentinel cleanup clears mock sinks, event logs, temp files, server state, and conversation state
+  - fixture immutability is preserved
+  - cross-attempt workspace isolation rejects traversal and unauthorized writes
+  - server crash/restart fallback is exercised
+  - repeated reset failure quarantines the controller
+  - nested Docker / privileged container / Docker-shell string scan
+acceptance_criteria:
+  - FastMCP is bound only to 127.0.0.1.
+  - Reset stays hidden from discovery and non-dispatchable through MCP.
+  - Reset failure triggers restart fallback and quarantines on repeated failure.
+  - Per-attempt workspace writes stay inside approved evidence/mock roots.
+  - Phase 4 and Phase 4.5 artifacts remain unmodified.
+commit_message: phase5(P07): implement MCP isolation and reset controls
+dependencies:
+  - P06
