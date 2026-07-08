@@ -1,0 +1,57 @@
+task_id: P13
+title: Safe GitHub Checkpoint Synchronization and Seal-Epoch Barriers
+parent_requirements:
+  - docs/Phase5_Revised_Execution_Plan_v3_2.md
+  - docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+  - P00 repository reality audit
+allowed_paths:
+  - phase5/sync/
+  - phase5/cli.py
+  - phase5/configs/sync_allowlist.yaml
+  - phase5/tests/
+  - phase5/implementation/tasks/
+  - phase5/implementation/reports/
+forbidden_paths:
+  - phase4/
+  - phase4_5/
+  - client/
+  - server/
+  - docs/
+  - configs/
+  - schemas/
+  - reproducibility/
+  - prompts/
+inputs:
+  - docs/Phase5_Revised_Execution_Plan_v3_2.md
+  - docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+  - phase4/reports/phase4_go_no_go_decision.md
+  - phase4_5/validation/phase45_final_go_no_go.md
+  - phase4_5/configs/phase45_checkpoint_resume.yaml
+  - phase4_5/validation/phase45_checkpoint_resume_report.md
+deliverables:
+  - sync state guard
+  - staged-path allowlist
+  - ephemeral credential mechanism interface
+  - remote-head divergence check
+  - deterministic checkpoint commit
+  - remote-SHA verification
+  - sync receipt
+  - post-sync credential purge/re-verification state
+  - P13 report
+required_tests:
+  - sync while sealed
+  - live trial process
+  - write token present before seal
+  - source path staged
+  - remote divergence
+  - push rejection
+  - remote SHA mismatch
+  - token/log redaction
+  - credential cleanup
+  - run before reverify
+  - successful reverify/reseal
+  - source drift after sync
+  - no force/rebase/history rewrite
+commit_message: phase5(P13): add safe checkpoint synchronization

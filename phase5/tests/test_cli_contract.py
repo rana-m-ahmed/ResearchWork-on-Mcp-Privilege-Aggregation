@@ -22,7 +22,7 @@ def test_module_help_and_not_implemented_command() -> None:
         check=False,
     )
     assert help_result.returncode == 0
-    for command in ("validate-batch", "run-batch", "sync-github"):
+    for command in ("validate-batch", "run-batch", "sync-github", "session-reverify"):
         assert command in help_result.stdout
 
     assert "gate0" in help_result.stdout

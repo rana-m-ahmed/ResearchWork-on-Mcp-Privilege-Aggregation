@@ -11,6 +11,8 @@ from . import __version__
 from .gate0 import run_gate0
 from .kaggle import plan_kaggle_runs
 from .domain.errors import ExitCode, NotImplementedCommandError, Phase5Error
+from .domain.session import Phase5Session
+from .sync.github_checkpoint import perform_session_reverify, perform_sync_github
 
 
 PLANNED_COMMANDS = (
@@ -75,11 +77,15 @@ def build_parser() -> argparse.ArgumentParser:
     session_seal.add_argument("--seal-epoch", required=False, type=int)
 
     session_reverify = add_planned_command("session-reverify", "Reverify source/frozen hashes after sync.")
-    session_reverify.add_argument("--run-id", required=False)
+    session_reverify.add_argument("--repo", required=False, default=".")
+    session_reverify.add_argument("--receipt", required=True)
 
     sync = add_planned_command("sync-github", "Synchronize finalized evidence after seal closure.")
-    sync.add_argument("--run-id", required=False)
-    sync.add_argument("--branch", required=False)
+    sync.add_argument("--repo", required=False, default=".")
+    sync.add_argument("--manifest", required=True)
+    sync.add_argument("--allowlist", required=False, default="phase5/configs/sync_allowlist.yaml")
+    sync.add_argument("--receipt", required=True)
+    sync.add_argument("--trial-process-running", action="store_true")
 
     qa = add_planned_command("generate-qa-sample", "Generate the frozen QA sample.")
     qa.add_argument("--output", required=False)
@@ -139,6 +145,37 @@ def main(argv: Sequence[str] | None = None) -> int:
             return int(ExitCode.SUCCESS)
         except Phase5Error as exc:
             print(f"PLAN_FAILURE: {exc}", file=sys.stderr)
+            return int(exc.exit_code)
+
+    if args.command == "sync-github":
+        try:
+            session, _receipt = perform_sync_github(
+                session=Phase5Session.initial().seal().close_after_finalization(),
+                repo=Path(args.repo),
+                manifest_path=Path(args.manifest),
+                allowlist_path=Path(args.allowlist),
+                receipt_path=Path(args.receipt),
+                trial_process_running=bool(args.trial_process_running),
+            )
+            if session.state.value != "UNSEALED_SYNCED":
+                raise Phase5Error("sync-github did not transition to UNSEALED_SYNCED")
+            return int(ExitCode.SUCCESS)
+        except Phase5Error as exc:
+            print(f"SYNC_FAILURE: {exc}", file=sys.stderr)
+            return int(exc.exit_code)
+
+    if args.command == "session-reverify":
+        try:
+            session, _result = perform_session_reverify(
+                session=Phase5Session.initial().seal().close_after_finalization().begin_sync().finish_sync(),
+                repo=Path(args.repo),
+                receipt_path=Path(args.receipt),
+            )
+            if session.state.value != "REVERIFIED_AFTER_SYNC":
+                raise Phase5Error("session-reverify did not transition to REVERIFIED_AFTER_SYNC")
+            return int(ExitCode.SUCCESS)
+        except Phase5Error as exc:
+            print(f"REVERIFY_FAILURE: {exc}", file=sys.stderr)
             return int(exc.exit_code)
 
     try:
