@@ -32,6 +32,8 @@ EVIDENCE_ROOT_PREFIXES = (
     Path("phase5/implementation"),
     Path("phase5/attempts"),
     Path("phase5/evidence"),
+    Path("phase5/checkpoints"),
+    Path("phase5/manifests"),
 )
 _AWS_SECRET_NAME = "_".join(("aws", "secret", "access", "key"))
 _AWS_ACCESS_NAME = "_".join(("aws", "access", "key", "id"))

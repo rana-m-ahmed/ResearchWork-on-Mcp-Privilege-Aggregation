@@ -1,0 +1,57 @@
+task_id: P12
+title: Batch Finalization, Integrity Manifests, Archive Indexes, and Checkpoint Contract
+parent_requirements:
+  - Phase5_Revised_Execution_Plan_v3_2.md
+  - Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+  - P00 repository reality audit
+allowed_paths:
+  - phase5/evidence/manifest_builder.py
+  - phase5/evidence/archive_index.py
+  - phase5/checkpoints/
+  - phase5/manifests/
+  - phase5/tests/
+  - phase5/implementation/tasks/
+  - phase5/implementation/reports/
+forbidden_paths:
+  - phase4/
+  - phase4_5/
+  - client/
+  - server/
+  - docs/
+  - configs/
+  - schemas/
+  - reproducibility/
+  - prompts/
+inputs:
+  - docs/Phase5_Revised_Execution_Plan_v3_2.md
+  - docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+  - phase4/reports/phase4_go_no_go_decision.md
+  - phase4_5/validation/phase45_final_go_no_go.md
+  - phase4_5/configs/phase45_checkpoint_resume.yaml
+  - phase4_5/validation/phase45_checkpoint_resume_report.md
+  - phase4/frozen_bundle/phase5_execution_manifest.json
+deliverables:
+  - batch and run hash-bound integrity manifests
+  - compact accepted-row JSONL builder
+  - external archive index
+  - atomic finalization bundle writer
+  - checkpoint schema with seal epochs and sync-barrier continuation controls
+  - P12 report
+required_tests:
+  - missing raw artifact
+  - corrupt raw artifact
+  - hash mismatch
+  - duplicate accepted target
+  - unresolved orphan
+  - incomplete attempt
+  - partial archive/index
+  - manifest interruption
+  - deterministic manifest
+  - seal-epoch checkpoint schema
+  - continuation forbidden before re-verification
+  - protocol lint
+  - frozen-path guard
+  - secret scan
+commit_message: phase5(P12): finalize batches and build integrity manifests

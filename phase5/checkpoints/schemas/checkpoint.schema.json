@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accepted_finalized_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "batch_id": {
+      "type": "string"
+    },
+    "batch_manifest_sha256": {
+      "type": "string"
+    },
+    "continuation_authorized_after_reverify": {
+      "type": "boolean"
+    },
+    "dataset_version": {
+      "type": "string"
+    },
+    "evidence_index_sha256": {
+      "type": "string"
+    },
+    "expected_remote_head_before_push": {
+      "type": "string"
+    },
+    "finalization_status": {
+      "enum": [
+        "FINALIZED_NOT_SYNCED"
+      ],
+      "type": "string"
+    },
+    "invalid_attempt_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "model_slot": {
+      "type": "string"
+    },
+    "no_more_official_execution_in_session": {
+      "type": "boolean"
+    },
+    "orphan_attempt_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "phase45_go_hash": {
+      "type": "string"
+    },
+    "phase4_lock_hash": {
+      "type": "string"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "seal_epoch": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "session_seal_closed": {
+      "type": "boolean"
+    },
+    "source_commit": {
+      "type": "string"
+    },
+    "sync_barrier_status": {
+      "type": "string"
+    },
+    "workload": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "dataset_version",
+    "model_slot",
+    "workload",
+    "run_id",
+    "batch_id",
+    "source_commit",
+    "phase4_lock_hash",
+    "phase45_go_hash",
+    "expected_remote_head_before_push",
+    "accepted_finalized_count",
+    "invalid_attempt_count",
+    "orphan_attempt_count",
+    "batch_manifest_sha256",
+    "evidence_index_sha256",
+    "session_seal_closed",
+    "seal_epoch",
+    "sync_barrier_status",
+    "continuation_authorized_after_reverify",
+    "no_more_official_execution_in_session",
+    "finalization_status"
+  ],
+  "title": "Phase 5 checkpoint record",
+  "type": "object"
+}

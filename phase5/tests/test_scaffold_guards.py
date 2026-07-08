@@ -33,6 +33,8 @@ def test_evidence_guard_allows_reporting_paths() -> None:
 def test_evidence_guard_allows_phase5_evidence_and_attempt_paths() -> None:
     assert reject_evidence_source_staging(["phase5/evidence/attempts/P5ATT-trial-001-A000-ABCDEF12/attempt_manifest.json"]) == []
     assert reject_evidence_source_staging(["phase5/attempts/attempt_lineage.csv"]) == []
+    assert reject_evidence_source_staging(["phase5/checkpoints/schemas/checkpoint.schema.json"]) == []
+    assert reject_evidence_source_staging(["phase5/manifests/batch_partition_manifest.json"]) == []
 
 
 def test_secret_lint_detects_secret_like_text() -> None:
