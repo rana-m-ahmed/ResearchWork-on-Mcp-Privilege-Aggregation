@@ -1,0 +1,57 @@
+task_id: P16
+title: Local End-to-End and Fault-Injection Qualification
+parent_requirements:
+  - docs/Phase5_Revised_Execution_Plan_v3_2.md
+  - docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+  - phase4_5/validation/phase45_final_go_no_go.md
+  - phase4_5/validation/phase45_authentic_completion_audit.md
+allowed_paths:
+  - phase5/tests/
+  - phase5/implementation/reports/
+  - phase5/implementation/tasks/
+forbidden_paths:
+  - phase4/
+  - phase4_5/
+  - client/
+  - server/
+  - docs/
+  - configs/
+  - schemas/
+  - reproducibility/
+  - prompts/
+inputs:
+  - docs/Phase5_Revised_Execution_Plan_v3_2.md
+  - docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md
+  - phase5/configs/upstream_artifact_registry.json
+  - phase5/validation/gate0_authorization_report.md
+  - phase5/validation/kaggle_run_plan.json
+  - phase4_5/configs/phase45_checkpoint_resume.yaml
+  - phase4_5/validation/phase45_final_go_no_go.md
+  - phase4_5/validation/phase45_authentic_completion_audit.md
+  - phase5/tests/test_agent_loop.py
+  - phase5/tests/test_campaign_runner.py
+  - phase5/tests/test_runtime_mcp_isolation.py
+  - phase5/tests/test_sync_github.py
+deliverables:
+  - phase5/tests/test_local_qualification.py
+  - phase5/implementation/reports/P16_fault_injection_matrix.csv
+  - phase5/implementation/reports/P16_state_transition_coverage_report.md
+  - phase5/implementation/reports/P16_checkpoint_resume_and_seal_sync_report.md
+  - phase5/implementation/reports/P16_local_qualification_report.md
+  - phase5/implementation/reports/P16_local_qualification_report.json
+required_tests:
+  - deterministic fake-backend local E2E coverage
+  - full state-transition coverage across local scenarios
+  - fault-injection matrix for malformed output, unauthorized tool, missing parameter, backend crash, reset failure, and overflow classes
+  - local MCP discovery and hidden-reset validation
+  - temporary Git remote sync, reverify, and reseal demonstration
+  - checkpoint/resume campaign demonstration
+  - secret and forbidden-analysis scan of generated qualification summary
+acceptance_criteria:
+  - Local qualification is deterministic and fail-closed.
+  - No official trial execution occurs.
+  - No frozen Phase 4 or Phase 4.5 artifact is modified.
+  - Generated reports are append-oriented and machine-readable.
+  - Qualification evidence includes checkpoint/resume and seal-epoch sync.
+commit_message: phase5(P16): qualify local Phase 5 pipeline
