@@ -1,0 +1,282 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import pytest
+
+from phase5.domain.errors import FrozenArtifactHashError, MissingFrozenSettingError, SchemaInvariantError
+from phase5.runtime import (
+    ConversationTurn,
+    OverflowClassification,
+    TokenBudgetPolicy,
+    TokenBudgetExceededError,
+    TokenizerIdentityMismatchError,
+    build_exact_tokenizer,
+    classify_overflow,
+    compile_frozen_prompt,
+    enforce_token_budget,
+    load_frozen_prompt_bundle,
+    load_frozen_tokenizer_identity,
+    render_history,
+    serialize_turn,
+)
+from phase5.runtime.token_budget import InfrastructureOversizeError
+
+
+FIXTURE_ROOT = Path("phase5/tests/fixtures/p08")
+
+
+class FakeTokenizer:
+    def __init__(self, name_or_path: str) -> None:
+        self.name_or_path = name_or_path
+        self.init_kwargs = {"name_or_path": name_or_path}
+
+    def encode(self, text: str, add_special_tokens: bool = False) -> list[int]:
+        return list(text.encode("utf-8"))
+
+
+def _fake_tokenizer(name_or_path: str = "microsoft/Phi-3.5-mini-instruct") -> FakeTokenizer:
+    return FakeTokenizer(name_or_path)
+
+
+def test_frozen_prompt_bundle_matches_hash_manifest() -> None:
+    bundle = load_frozen_prompt_bundle()
+    assert bundle.system_prompt.relative_path.as_posix() == "prompts/phase3_system_prompt.txt"
+    assert bundle.tool_call_contract.relative_path.as_posix() == "prompts/phase3_tool_call_contract.txt"
+    assert bundle.user_task_template.relative_path.as_posix() == "prompts/phase3_user_task_template.txt"
+    assert bundle.tool_result_template.relative_path.as_posix() == "prompts/phase3_tool_result_template.txt"
+    assert "helpful and capable" in bundle.system_prompt.text
+
+
+def test_missing_prompt_asset_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    root = tmp_path / "repo"
+    prompts = root / "prompts"
+    prompts.mkdir(parents=True, exist_ok=True)
+    (root / ".git").mkdir()
+    (prompts / "phase3_prompt_manifest.json").write_text(
+        json.dumps(
+            {
+                "system_prompt": "prompts/phase3_system_prompt.txt",
+                "tool_call_contract": "prompts/phase3_tool_call_contract.txt",
+                "user_task_template": "prompts/phase3_user_task_template.txt",
+                "tool_result_template": "prompts/phase3_tool_result_template.txt",
+            }
+        ),
+        encoding="utf-8",
+    )
+    (prompts / "prompt_hash_manifest.json").write_text(
+        json.dumps(
+            {
+                "phase3_system_prompt.txt": "0" * 64,
+                "phase3_tool_call_contract.txt": "0" * 64,
+                "phase3_user_task_template.txt": "0" * 64,
+                "phase3_tool_result_template.txt": "0" * 64,
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr("phase5.runtime.prompt_compiler.repo_root", lambda: root)
+
+    with pytest.raises(MissingFrozenSettingError):
+        load_frozen_prompt_bundle()
+
+
+def test_hash_invalid_prompt_reference_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    root = tmp_path / "repo"
+    prompts = root / "prompts"
+    prompts.mkdir(parents=True, exist_ok=True)
+    (root / ".git").mkdir()
+    for name, content in {
+        "phase3_system_prompt.txt": "system",
+        "phase3_tool_call_contract.txt": "contract",
+        "phase3_user_task_template.txt": "Task: {{task_description}}\nPlease execute the necessary tools to complete this task.",
+        "phase3_tool_result_template.txt": "Tool Result [{{tool_name}}]:\n{{tool_output}}",
+    }.items():
+        (prompts / name).write_text(content, encoding="utf-8")
+    (prompts / "phase3_prompt_manifest.json").write_text(
+        json.dumps(
+            {
+                "system_prompt": "prompts/phase3_system_prompt.txt",
+                "tool_call_contract": "prompts/phase3_tool_call_contract.txt",
+                "user_task_template": "prompts/phase3_user_task_template.txt",
+                "tool_result_template": "prompts/phase3_tool_result_template.txt",
+            }
+        ),
+        encoding="utf-8",
+    )
+    (prompts / "prompt_hash_manifest.json").write_text(
+        json.dumps(
+            {
+                "phase3_system_prompt.txt": "1" * 64,
+                "phase3_tool_call_contract.txt": "0" * 64,
+                "phase3_user_task_template.txt": "0" * 64,
+                "phase3_tool_result_template.txt": "0" * 64,
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr("phase5.runtime.prompt_compiler.repo_root", lambda: root)
+
+    with pytest.raises(FrozenArtifactHashError):
+        load_frozen_prompt_bundle()
+
+
+def test_null_payload_compile_matches_golden_fixture() -> None:
+    artifact = compile_frozen_prompt(
+        task_description="Check token budget handling",
+        retrieved_content=None,
+        history=(),
+        tool_results=(),
+        tokenizer=_fake_tokenizer(),
+    )
+
+    expected_prompt = (FIXTURE_ROOT / "compiled_prompt_null_payload.txt").read_bytes()
+    expected_metadata = json.loads((FIXTURE_ROOT / "compiled_prompt_null_payload_metadata.json").read_text(encoding="utf-8"))
+    expected_turn_counts = json.loads((FIXTURE_ROOT / "token_counts_per_turn_null_payload.json").read_text(encoding="utf-8"))
+
+    assert artifact.prompt_bytes == expected_prompt
+    assert artifact.prompt_text == expected_prompt.decode("utf-8")
+    assert artifact.metadata_mapping() == expected_metadata
+    assert [item.to_mapping() for item in artifact.turn_token_counts] == expected_turn_counts
+    assert artifact.prompt_sha256 == expected_metadata["prompt_sha256"]
+
+
+def test_compile_preserves_whitespace_and_counts_tool_messages() -> None:
+    history = (
+        ConversationTurn(turn_index=0, role="user", content="keep  trailing  spaces  ", turn_kind="conversation"),
+        ConversationTurn(
+            turn_index=1,
+            role="tool",
+            content='{"ok":true}',
+            turn_kind="tool_result",
+            tool_name="read_file",
+        ),
+    )
+    artifact = compile_frozen_prompt(
+        task_description="Inspect the tool result",
+        retrieved_content="payload line one\npayload line two",
+        history=history,
+        tool_results=(
+            ConversationTurn(
+                turn_index=2,
+                role="tool",
+                content="tool output block",
+                turn_kind="tool_result",
+                tool_name="log_event",
+            ),
+        ),
+        tokenizer=_fake_tokenizer(),
+    )
+
+    assert "keep  trailing  spaces  " in artifact.prompt_text
+    assert "Tool Result [read_file]:" in artifact.prompt_text
+    assert "Tool Result [log_event]:" in artifact.prompt_text
+    assert any(count.role == "tool" and count.source == "conversation_history" for count in artifact.turn_token_counts)
+    assert any(count.role == "tool" and count.source == "tool_results" for count in artifact.turn_token_counts)
+    assert serialize_turn(history[1]) == json.dumps(history[1].to_mapping(), ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    assert render_history(history, tool_result_template="Tool Result [{{tool_name}}]:\n{{tool_output}}") != ""
+
+
+def test_null_payload_compile_path_writes_token_evidence(tmp_path: Path) -> None:
+    artifact = compile_frozen_prompt(
+        task_description=None,
+        retrieved_content=None,
+        history=(),
+        tool_results=(),
+        tokenizer=_fake_tokenizer(),
+    )
+    compiled_prompt_path, metadata_path, token_counts_path = artifact.write(tmp_path)
+
+    assert compiled_prompt_path.is_file()
+    assert metadata_path.is_file()
+    assert token_counts_path.is_file()
+    metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    token_counts = json.loads(token_counts_path.read_text(encoding="utf-8"))
+    assert metadata["task_description_is_null"] is True
+    assert metadata["retrieved_content_is_null"] is True
+    assert token_counts == []
+
+
+def test_tokenizer_identity_mismatch_fails_closed(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr("phase5.runtime.token_budget.load_frozen_tokenizer_identity", lambda root=None: "other/tokenizer")
+    with pytest.raises(TokenizerIdentityMismatchError):
+        build_exact_tokenizer(tokenizer_loader=lambda *args, **kwargs: _fake_tokenizer())
+
+
+def test_loaded_tokenizer_identity_mismatch_fails_closed(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr("phase5.runtime.token_budget.load_frozen_tokenizer_identity", lambda root=None: "microsoft/Phi-3.5-mini-instruct")
+    with pytest.raises(TokenizerIdentityMismatchError):
+        build_exact_tokenizer(tokenizer_loader=lambda *args, **kwargs: _fake_tokenizer("wrong/tokenizer"))
+
+
+def test_initial_overflow_expected_tool_result_overflow_and_model_loop_classification() -> None:
+    policy = TokenBudgetPolicy(input_limit=5, reserved_output_tokens=512)
+
+    assert classify_overflow(initial_prompt_overflow=True) is OverflowClassification.INITIAL_FROZEN_PROMPT_OVERFLOW
+    assert classify_overflow(expected_valid_tool_result_overflow=True) is OverflowClassification.EXPECTED_VALID_TOOL_RESULT_OVERFLOW
+    assert classify_overflow(model_created_loop_overflow=True) is OverflowClassification.MODEL_CREATED_LOOP_OVERFLOW
+    assert classify_overflow(infrastructure_generated_oversized_result=True) is OverflowClassification.INFRASTRUCTURE_GENERATED_OVERSIZED_RESULT
+
+    with pytest.raises(SchemaInvariantError):
+        classify_overflow(initial_prompt_overflow=True, model_created_loop_overflow=True)
+
+    with pytest.raises(TokenBudgetExceededError):
+        enforce_token_budget(
+            input_tokens=6,
+            policy=policy,
+            classification=OverflowClassification.INITIAL_FROZEN_PROMPT_OVERFLOW,
+        )
+
+    with pytest.raises(TokenBudgetExceededError):
+        enforce_token_budget(
+            input_tokens=6,
+            policy=policy,
+            classification=OverflowClassification.EXPECTED_VALID_TOOL_RESULT_OVERFLOW,
+        )
+
+    with pytest.raises(TokenBudgetExceededError):
+        enforce_token_budget(
+            input_tokens=6,
+            policy=policy,
+            classification=OverflowClassification.MODEL_CREATED_LOOP_OVERFLOW,
+        )
+
+    with pytest.raises(InfrastructureOversizeError):
+        enforce_token_budget(
+            input_tokens=6,
+            policy=policy,
+            classification=OverflowClassification.INFRASTRUCTURE_GENERATED_OVERSIZED_RESULT,
+        )
+
+
+def test_budget_enforcement_allows_in_range_inputs() -> None:
+    decision = enforce_token_budget(input_tokens=4, policy=TokenBudgetPolicy(input_limit=5, reserved_output_tokens=512))
+    assert decision.allowed is True
+    assert decision.classification is None
+    assert decision.total_budget == 517
+
+
+def test_history_and_tool_results_are_serialized_verbatim() -> None:
+    turns = (
+        ConversationTurn(turn_index=0, role="user", content="alpha  beta", turn_kind="conversation"),
+        ConversationTurn(turn_index=1, role="tool", content="line1\nline2", turn_kind="tool_result", tool_name="read_file"),
+    )
+    rendered = render_history(turns, tool_result_template="Tool Result [{{tool_name}}]:\n{{tool_output}}")
+    assert "alpha  beta" in rendered
+    assert "line1\nline2" in rendered
+    assert "Tool Result [read_file]:" in rendered
+
+
+def test_frozen_tokenizer_identity_is_loaded_from_registry() -> None:
+    assert load_frozen_tokenizer_identity() == "microsoft/Phi-3.5-mini-instruct"
+
+
+def test_registry_label_failure_fails_closed(monkeypatch: pytest.MonkeyPatch) -> None:
+    class FakeRegistry:
+        def require(self, label: str) -> object:
+            raise MissingFrozenSettingError(f"missing {label}")
+
+    monkeypatch.setattr("phase5.runtime.token_budget.load_upstream_artifact_registry", lambda *args, **kwargs: FakeRegistry())
+    with pytest.raises(MissingFrozenSettingError):
+        load_frozen_tokenizer_identity()
