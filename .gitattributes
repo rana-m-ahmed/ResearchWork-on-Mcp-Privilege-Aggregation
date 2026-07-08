@@ -5,6 +5,7 @@ phase3/** text eol=crlf
 phase4/** text eol=crlf
 phase4_5/** text eol=crlf
 prompts/*.txt text eol=crlf
+phase5/tests/fixtures/p08/*.txt text eol=lf
 server/** text eol=crlf
 
 client/model_backend.py text eol=lf

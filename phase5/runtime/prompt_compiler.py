@@ -58,6 +58,10 @@ def _render_template(template: str, substitutions: Mapping[str, str]) -> str:
     return rendered
 
 
+def _normalize_line_endings(text: str) -> str:
+    return text.replace("\r\n", "\n").replace("\r", "\n")
+
+
 @dataclass(frozen=True, slots=True)
 class FrozenPromptAsset:
     label: str
@@ -251,6 +255,7 @@ def _render_compiled_sections(
             "<|assistant|>",
         ]
     )
+    prompt_text = _normalize_line_endings(prompt_text)
     if not prompt_text.endswith("\n"):
         prompt_text += "\n"
     return prompt_text, normalized_history, normalized_tool_results, rendered_task

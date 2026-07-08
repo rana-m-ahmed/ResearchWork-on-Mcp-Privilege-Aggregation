@@ -178,6 +178,38 @@ def test_compile_preserves_whitespace_and_counts_tool_messages() -> None:
     assert render_history(history, tool_result_template="Tool Result [{{tool_name}}]:\n{{tool_output}}") != ""
 
 
+def test_compile_normalizes_prompt_bytes_to_lf() -> None:
+    artifact = compile_frozen_prompt(
+        task_description="line one\r\nline two\rline three",
+        retrieved_content="retrieved\r\ncontent",
+        history=(
+            ConversationTurn(
+                turn_index=0,
+                role="user",
+                content="history\r\ncontent",
+                turn_kind="conversation",
+            ),
+        ),
+        tool_results=(
+            ConversationTurn(
+                turn_index=1,
+                role="tool",
+                content="tool\rcontent",
+                turn_kind="tool_result",
+                tool_name="read_file",
+            ),
+        ),
+        tokenizer=_fake_tokenizer(),
+    )
+
+    assert "\r" not in artifact.prompt_text
+    assert b"\r" not in artifact.prompt_bytes
+    assert "line one\nline two\nline three" in artifact.prompt_text
+    assert "retrieved\ncontent" in artifact.prompt_text
+    assert "history\ncontent" in artifact.prompt_text
+    assert "tool\ncontent" in artifact.prompt_text
+
+
 def test_null_payload_compile_path_writes_token_evidence(tmp_path: Path) -> None:
     artifact = compile_frozen_prompt(
         task_description=None,

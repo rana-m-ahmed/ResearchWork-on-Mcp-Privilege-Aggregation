@@ -1,0 +1,24 @@
+{
+  "report_id": "P08_prompt_compiler_lf_normalization_fix_report",
+  "summary": [
+    "CI exposed a platform-dependent byte mismatch in the null-payload compiled prompt golden test.",
+    "The prompt compiler now normalizes final assembled prompt text to LF before UTF-8 encoding.",
+    "Frozen prompt assets and prompt hash manifest contents were not rewritten.",
+    "The null-payload golden metadata was updated for the normalized compiled prompt bytes."
+  ],
+  "files_changed": [
+    ".gitattributes",
+    "phase5/runtime/prompt_compiler.py",
+    "phase5/tests/fixtures/p08/compiled_prompt_null_payload.txt",
+    "phase5/tests/fixtures/p08/compiled_prompt_null_payload_metadata.json",
+    "phase5/tests/test_prompt_compiler_and_token_budget.py",
+    "phase5/tests/test_scaffold_guards.py"
+  ],
+  "validation": [
+    "Targeted null-payload prompt compiler tests passed with 2 tests.",
+    "pytest -q phase5/tests/test_prompt_compiler_and_token_budget.py passed with 14 tests.",
+    "pytest -q phase5/tests passed with 143 tests.",
+    "python -m compileall phase5 completed successfully.",
+    "Prompt manifest hashes verified locally against prompts/prompt_hash_manifest.json."
+  ]
+}
