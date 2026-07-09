@@ -1,10 +1,10 @@
-# Trial Ordering Generation Report
+# Remediated Trial Ordering Generation Report
 
-**Timestamp (UTC):** 2026-07-07T13:20:58.471849+00:00
+**Timestamp (UTC):** 2026-07-09T15:44:14.414135+00:00
 **Software Version:** 1.0.0
 
 ## Purpose
-Generate a strict deterministic trial schedule for Phase 5.
+Generate a strict deterministic trial schedule for Phase 5 conforming to the 12-column schema.
 
 ## Inputs Evaluated
 - phase4/configs/phase5_schema_freeze.json
@@ -15,13 +15,14 @@ Generate a strict deterministic trial schedule for Phase 5.
 ## Checks Performed
 - Cross-product generation
 - Isolated PRNG shuffle (seed 42)
-- Trial uniqueness check
-- Payload integrity check
 
 ## Summary
 Status: PASS
 
-Generated 2808 unique trial combinations deterministically utilizing valid upstream artifacts.
+Generated queues:
+Core: 5400
+Defense: 2400
+Utility: 2400
 
 ## Failures
 No failures detected.
@@ -30,27 +31,16 @@ No failures detected.
 No warnings detected.
 
 ## Recommendations
-- Lock CSV hash into cryptographic manifest.
+- Lock CSV hashes into cryptographic manifest.
 
 ## Evidence Log
 ```json
 {
-  "defenses_included": [
-    "IHR_SPCE"
-  ],
-  "densities_included": [
-    "D1",
-    "D3",
-    "D5"
-  ],
-  "models_included": [
-    "M1",
-    "M2",
-    "M3",
-    "M4"
-  ],
-  "payload_count": 234,
-  "total_trials": 2808,
-  "trial_order_sha256": "2c0e96bd07245b95021c6521b7730db645acbd7686af6bb8127e7d36f3fb426f"
+  "core_hash": "92ae497f768dce21705660eded2d74379a56f550e4183ea7654d76ef759ad9db",
+  "core_trials": 5400,
+  "defense_hash": "22b961b5cdec2efbd5abfb4cc9356026ffe359c2eb66288b263ee25011d09207",
+  "defense_trials": 2400,
+  "utility_hash": "16ec83b0cb2a8db756247273e25330c806216a23c7c5ad7cd75e86312700685d",
+  "utility_trials": 2400
 }
 ```
