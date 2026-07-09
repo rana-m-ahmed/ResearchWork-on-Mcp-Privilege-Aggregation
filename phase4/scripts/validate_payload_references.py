@@ -57,6 +57,9 @@ def extract_canonical_payloads(ledger_path: str) -> Tuple[Dict[str, str], list]:
                 failures.append(f"INVALID_SCHEMA: Metadata canonical_payload_count ({expected_canonical_count}) exceeds payload_count ({expected_payload_count}).")
         
         for p in payloads_list:
+            if p.get("approval_status") != "Approved" or not p.get("duplicate_handling", {}).get("is_canonical"):
+                continue
+                
             pid = p.get("payload_id")
             phash = p.get("phase1_payload_hash")
             
@@ -68,16 +71,12 @@ def extract_canonical_payloads(ledger_path: str) -> Tuple[Dict[str, str], list]:
                 failures.append(f"INVALID_SCHEMA: Duplicate payload ID detected in canonical ledger: {pid}")
                 continue
 
-            if phash is None:
-                # Accept null hashes explicitly per Phase 1 schema.
-                payloads[pid] = None
-                continue
+            if phash is not None:
+                if not isinstance(phash, str) or not bool(re.fullmatch(r"^[a-f0-9]{64}$", phash)):
+                    failures.append(f"INVALID_SCHEMA: canonical payload {pid} has a malformed Phase 1 hash: {phash}")
+                    continue
                 
-            if not isinstance(phash, str) or not bool(re.fullmatch(r"^[a-f0-9]{64}$", phash)):
-                failures.append(f"INVALID_SCHEMA: canonical payload {pid} has a malformed Phase 1 hash: {phash}")
-                continue
-                
-            payloads[pid] = phash
+            payloads[pid] = None
                     
     # Sort for deterministic map output
     return dict(sorted(payloads.items())), failures

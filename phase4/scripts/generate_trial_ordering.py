@@ -69,9 +69,9 @@ def main():
     parser.add_argument("--payloads", default="phase1/ledger/payload_provenance_ledger.json", help="Phase 1 payload ledger")
     parser.add_argument("--models", default="phase4/configs/model_set_freeze.yaml", help="Frozen models")
     parser.add_argument("--defenses", default="phase4/configs/defense_config_freeze.yaml", help="Frozen defenses")
-    parser.add_argument("--out-core", default="phase4/remediation/v2/trial_order_core.csv", help="Output core order")
-    parser.add_argument("--out-defense", default="phase4/remediation/v2/trial_order_defense.csv", help="Output defense order")
-    parser.add_argument("--out-utility", default="phase4/remediation/v2/trial_order_utility.csv", help="Output utility order")
+    parser.add_argument("--out-core", default="phase4/frozen_bundle/trial_order_core.csv", help="Output core order")
+    parser.add_argument("--out-defense", default="phase4/frozen_bundle/trial_order_defense.csv", help="Output defense order")
+    parser.add_argument("--out-utility", default="phase4/frozen_bundle/trial_order_utility.csv", help="Output utility order")
     args = parser.parse_args()
 
     missing = [p for p in [args.schema, args.payloads, args.models, args.defenses, "phase3/tasks/benign_tasks_master.jsonl", "phase5/configs/payload_family_mapping.json"] if not os.path.exists(p)]
