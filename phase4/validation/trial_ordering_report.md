@@ -1,10 +1,10 @@
 # Remediated Trial Ordering Generation Report
 
-**Timestamp (UTC):** 2026-07-09T15:44:14.414135+00:00
+**Timestamp (UTC):** 2026-07-09T20:07:44.474823+00:00
 **Software Version:** 1.0.0
 
 ## Purpose
-Generate a strict deterministic trial schedule for Phase 5 conforming to the 12-column schema.
+Generate a strict deterministic trial schedule for Phase 5 conforming to the 7-column schema.
 
 ## Inputs Evaluated
 - phase4/configs/phase5_schema_freeze.json
@@ -36,11 +36,11 @@ No warnings detected.
 ## Evidence Log
 ```json
 {
-  "core_hash": "92ae497f768dce21705660eded2d74379a56f550e4183ea7654d76ef759ad9db",
+  "core_hash": "a81ce0d93df2fae979ccd1ddf42c11016f61a18d970c2b3d5ee67255ef9528a5",
   "core_trials": 5400,
-  "defense_hash": "22b961b5cdec2efbd5abfb4cc9356026ffe359c2eb66288b263ee25011d09207",
+  "defense_hash": "233389d23c20ae158e23c67fab430e05e93141dceb038b6b8483c7404a8bf4c0",
   "defense_trials": 2400,
-  "utility_hash": "16ec83b0cb2a8db756247273e25330c806216a23c7c5ad7cd75e86312700685d",
+  "utility_hash": "8677fd1c21a7387ad94d6800e72008f500cfa3535b461d3b24fd155c5bbd4c28",
   "utility_trials": 2400
 }
 ```

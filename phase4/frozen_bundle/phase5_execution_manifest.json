@@ -5,7 +5,7 @@
     "model_freeze": "phase4/configs/model_set_freeze.yaml",
     "payload_map": "phase4/configs/payload_reference_map.json",
     "statistical_plan": "phase4/configs/statistical_plan.yaml",
-    "trial_order": "phase4/remediation/v2/trial_order_core.csv"
+    "trial_order": "phase4/frozen_bundle/trial_order_core.csv"
   },
   "execution_groups": [
     "benign_baseline",
@@ -27,19 +27,16 @@
   "hashes": {
     "phase1_ledger_hash": "b450d8f6af7be29ee008897a658d280a171c9ecaec1b4be2a499f8bd45b53a9a",
     "phase3_freeze_hash": "a7324b63b1307de2dc9e90510ee7372b0b3aad685c4eec51182521191426dc79",
-    "phase4_manifest_hash": "09122acabc4ea034aae2ea43adfbfb9b6b370e926db1222861d11d37e87cd11f",
-    "trial_order_core_sha256": "d97c7dda394aace668d2916b71b5bea36416af425dfbe1a99b25c0c128630711",
-    "trial_order_defense_sha256": "1a391e9dcd35e0d6c0a8f1690cfb2b6c388f71cddbfabb5db2fef93f9b916588",
-    "trial_order_utility_sha256": "3d4588b35e5453cf981f19f6a25f35f9f1e74aa66f9bcb9f41bac59f82bed94a"
+    "phase4_manifest_hash": "12aad2a0692c329422908d2972223a0aad7c95b000f15b9afdcf61d08b61376f",
+    "trial_order_sha256": "a81ce0d93df2fae979ccd1ddf42c11016f61a18d970c2b3d5ee67255ef9528a5"
   },
   "metrics": {
-    "expected_defense_count": 2400,
+    "expected_defense_count": 1,
     "expected_models": 4,
     "expected_payload_count": 223,
-    "expected_core_count": 5400,
-    "expected_utility_count": 2400
+    "expected_trial_count": 5400
   },
-  "repository_commit": "a5a718749355ae8a5d0ce46723d0f0b6d5b5d52a",
-  "repository_version": "phase45-passed-kaggle-smoke-4-ga5a7187",
+  "repository_commit": "1cb6f521bcb2b867f8f8b2a17fd9393e8f1fd387",
+  "repository_version": "phase4-recovery-start-point-2-g1cb6f52",
   "schema_version": "1.2"
 }
