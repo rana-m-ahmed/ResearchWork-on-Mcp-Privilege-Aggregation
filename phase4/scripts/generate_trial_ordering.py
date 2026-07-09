@@ -74,7 +74,7 @@ def main():
     parser.add_argument("--out-utility", default="phase4/frozen_bundle/trial_order_utility.csv", help="Output utility order")
     args = parser.parse_args()
 
-    missing = [p for p in [args.schema, args.payloads, args.models, args.defenses, "phase3/tasks/benign_tasks_master.jsonl", "phase5/configs/payload_family_mapping.json"] if not os.path.exists(p)]
+    missing = [p for p in [args.schema, args.payloads, args.models, args.defenses] if not os.path.exists(p)]
 
     if missing:
         logging.warning(f"[-] Required upstream data missing: {missing}. Cannot freeze trial order.")
@@ -108,22 +108,7 @@ def main():
         failures.append(f"Payload ledger read error: {e}")
         payload_ledger = {}
 
-    try:
-        tasks = {'D1': [], 'D3': [], 'D5': []}
-        with open("phase3/tasks/benign_tasks_master.jsonl", "r", encoding="utf-8") as f:
-            for line in f:
-                t = json.loads(line)
-                dens = t['task_id'].split('_')[0].upper()
-                if dens in tasks:
-                    tasks[dens].append((t['task_id'], t['task_hash']))
-    except Exception as e:
-        failures.append(f"Task loading error: {e}")
 
-    try:
-        with open("phase5/configs/payload_family_mapping.json", "r", encoding="utf-8") as f:
-            family_mapping = json.load(f)
-    except Exception as e:
-        failures.append(f"Family mapping loading error: {e}")
 
     if failures:
         logging.error("[-] Upstream dependency validation failed.")
@@ -134,7 +119,6 @@ def main():
         if p.get('approval_status') == 'Approved' and p.get('duplicate_handling', {}).get('is_canonical') == True:
             approved_payloads.append({
                 "payload_id": p["payload_id"],
-                "attack_family": family_mapping.get(p["payload_id"], p.get("attack_family", "NONE")),
                 "phase1_payload_hash": p.get("phase1_payload_hash")
             })
             
@@ -146,23 +130,15 @@ def main():
         sys.exit(1)
 
     rng = random.Random(42)
-    def get_task(density):
-        return rng.choice(tasks[density])
 
     def generate_row(trial_id, model, density, surface, defense, payload):
-        task_id, task_hash = get_task(density)
         row = {
             "trial_id": f"T{trial_id:05d}",
             "model_id": model,
             "density": density,
-            "metadata_surface_condition": surface,
-            "attack_family": payload["attack_family"] if payload else "NONE",
-            "defense_condition": defense,
             "payload_id": payload["payload_id"] if payload else "NONE",
-            "payload_hash": payload["phase1_payload_hash"] if payload else "NONE",
-            "task_id": task_id,
-            "task_hash": task_hash,
             "payload_condition": "PHASE1_HASH_AUTHORIZED" if payload else "NONE",
+            "defense_condition": defense,
             "status": "PENDING"
         }
         return row
@@ -200,9 +176,8 @@ def main():
 
     os.makedirs(os.path.dirname(args.out_core), exist_ok=True)
     fieldnames = [
-        "trial_id", "model_id", "density", "metadata_surface_condition", 
-        "attack_family", "defense_condition", "payload_id", "payload_hash", 
-        "task_id", "task_hash", "payload_condition", "status"
+        "trial_id", "model_id", "density", "payload_id", 
+        "payload_condition", "defense_condition", "status"
     ]
     
     def write_csv(filename, data):
@@ -223,7 +198,7 @@ def main():
     generate_report(
         filepath="phase4/validation/trial_ordering_report.md",
         title="Remediated Trial Ordering Generation Report",
-        purpose="Generate a strict deterministic trial schedule for Phase 5 conforming to the 12-column schema.",
+        purpose="Generate a strict deterministic trial schedule for Phase 5 conforming to the 7-column schema.",
         inputs=[args.schema, args.payloads, args.models, args.defenses],
         checks=["Cross-product generation", "Isolated PRNG shuffle (seed 42)"],
         failures=[],
