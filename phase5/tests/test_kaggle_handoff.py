@@ -43,7 +43,7 @@ NOTEBOOK = load_notebook(NOTEBOOK_PATH)
 def _parameters() -> KaggleHandoffParameters:
     return KaggleHandoffParameters(
         repository_branch="repo/handoff",
-        source_branch="source/handoff",
+        source_tag_or_commit="phase5-official-source-v2",
         model_branch="model/handoff",
         evidence_branch="evidence/handoff",
         approved_operational_limits={
@@ -71,11 +71,45 @@ def test_notebook_parameter_whitelist_matches_schema() -> None:
     assert issues == []
     assert set(EDITABLE_PARAMETER_KEYS) == {
         "repository_branch",
-        "source_branch",
+        "source_tag_or_commit",
         "model_branch",
         "evidence_branch",
         "approved_operational_limits",
     }
+    assert "source_tag_or_commit" in json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))["required"]
+
+
+def test_notebook_requires_detached_source_checkout_and_verification() -> None:
+    text = json.dumps(NOTEBOOK)
+    assert "SOURCE_TAG_OR_COMMIT" in text
+    assert "EXPECTED_SOURCE_COMMIT" in text
+    assert "--detach" in text
+    assert "branch HEAD execution is prohibited" in text
+
+
+def test_handoff_defaults_to_reconciled_v2_run_plan() -> None:
+    from phase5.kaggle import DEFAULT_BATCH_MANIFEST, DEFAULT_RUN_PLAN
+
+    assert DEFAULT_RUN_PLAN.as_posix() == "phase5/validation/kaggle_run_plan_v2.json"
+    assert DEFAULT_BATCH_MANIFEST.as_posix() == "phase5/manifests/batch_partition_manifest_v2.json"
+
+
+def test_m4_reconciled_run_plan_is_active_and_evidence_bound() -> None:
+    plan = json.loads(Path("phase5/validation/kaggle_run_plan_v2.json").read_text(encoding="utf-8"))
+    recon = json.loads(Path("phase5/validation/m4_loader_status_reconciliation.json").read_text(encoding="utf-8"))
+    m4_plan = next(item for item in plan["model_plans"] if item["model_slot"] == "M4")
+    m4_status = next(item for item in plan["timing_evidence"]["model_load_status"] if item["model_slot"] == "M4")
+
+    assert recon["prior_status"] == "LOAD_FAILURE"
+    assert recon["final_non_official_kaggle_status"] == "PASS"
+    assert recon["official_trials_executed"] == 0
+    assert m4_plan["model_load_status"] == "LOAD_SUCCESS"
+    assert m4_status["status"] == "LOAD_SUCCESS"
+    assert plan["dataset_version"] == "P5-DV-1.0.1-A7C91E42"
+    assert {
+        "label": "M4 loader status reconciliation",
+        "sha256": "b3893e14ac5203f3021f128ffd4f13f49af19a745eaca74a9a4664d12fefb112",
+    } in plan["source_evidence"]
 
 
 def test_notebook_public_cli_only_contract_holds() -> None:

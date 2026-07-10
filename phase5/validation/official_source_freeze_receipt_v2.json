@@ -1,0 +1,18 @@
+{
+  "artifact": "official_source_freeze_receipt_v2",
+  "branch_mapping": "phase5/validation/official_evidence_branch_mapping.json",
+  "branch_mapping_sha256": "727a95fdd53434ebd8724170babd82c2f899cbb238dbfb3f3caacfbc40a25bc7",
+  "dataset_version": "P5-DV-1.0.1-A7C91E42",
+  "evidence_branch_heads_equal_source_commit": true,
+  "evidence_branches_created": true,
+  "m4_active_plan_status": "LOAD_SUCCESS",
+  "m4_active_status": "PASS",
+  "official_source_commit": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+  "official_source_manifest": "phase5/manifests/official_source_manifest_v2.json",
+  "official_source_manifest_sha256": "97061eb827da5598a8adaa3f82cda5b16c7ae63e59e9874801506f6f18c18c9a",
+  "official_source_tag": "phase5-official-source-v2",
+  "official_tag_object": "38fab6c096f0de72a649eabd2f3c460ba8221ca7",
+  "official_trials_executed": 0,
+  "remote_tag_dereferenced_commit": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+  "remote_tag_visible": true
+}

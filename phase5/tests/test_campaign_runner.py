@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pytest
 
@@ -102,11 +103,11 @@ def test_campaign_barrier_controller_decides_by_count_and_time_and_fails_closed(
 
 def test_campaign_plan_loads_frozen_batches_and_reconciles_hashes() -> None:
     plan = load_campaign_plan(model_slot="M1")
-    assert plan.dataset_version == "P5-DV-1.0.0-A7C91E42"
+    assert plan.dataset_version == "P5-DV-1.0.1-A7C91E42"
     assert plan.model_load_status == "LOAD_SUCCESS"
     assert plan.total_batches == 51
     assert len(plan.batches) == 51
-    assert plan.batches[0].batch_id.startswith("P5BAT-P5-DV-1.0.0-A7C91E42-phase5_adversarial_core-M1-")
+    assert plan.batches[0].batch_id.startswith("P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-")
     assert plan.batch_manifest_sha256
     assert plan.run_plan_sha256
 
@@ -114,7 +115,7 @@ def test_campaign_plan_loads_frozen_batches_and_reconciles_hashes() -> None:
 def test_campaign_run_processes_multiple_batches_and_reseals() -> None:
     session, report = run_campaign(
         model_slot=ModelSlot.M1,
-        run_id="P5RUN-P5-DV-1.0.0-A7C91E42-M1-20260708-ABCDEF12",
+        run_id="P5RUN-P5-DV-1.0.1-A7C91E42-M1-20260708-ABCDEF12",
         utcdate="20260708",
         until_safety_horizon=True,
         max_batches=3,
@@ -131,7 +132,7 @@ def test_campaign_run_processes_multiple_batches_and_reseals() -> None:
 def test_campaign_run_resume_is_duplicate_safe() -> None:
     first_session, first_report = run_campaign(
         model_slot=ModelSlot.M1,
-        run_id="P5RUN-P5-DV-1.0.0-A7C91E42-M1-20260708-ABCDEF12",
+        run_id="P5RUN-P5-DV-1.0.1-A7C91E42-M1-20260708-ABCDEF12",
         utcdate="20260708",
         until_safety_horizon=True,
         max_batches=2,
@@ -161,7 +162,7 @@ def test_campaign_run_stops_before_safety_horizon() -> None:
 
     session, report = run_campaign(
         model_slot=ModelSlot.M1,
-        run_id="P5RUN-P5-DV-1.0.0-A7C91E42-M1-20260708-ABCDEF12",
+        run_id="P5RUN-P5-DV-1.0.1-A7C91E42-M1-20260708-ABCDEF12",
         utcdate="20260708",
         until_safety_horizon=True,
         batch_processor=_fat_batch_processor,
@@ -179,12 +180,14 @@ def test_campaign_rejects_load_failure_model() -> None:
             run_id="P5RUN-P5-DV-1.0.0-A7C91E42-M4-20260708-ABCDEF12",
             utcdate="20260708",
             until_safety_horizon=True,
+            batch_manifest_path=Path("phase5/manifests/batch_partition_manifest.json"),
+            run_plan_path=Path("phase5/validation/kaggle_run_plan.json"),
         )
 
 
 def test_dashboard_and_resume_reports_hide_outcome_fields() -> None:
-    dashboard = build_dashboard(model_slot=ModelSlot.M1, run_id="P5RUN-P5-DV-1.0.0-A7C91E42-M1-20260708-ABCDEF12")
-    resume = build_resume_plan(model_slot=ModelSlot.M1, run_id="P5RUN-P5-DV-1.0.0-A7C91E42-M1-20260708-ABCDEF12")
+    dashboard = build_dashboard(model_slot=ModelSlot.M1, run_id="P5RUN-P5-DV-1.0.1-A7C91E42-M1-20260708-ABCDEF12")
+    resume = build_resume_plan(model_slot=ModelSlot.M1, run_id="P5RUN-P5-DV-1.0.1-A7C91E42-M1-20260708-ABCDEF12")
 
     dashboard_text = dashboard.to_markdown()
     resume_text = resume.to_markdown()

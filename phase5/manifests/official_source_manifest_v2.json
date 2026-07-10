@@ -1,0 +1,47 @@
+{
+  "artifact": "official_source_manifest_v2",
+  "dataset_version": "P5-DV-1.0.1-A7C91E42",
+  "files": [
+    {
+      "path": "phase5/kaggle/phase5_runner.ipynb",
+      "sha256": "bcf53c5097e0e03b6339879cba9f0d8e79baeebedc83c16844d51233b00f8700"
+    },
+    {
+      "path": "phase5/cli.py",
+      "sha256": "5ce8d2cd1df8f914e4da0bd618c88094ee9432d8059a40fafb7e97f7e9aca6ff"
+    },
+    {
+      "path": "phase5/campaign.py",
+      "sha256": "57f963d2937ad5ce419498e8bb543536d073da3ae67388488060a45be999d0f0"
+    },
+    {
+      "path": "phase5/kaggle/run_planner.py",
+      "sha256": "5801d669f0be93840f05a42c338640c31789276fcc7af872391f2c722705451a"
+    },
+    {
+      "path": "phase5/validation/kaggle_run_plan_v2.json",
+      "sha256": "be7393d020e3d7696d01efafd79c1fc24b368765191d5e294fc096887fc715ad"
+    },
+    {
+      "path": "phase5/manifests/batch_partition_manifest_v2.json",
+      "sha256": "8d9bd8b408d9ca3a75b3675c0a243096e295de19b3f2fd55b923470cb0989dd5"
+    },
+    {
+      "path": "phase5/validation/m4_loader_status_reconciliation.json",
+      "sha256": "b3893e14ac5203f3021f128ffd4f13f49af19a745eaca74a9a4664d12fefb112"
+    },
+    {
+      "path": "phase5/validation/official_evidence_branch_mapping.json",
+      "sha256": "727a95fdd53434ebd8724170babd82c2f899cbb238dbfb3f3caacfbc40a25bc7"
+    }
+  ],
+  "official_source_commit": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+  "official_source_tag": "phase5-official-source-v2",
+  "official_tag_object": "38fab6c096f0de72a649eabd2f3c460ba8221ca7",
+  "supersedes": {
+    "dataset_version": "P5-DV-1.0.0-A7C91E42",
+    "official_accepted_trials": 0,
+    "official_source_tag": "phase5-official-source-v1",
+    "status": "SUPERSEDED BEFORE OFFICIAL DISPATCH"
+  }
+}

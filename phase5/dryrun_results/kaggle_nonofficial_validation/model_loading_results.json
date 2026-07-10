@@ -1,0 +1,26 @@
+{
+  "M1": {
+    "status": "PASS",
+    "load_time_sec": 96.37360954284668,
+    "peak_vram_gb": 2.361870288848877,
+    "synthetic_generated": true
+  },
+  "M2": {
+    "status": "PASS",
+    "load_time_sec": 77.59134531021118,
+    "peak_vram_gb": 2.639603614807129,
+    "synthetic_generated": true
+  },
+  "M3": {
+    "status": "PASS",
+    "load_time_sec": 79.24335265159607,
+    "peak_vram_gb": 4.920762062072754,
+    "synthetic_generated": true
+  },
+  "M4": {
+    "status": "PASS",
+    "load_time_sec": 11.726501941680908,
+    "peak_vram_gb": 4.920762062072754,
+    "synthetic_generated": true
+  }
+}

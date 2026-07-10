@@ -1,0 +1,35 @@
+{
+  "dependencies": {
+    "cryptographic_manifest": "phase4/frozen_bundle_v2/cryptographic_lock_manifest.json",
+    "queue_schema": "phase4/frozen_bundle_v2/queue_schema.json",
+    "source_input_manifest": "phase4/frozen_bundle_v2/source_input_manifest.json",
+    "trial_order_core": "phase4/frozen_bundle_v2/trial_order_core.csv",
+    "trial_order_defense": "phase4/frozen_bundle_v2/trial_order_defense.csv",
+    "trial_order_utility": "phase4/frozen_bundle_v2/trial_order_utility.csv"
+  },
+  "execution_groups": [
+    "adversarial_core",
+    "adversarial_defense",
+    "utility_preservation"
+  ],
+  "generated_utc": "2026-07-10T12:44:28.849565Z",
+  "hashes": {
+    "phase4_corrected_lock_hash": "4a5ed03c2a7bee2b8ef985fcb67ccaeaebe7d85d10cee21afec3ff88a3cc274d",
+    "queue_schema_sha256": "ba3d55d305a9465eee34630b3c7e5994878459d8bb98f01a54658fc91b1a0d10",
+    "trial_order_core_sha256": "d97c7dda394aace668d2916b71b5bea36416af425dfbe1a99b25c0c128630711",
+    "trial_order_defense_sha256": "1a391e9dcd35e0d6c0a8f1690cfb2b6c388f71cddbfabb5db2fef93f9b916588",
+    "trial_order_utility_sha256": "3d4588b35e5453cf981f19f6a25f35f9f1e74aa66f9bcb9f41bac59f82bed94a"
+  },
+  "manifest": "phase4_corrected_v2_phase5_execution_manifest",
+  "metrics": {
+    "expected_core_count": 5400,
+    "expected_defense_count": 2400,
+    "expected_payload_count": 223,
+    "expected_per_model_count": 2550,
+    "expected_trial_count": 10200,
+    "expected_utility_count": 2400
+  },
+  "official_phase5_trials_authorized": false,
+  "schema_version": "2.0.0",
+  "status": "PASS"
+}

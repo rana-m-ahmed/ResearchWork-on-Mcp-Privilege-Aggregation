@@ -9,6 +9,7 @@ from types import MappingProxyType
 import pytest
 
 from phase5.domain import (
+    AttackFamily,
     ArtifactRegistry,
     DefenseCondition,
     Density,
@@ -143,11 +144,16 @@ def test_no_concatenation_or_reordering_in_bundle_iteration() -> None:
         trial_id=load_frozen_queue_bundle().core.rows[0].trial_id,
         model_id=ModelSlot.M1,
         density=Density.D3,
-        payload_id="PAYLOAD_000001",
-        payload_condition=PayloadCondition.PHASE1_HASH_AUTHORIZED,
+        metadata_surface_condition=MetadataSurfaceCondition.POISON_TD,
+        attack_family=AttackFamily.DIRECT_OVERRIDE,
         defense_condition=DefenseCondition.BASELINE,
+        payload_id="PAYLOAD_000001",
+        phase1_payload_hash=None,
+        task_id="d3_task_000",
+        task_hash="0" * 64,
+        payload_condition=PayloadCondition.PHASE1_HASH_AUTHORIZED,
         status="PENDING",
-        source_path=Path("phase4/frozen_bundle/trial_order_core.csv"),
+        source_path=Path("phase4/frozen_bundle_v2/trial_order_core.csv"),
         source_sha256="core",
     )
     defense_row = FrozenQueueRow(
@@ -156,11 +162,16 @@ def test_no_concatenation_or_reordering_in_bundle_iteration() -> None:
         trial_id=load_frozen_queue_bundle().core.rows[1].trial_id,
         model_id=ModelSlot.M2,
         density=Density.D5,
-        payload_id="PAYLOAD_000002",
-        payload_condition=PayloadCondition.PHASE1_HASH_AUTHORIZED,
+        metadata_surface_condition=MetadataSurfaceCondition.POISON_CA,
+        attack_family=AttackFamily.DATA_EXFILTRATION,
         defense_condition=DefenseCondition.IHR_SPCE,
+        payload_id="PAYLOAD_000002",
+        phase1_payload_hash=None,
+        task_id="d5_task_000",
+        task_hash="1" * 64,
+        payload_condition=PayloadCondition.PHASE1_HASH_AUTHORIZED,
         status="PENDING",
-        source_path=Path("phase4/frozen_bundle/trial_order_defense.csv"),
+        source_path=Path("phase4/frozen_bundle_v2/trial_order_defense.csv"),
         source_sha256="defense",
     )
     utility_row = FrozenQueueRow(
@@ -168,12 +179,17 @@ def test_no_concatenation_or_reordering_in_bundle_iteration() -> None:
         order_index=1,
         trial_id=load_frozen_queue_bundle().core.rows[2].trial_id,
         model_id=ModelSlot.M3,
-        density=Density.D1,
-        payload_id="PAYLOAD_000003",
-        payload_condition=PayloadCondition.PHASE1_HASH_AUTHORIZED,
+        density=Density.D3,
+        metadata_surface_condition=MetadataSurfaceCondition.CLEAN,
+        attack_family=AttackFamily.NONE,
         defense_condition=DefenseCondition.IHR_SPCE,
+        payload_id="",
+        phase1_payload_hash=None,
+        task_id="d3_task_001",
+        task_hash="2" * 64,
+        payload_condition=PayloadCondition.NONE,
         status="PENDING",
-        source_path=Path("phase4/frozen_bundle/trial_order_utility.csv"),
+        source_path=Path("phase4/frozen_bundle_v2/trial_order_utility.csv"),
         source_sha256="utility",
     )
     bundle = FrozenQueueBundle(
@@ -186,7 +202,7 @@ def test_no_concatenation_or_reordering_in_bundle_iteration() -> None:
 
 
 def test_malformed_and_missing_field_rows_fail_closed(tmp_path: Path) -> None:
-    source = Path("phase4/frozen_bundle/trial_order_core.csv")
+    source = Path("phase4/frozen_bundle_v2/trial_order_core.csv")
     rows = list(csv.reader(source.read_text(encoding="utf-8").splitlines()))
     rows[0] = rows[0][:-1]
     broken = tmp_path / "trial_order_core.csv"
@@ -198,7 +214,7 @@ def test_malformed_and_missing_field_rows_fail_closed(tmp_path: Path) -> None:
 
 
 def test_duplicate_identity_row_fails_closed(tmp_path: Path) -> None:
-    source_rows = list(csv.reader(Path("phase4/frozen_bundle/trial_order_core.csv").read_text(encoding="utf-8").splitlines()))
+    source_rows = list(csv.reader(Path("phase4/frozen_bundle_v2/trial_order_core.csv").read_text(encoding="utf-8").splitlines()))
     duplicate_rows = source_rows[:]
     duplicate_rows.insert(3, duplicate_rows[2])
     path = tmp_path / "trial_order_core.csv"
@@ -210,9 +226,9 @@ def test_duplicate_identity_row_fails_closed(tmp_path: Path) -> None:
 
 
 def test_payload_reference_mismatch_fails_closed(tmp_path: Path) -> None:
-    source_rows = list(csv.reader(Path("phase4/frozen_bundle/trial_order_core.csv").read_text(encoding="utf-8").splitlines()))
+    source_rows = list(csv.reader(Path("phase4/frozen_bundle_v2/trial_order_core.csv").read_text(encoding="utf-8").splitlines()))
     rows = [source_rows[0], source_rows[1], source_rows[2][:]]
-    rows[2][3] = "PAYLOAD_999999"
+    rows[2][6] = "PAYLOAD_999999"
     rows.extend(source_rows[3:])
     path = tmp_path / "trial_order_core.csv"
     path.write_text("\n".join(",".join(row) for row in rows) + "\n", encoding="utf-8")
@@ -223,7 +239,7 @@ def test_payload_reference_mismatch_fails_closed(tmp_path: Path) -> None:
 
 
 def test_hash_mismatch_fails_closed(tmp_path: Path) -> None:
-    source = Path("phase4/frozen_bundle/trial_order_core.csv")
+    source = Path("phase4/frozen_bundle_v2/trial_order_core.csv")
     mutated = tmp_path / "trial_order_core.csv"
     mutated.write_bytes(source.read_bytes()[:-1] + b"X")
 
@@ -274,3 +290,29 @@ def test_validation_report_rendering_is_deterministic(tmp_path: Path) -> None:
     assert report.to_markdown() == report.to_markdown()
     assert (tmp_path / "P04_queue_separation_and_order_validation.md").is_file()
     assert (tmp_path / "P04_queue_separation_and_order_validation.json").is_file()
+
+
+def test_original_phase4_frozen_bundle_hashes_survive_validation() -> None:
+    expected = {
+        "phase4/frozen_bundle/trial_order_core.csv": "2c0e96bd07245b95021c6521b7730db645acbd7686af6bb8127e7d36f3fb426f",
+        "phase4/frozen_bundle/trial_order_defense.csv": "cd483dcece127f48ff911239dfc1ee68c2696aaaec384a495c617d76cb53d182",
+        "phase4/frozen_bundle/trial_order_utility.csv": "66f088402c2a494a12fadd542477c6f1463583508e492217816e9fca15f79de7",
+        "phase4/frozen_bundle/phase5_execution_manifest.json": "290a397e795a40dc97f497ada3a6c42c1d5ffdec2bdeb03046565996c2b350c2",
+        "phase4/frozen_bundle/master_hash_ledger.csv": "b399844c96eec465f66b767d3cabcdefc9e2e87792af7070ef499d78da6fe84d",
+        "phase4/frozen_bundle/cryptographic_lock_manifest.json": "09122acabc4ea034aae2ea43adfbfb9b6b370e926db1222861d11d37e87cd11f",
+    }
+    before = {path: _sha256(Path(path)) for path in expected}
+
+    validate_frozen_queue_bundle()
+
+    after = {path: _sha256(Path(path)) for path in expected}
+    assert before == expected
+    assert after == expected
+
+
+def test_old_seven_column_queue_package_fails_closed(tmp_path: Path) -> None:
+    source = Path("phase4/frozen_bundle/trial_order_core.csv")
+    registry = _registry_with_overrides(core_path=source, core_hash=_sha256(source))
+
+    with pytest.raises(SchemaInvariantError):
+        load_frozen_queue_bundle(registry=registry)

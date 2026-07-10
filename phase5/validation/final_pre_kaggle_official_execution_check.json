@@ -1,0 +1,88 @@
+{
+  "audit_timestamp_utc": "2026-07-10T21:00:00Z",
+  "repository": {
+    "branch": "phase4-activate-corrected-v2",
+    "current_head": "d421d8d00152b12154dde52d6dee59b82deca409",
+    "remote_head": "d421d8d00152b12154dde52d6dee59b82deca409",
+    "worktree_clean": true
+  },
+  "source_binding": {
+    "current_source_commit": "d421d8d00152b12154dde52d6dee59b82deca409",
+    "successful_non_official_run_commit": "6e2cafe989ce60572a868b9a31dbcd0b6a1f8898",
+    "run_kaggle_smoke_commit": "6e2cafe989ce60572a868b9a31dbcd0b6a1f8898",
+    "current_remote_branch_sha": "d421d8d00152b12154dde52d6dee59b82deca409",
+    "source_changed_after_non_official_run": true,
+    "source_change_runtime_affecting": false
+  },
+  "non_official_kaggle_evidence": {
+    "real_gpu_used": true,
+    "candidate_sha_enforced": "6e2cafe989ce60572a868b9a31dbcd0b6a1f8898",
+    "strict_gate0_passed": true,
+    "locked_models_used": true,
+    "all_four_models_loaded": true,
+    "all_four_models_generated_outputs": true,
+    "d3_d5_canaries_completed": true,
+    "token_ceilings_enforced": true,
+    "fastmcp_reset_checks_passed": true,
+    "write_ahead_durability_passed": true,
+    "checkpoint_resume_passed": true,
+    "no_official_queue_row_executed": true,
+    "all_artifacts_marked_non_official": true,
+    "run_kaggle_smoke_hash_reported": "c708cd3c6eab21a420384025290d1a6fc2f4122a3cb644b88261e65c5e717a4d",
+    "run_kaggle_smoke_hash_current": "c708cd3c6eab21a420384025290d1a6fc2f4122a3cb644b88261e65c5e717a4d",
+    "hash_match": true
+  },
+  "final_implementation_readiness_report": {
+    "exists": false,
+    "path": "phase5/validation/final_implementation_readiness_report.md"
+  },
+  "official_source_freeze": {
+    "exists": false,
+    "preferred_tag": "phase5-official-source-v1",
+    "official_commit": null,
+    "official_manifest": null,
+    "dataset_version": null
+  },
+  "dataset_and_queue": {
+    "dataset_version": "P5-DV-1.0.0-A7C91E42",
+    "totals": {
+      "core": 5400,
+      "defense": 2400,
+      "utility": 2400,
+      "total": 10200,
+      "per_model": 2550
+    },
+    "batch_totals": {
+      "per_model_batches": 51,
+      "total_batches": 204
+    }
+  },
+  "model_authority": {
+    "M1": "Qwen/Qwen2.5-7B-Instruct",
+    "M2": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+    "M3": "mistralai/Mistral-7B-Instruct-v0.3",
+    "M4": "microsoft/Phi-3.5-mini-instruct"
+  },
+  "gate0_result": "PASS",
+  "targeted_checks": {
+    "official_source_tag_commit_verification": "FAIL",
+    "registry_hash_verification": "PASS",
+    "model_identity_verification": "PASS",
+    "queue_completeness_and_partition_reconciliation": "PASS",
+    "resume_plan_dry_run": "PASS",
+    "official_notebook_structural_validation": "PASS",
+    "seal_sync_state_machine_tests": "PASS",
+    "path_allowlist_test": "PASS",
+    "credential_purge_test": "PASS",
+    "remote_divergence_fail_closed_test": "PASS",
+    "official_row_dry_dispatch_prohibition_test": "PASS"
+  },
+  "remaining_blockers": [
+    "phase5/validation/final_implementation_readiness_report.md is missing",
+    "phase5-official-source-v1 annotated tag is missing",
+    "official source freeze artifacts are missing",
+    "official source manifest is missing",
+    "official dataset-version binding is not frozen in an official tag"
+  ],
+  "verdict": "TARGETED FINALIZATION REQUIRED"
+}

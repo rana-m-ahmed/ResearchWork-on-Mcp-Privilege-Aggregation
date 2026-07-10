@@ -1,0 +1,9 @@
+{
+  "test_collection_count": 488,
+  "passed": 488,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 0,
+  "xfail": 0,
+  "execution_notes": "Executed using external temp override (TEMP/TMP/TMPDIR) and pytest basetemp redirection."
+}

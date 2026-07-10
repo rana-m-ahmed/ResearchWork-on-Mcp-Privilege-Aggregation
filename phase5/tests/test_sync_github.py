@@ -117,7 +117,12 @@ def _write_post_receive_reset_hook(remote: Path, branch: str, sha: str) -> None:
 def test_sync_allowlist_blocks_source_paths() -> None:
     allowlist = load_sync_allowlist(Path("phase5/configs/sync_allowlist.yaml"))
     assert validate_staged_paths(["phase5/implementation/reports/a.json"], allowlist) == []
-    assert validate_staged_paths(["src/main.py"], allowlist) == ["src/main.py"]
+    source_paths = [
+        "src/main.py",
+        "phase5/kaggle/phase5_runner.ipynb",
+        "phase5/validation/kaggle_run_plan_v2.json",
+    ]
+    assert validate_staged_paths(source_paths, allowlist) == source_paths
 
 
 def test_credential_lease_redacts_and_purges_environment() -> None:

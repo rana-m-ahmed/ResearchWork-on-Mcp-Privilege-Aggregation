@@ -7,6 +7,7 @@ from pathlib import Path
 from phase5.guards import (
     reject_evidence_source_staging,
     reject_frozen_path_changes,
+    reject_original_phase4_frozen_bundle_writes,
     scan_text_for_forbidden_analysis,
     scan_text_for_secrets,
 )
@@ -19,6 +20,17 @@ def test_frozen_path_guard_blocks_phase4_changes() -> None:
 
 def test_frozen_path_guard_allows_phase5_paths() -> None:
     assert reject_frozen_path_changes(["phase5/implementation/reports/P01_implementation_report.md"]) == []
+
+
+def test_original_phase4_frozen_bundle_write_guard_is_precise() -> None:
+    blocked = reject_original_phase4_frozen_bundle_writes(
+        [
+            "phase4/frozen_bundle/trial_order_core.csv",
+            "phase4/frozen_bundle_v2/trial_order_core.csv",
+            "phase4/remediation/original_bundle_restoration_report.md",
+        ]
+    )
+    assert blocked == ["phase4/frozen_bundle/trial_order_core.csv"]
 
 
 def test_evidence_guard_blocks_source_staging() -> None:

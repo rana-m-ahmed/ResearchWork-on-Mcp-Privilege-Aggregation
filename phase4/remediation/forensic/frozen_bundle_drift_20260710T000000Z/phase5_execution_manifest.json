@@ -1,0 +1,42 @@
+{
+  "dependencies": {
+    "cryptographic_manifest": "phase4/frozen_bundle/cryptographic_lock_manifest.json",
+    "defense_freeze": "phase4/configs/defense_config_freeze.yaml",
+    "model_freeze": "phase4/configs/model_set_freeze.yaml",
+    "payload_map": "phase4/configs/payload_reference_map.json",
+    "statistical_plan": "phase4/configs/statistical_plan.yaml",
+    "trial_order": "phase4/frozen_bundle/trial_order_core.csv"
+  },
+  "execution_groups": [
+    "benign_baseline",
+    "adversarial_core",
+    "adversarial_defense",
+    "utility_preservation"
+  ],
+  "execution_uuid": null,
+  "expected_outputs": {
+    "required_csvs": [
+      "phase5_results_core.csv",
+      "phase5_results_defense.csv"
+    ],
+    "required_reports": [
+      "phase5_final_evaluation_report.md",
+      "phase5_attack_success_rate_summary.md"
+    ]
+  },
+  "hashes": {
+    "phase1_ledger_hash": "b450d8f6af7be29ee008897a658d280a171c9ecaec1b4be2a499f8bd45b53a9a",
+    "phase3_freeze_hash": "a7324b63b1307de2dc9e90510ee7372b0b3aad685c4eec51182521191426dc79",
+    "phase4_manifest_hash": "12aad2a0692c329422908d2972223a0aad7c95b000f15b9afdcf61d08b61376f",
+    "trial_order_sha256": "a81ce0d93df2fae979ccd1ddf42c11016f61a18d970c2b3d5ee67255ef9528a5"
+  },
+  "metrics": {
+    "expected_defense_count": 1,
+    "expected_models": 4,
+    "expected_payload_count": 223,
+    "expected_trial_count": 5400
+  },
+  "repository_commit": "1cb6f521bcb2b867f8f8b2a17fd9393e8f1fd387",
+  "repository_version": "phase4-recovery-start-point-2-g1cb6f52",
+  "schema_version": "1.2"
+}

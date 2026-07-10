@@ -1,0 +1,27 @@
+{
+  "active_official_run_plan_status": "LOAD_SUCCESS",
+  "active_run_plan": "phase5/validation/kaggle_run_plan_v2.json",
+  "artifact": "m4_loader_status_reconciliation",
+  "evidence_paths": [
+    "phase5/dryrun_results/kaggle_nonofficial_validation/model_loading_results.json",
+    "phase5/dryrun_results/kaggle_nonofficial_validation/synthetic_canary_results.json",
+    "phase5/implementation/reports/kaggle_non_official_infrastructure_validation.md",
+    "phase5/validation/final_implementation_readiness_report.json"
+  ],
+  "executed_run_kaggle_smoke_sha256": "c708cd3c6eab21a420384025290d1a6fc2f4122a3cb644b88261e65c5e717a4d",
+  "executed_source_commit": "6e2cafe989ce60572a868b9a31dbcd0b6a1f8898",
+  "final_non_official_kaggle_status": "PASS",
+  "historical_failure_preserved": true,
+  "model_id": "microsoft/Phi-3.5-mini-instruct",
+  "model_slot": "M4",
+  "official_trials_executed": 0,
+  "prior_status": "LOAD_FAILURE",
+  "prior_status_classification": {
+    "phase4_5/dryrun_results/kaggle_model_loader_smoke/model_loader_trials.jsonl": "HISTORICAL_PRE_KAGGLE_STATUS",
+    "phase5/handoff/candidate_kaggle_handoff_manifest.json": "HISTORICAL_PRE_KAGGLE_STATUS",
+    "phase5/implementation/reports/P05_implementation_report.md": "HISTORICAL_PRE_KAGGLE_STATUS",
+    "phase5/validation/kaggle_run_plan.json": "ACTIVE_OFFICIAL_RUN_PLAN_STATUS_BEFORE_I17R",
+    "phase5/validation/kaggle_run_plan.md": "ACTIVE_OFFICIAL_RUN_PLAN_STATUS_BEFORE_I17R"
+  },
+  "real_synthetic_generation": "PASS"
+}

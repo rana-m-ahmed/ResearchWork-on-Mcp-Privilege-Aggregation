@@ -1,0 +1,21 @@
+{
+  "files": {
+    "phase4/configs/README.md": "f049eee751a9eca653fb7d446f2a28d062f30c70a33c3d58af2867c129b87bd6",
+    "phase4/configs/defense_config_freeze.yaml": "5934137bd5e741b1ce700879691040d215648b409316c3cf09bc559b098d47a8",
+    "phase4/configs/model_1_freeze.yaml": "6bb3e095cf1aae4ba2961c35efdf05d94d615e7abd246f6b5e95b00c51dc0412",
+    "phase4/configs/model_2_freeze.yaml": "8a3299dd860f55b7c3bdcd46387b5da1a22ce701a019f1312bba6e4ba12811d5",
+    "phase4/configs/model_3_freeze.yaml": "20b81a8645700b86f0984e91d887711689b0bd0cc7a919f02d0f4cd72834e2e6",
+    "phase4/configs/model_4_freeze.yaml": "d300af9ce961a4b839dd073434cfdd15291e27d6f37c71fee58e05343992715c",
+    "phase4/configs/model_set_freeze.yaml": "686c112ebfc8e7790098b26454504edd385ee6a21ab41d636949afb7f1a05d0d",
+    "phase4/configs/payload_reference_map.json": "a14fb6217f7484135c71530cf2521fd149b35b5e60f73a8340fdef0adbaebafe",
+    "phase4/configs/phase4_global_freeze.yaml": "2edf49bf777e1cc5d3bfbc34aff5b06fcfe07f9f077c050553cf30d842cf8467",
+    "phase4/configs/phase5_schema_freeze.json": "19ea1480d44ba1f854befcaa3da30f720e1866758fc0adca7e16556afb5e85c4",
+    "phase4/configs/statistical_plan.yaml": "96161dd17f00bd76534f3f70842775e303e926319ff59406c4ef06108df404ec",
+    "phase4/frozen_bundle/README.md": "a511bc895298f6c9e6647cfdcbdc5329b236f234a8c8470cf68d64462782f354",
+    "phase4/frozen_bundle/phase5_execution_manifest.json": "350523d0fce336623b2ce6699e84ea916b6478d466063b6a43c3796f9c3f6979",
+    "phase4/frozen_bundle/trial_order_core.csv": "a81ce0d93df2fae979ccd1ddf42c11016f61a18d970c2b3d5ee67255ef9528a5",
+    "phase4/frozen_bundle/trial_order_defense.csv": "233389d23c20ae158e23c67fab430e05e93141dceb038b6b8483c7404a8bf4c0",
+    "phase4/frozen_bundle/trial_order_utility.csv": "8677fd1c21a7387ad94d6800e72008f500cfa3535b461d3b24fd155c5bbd4c28"
+  },
+  "manifest_hash": "a1b365a7ea50077c877f6806b9e8bf0380942818b5fb9f6a19383c18a3e35509"
+}

@@ -1,0 +1,72 @@
+{
+  "dataset_version": "P5-DV-1.0.0-A7C91E42",
+  "generated_utc": "2026-07-10T21:00:00Z",
+  "official_source_commit": "d421d8d00152b12154dde52d6dee59b82deca409",
+  "official_source_ref": "refs/tags/phase5-official-source-v1",
+  "official_source_tag": "phase5-official-source-v1",
+  "common_source_hash": "a7324b63b1307de2dc9e90510ee7372b0b3aad685c4eec51182521191426dc79",
+  "common_source_hash_algorithm": "sha256(canonical path=sha256 list)",
+  "hash_bound_integrity_manifest": true,
+  "artifacts": [
+    {
+      "label": "Phase 4 corrected lock manifest",
+      "path": "phase4/frozen_bundle_v2/cryptographic_lock_manifest.json",
+      "sha256": "4a5ed03c2a7bee2b8ef985fcb67ccaeaebe7d85d10cee21afec3ff88a3cc274d"
+    },
+    {
+      "label": "Phase 4.5 corrected GO report",
+      "path": "phase4_5/validation/remediation_v2/phase45_corrected_final_go_no_go.md",
+      "sha256": "5ecf56d88671a45472ec53aac693f2fc53dfb2dffee64ed8b06dabd9206f5cec"
+    },
+    {
+      "label": "Phase 5 queue schema",
+      "path": "phase4/frozen_bundle_v2/queue_schema.json",
+      "sha256": "ba3d55d305a9465eee34630b3c7e5994878459d8bb98f01a54658fc91b1a0d10"
+    },
+    {
+      "label": "Phase 3 logical-ID grader",
+      "path": "client/phase3_grader.py",
+      "sha256": "b8eaebec6395712a92fcd2421f34d6dd7c5013e8ac0003e769e4ae174c20569f"
+    },
+    {
+      "label": "Phase 5 TID adapter",
+      "path": "phase5/grading/tid.py",
+      "sha256": "2891b85548e4025440cd07981b9c294cc3c65fb6b78371c4b116fe0076d7a102"
+    },
+    {
+      "label": "Model registry/config",
+      "path": "phase5/configs/upstream_artifact_registry.json",
+      "sha256": "1672cb0fc96e4143560477f1baafdcfc0d92ad2adbf64b3e78631d83d6b00d9b"
+    },
+    {
+      "label": "Dependency lock",
+      "path": "phase4_5/kaggle/requirements.lock.txt",
+      "sha256": "6c16eea4d775facf286f91f509ef0ba7f95bd4a5d63dd7277b1e6723cbb41b68"
+    },
+    {
+      "label": "Official notebook",
+      "path": "phase5/kaggle/phase5_runner.ipynb",
+      "sha256": "a518454e1491507fd07067ecfdf48b406515376a99abb6e679f4a47ebadd8d2f"
+    },
+    {
+      "label": "Unified CLI",
+      "path": "phase5/cli.py",
+      "sha256": "4bbee6e2a5132b29e56b30969ea7add25acd34aef012285416625e8e1c39e3a5"
+    },
+    {
+      "label": "Unified runtime entrypoint",
+      "path": "phase5/__main__.py",
+      "sha256": "6c7ba7553b09387dd9b88114cdcaa02dc1315ec29a7652e294d613c5dfcb886e"
+    },
+    {
+      "label": "Batch partition manifest",
+      "path": "phase5/manifests/batch_partition_manifest.json",
+      "sha256": "e8ad89556e6eb24e7e3c0ff8267ee1234e01cd81cb0f113d74571cbc386ad7e6"
+    },
+    {
+      "label": "Official batch partition manifest",
+      "path": "phase5/manifests/batch_partition_manifest.json",
+      "sha256": "e8ad89556e6eb24e7e3c0ff8267ee1234e01cd81cb0f113d74571cbc386ad7e6"
+    }
+  ]
+}

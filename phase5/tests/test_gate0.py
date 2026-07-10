@@ -72,7 +72,7 @@ def test_phase45_go_report_requires_ready_for_external_audit(tmp_path: Path) -> 
 
 @pytest.mark.parametrize("drop_row", [False, True])
 def test_queue_duplicate_and_missing_row_fail(tmp_path: Path, drop_row: bool) -> None:
-    src = Path("phase4/frozen_bundle/trial_order_core.csv").read_text(encoding="utf-8").splitlines()
+    src = Path("phase4/frozen_bundle_v2/trial_order_core.csv").read_text(encoding="utf-8").splitlines()
     if drop_row:
         mutated = "\n".join(src[:2] + src[3:]) + "\n"
     else:
@@ -80,9 +80,9 @@ def test_queue_duplicate_and_missing_row_fail(tmp_path: Path, drop_row: bool) ->
     path = tmp_path / "trial_order_core.csv"
     path.write_text(mutated, encoding="utf-8")
 
-    check, metrics = _verify_queue_file(path, expected_row_count=2808)
+    check, metrics = _verify_queue_file(path, expected_row_count=5400)
     assert check.status == "FAIL"
-    assert metrics.get("row_count") != 2808 or metrics.get("unique_rows") != 2808
+    assert metrics.get("row_count") != 5400 or metrics.get("unique_rows") != 5400
 
 
 def test_one_byte_mutation_fails_closed(tmp_path: Path) -> None:

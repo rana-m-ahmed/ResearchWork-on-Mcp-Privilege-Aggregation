@@ -20,7 +20,7 @@ DEFAULT_CAMPAIGN_OUTPUT = Path("phase5/validation/campaign_run_report.json")
 DEFAULT_DASHBOARD_OUTPUT = Path("phase5/validation/checkpoint_status.json")
 DEFAULT_RESUME_OUTPUT = Path("phase5/validation/campaign_resume_plan.json")
 DEFAULT_SESSION_OUTPUT = Path("phase5/validation/session_report.json")
-DEFAULT_BATCH_MANIFEST = Path("phase5/manifests/batch_partition_manifest.json")
+DEFAULT_BATCH_MANIFEST = Path("phase5/manifests/batch_partition_manifest_v2.json")
 
 
 def _sha256_bytes(data: bytes) -> str:

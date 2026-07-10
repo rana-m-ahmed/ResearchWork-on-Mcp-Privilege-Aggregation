@@ -93,9 +93,14 @@ _EXPECTED_QUEUE_HEADER = (
     "trial_id",
     "model_id",
     "density",
-    "payload_id",
-    "payload_condition",
+    "metadata_surface_condition",
+    "attack_family",
     "defense_condition",
+    "payload_id",
+    "phase1_payload_hash",
+    "task_id",
+    "task_hash",
+    "payload_condition",
     "status",
 )
 _GATE0_REPORT_MD = "gate0_authorization_report.md"
@@ -288,18 +293,38 @@ def _parse_phase4_go_report(path: Path) -> Gate0Check:
 
 def _parse_phase45_go_report(path: Path) -> Gate0Check:
     text = _load_text(path)
-    verdict_match = re.search(r"(?im)^-\s*Final verdict:\s*`?([A-Z_]+)`?\s*$", text)
-    required_phrases = {
-        "Preflight: `PASS`",
-        "Schema mapping: `PASS`",
-        "Statistics smoke: `PASS`",
-        "Forbidden claims lint: `PASS`",
-        "Kaggle authentic quota feasibility: `CALCULATED`",
-    }
+    verdict_match = re.search(r"(?im)^-\s*Final verdict:\s*`?([A-Z0-9_ ]+)`?\s*$", text)
+    corrected = "GO TO PHASE 5 REBINDING" in text
+    required_phrases = (
+        {
+            "Schema mapping: `PASS`",
+            "Payload loading and hashes: `PASS`",
+            "Prompt compilation: `PASS`",
+            "Token budgets: `PASS`",
+            "Grader: `PASS`",
+            "TID: `PASS`",
+            "Reset/isolation: `PASS`",
+            "Write-ahead logging: `PASS`",
+            "Checkpoint/resume: `PASS`",
+            "Utility smoke: `PASS`",
+            "Outcome taxonomy: `PASS`",
+            "Model/tokenizer/backend identity: `PASS`",
+            "Timing and run-plan inputs: `PASS`",
+            "Forbidden claims checks: `PASS`",
+        }
+        if corrected
+        else {
+            "Preflight: `PASS`",
+            "Schema mapping: `PASS`",
+            "Statistics smoke: `PASS`",
+            "Forbidden claims lint: `PASS`",
+            "Kaggle authentic quota feasibility: `CALCULATED`",
+        }
+    )
     if verdict_match is None:
         return _check_result("phase45-go-verdict", False, f"missing final verdict in {path.as_posix()}")
     missing = sorted(phrase for phrase in required_phrases if phrase not in text)
-    ok = verdict_match.group(1) == "READY_FOR_EXTERNAL_AUDIT" and not missing
+    ok = verdict_match.group(1) in {"READY_FOR_EXTERNAL_AUDIT", "GO TO PHASE 5 REBINDING"} and not missing
     details = [f"final_verdict={verdict_match.group(1)}"]
     if missing:
         details.extend(f"missing:{item}" for item in missing)
@@ -331,7 +356,7 @@ def _verify_registry(root: Path) -> tuple[object, dict[str, object], list[Gate0C
                 isinstance(phase4, dict)
                 and isinstance(phase45, dict)
                 and phase4.get("status") == "PASS"
-                and phase45.get("status") == "READY_FOR_EXTERNAL_AUDIT",
+                and phase45.get("status") in {"READY_FOR_EXTERNAL_AUDIT", "GO TO PHASE 5 REBINDING"},
                 f"phase4={phase4.get('status')!r}",
                 f"phase4_5={phase45.get('status')!r}",
             )
@@ -389,11 +414,11 @@ def _verify_queue_file(
     row_count = len(data_rows)
     unique_rows = len({tuple(row) for row in data_rows})
     unique_trial_ids = len({row[0] for row in data_rows}) if data_rows else 0
-    unique_payload_ids = len({row[3] for row in data_rows}) if data_rows else 0
+    unique_payload_ids = len({row[6] for row in data_rows if row[6]}) if data_rows else 0
     counts_by_model = Counter(row[1] for row in data_rows)
     counts_by_density = Counter(row[2] for row in data_rows)
     counts_by_defense = Counter(row[5] for row in data_rows)
-    status_values = {row[6] for row in data_rows}
+    status_values = {row[11] for row in data_rows}
     ok = all(len(row) == len(_EXPECTED_QUEUE_HEADER) for row in data_rows) and status_values == {"PENDING"}
     if expected_row_count is not None:
         ok = ok and row_count == expected_row_count and unique_rows == row_count
@@ -631,14 +656,14 @@ def _verify_queue_statistics(
     consumed.append(("Trial order core", core_metrics.get("sha256", "")))
 
     expected_defense_rows = queue_stats.get("trial_order_defense_rows")
-    defense_check, _ = _verify_queue_file(
+    defense_check, defense_metrics = _verify_queue_file(
         defense_path,
         registry.require("Trial order defense").sha256[0],
         expected_row_count=expected_defense_rows if isinstance(expected_defense_rows, int) else None,
     )
 
     expected_utility_rows = queue_stats.get("trial_order_utility_rows")
-    utility_check, _ = _verify_queue_file(
+    utility_check, utility_metrics = _verify_queue_file(
         utility_path,
         registry.require("Trial order utility").sha256[0],
         expected_row_count=expected_utility_rows if isinstance(expected_utility_rows, int) else None,
@@ -655,17 +680,39 @@ def _verify_queue_statistics(
     else:
         check = _check_result(
             "execution-manifest",
-            manifest_hashes.get("trial_order_sha256") == registry.require("Trial order core").sha256[0]
-            and manifest_hashes.get("phase4_manifest_hash") == registry.require("Cryptographic lock manifest").sha256[0]
+            manifest_hashes.get("trial_order_core_sha256") == registry.require("Trial order core").sha256[0]
+            and manifest_hashes.get("trial_order_defense_sha256") == registry.require("Trial order defense").sha256[0]
+            and manifest_hashes.get("trial_order_utility_sha256") == registry.require("Trial order utility").sha256[0]
+            and manifest_hashes.get("phase4_corrected_lock_hash") == registry.require("Cryptographic lock manifest").sha256[0]
             and manifest_metrics.get("expected_trial_count") == queue_stats.get("phase5_manifest_expected_trial_count")
             and manifest_metrics.get("expected_payload_count") == queue_stats.get("phase5_manifest_expected_payload_count"),
-            f"trial_order_sha256={manifest_hashes.get('trial_order_sha256')!r}",
-            f"phase4_manifest_hash={manifest_hashes.get('phase4_manifest_hash')!r}",
+            f"trial_order_core_sha256={manifest_hashes.get('trial_order_core_sha256')!r}",
+            f"trial_order_defense_sha256={manifest_hashes.get('trial_order_defense_sha256')!r}",
+            f"trial_order_utility_sha256={manifest_hashes.get('trial_order_utility_sha256')!r}",
+            f"phase4_corrected_lock_hash={manifest_hashes.get('phase4_corrected_lock_hash')!r}",
             f"expected_trial_count={manifest_metrics.get('expected_trial_count')!r}",
             f"expected_payload_count={manifest_metrics.get('expected_payload_count')!r}",
         )
     checks.append(check)
     findings.extend(_findings_for_check(check))
+
+    total_rows = sum(
+        int(metrics.get("row_count", 0)) for metrics in (core_metrics, defense_metrics, utility_metrics)
+    )
+    per_model_total: Counter[str] = Counter()
+    for metrics in (core_metrics, defense_metrics, utility_metrics):
+        counts = metrics.get("counts_by_model", {})
+        if isinstance(counts, dict):
+            per_model_total.update({str(key): int(value) for key, value in counts.items()})
+    total_check = _check_result(
+        "corrected-v2-totals",
+        total_rows == queue_stats.get("total_rows")
+        and dict(sorted(per_model_total.items())) == queue_stats.get("per_model_total"),
+        f"total_rows={total_rows}",
+        f"per_model_total={dict(sorted(per_model_total.items()))}",
+    )
+    checks.append(total_check)
+    findings.extend(_findings_for_check(total_check))
 
     expected_unique_trials = queue_stats.get("trial_order_core_unique_trial_ids")
     expected_non_empty = queue_stats.get("trial_order_core_non_empty_cells")
@@ -686,7 +733,7 @@ def _verify_queue_statistics(
         "by_model": dict(sorted(Counter(row[1] for row in core_rows).items())),
         "by_density": dict(sorted(Counter(row[2] for row in core_rows).items())),
         "by_defense": dict(sorted(Counter(row[5] for row in core_rows).items())),
-        "unique_payload_ids": len({row[3] for row in core_rows}),
+        "unique_payload_ids": len({row[6] for row in core_rows if row[6]}),
     }
     ok = (
         computed["rows"] == expected_core_rows
@@ -833,7 +880,7 @@ def run_gate0(
     verdicts.extend(
         [
             ("phase4", "PASS" if phase4_check.status == "PASS" else "FAIL"),
-            ("phase4_5", "READY_FOR_EXTERNAL_AUDIT" if phase45_check.status == "PASS" else "FAIL"),
+            ("phase4_5", "GO TO PHASE 5 REBINDING" if phase45_check.status == "PASS" else "FAIL"),
         ]
     )
 

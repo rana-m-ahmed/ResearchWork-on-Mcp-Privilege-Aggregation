@@ -1,0 +1,54 @@
+{
+  "field_semantics": {
+    "attack_family": "DIRECT_OVERRIDE|CROSS_CAPABILITY_ESCALATION|DATA_EXFILTRATION|NONE",
+    "defense_condition": "BASELINE|IHR_SPCE",
+    "density": "D1|D3|D5",
+    "metadata_surface_condition": "CLEAN|POISON_TD|POISON_CA",
+    "model_id": "M1|M2|M3|M4",
+    "payload_condition": "PHASE1_HASH_AUTHORIZED for adversarial queues; NONE for utility",
+    "payload_id": "Phase 1 payload id for adversarial queues; empty for utility null-payload rows",
+    "phase1_payload_hash": "Phase 1 payload hash when present; empty where authoritative placeholders are null or utility rows have no payload",
+    "status": "PENDING before official Phase 5 execution",
+    "task_hash": "Authoritative task_hash from phase3/tasks/*.jsonl",
+    "task_id": "Phase 3 benign task identifier",
+    "trial_id": "globally unique corrected Phase 4 row identity"
+  },
+  "fields": [
+    "trial_id",
+    "model_id",
+    "density",
+    "metadata_surface_condition",
+    "attack_family",
+    "defense_condition",
+    "payload_id",
+    "phase1_payload_hash",
+    "task_id",
+    "task_hash",
+    "payload_condition",
+    "status"
+  ],
+  "generated_utc": "2026-07-10T12:44:28.849565Z",
+  "prohibited_downcast_fields": [
+    "task_id",
+    "task_hash",
+    "metadata_surface_condition",
+    "attack_family",
+    "phase1_payload_hash"
+  ],
+  "required_fields": [
+    "trial_id",
+    "model_id",
+    "density",
+    "metadata_surface_condition",
+    "attack_family",
+    "defense_condition",
+    "payload_id",
+    "phase1_payload_hash",
+    "task_id",
+    "task_hash",
+    "payload_condition",
+    "status"
+  ],
+  "schema_id": "phase4_corrected_v2_queue_schema",
+  "schema_version": "2.0.0"
+}

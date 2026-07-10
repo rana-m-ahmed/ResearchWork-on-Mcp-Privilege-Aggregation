@@ -1,0 +1,45 @@
+{
+  "classification": "IMMUTABLE_ARTIFACT_RESTORATION",
+  "forensic_manifest": "phase4/remediation/forensic/frozen_bundle_drift_20260710T000000Z_manifest.json",
+  "generated_utc": "2026-07-10T12:40:37.237327Z",
+  "report": "original_bundle_restoration_report",
+  "restored_files": {
+    "phase4/frozen_bundle/cryptographic_lock_manifest.json": {
+      "restored_line_endings": "CRLF",
+      "sha256": "09122acabc4ea034aae2ea43adfbfb9b6b370e926db1222861d11d37e87cd11f",
+      "source_bytes_sha256_before_checkout_eol": "ecec625ca5fd9dc1e3a4286e97ab8410ef8c5fca79aa2348c7e5e27a938c4a65",
+      "source_commit": "13754ca91a839eeac0c8233e01f5d4953634dd8e"
+    },
+    "phase4/frozen_bundle/master_hash_ledger.csv": {
+      "restored_line_endings": "CRLF",
+      "sha256": "b399844c96eec465f66b767d3cabcdefc9e2e87792af7070ef499d78da6fe84d",
+      "source_bytes_sha256_before_checkout_eol": "d45374948cbf229bcc689bd1336e0613a4fa2f1ccc73dba00238b439c76beb45",
+      "source_commit": "13754ca91a839eeac0c8233e01f5d4953634dd8e"
+    },
+    "phase4/frozen_bundle/phase5_execution_manifest.json": {
+      "restored_line_endings": "CRLF",
+      "sha256": "290a397e795a40dc97f497ada3a6c42c1d5ffdec2bdeb03046565996c2b350c2",
+      "source_bytes_sha256_before_checkout_eol": "c55c611926669b12e8dfbc685fac8af1f4449b7a26f4607cd3183b2b620e6193",
+      "source_commit": "13754ca91a839eeac0c8233e01f5d4953634dd8e"
+    },
+    "phase4/frozen_bundle/trial_order_core.csv": {
+      "restored_line_endings": "CRLF",
+      "sha256": "2c0e96bd07245b95021c6521b7730db645acbd7686af6bb8127e7d36f3fb426f",
+      "source_bytes_sha256_before_checkout_eol": "78d316169b3ac6eeee4ffc071d94a407708aa0b8d7a6eb1d098a3fec0f6bd304",
+      "source_commit": "13754ca91a839eeac0c8233e01f5d4953634dd8e"
+    },
+    "phase4/frozen_bundle/trial_order_defense.csv": {
+      "restored_line_endings": "CRLF",
+      "sha256": "cd483dcece127f48ff911239dfc1ee68c2696aaaec384a495c617d76cb53d182",
+      "source_bytes_sha256_before_checkout_eol": "36a0cefd9fba4be5d573b419538a53db3ccda8fffec70a0c8e303c606553aa28",
+      "source_commit": "13754ca91a839eeac0c8233e01f5d4953634dd8e"
+    },
+    "phase4/frozen_bundle/trial_order_utility.csv": {
+      "restored_line_endings": "CRLF",
+      "sha256": "66f088402c2a494a12fadd542477c6f1463583508e492217816e9fca15f79de7",
+      "source_bytes_sha256_before_checkout_eol": "ef1022a4aac8949bd1e5566f37324219c4fd60f19c0be7e62bb9fd4e4f340823",
+      "source_commit": "13754ca91a839eeac0c8233e01f5d4953634dd8e"
+    }
+  },
+  "status": "PASS"
+}

@@ -14,6 +14,22 @@ def test_cli_help_exposes_planned_commands() -> None:
         assert command in help_text
 
 
+def test_official_campaign_commands_default_to_reconciled_v2_plan() -> None:
+    parser = build_parser()
+    for command in ("checkpoint-status", "resume-plan", "run-campaign"):
+        args = parser.parse_args([command, "--model-slot", "M1"] if command != "run-campaign" else [
+            command,
+            "--model-slot",
+            "M1",
+            "--run-id",
+            "P5RUN-P5-DV-1.0.1-A7C91E42-M1-20260710-ABCDEF12",
+            "--utcdate",
+            "20260710",
+        ])
+        assert args.run_plan == "phase5/validation/kaggle_run_plan_v2.json"
+        assert args.batch_manifest == "phase5/manifests/batch_partition_manifest_v2.json"
+
+
 def test_module_help_and_not_implemented_command() -> None:
     help_result = subprocess.run(
         [sys.executable, "-m", "phase5", "--help"],
@@ -37,7 +53,7 @@ def test_module_help_and_not_implemented_command() -> None:
     assert "--strict" in gate0_help.stdout
 
     batch_id = BatchId.build(
-        dataset="P5-DV-1.0.0-A7C91E42",
+        dataset="P5-DV-1.0.1-A7C91E42",
         workload=TrialPhase.PHASE5_ADVERSARIAL_CORE,
         model=ModelSlot.M1,
         density_or_mix=Density.D3,
@@ -154,7 +170,7 @@ def test_campaign_cli_smoke_writes_operational_reports(tmp_path: Path) -> None:
             "--model-slot",
             "M1",
             "--run-id",
-            "P5RUN-P5-DV-1.0.0-A7C91E42-M1-20260708-ABCDEF12",
+            "P5RUN-P5-DV-1.0.1-A7C91E42-M1-20260708-ABCDEF12",
             "--utcdate",
             "20260708",
             "--until-safety-horizon",

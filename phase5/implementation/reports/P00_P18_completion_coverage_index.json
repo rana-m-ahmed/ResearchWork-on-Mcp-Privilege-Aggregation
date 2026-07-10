@@ -1,0 +1,304 @@
+{
+  "commit": "RECORDED_IN_GIT_METADATA",
+  "generated_utc": "2026-07-10T12:52:28.108116Z",
+  "items": [
+    {
+      "commit": "PENDING_THIS_REPAIR_COMMIT",
+      "current_status": "IMPLEMENTED_OR_REPORTED",
+      "id": "P00",
+      "implementation_path": [
+        "phase5/implementation/reports/P00_path_reconciliation.json",
+        "phase5/implementation/reports/P00_repository_reality_audit.md",
+        "phase5/implementation/reports/P00_validation.log"
+      ],
+      "report_path": [
+        "phase5/implementation/reports/P00_path_reconciliation.json",
+        "phase5/implementation/reports/P00_repository_reality_audit.md",
+        "phase5/implementation/reports/P00_validation.log"
+      ],
+      "test_coverage": "repository-local pytest and guard coverage; see implementation reports"
+    },
+    {
+      "commit": "PENDING_THIS_REPAIR_COMMIT",
+      "current_status": "IMPLEMENTED_OR_REPORTED",
+      "id": "P01",
+      "implementation_path": [
+        "phase5/implementation/tasks/P01_task_packet.yaml"
+      ],
+      "report_path": [
+        "phase5/implementation/reports/P01_audit_report_template.md",
+        "phase5/implementation/reports/P01_checkpoint.json",
+        "phase5/implementation/reports/P01_implementation_report.json",
+        "phase5/implementation/reports/P01_implementation_report.md",
+        "phase5/implementation/reports/P01_remediation_report.md"
+      ],
+      "test_coverage": "repository-local pytest and guard coverage; see implementation reports"
+    },
+    {
+      "commit": "PENDING_THIS_REPAIR_COMMIT",
+      "current_status": "IMPLEMENTED_OR_REPORTED",
+      "id": "P02",
+      "implementation_path": [
+        "phase5/implementation/reports/P02_implementation_report.json",
+        "phase5/implementation/reports/P02_implementation_report.md"
+      ],
+      "report_path": [
+        "phase5/implementation/reports/P02_implementation_report.json",
+        "phase5/implementation/reports/P02_implementation_report.md"
+      ],
+      "test_coverage": "repository-local pytest and guard coverage; see implementation reports"
+    },
+    {
+      "commit": "PENDING_THIS_REPAIR_COMMIT",
+      "current_status": "IMPLEMENTED_OR_REPORTED",
+      "id": "P03",
+      "implementation_path": [
+        "phase5/implementation/tasks/P03_task_packet.yaml"
+      ],
+      "report_path": [
+        "phase5/implementation/reports/P03_implementation_report.json",
+        "phase5/implementation/reports/P03_implementation_report.md"
+      ],
+      "test_coverage": "repository-local pytest and guard coverage; see implementation reports"
+    },
+    {
+      "commit": "PENDING_THIS_REPAIR_COMMIT",
+      "current_status": "IMPLEMENTED_OR_REPORTED",
+      "id": "P04",
+      "implementation_path": [
+        "phase5/implementation/tasks/P04_task_packet.yaml"
+      ],
+      "report_path": [
+        "phase5/implementation/reports/P04_implementation_report.json",
+        "phase5/implementation/reports/P04_implementation_report.md",
+        "phase5/implementation/reports/P04_queue_separation_and_order_validation.json",
+        "phase5/implementation/reports/P04_queue_separation_and_order_validation.md"
+      ],
+      "test_coverage": "repository-local pytest and guard coverage; see implementation reports"
+    },
+    {
+      "commit": "PENDING_THIS_REPAIR_COMMIT",
+      "current_status": "IMPLEMENTED_OR_REPORTED",
+      "id": "P05",
+      "implementation_path": [
+        "phase5/implementation/tasks/P05_task_packet.yaml"
+      ],
+      "report_path": [
+        "phase5/implementation/reports/P05_implementation_report.json",
+        "phase5/implementation/reports/P05_implementation_report.md"
+      ],
+      "test_coverage": "repository-local pytest and guard coverage; see implementation reports"
+    },
+    {
+      "commit": "PENDING_THIS_REPAIR_COMMIT",
+      "current_status": "IMPLEMENTED_OR_REPORTED",
+      "id": "P06",
+      "implementation_path": [
+        "phase5/implementation/tasks/P06_task_packet.yaml"
+      ],
+      "report_path": [
+        "phase5/implementation/reports/P06_ci_line_ending_fix_report.json",
+        "phase5/implementation/reports/P06_ci_line_ending_fix_report.md",
+        "phase5/implementation/reports/P06_ci_prompt_line_ending_fix_report.json",
+        "phase5/implementation/reports/P06_ci_prompt_line_ending_fix_report.md",
+        "phase5/implementation/reports/P06_ci_workflow_fix_report.json",
+        "phase5/implementation/reports/P06_ci_workflow_fix_report.md",
+        "phase5/implementation/reports/P06_implementation_report.json",
+        "phase5/implementation/reports/P06_implementation_report.md"
+      ],
+      "test_coverage": "repository-local pytest and guard coverage; see implementation reports"
+    },
+    {
+      "commit": "PENDING_THIS_REPAIR_COMMIT",
+      "current_status": "IMPLEMENTED_OR_REPORTED",
+      "id": "P07",
+      "implementation_path": [
+        "phase5/implementation/tasks/P07_task_packet.yaml"
+      ],
+      "report_path": [
+        "phase5/implementation/reports/P07_implementation_report.json",
+        "phase5/implementation/reports/P07_implementation_report.md"
+      ],
+      "test_coverage": "repository-local pytest and guard coverage; see implementation reports"
+    },
+    {
+      "commit": "PENDING_THIS_REPAIR_COMMIT",
+      "current_status": "IMPLEMENTED_OR_REPORTED",
+      "id": "P08",
+      "implementation_path": [
+        "phase5/implementation/reports/P08_implementation_report.json",
+        "phase5/implementation/reports/P08_implementation_report.md",
+        "phase5/implementation/reports/P08_prompt_bundle_metadata_relative_paths_fix_report.json",
+        "phase5/implementation/reports/P08_prompt_bundle_metadata_relative_paths_fix_report.md",
+        "phase5/implementation/reports/P08_prompt_compiler_lf_normalization_fix_report.json",
+        "phase5/implementation/reports/P08_prompt_compiler_lf_normalization_fix_report.md",
+        "phase5/implementation/reports/P08_prompt_manifest_metadata_hash_stability_fix_report.json",
+        "phase5/implementation/reports/P08_prompt_manifest_metadata_hash_stability_fix_report.md"
+      ],
+      "report_path": [
+        "phase5/implementation/reports/P08_implementation_report.json",
+        "phase5/implementation/reports/P08_implementation_report.md",
+        "phase5/implementation/reports/P08_prompt_bundle_metadata_relative_paths_fix_report.json",
+        "phase5/implementation/reports/P08_prompt_bundle_metadata_relative_paths_fix_report.md",
+        "phase5/implementation/reports/P08_prompt_compiler_lf_normalization_fix_report.json",
+        "phase5/implementation/reports/P08_prompt_compiler_lf_normalization_fix_report.md",
+        "phase5/implementation/reports/P08_prompt_manifest_metadata_hash_stability_fix_report.json",
+        "phase5/implementation/reports/P08_prompt_manifest_metadata_hash_stability_fix_report.md"
+      ],
+      "test_coverage": "repository-local pytest and guard coverage; see implementation reports"
+    },
+    {
+      "commit": "PENDING_THIS_REPAIR_COMMIT",
+      "current_status": "IMPLEMENTED_OR_REPORTED",
+      "id": "P09",
+      "implementation_path": [
+        "phase5/implementation/tasks/P09_task_packet.yaml"
+      ],
+      "report_path": [
+        "phase5/implementation/reports/P09_implementation_report.json",
+        "phase5/implementation/reports/P09_implementation_report.md"
+      ],
+      "test_coverage": "repository-local pytest and guard coverage; see implementation reports"
+    },
+    {
+      "commit": "PENDING_THIS_REPAIR_COMMIT",
+      "current_status": "IMPLEMENTED_OR_REPORTED",
+      "id": "P10",
+      "implementation_path": [
+        "phase5/implementation/reports/P10_implementation_report.json",
+        "phase5/implementation/reports/P10_implementation_report.md"
+      ],
+      "report_path": [
+        "phase5/implementation/reports/P10_implementation_report.json",
+        "phase5/implementation/reports/P10_implementation_report.md"
+      ],
+      "test_coverage": "repository-local pytest and guard coverage; see implementation reports"
+    },
+    {
+      "commit": "PENDING_THIS_REPAIR_COMMIT",
+      "current_status": "IMPLEMENTED_OR_REPORTED",
+      "id": "P11",
+      "implementation_path": [
+        "phase5/implementation/tasks/P11_task_packet.yaml"
+      ],
+      "report_path": [
+        "phase5/implementation/reports/P11_implementation_report.json",
+        "phase5/implementation/reports/P11_implementation_report.md"
+      ],
+      "test_coverage": "repository-local pytest and guard coverage; see implementation reports"
+    },
+    {
+      "commit": "PENDING_THIS_REPAIR_COMMIT",
+      "current_status": "IMPLEMENTED_OR_REPORTED",
+      "id": "P12",
+      "implementation_path": [
+        "phase5/implementation/tasks/P12_task_packet.yaml"
+      ],
+      "report_path": [
+        "phase5/implementation/reports/P12_implementation_report.json",
+        "phase5/implementation/reports/P12_implementation_report.md"
+      ],
+      "test_coverage": "repository-local pytest and guard coverage; see implementation reports"
+    },
+    {
+      "commit": "PENDING_THIS_REPAIR_COMMIT",
+      "current_status": "IMPLEMENTED_OR_REPORTED",
+      "id": "P13",
+      "implementation_path": [
+        "phase5/implementation/tasks/P13_task_packet.yaml"
+      ],
+      "report_path": [
+        "phase5/implementation/reports/P13_implementation_report.json",
+        "phase5/implementation/reports/P13_implementation_report.md"
+      ],
+      "test_coverage": "repository-local pytest and guard coverage; see implementation reports"
+    },
+    {
+      "commit": "PENDING_THIS_REPAIR_COMMIT",
+      "current_status": "IMPLEMENTED_OR_REPORTED",
+      "id": "P14",
+      "implementation_path": [
+        "phase5/implementation/tasks/P14_task_packet.yaml"
+      ],
+      "report_path": [
+        "phase5/implementation/reports/P14_implementation_report.json",
+        "phase5/implementation/reports/P14_implementation_report.md"
+      ],
+      "test_coverage": "repository-local pytest and guard coverage; see implementation reports"
+    },
+    {
+      "commit": "PENDING_THIS_REPAIR_COMMIT",
+      "current_status": "IMPLEMENTED_OR_REPORTED",
+      "id": "P15",
+      "implementation_path": [
+        "phase5/implementation/tasks/P15_task_packet.yaml"
+      ],
+      "report_path": [
+        "phase5/implementation/reports/P15_implementation_report.json",
+        "phase5/implementation/reports/P15_implementation_report.md",
+        "phase5/implementation/reports/P15_notebook_static_validation_report.json",
+        "phase5/implementation/reports/P15_notebook_static_validation_report.md"
+      ],
+      "test_coverage": "repository-local pytest and guard coverage; see implementation reports"
+    },
+    {
+      "commit": "PENDING_THIS_REPAIR_COMMIT",
+      "current_status": "IMPLEMENTED_OR_REPORTED",
+      "id": "P16",
+      "implementation_path": [
+        "phase5/implementation/tasks/P16_task_packet.yaml"
+      ],
+      "report_path": [
+        "phase5/implementation/reports/P16_checkpoint_resume_and_seal_sync_report.md",
+        "phase5/implementation/reports/P16_fault_injection_matrix.csv",
+        "phase5/implementation/reports/P16_local_qualification_report.json",
+        "phase5/implementation/reports/P16_local_qualification_report.md",
+        "phase5/implementation/reports/P16_state_transition_coverage_report.md"
+      ],
+      "test_coverage": "repository-local pytest and guard coverage; see implementation reports"
+    },
+    {
+      "commit": "PENDING_THIS_REPAIR_COMMIT",
+      "current_status": "IMPLEMENTED_OR_REPORTED",
+      "id": "P17",
+      "implementation_path": [
+        "phase5/implementation/reports/P17_implementation_report.json",
+        "phase5/implementation/reports/P17_implementation_report.md"
+      ],
+      "report_path": [
+        "phase5/implementation/reports/P17_implementation_report.json",
+        "phase5/implementation/reports/P17_implementation_report.md"
+      ],
+      "test_coverage": "repository-local pytest and guard coverage; see implementation reports"
+    },
+    {
+      "commit": "PENDING_THIS_REPAIR_COMMIT",
+      "current_status": "IMPLEMENTED_OR_REPORTED",
+      "id": "P18",
+      "implementation_path": [
+        "phase5/implementation/reports/P18_implementation_report.json",
+        "phase5/implementation/reports/P18_implementation_report.md"
+      ],
+      "report_path": [
+        "phase5/implementation/reports/P18_implementation_report.json",
+        "phase5/implementation/reports/P18_implementation_report.md"
+      ],
+      "test_coverage": "repository-local pytest and guard coverage; see implementation reports"
+    }
+  ],
+  "status": "PASS",
+  "validation_summary": {
+    "gate0_current_tree_source_clean_override": "PASS",
+    "git_diff_check": "PASS",
+    "in_memory_compile": "PASS files=116",
+    "notes": [
+      "Gate0 was refreshed in the dirty implementation tree with source_clean=True; final strict clean checkout verification is performed after commit in a detached worktree.",
+      "pytest warnings are pre-existing cache/deprecation warnings and did not fail the suite."
+    ],
+    "phase5_forbidden_analysis_lint": "PASS",
+    "phase5_instruction_hierarchy": "PASS",
+    "phase5_secret_lint": "PASS",
+    "pytest": "506 passed, 13 warnings",
+    "queue_validation": "PASS"
+  }
+}

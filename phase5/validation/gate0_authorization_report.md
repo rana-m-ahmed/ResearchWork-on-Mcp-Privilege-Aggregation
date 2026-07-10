@@ -2,14 +2,14 @@
 
 ## Verdict
 
-- Status: `FAIL`
+- Status: `PASS`
 - Task: `P03`
 - Strict: `true`
-- Generated UTC: `2026-07-10T10:09:29.935505Z`
+- Generated UTC: `2026-07-10T14:44:37.488943Z`
 
 ## Summary
 
-Gate 0 failed because one or more frozen artifacts, verdicts, runtime controls, or checkout checks did not match.
+Gate 0 passed with strict, hash-bound verification of the registry, frozen artifacts, queue files, model/runtime evidence, and checkout cleanliness.
 
 ## Checks
 - registry-status: PASS
@@ -17,16 +17,16 @@ Gate 0 failed because one or more frozen artifacts, verdicts, runtime controls, 
   - status=COMPLETE
 - registry-go-verdicts: PASS
   - phase4='PASS'
-  - phase4_5='READY_FOR_EXTERNAL_AUDIT'
+  - phase4_5='GO TO PHASE 5 REBINDING'
 - phase4-go-verdict: PASS
   - status=PASS
   - ready_for_phase5=True
   - missing_dependencies=[]
 - phase45-go-verdict: PASS
-  - final_verdict=READY_FOR_EXTERNAL_AUDIT
+  - final_verdict=GO TO PHASE 5 REBINDING
 - required-label:Phase 4 GO report: PASS
-  - phase4/reports/phase4_go_no_go_decision.md
-  - 5766e232af92a5d6b545f8e2f61c2fe499d9da71b7760e3f9a9fab6b8054c3e1
+  - phase4/reports/remediation_v2/phase4_corrected_go_no_go_decision.md
+  - 5008cc2d1e02a230c65e6e08b62fc9892a4f3b5000a78d448ab405ac5e22801d
 - required-label:Phase 4 global freeze: PASS
   - phase4/configs/phase4_global_freeze.yaml
   - 2edf49bf777e1cc5d3bfbc34aff5b06fcfe07f9f077c050553cf30d842cf8467
@@ -50,19 +50,19 @@ Gate 0 failed because one or more frozen artifacts, verdicts, runtime controls, 
   - 5934137bd5e741b1ce700879691040d215648b409316c3cf09bc559b098d47a8
 - required-label:Statistical plan: PASS
   - phase4/configs/statistical_plan.yaml
-  - 96161dd17f00bd76534f3f70842775e303e926319ff59406c4ef06108df404ec
+  - aad0afdd8f395ecdd4853e737782c487e3b3207730e3496c9e7b4d1ddb558a07
 - required-label:Phase 5 schema freeze: PASS
-  - phase4/configs/phase5_schema_freeze.json
-  - b26ae0025cca7a64a5578af7f63afdd30498116d2b7b7a0ef9fb558b8b8a05ed
+  - phase4/frozen_bundle_v2/queue_schema.json
+  - ba3d55d305a9465eee34630b3c7e5994878459d8bb98f01a54658fc91b1a0d10
 - required-label:Payload reference map: PASS
   - phase4/configs/payload_reference_map.json
   - a14fb6217f7484135c71530cf2521fd149b35b5e60f73a8340fdef0adbaebafe
 - required-label:Cryptographic lock manifest: PASS
-  - phase4/frozen_bundle/cryptographic_lock_manifest.json
-  - 12aad2a0692c329422908d2972223a0aad7c95b000f15b9afdcf61d08b61376f
+  - phase4/frozen_bundle_v2/cryptographic_lock_manifest.json
+  - 4a5ed03c2a7bee2b8ef985fcb67ccaeaebe7d85d10cee21afec3ff88a3cc274d
 - required-label:Master hash ledger: PASS
-  - phase4/frozen_bundle/master_hash_ledger.csv
-  - 9d304278a1ebeacaa89beef90faa9cb74cbd071640a27870318f7c1f415fdd28
+  - phase4/frozen_bundle_v2/master_hash_ledger.csv
+  - 193d1504445ba3a3efd6d348218e6d601df6f64cf3d711cec663a8e105e9b67d
 - required-label:Phase 4 global freeze: PASS
   - phase4/configs/phase4_global_freeze.yaml
   - 2edf49bf777e1cc5d3bfbc34aff5b06fcfe07f9f077c050553cf30d842cf8467
@@ -71,22 +71,22 @@ Gate 0 failed because one or more frozen artifacts, verdicts, runtime controls, 
   - 5934137bd5e741b1ce700879691040d215648b409316c3cf09bc559b098d47a8
 - required-label:Statistical plan: PASS
   - phase4/configs/statistical_plan.yaml
-  - 96161dd17f00bd76534f3f70842775e303e926319ff59406c4ef06108df404ec
+  - aad0afdd8f395ecdd4853e737782c487e3b3207730e3496c9e7b4d1ddb558a07
 - required-label:Phase 5 schema freeze: PASS
-  - phase4/configs/phase5_schema_freeze.json
-  - b26ae0025cca7a64a5578af7f63afdd30498116d2b7b7a0ef9fb558b8b8a05ed
+  - phase4/frozen_bundle_v2/queue_schema.json
+  - ba3d55d305a9465eee34630b3c7e5994878459d8bb98f01a54658fc91b1a0d10
 - required-label:Payload reference map: PASS
   - phase4/configs/payload_reference_map.json
   - a14fb6217f7484135c71530cf2521fd149b35b5e60f73a8340fdef0adbaebafe
 - required-label:Cryptographic lock manifest: PASS
-  - phase4/frozen_bundle/cryptographic_lock_manifest.json
-  - 12aad2a0692c329422908d2972223a0aad7c95b000f15b9afdcf61d08b61376f
+  - phase4/frozen_bundle_v2/cryptographic_lock_manifest.json
+  - 4a5ed03c2a7bee2b8ef985fcb67ccaeaebe7d85d10cee21afec3ff88a3cc274d
 - required-label:Master hash ledger: PASS
-  - phase4/frozen_bundle/master_hash_ledger.csv
-  - 9d304278a1ebeacaa89beef90faa9cb74cbd071640a27870318f7c1f415fdd28
+  - phase4/frozen_bundle_v2/master_hash_ledger.csv
+  - 193d1504445ba3a3efd6d348218e6d601df6f64cf3d711cec663a8e105e9b67d
 - required-label:Phase 4.5 GO report: PASS
-  - phase4_5/validation/phase45_final_go_no_go.md
-  - 910fa15b9e60f239a7de1f164f25a5c7b61bafece47e48cda54bae5acc97b5d7
+  - phase4_5/validation/remediation_v2/phase45_corrected_final_go_no_go.md
+  - 5ecf56d88671a45472ec53aac693f2fc53dfb2dffee64ed8b06dabd9206f5cec
 - required-label:Schema mapping: PASS
   - phase4_5/validation/phase45_schema_mapping_report.md
   - bf4515919c4567c3f10139c248f2fb8f1c2489ca1daa05fe1c35342d636460a1
@@ -142,17 +142,17 @@ Gate 0 failed because one or more frozen artifacts, verdicts, runtime controls, 
   - server/tool_definitions/log_event.py
   - 89a4b7ef649d90241d7a25d2c39bb0e272a680077b9a91d0d5b9a67b142b2e41
 - required-label:Trial order core: PASS
-  - phase4/frozen_bundle/trial_order_core.csv
-  - a81ce0d93df2fae979ccd1ddf42c11016f61a18d970c2b3d5ee67255ef9528a5
+  - phase4/frozen_bundle_v2/trial_order_core.csv
+  - d97c7dda394aace668d2916b71b5bea36416af425dfbe1a99b25c0c128630711
 - required-label:Trial order defense: PASS
-  - phase4/frozen_bundle/trial_order_defense.csv
-  - 233389d23c20ae158e23c67fab430e05e93141dceb038b6b8483c7404a8bf4c0
+  - phase4/frozen_bundle_v2/trial_order_defense.csv
+  - 1a391e9dcd35e0d6c0a8f1690cfb2b6c388f71cddbfabb5db2fef93f9b916588
 - required-label:Trial order utility: PASS
-  - phase4/frozen_bundle/trial_order_utility.csv
-  - 8677fd1c21a7387ad94d6800e72008f500cfa3535b461d3b24fd155c5bbd4c28
+  - phase4/frozen_bundle_v2/trial_order_utility.csv
+  - 3d4588b35e5453cf981f19f6a25f35f9f1e74aa66f9bcb9f41bac59f82bed94a
 - required-label:Phase 5 execution manifest: PASS
-  - phase4/frozen_bundle/phase5_execution_manifest.json
-  - a8734eed3fe12bd2f1756331c088cbe216de1b38f77efc78d40092cb92843328
+  - phase4/frozen_bundle_v2/phase5_execution_manifest.json
+  - 5613a19080400ca5e41a9d3e38d3f0221a22c2676b6fc0da6c119b9494a91505
 - required-label:Model freeze set: PASS
   - phase4/configs/model_set_freeze.yaml
   - 686c112ebfc8e7790098b26454504edd385ee6a21ab41d636949afb7f1a05d0d
@@ -170,7 +170,7 @@ Gate 0 failed because one or more frozen artifacts, verdicts, runtime controls, 
   - d300af9ce961a4b839dd073434cfdd15291e27d6f37c71fee58e05343992715c
 - queue-file: PASS
   - rows=5400
-  - cells=37800
+  - cells=59400
   - unique_rows=5400
   - unique_trial_ids=5400
   - unique_payload_ids=150
@@ -178,10 +178,10 @@ Gate 0 failed because one or more frozen artifacts, verdicts, runtime controls, 
   - densities={'D1': 1800, 'D3': 1800, 'D5': 1800}
   - defense={'BASELINE': 5400}
   - statuses=['PENDING']
-  - sha256=a81ce0d93df2fae979ccd1ddf42c11016f61a18d970c2b3d5ee67255ef9528a5
+  - sha256=d97c7dda394aace668d2916b71b5bea36416af425dfbe1a99b25c0c128630711
 - queue-file: PASS
   - rows=2400
-  - cells=16800
+  - cells=26400
   - unique_rows=2400
   - unique_trial_ids=2400
   - unique_payload_ids=150
@@ -189,41 +189,46 @@ Gate 0 failed because one or more frozen artifacts, verdicts, runtime controls, 
   - densities={'D3': 1200, 'D5': 1200}
   - defense={'IHR_SPCE': 2400}
   - statuses=['PENDING']
-  - sha256=233389d23c20ae158e23c67fab430e05e93141dceb038b6b8483c7404a8bf4c0
+  - sha256=1a391e9dcd35e0d6c0a8f1690cfb2b6c388f71cddbfabb5db2fef93f9b916588
 - queue-file: PASS
   - rows=2400
-  - cells=16800
+  - cells=24000
   - unique_rows=2400
   - unique_trial_ids=2400
-  - unique_payload_ids=1
+  - unique_payload_ids=0
   - models={'M1': 600, 'M2': 600, 'M3': 600, 'M4': 600}
   - densities={'D3': 1200, 'D5': 1200}
   - defense={'BASELINE': 1200, 'IHR_SPCE': 1200}
   - statuses=['PENDING']
-  - sha256=8677fd1c21a7387ad94d6800e72008f500cfa3535b461d3b24fd155c5bbd4c28
+  - sha256=3d4588b35e5453cf981f19f6a25f35f9f1e74aa66f9bcb9f41bac59f82bed94a
 - execution-manifest: PASS
-  - trial_order_sha256='a81ce0d93df2fae979ccd1ddf42c11016f61a18d970c2b3d5ee67255ef9528a5'
-  - phase4_manifest_hash='12aad2a0692c329422908d2972223a0aad7c95b000f15b9afdcf61d08b61376f'
-  - expected_trial_count=5400
+  - trial_order_core_sha256='d97c7dda394aace668d2916b71b5bea36416af425dfbe1a99b25c0c128630711'
+  - trial_order_defense_sha256='1a391e9dcd35e0d6c0a8f1690cfb2b6c388f71cddbfabb5db2fef93f9b916588'
+  - trial_order_utility_sha256='3d4588b35e5453cf981f19f6a25f35f9f1e74aa66f9bcb9f41bac59f82bed94a'
+  - phase4_corrected_lock_hash='4a5ed03c2a7bee2b8ef985fcb67ccaeaebe7d85d10cee21afec3ff88a3cc274d'
+  - expected_trial_count=10200
   - expected_payload_count=223
+- corrected-v2-totals: PASS
+  - total_rows=10200
+  - per_model_total={'M1': 2550, 'M2': 2550, 'M3': 2550, 'M4': 2550}
 - queue-statistics: PASS
-  - computed={'rows': 5400, 'unique_trial_ids': 5400, 'non_empty_cells': 37800, 'duplicates': [], 'by_model': {'M1': 1350, 'M2': 1350, 'M3': 1350, 'M4': 1350}, 'by_density': {'D1': 1800, 'D3': 1800, 'D5': 1800}, 'by_defense': {'BASELINE': 5400}, 'unique_payload_ids': 150}
+  - computed={'rows': 5400, 'unique_trial_ids': 5400, 'non_empty_cells': 59400, 'duplicates': [], 'by_model': {'M1': 1350, 'M2': 1350, 'M3': 1350, 'M4': 1350}, 'by_density': {'D1': 1800, 'D3': 1800, 'D5': 1800}, 'by_defense': {'BASELINE': 5400}, 'unique_payload_ids': 150}
   - expected_rows=5400
   - expected_unique_trials=5400
-  - expected_non_empty_cells=37800
+  - expected_non_empty_cells=59400
 - phase3-source-hash: PASS
   - a7324b63b1307de2dc9e90510ee7372b0b3aad685c4eec51182521191426dc79
 - model-set: PASS
   - expected={'M1': 'Qwen/Qwen2.5-7B-Instruct', 'M2': 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B', 'M3': 'mistralai/Mistral-7B-Instruct-v0.3', 'M4': 'microsoft/Phi-3.5-mini-instruct'}
   - got={'M1': 'Qwen/Qwen2.5-7B-Instruct', 'M2': 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B', 'M3': 'mistralai/Mistral-7B-Instruct-v0.3', 'M4': 'microsoft/Phi-3.5-mini-instruct'}
 - model-freeze:M1: PASS
-  - D:/Downloads/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_1_freeze.yaml
+  - D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_1_freeze.yaml
 - model-freeze:M2: PASS
-  - D:/Downloads/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_2_freeze.yaml
+  - D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_2_freeze.yaml
 - model-freeze:M3: PASS
-  - D:/Downloads/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_3_freeze.yaml
+  - D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_3_freeze.yaml
 - model-freeze:M4: PASS
-  - D:/Downloads/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_4_freeze.yaml
+  - D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_4_freeze.yaml
 - runtime-env-lock: PASS
   - environment lock verified
 - runtime-setup: PASS
@@ -236,14 +241,14 @@ Gate 0 failed because one or more frozen artifacts, verdicts, runtime controls, 
 - runtime-metrics-count: PASS
   - kaggle_smoke_rows=8
   - model_loader_rows=4
-- checkout-clean: FAIL
-  - working tree is dirty
+- checkout-clean: PASS
+  - working tree clean
 
 ## Findings
-- checkout-clean: working tree is dirty
+- none
 
 ## Verified Artifacts
-- Phase 4 GO report: `phase4/reports/phase4_go_no_go_decision.md` `5766e232af92a5d6b545f8e2f61c2fe499d9da71b7760e3f9a9fab6b8054c3e1`
+- Phase 4 GO report: `phase4/reports/remediation_v2/phase4_corrected_go_no_go_decision.md` `5008cc2d1e02a230c65e6e08b62fc9892a4f3b5000a78d448ab405ac5e22801d`
 - Phase 4 global freeze: `phase4/configs/phase4_global_freeze.yaml` `2edf49bf777e1cc5d3bfbc34aff5b06fcfe07f9f077c050553cf30d842cf8467`
 - Model freeze set: `phase4/configs/model_set_freeze.yaml` `686c112ebfc8e7790098b26454504edd385ee6a21ab41d636949afb7f1a05d0d`
 - Model freeze M1: `phase4/configs/model_1_freeze.yaml` `6bb3e095cf1aae4ba2961c35efdf05d94d615e7abd246f6b5e95b00c51dc0412`
@@ -251,19 +256,19 @@ Gate 0 failed because one or more frozen artifacts, verdicts, runtime controls, 
 - Model freeze M3: `phase4/configs/model_3_freeze.yaml` `20b81a8645700b86f0984e91d887711689b0bd0cc7a919f02d0f4cd72834e2e6`
 - Model freeze M4: `phase4/configs/model_4_freeze.yaml` `d300af9ce961a4b839dd073434cfdd15291e27d6f37c71fee58e05343992715c`
 - Defense freeze: `phase4/configs/defense_config_freeze.yaml` `5934137bd5e741b1ce700879691040d215648b409316c3cf09bc559b098d47a8`
-- Statistical plan: `phase4/configs/statistical_plan.yaml` `96161dd17f00bd76534f3f70842775e303e926319ff59406c4ef06108df404ec`
-- Phase 5 schema freeze: `phase4/configs/phase5_schema_freeze.json` `b26ae0025cca7a64a5578af7f63afdd30498116d2b7b7a0ef9fb558b8b8a05ed`
+- Statistical plan: `phase4/configs/statistical_plan.yaml` `aad0afdd8f395ecdd4853e737782c487e3b3207730e3496c9e7b4d1ddb558a07`
+- Phase 5 schema freeze: `phase4/frozen_bundle_v2/queue_schema.json` `ba3d55d305a9465eee34630b3c7e5994878459d8bb98f01a54658fc91b1a0d10`
 - Payload reference map: `phase4/configs/payload_reference_map.json` `a14fb6217f7484135c71530cf2521fd149b35b5e60f73a8340fdef0adbaebafe`
-- Cryptographic lock manifest: `phase4/frozen_bundle/cryptographic_lock_manifest.json` `12aad2a0692c329422908d2972223a0aad7c95b000f15b9afdcf61d08b61376f`
-- Master hash ledger: `phase4/frozen_bundle/master_hash_ledger.csv` `9d304278a1ebeacaa89beef90faa9cb74cbd071640a27870318f7c1f415fdd28`
+- Cryptographic lock manifest: `phase4/frozen_bundle_v2/cryptographic_lock_manifest.json` `4a5ed03c2a7bee2b8ef985fcb67ccaeaebe7d85d10cee21afec3ff88a3cc274d`
+- Master hash ledger: `phase4/frozen_bundle_v2/master_hash_ledger.csv` `193d1504445ba3a3efd6d348218e6d601df6f64cf3d711cec663a8e105e9b67d`
 - Phase 4 global freeze: `phase4/configs/phase4_global_freeze.yaml` `2edf49bf777e1cc5d3bfbc34aff5b06fcfe07f9f077c050553cf30d842cf8467`
 - Defense freeze: `phase4/configs/defense_config_freeze.yaml` `5934137bd5e741b1ce700879691040d215648b409316c3cf09bc559b098d47a8`
-- Statistical plan: `phase4/configs/statistical_plan.yaml` `96161dd17f00bd76534f3f70842775e303e926319ff59406c4ef06108df404ec`
-- Phase 5 schema freeze: `phase4/configs/phase5_schema_freeze.json` `b26ae0025cca7a64a5578af7f63afdd30498116d2b7b7a0ef9fb558b8b8a05ed`
+- Statistical plan: `phase4/configs/statistical_plan.yaml` `aad0afdd8f395ecdd4853e737782c487e3b3207730e3496c9e7b4d1ddb558a07`
+- Phase 5 schema freeze: `phase4/frozen_bundle_v2/queue_schema.json` `ba3d55d305a9465eee34630b3c7e5994878459d8bb98f01a54658fc91b1a0d10`
 - Payload reference map: `phase4/configs/payload_reference_map.json` `a14fb6217f7484135c71530cf2521fd149b35b5e60f73a8340fdef0adbaebafe`
-- Cryptographic lock manifest: `phase4/frozen_bundle/cryptographic_lock_manifest.json` `12aad2a0692c329422908d2972223a0aad7c95b000f15b9afdcf61d08b61376f`
-- Master hash ledger: `phase4/frozen_bundle/master_hash_ledger.csv` `9d304278a1ebeacaa89beef90faa9cb74cbd071640a27870318f7c1f415fdd28`
-- Phase 4.5 GO report: `phase4_5/validation/phase45_final_go_no_go.md` `910fa15b9e60f239a7de1f164f25a5c7b61bafece47e48cda54bae5acc97b5d7`
+- Cryptographic lock manifest: `phase4/frozen_bundle_v2/cryptographic_lock_manifest.json` `4a5ed03c2a7bee2b8ef985fcb67ccaeaebe7d85d10cee21afec3ff88a3cc274d`
+- Master hash ledger: `phase4/frozen_bundle_v2/master_hash_ledger.csv` `193d1504445ba3a3efd6d348218e6d601df6f64cf3d711cec663a8e105e9b67d`
+- Phase 4.5 GO report: `phase4_5/validation/remediation_v2/phase45_corrected_final_go_no_go.md` `5ecf56d88671a45472ec53aac693f2fc53dfb2dffee64ed8b06dabd9206f5cec`
 - Schema mapping: `phase4_5/validation/phase45_schema_mapping_report.md` `bf4515919c4567c3f10139c248f2fb8f1c2489ca1daa05fe1c35342d636460a1`
 - Log schema: `phase4_5/validation/phase45_log_schema_report.md` `dcdc669517e504a84d99fc0544cd7259aef3fe7366ef39c6aa4c077c14bae713`
 - Reset: `phase4_5/validation/phase45_reset_report.md` `86823f9145ea0e5d83e606654e832a94d572d4b6dc50b24c5fdf10db2fa72cd9`
@@ -282,10 +287,10 @@ Gate 0 failed because one or more frozen artifacts, verdicts, runtime controls, 
 - Tool definition get_local_weather: `server/tool_definitions/get_local_weather.py` `4eff65d2e57aea2616840c7ce9cf07548e0c1f2d5d2ef28c7fe4e4e2be0a5b08`
 - Tool definition query_local_inventory: `server/tool_definitions/query_local_inventory.py` `f13cfd4a29faee1691859db1f30a3ccae2f9647c13e24a57695991569ecbeec7`
 - Tool definition log_event: `server/tool_definitions/log_event.py` `89a4b7ef649d90241d7a25d2c39bb0e272a680077b9a91d0d5b9a67b142b2e41`
-- Trial order core: `phase4/frozen_bundle/trial_order_core.csv` `a81ce0d93df2fae979ccd1ddf42c11016f61a18d970c2b3d5ee67255ef9528a5`
-- Trial order defense: `phase4/frozen_bundle/trial_order_defense.csv` `233389d23c20ae158e23c67fab430e05e93141dceb038b6b8483c7404a8bf4c0`
-- Trial order utility: `phase4/frozen_bundle/trial_order_utility.csv` `8677fd1c21a7387ad94d6800e72008f500cfa3535b461d3b24fd155c5bbd4c28`
-- Phase 5 execution manifest: `phase4/frozen_bundle/phase5_execution_manifest.json` `a8734eed3fe12bd2f1756331c088cbe216de1b38f77efc78d40092cb92843328`
+- Trial order core: `phase4/frozen_bundle_v2/trial_order_core.csv` `d97c7dda394aace668d2916b71b5bea36416af425dfbe1a99b25c0c128630711`
+- Trial order defense: `phase4/frozen_bundle_v2/trial_order_defense.csv` `1a391e9dcd35e0d6c0a8f1690cfb2b6c388f71cddbfabb5db2fef93f9b916588`
+- Trial order utility: `phase4/frozen_bundle_v2/trial_order_utility.csv` `3d4588b35e5453cf981f19f6a25f35f9f1e74aa66f9bcb9f41bac59f82bed94a`
+- Phase 5 execution manifest: `phase4/frozen_bundle_v2/phase5_execution_manifest.json` `5613a19080400ca5e41a9d3e38d3f0221a22c2676b6fc0da6c119b9494a91505`
 - Model freeze set: `phase4/configs/model_set_freeze.yaml` `686c112ebfc8e7790098b26454504edd385ee6a21ab41d636949afb7f1a05d0d`
 - Model freeze M1: `phase4/configs/model_1_freeze.yaml` `6bb3e095cf1aae4ba2961c35efdf05d94d615e7abd246f6b5e95b00c51dc0412`
 - Model freeze M2: `phase4/configs/model_2_freeze.yaml` `8a3299dd860f55b7c3bdcd46387b5da1a22ce701a019f1312bba6e4ba12811d5`
@@ -293,11 +298,11 @@ Gate 0 failed because one or more frozen artifacts, verdicts, runtime controls, 
 - Model freeze M4: `phase4/configs/model_4_freeze.yaml` `d300af9ce961a4b839dd073434cfdd15291e27d6f37c71fee58e05343992715c`
 
 ## Frozen Inputs
-- Trial order core: `a81ce0d93df2fae979ccd1ddf42c11016f61a18d970c2b3d5ee67255ef9528a5`
-- Trial order core: `a81ce0d93df2fae979ccd1ddf42c11016f61a18d970c2b3d5ee67255ef9528a5`
-- Trial order defense: `233389d23c20ae158e23c67fab430e05e93141dceb038b6b8483c7404a8bf4c0`
-- Trial order utility: `8677fd1c21a7387ad94d6800e72008f500cfa3535b461d3b24fd155c5bbd4c28`
-- Phase 5 execution manifest: `a8734eed3fe12bd2f1756331c088cbe216de1b38f77efc78d40092cb92843328`
+- Trial order core: `d97c7dda394aace668d2916b71b5bea36416af425dfbe1a99b25c0c128630711`
+- Trial order core: `d97c7dda394aace668d2916b71b5bea36416af425dfbe1a99b25c0c128630711`
+- Trial order defense: `1a391e9dcd35e0d6c0a8f1690cfb2b6c388f71cddbfabb5db2fef93f9b916588`
+- Trial order utility: `3d4588b35e5453cf981f19f6a25f35f9f1e74aa66f9bcb9f41bac59f82bed94a`
+- Phase 5 execution manifest: `5613a19080400ca5e41a9d3e38d3f0221a22c2676b6fc0da6c119b9494a91505`
 - Phase 3 common-source hash: `a7324b63b1307de2dc9e90510ee7372b0b3aad685c4eec51182521191426dc79`
 - M1 freeze: `6bb3e095cf1aae4ba2961c35efdf05d94d615e7abd246f6b5e95b00c51dc0412`
 - M2 freeze: `8a3299dd860f55b7c3bdcd46387b5da1a22ce701a019f1312bba6e4ba12811d5`
@@ -309,7 +314,7 @@ Gate 0 failed because one or more frozen artifacts, verdicts, runtime controls, 
 
 ## Verdicts
 - phase4: `PASS`
-- phase4_5: `READY_FOR_EXTERNAL_AUDIT`
+- phase4_5: `GO TO PHASE 5 REBINDING`
 - phase4_5_source_commit: `4e329f8cad35770e15a7750883e2b2e96629e71c`
 
 ## Output Files

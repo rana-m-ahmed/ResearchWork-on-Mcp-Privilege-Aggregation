@@ -233,6 +233,31 @@ def test_materializer_resolves_evidence_and_preserves_exact_schema_rows(tmp_path
     assert utility.row == utility_row
     assert utility.row["phase1_payload_hash"] is None
     assert utility.row["payload_hash"] is None
+    assert materialized.schema_id == "phase5_official_trial_schema"
+
+
+def test_materializer_preserves_corrected_queue_schema_fields() -> None:
+    row = {
+        "trial_id": "T00001",
+        "model_id": "M1",
+        "density": "D3",
+        "metadata_surface_condition": "POISON_TD",
+        "attack_family": "DIRECT_OVERRIDE",
+        "defense_condition": "BASELINE",
+        "payload_id": "PAYLOAD_000001",
+        "phase1_payload_hash": "",
+        "task_id": "d3_task_000",
+        "task_hash": "fe9dcac575dd9bccc05fc4415a39f23135f69e25260a17b300a9459859552c40",
+        "payload_condition": "PHASE1_HASH_AUTHORIZED",
+        "status": "PENDING",
+    }
+
+    materialized = materialize_frozen_trial_row(row)
+
+    assert materialized.row == row
+    assert materialized.schema_id == "phase4_corrected_v2_queue_schema"
+    assert materialized.row["task_id"] == "d3_task_000"
+    assert materialized.row["task_hash"] == row["task_hash"]
 
 
 def test_materializer_rejects_missing_and_corrupt_evidence_references(tmp_path: Path) -> None:

@@ -1,0 +1,79 @@
+{
+  "branch": "phase4-activate-corrected-v2",
+  "corrected_lock_hash": "4a5ed03c2a7bee2b8ef985fcb67ccaeaebe7d85d10cee21afec3ff88a3cc274d",
+  "corrected_phase45_go_hash": "5ecf56d88671a45472ec53aac693f2fc53dfb2dffee64ed8b06dabd9206f5cec",
+  "corrected_phase4_go_hash": "5008cc2d1e02a230c65e6e08b62fc9892a4f3b5000a78d448ab405ac5e22801d",
+  "corrected_queue_totals": {
+    "M1": 2550,
+    "M2": 2550,
+    "M3": 2550,
+    "M4": 2550,
+    "core": 5400,
+    "defense": 2400,
+    "total": 10200,
+    "utility": 2400
+  },
+  "generated_utc": "2026-07-10T12:52:28.108116Z",
+  "m4_status": "KAGGLE_NON_OFFICIAL_LOAD_VALIDATION_REQUIRED",
+  "original_package_hash_result": {
+    "phase4/frozen_bundle/cryptographic_lock_manifest.json": {
+      "restored_line_endings": "CRLF",
+      "sha256": "09122acabc4ea034aae2ea43adfbfb9b6b370e926db1222861d11d37e87cd11f",
+      "source_bytes_sha256_before_checkout_eol": "ecec625ca5fd9dc1e3a4286e97ab8410ef8c5fca79aa2348c7e5e27a938c4a65",
+      "source_commit": "13754ca91a839eeac0c8233e01f5d4953634dd8e"
+    },
+    "phase4/frozen_bundle/master_hash_ledger.csv": {
+      "restored_line_endings": "CRLF",
+      "sha256": "b399844c96eec465f66b767d3cabcdefc9e2e87792af7070ef499d78da6fe84d",
+      "source_bytes_sha256_before_checkout_eol": "d45374948cbf229bcc689bd1336e0613a4fa2f1ccc73dba00238b439c76beb45",
+      "source_commit": "13754ca91a839eeac0c8233e01f5d4953634dd8e"
+    },
+    "phase4/frozen_bundle/phase5_execution_manifest.json": {
+      "restored_line_endings": "CRLF",
+      "sha256": "290a397e795a40dc97f497ada3a6c42c1d5ffdec2bdeb03046565996c2b350c2",
+      "source_bytes_sha256_before_checkout_eol": "c55c611926669b12e8dfbc685fac8af1f4449b7a26f4607cd3183b2b620e6193",
+      "source_commit": "13754ca91a839eeac0c8233e01f5d4953634dd8e"
+    },
+    "phase4/frozen_bundle/trial_order_core.csv": {
+      "restored_line_endings": "CRLF",
+      "sha256": "2c0e96bd07245b95021c6521b7730db645acbd7686af6bb8127e7d36f3fb426f",
+      "source_bytes_sha256_before_checkout_eol": "78d316169b3ac6eeee4ffc071d94a407708aa0b8d7a6eb1d098a3fec0f6bd304",
+      "source_commit": "13754ca91a839eeac0c8233e01f5d4953634dd8e"
+    },
+    "phase4/frozen_bundle/trial_order_defense.csv": {
+      "restored_line_endings": "CRLF",
+      "sha256": "cd483dcece127f48ff911239dfc1ee68c2696aaaec384a495c617d76cb53d182",
+      "source_bytes_sha256_before_checkout_eol": "36a0cefd9fba4be5d573b419538a53db3ccda8fffec70a0c8e303c606553aa28",
+      "source_commit": "13754ca91a839eeac0c8233e01f5d4953634dd8e"
+    },
+    "phase4/frozen_bundle/trial_order_utility.csv": {
+      "restored_line_endings": "CRLF",
+      "sha256": "66f088402c2a494a12fadd542477c6f1463583508e492217816e9fca15f79de7",
+      "source_bytes_sha256_before_checkout_eol": "ef1022a4aac8949bd1e5566f37324219c4fd60f19c0be7e62bb9fd4e4f340823",
+      "source_commit": "13754ca91a839eeac0c8233e01f5d4953634dd8e"
+    }
+  },
+  "refreshed_report_hashes": {
+    "phase5/implementation/reports/P04_queue_separation_and_order_validation.json": "d62e173ed3979c4052ed8e5b139b1a30170af9717d0615b298fae3ba63e27c76",
+    "phase5/validation/gate0_authorization_report.json": "e75e06ec98dcf1b7040ec516e00f9cf4a384f3bb839c76eac47afab7b16fa911",
+    "phase5/validation/kaggle_run_plan.json": "edbaf655fb8e771d757bffcf2e62884ab3ab88c9e1a3ca019ec33bae0898e549"
+  },
+  "registry_hash": "753441faa3aff10fbf081e4dc2d405f1492da6a51d0f26e287618f3e1064a431",
+  "report": "P24_corrected_v2_activation_report",
+  "status": "VALIDATED_READY_FOR_COMMIT",
+  "updated_utc": "2026-07-10T13:04:55.673266Z",
+  "validation_summary": {
+    "gate0_current_tree_source_clean_override": "PASS",
+    "git_diff_check": "PASS",
+    "in_memory_compile": "PASS files=116",
+    "notes": [
+      "Gate0 was refreshed in the dirty implementation tree with source_clean=True; final strict clean checkout verification is performed after commit in a detached worktree.",
+      "pytest warnings are pre-existing cache/deprecation warnings and did not fail the suite."
+    ],
+    "phase5_forbidden_analysis_lint": "PASS",
+    "phase5_instruction_hierarchy": "PASS",
+    "phase5_secret_lint": "PASS",
+    "pytest": "506 passed, 13 warnings",
+    "queue_validation": "PASS"
+  }
+}

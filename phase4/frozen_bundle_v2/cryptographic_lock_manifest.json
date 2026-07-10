@@ -1,0 +1,17 @@
+{
+  "files": {
+    "phase4/frozen_bundle_v2/cell_integrity_report.json": "35367390fc8a49659a2e568bcc371ca6382ab0455620339f76a0a9906f1d1ca4",
+    "phase4/frozen_bundle_v2/queue_integrity_report.json": "dbf7130224052af6bb4d4b5b7625e9eea57ffcd7b3abc7ae497dec43422f6ce4",
+    "phase4/frozen_bundle_v2/queue_schema.json": "ba3d55d305a9465eee34630b3c7e5994878459d8bb98f01a54658fc91b1a0d10",
+    "phase4/frozen_bundle_v2/source_input_manifest.json": "75fec874d637e5d53f7f07a417724bca29ff102b778544071cfb1442655021f7",
+    "phase4/frozen_bundle_v2/supersession_manifest.json": "fa5fa73a28f69cfcda42e7910d1355e97c1fdd7d748e6ee6f9aa287c4e0d22a2",
+    "phase4/frozen_bundle_v2/trial_order_core.csv": "d97c7dda394aace668d2916b71b5bea36416af425dfbe1a99b25c0c128630711",
+    "phase4/frozen_bundle_v2/trial_order_defense.csv": "1a391e9dcd35e0d6c0a8f1690cfb2b6c388f71cddbfabb5db2fef93f9b916588",
+    "phase4/frozen_bundle_v2/trial_order_utility.csv": "3d4588b35e5453cf981f19f6a25f35f9f1e74aa66f9bcb9f41bac59f82bed94a"
+  },
+  "generated_utc": "2026-07-10T12:44:28.849565Z",
+  "locked_package_path": "phase4/frozen_bundle_v2/",
+  "manifest": "phase4_corrected_v2_cryptographic_lock_manifest",
+  "manifest_hash": "d3349a2b2b4c8d453c141067cad6b4514edfb6aca77870af9fe7797e07cb3959",
+  "status": "PASS"
+}

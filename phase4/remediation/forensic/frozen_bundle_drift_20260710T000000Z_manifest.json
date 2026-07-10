@@ -1,0 +1,54 @@
+{
+  "branch": "phase4-activate-corrected-v2",
+  "classification": "IMMUTABLE_ARTIFACT_RESTORATION_FORENSIC_PRESERVATION",
+  "documented_original_hashes": {
+    "phase4/frozen_bundle/cryptographic_lock_manifest.json": "09122acabc4ea034aae2ea43adfbfb9b6b370e926db1222861d11d37e87cd11f",
+    "phase4/frozen_bundle/master_hash_ledger.csv": "b399844c96eec465f66b767d3cabcdefc9e2e87792af7070ef499d78da6fe84d",
+    "phase4/frozen_bundle/phase5_execution_manifest.json": "290a397e795a40dc97f497ada3a6c42c1d5ffdec2bdeb03046565996c2b350c2",
+    "phase4/frozen_bundle/trial_order_core.csv": "2c0e96bd07245b95021c6521b7730db645acbd7686af6bb8127e7d36f3fb426f",
+    "phase4/frozen_bundle/trial_order_defense.csv": "cd483dcece127f48ff911239dfc1ee68c2696aaaec384a495c617d76cb53d182",
+    "phase4/frozen_bundle/trial_order_utility.csv": "66f088402c2a494a12fadd542477c6f1463583508e492217816e9fca15f79de7"
+  },
+  "drifted_files": {
+    "phase4/frozen_bundle/README.md": {
+      "bytes": 736,
+      "preserved_path": "phase4/remediation/forensic/frozen_bundle_drift_20260710T000000Z/README.md",
+      "sha256": "fe38aeb7801c39699210a8b5e0873afa2a7c6e23c937233c69f96ac928bbc2ad"
+    },
+    "phase4/frozen_bundle/cryptographic_lock_manifest.json": {
+      "bytes": 1946,
+      "preserved_path": "phase4/remediation/forensic/frozen_bundle_drift_20260710T000000Z/cryptographic_lock_manifest.json",
+      "sha256": "12aad2a0692c329422908d2972223a0aad7c95b000f15b9afdcf61d08b61376f"
+    },
+    "phase4/frozen_bundle/master_hash_ledger.csv": {
+      "bytes": 1699,
+      "preserved_path": "phase4/remediation/forensic/frozen_bundle_drift_20260710T000000Z/master_hash_ledger.csv",
+      "sha256": "9d304278a1ebeacaa89beef90faa9cb74cbd071640a27870318f7c1f415fdd28"
+    },
+    "phase4/frozen_bundle/phase5_execution_manifest.json": {
+      "bytes": 1580,
+      "preserved_path": "phase4/remediation/forensic/frozen_bundle_drift_20260710T000000Z/phase5_execution_manifest.json",
+      "sha256": "a8734eed3fe12bd2f1756331c088cbe216de1b38f77efc78d40092cb92843328"
+    },
+    "phase4/frozen_bundle/trial_order_core.csv": {
+      "bytes": 372681,
+      "preserved_path": "phase4/remediation/forensic/frozen_bundle_drift_20260710T000000Z/trial_order_core.csv",
+      "sha256": "a81ce0d93df2fae979ccd1ddf42c11016f61a18d970c2b3d5ee67255ef9528a5"
+    },
+    "phase4/frozen_bundle/trial_order_defense.csv": {
+      "bytes": 165681,
+      "preserved_path": "phase4/remediation/forensic/frozen_bundle_drift_20260710T000000Z/trial_order_defense.csv",
+      "sha256": "233389d23c20ae158e23c67fab430e05e93141dceb038b6b8483c7404a8bf4c0"
+    },
+    "phase4/frozen_bundle/trial_order_utility.csv": {
+      "bytes": 98481,
+      "preserved_path": "phase4/remediation/forensic/frozen_bundle_drift_20260710T000000Z/trial_order_utility.csv",
+      "sha256": "8677fd1c21a7387ad94d6800e72008f500cfa3535b461d3b24fd155c5bbd4c28"
+    }
+  },
+  "forensic_path": "phase4/remediation/forensic/frozen_bundle_drift_20260710T000000Z",
+  "generated_utc": "2026-07-10T12:40:37.237327Z",
+  "head_commit": "fd567b280fcb848399e22fcb66489363cc4e14dc",
+  "manifest": "frozen_bundle_drift_preservation_manifest",
+  "source_path": "phase4/frozen_bundle/"
+}

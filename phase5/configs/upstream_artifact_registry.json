@@ -1,9 +1,4 @@
 {
-  "registry_id": "P00",
-  "registry_version": "1.0",
-  "generated_utc": "2026-07-07T17:46:54.0205400Z",
-  "repository_root": "D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation",
-  "status": "COMPLETE",
   "authority_order": [
     "Phase 4 cryptographic lock and frozen artifacts",
     "Completed Phase 4.5 GO package and runtime evidence",
@@ -13,243 +8,263 @@
     "This task prompt",
     "Existing implementation notes"
   ],
-  "go_verdicts": {
-    "phase4": {
-      "path": "phase4/reports/phase4_go_no_go_decision.md",
-      "sha256": "5766e232af92a5d6b545f8e2f61c2fe499d9da71b7760e3f9a9fab6b8054c3e1",
-      "status": "PASS",
-      "evidence": "Summary says Status: PASS and ready_for_phase5 is true."
+  "corrected_phase4_v2_activation": {
+    "active_package": "phase4/frozen_bundle_v2/",
+    "corrected_lock_hash": "4a5ed03c2a7bee2b8ef985fcb67ccaeaebe7d85d10cee21afec3ff88a3cc274d",
+    "mixing_original_and_corrected_artifacts": "prohibited",
+    "original_package_role": "preserved immutable audit evidence"
+  },
+  "official_source_binding": {
+    "dataset_version": "P5-DV-1.0.0-A7C91E42",
+    "official_source_ref": "refs/tags/phase5-official-source-v1",
+    "official_source_tag": "phase5-official-source-v1"
+  },
+  "corrected_required_artifacts": {
+    "cell_integrity_report": {
+      "path": "phase4/frozen_bundle_v2/cell_integrity_report.json",
+      "sha256": "35367390fc8a49659a2e568bcc371ca6382ab0455620339f76a0a9906f1d1ca4"
     },
-    "phase4_5": {
-      "path": "phase4_5/validation/phase45_final_go_no_go.md",
-      "sha256": "910fa15b9e60f239a7de1f164f25a5c7b61bafece47e48cda54bae5acc97b5d7",
-      "status": "READY_FOR_EXTERNAL_AUDIT",
-      "evidence": "Final verdict says READY_FOR_EXTERNAL_AUDIT."
+    "phase45_corrected_package": {
+      "path": "phase4_5/validation/remediation_v2/phase45_corrected_validation_package.json",
+      "sha256": "ed76226e47a753695f7b519856302d179f745a359a0019746d50f2a448634955"
+    },
+    "queue_integrity_report": {
+      "path": "phase4/frozen_bundle_v2/queue_integrity_report.json",
+      "sha256": "dbf7130224052af6bb4d4b5b7625e9eea57ffcd7b3abc7ae497dec43422f6ce4"
+    },
+    "queue_schema": {
+      "path": "phase4/frozen_bundle_v2/queue_schema.json",
+      "sha256": "ba3d55d305a9465eee34630b3c7e5994878459d8bb98f01a54658fc91b1a0d10"
+    },
+    "supersession_manifest": {
+      "path": "phase4/frozen_bundle_v2/supersession_manifest.json",
+      "sha256": "fa5fa73a28f69cfcda42e7910d1355e97c1fdd7d748e6ee6f9aa287c4e0d22a2"
     }
   },
+  "generated_utc": "2026-07-10T12:52:28.108116Z",
+  "go_verdicts": {
+    "phase4": {
+      "evidence": "Corrected v2 GO issued.",
+      "path": "phase4/reports/remediation_v2/phase4_corrected_go_no_go_decision.md",
+      "sha256": "5008cc2d1e02a230c65e6e08b62fc9892a4f3b5000a78d448ab405ac5e22801d",
+      "status": "PASS"
+    },
+    "phase4_5": {
+      "evidence": "Corrected Phase 4.5 GO issued.",
+      "path": "phase4_5/validation/remediation_v2/phase45_corrected_final_go_no_go.md",
+      "sha256": "5ecf56d88671a45472ec53aac693f2fc53dfb2dffee64ed8b06dabd9206f5cec",
+      "status": "GO TO PHASE 5 REBINDING"
+    }
+  },
+  "implementation_reconciliation": {
+    "additional_observed_conflicts": [
+      {
+        "evidence_paths": [
+          "phase4_5/validation/phase45_kaggle_quota_feasibility_report.md",
+          "phase4_5/validation/phase45_phase5_suitability_audit.md",
+          "phase4_5/validation/phase45_remaining_blockers.md"
+        ],
+        "label": "quota estimate wording varies across Phase 4.5 reports",
+        "notes": "The reports cite slightly different prose for the runtime estimate, but they all remain non-official and non-Phase-5 claims.",
+        "status": "FOUND_MISMATCH"
+      }
+    ],
+    "prompt_identified_conflicts": [
+      {
+        "label": "header/version mismatch",
+        "notes": "The exact Phase 5 plan file now exists at the requested path and the copied file title was normalized to Version 1.1.0.",
+        "status": "RESOLVED"
+      },
+      {
+        "label": "stale v1.0 references",
+        "notes": "The exact Phase 5 plan file now exists and can be line-checked directly, but this specific conflict was not audited further.",
+        "status": "AMBIGUOUS"
+      },
+      {
+        "label": "stale one-batch I17 wording",
+        "notes": "The exact Phase 5 plan file now exists and can be line-checked directly, but this specific conflict was not audited further.",
+        "status": "AMBIGUOUS"
+      },
+      {
+        "label": "checkpoint field conflict with seal-epoch continuation",
+        "notes": "The exact Phase 5 plan file now exists and can be line-checked directly, but this specific conflict was not audited further.",
+        "status": "AMBIGUOUS"
+      }
+    ],
+    "required_plan_docs_missing": false,
+    "resolution_rule": "Use the higher-source frozen artifacts and Phase 4.5 runtime evidence; do not edit upstream plans."
+  },
+  "queue_statistics": {
+    "core_sha256_matches_phase5_manifest": true,
+    "per_model_total": {
+      "M1": 2550,
+      "M2": 2550,
+      "M3": 2550,
+      "M4": 2550
+    },
+    "phase5_manifest_expected_payload_count": 223,
+    "phase5_manifest_expected_trial_count": 10200,
+    "total_rows": 10200,
+    "trial_order_core_by_defense_condition": {
+      "BASELINE": 5400
+    },
+    "trial_order_core_by_density": {
+      "D1": 1800,
+      "D3": 1800,
+      "D5": 1800
+    },
+    "trial_order_core_by_model": {
+      "M1": 1350,
+      "M2": 1350,
+      "M3": 1350,
+      "M4": 1350
+    },
+    "trial_order_core_duplicates": [],
+    "trial_order_core_non_empty_cells": 59400,
+    "trial_order_core_primary_cell_count": 36,
+    "trial_order_core_primary_cell_rows": 150,
+    "trial_order_core_rows": 5400,
+    "trial_order_core_unique_trial_ids": 5400,
+    "trial_order_defense_by_defense_condition": {
+      "IHR_SPCE": 2400
+    },
+    "trial_order_defense_by_density": {
+      "D3": 1200,
+      "D5": 1200
+    },
+    "trial_order_defense_by_model": {
+      "M1": 600,
+      "M2": 600,
+      "M3": 600,
+      "M4": 600
+    },
+    "trial_order_defense_duplicates": [],
+    "trial_order_defense_non_empty_cells": 26400,
+    "trial_order_defense_primary_cell_count": 16,
+    "trial_order_defense_primary_cell_rows": 150,
+    "trial_order_defense_rows": 2400,
+    "trial_order_defense_unique_trial_ids": 2400,
+    "trial_order_utility_by_defense_condition": {
+      "BASELINE": 1200,
+      "IHR_SPCE": 1200
+    },
+    "trial_order_utility_by_density": {
+      "D3": 1200,
+      "D5": 1200
+    },
+    "trial_order_utility_by_model": {
+      "M1": 600,
+      "M2": 600,
+      "M3": 600,
+      "M4": 600
+    },
+    "trial_order_utility_duplicates": [],
+    "trial_order_utility_non_empty_cells": 24000,
+    "trial_order_utility_primary_cell_count": 16,
+    "trial_order_utility_primary_cell_rows": 150,
+    "trial_order_utility_rows": 2400,
+    "trial_order_utility_unique_trial_ids": 2400,
+    "unique_payload_ids_used_in_core": 150,
+    "unique_payload_ids_used_in_defense": 150,
+    "unique_payload_ids_used_in_utility": 0
+  },
+  "registry_id": "P00",
+  "registry_version": "1.0",
+  "repository_root": "D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation",
   "required_items": {
     "missing_plan_docs": [
       {
         "label": "Phase5_Revised_Execution_Plan_v3_2.md",
+        "notes": "Exact repository file found.",
         "path": "docs/Phase5_Revised_Execution_Plan_v3_2.md",
         "sha256": "DBCB49047AF17ED3C179D80F3BE0DD0536CD57015473791CF21A5FEF3A0D3953",
-        "status": "FOUND_VERIFIED",
-        "notes": "Exact repository file found."
+        "status": "FOUND_VERIFIED"
       },
       {
         "label": "Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md",
+        "notes": "Exact repository file found; title normalized to Version 1.1.0.",
         "path": "docs/Phase5_Practical_Implementation_Plan_v1_1_Audited_Long_Run.md",
         "sha256": "5C9CCD4A0B93E894FE1DC0DF1ADC311AA34C59C3CBBC524D85523C612939AAB0",
-        "status": "FOUND_VERIFIED",
-        "notes": "Exact repository file found; title normalized to Version 1.1.0."
-      }
-    ],
-    "phase4_frozen_artifacts": [
-      {
-        "label": "Phase 4 GO report",
-        "path": "phase4/reports/phase4_go_no_go_decision.md",
-        "sha256": "5766e232af92a5d6b545f8e2f61c2fe499d9da71b7760e3f9a9fab6b8054c3e1",
-        "status": "FOUND_VERIFIED"
-      },
-      {
-        "label": "Phase 4 global freeze",
-        "path": "phase4/configs/phase4_global_freeze.yaml",
-        "sha256": "2edf49bf777e1cc5d3bfbc34aff5b06fcfe07f9f077c050553cf30d842cf8467",
-        "status": "FOUND_VERIFIED"
-      },
-      {
-        "label": "Model freeze set",
-        "path": "phase4/configs/model_set_freeze.yaml",
-        "sha256": "686c112ebfc8e7790098b26454504edd385ee6a21ab41d636949afb7f1a05d0d",
-        "status": "FOUND_VERIFIED"
-      },
-      {
-        "label": "Model freeze M1",
-        "path": "phase4/configs/model_1_freeze.yaml",
-        "sha256": "6bb3e095cf1aae4ba2961c35efdf05d94d615e7abd246f6b5e95b00c51dc0412",
-        "status": "FOUND_VERIFIED"
-      },
-      {
-        "label": "Model freeze M2",
-        "path": "phase4/configs/model_2_freeze.yaml",
-        "sha256": "8a3299dd860f55b7c3bdcd46387b5da1a22ce701a019f1312bba6e4ba12811d5",
-        "status": "FOUND_VERIFIED"
-      },
-      {
-        "label": "Model freeze M3",
-        "path": "phase4/configs/model_3_freeze.yaml",
-        "sha256": "20b81a8645700b86f0984e91d887711689b0bd0cc7a919f02d0f4cd72834e2e6",
-        "status": "FOUND_VERIFIED"
-      },
-      {
-        "label": "Model freeze M4",
-        "path": "phase4/configs/model_4_freeze.yaml",
-        "sha256": "d300af9ce961a4b839dd073434cfdd15291e27d6f37c71fee58e05343992715c",
-        "status": "FOUND_VERIFIED"
-      },
-      {
-        "label": "Defense freeze",
-        "path": "phase4/configs/defense_config_freeze.yaml",
-        "sha256": "5934137bd5e741b1ce700879691040d215648b409316c3cf09bc559b098d47a8",
-        "status": "FOUND_VERIFIED"
-      },
-      {
-        "label": "Statistical plan",
-        "path": "phase4/configs/statistical_plan.yaml",
-        "sha256": "aad0afdd8f395ecdd4853e737782c487e3b3207730e3496c9e7b4d1ddb558a07",
-        "status": "FOUND_VERIFIED"
-      },
-      {
-        "label": "Phase 5 schema freeze",
-        "path": "phase4/configs/phase5_schema_freeze.json",
-        "sha256": [
-          "b26ae0025cca7a64a5578af7f63afdd30498116d2b7b7a0ef9fb558b8b8a05ed"
-        ],
-        "status": "FOUND_VERIFIED"
-      },
-      {
-        "label": "Payload reference map",
-        "path": "phase4/configs/payload_reference_map.json",
-        "sha256": "a14fb6217f7484135c71530cf2521fd149b35b5e60f73a8340fdef0adbaebafe",
-        "status": "FOUND_VERIFIED"
-      },
-      {
-        "label": "Cryptographic lock manifest",
-        "path": "phase4/frozen_bundle/cryptographic_lock_manifest.json",
-        "sha256": "12aad2a0692c329422908d2972223a0aad7c95b000f15b9afdcf61d08b61376f",
-        "status": "FOUND_VERIFIED"
-      },
-      {
-        "label": "Master hash ledger",
-        "path": "phase4/frozen_bundle/master_hash_ledger.csv",
-        "sha256": "9d304278a1ebeacaa89beef90faa9cb74cbd071640a27870318f7c1f415fdd28",
-        "status": "FOUND_VERIFIED"
-      },
-      {
-        "label": "Phase 5 execution manifest",
-        "path": "phase4/frozen_bundle/phase5_execution_manifest.json",
-        "sha256": [
-          "a8734eed3fe12bd2f1756331c088cbe216de1b38f77efc78d40092cb92843328"
-        ],
-        "status": "FOUND_VERIFIED",
-        "notes": "Manifest records expected_payload_count=223, which matches the Phase 1 canonical_payload_count; the frozen trial order's 234 payload IDs include 11 duplicates by design."
-      },
-      {
-        "label": "Trial order core",
-        "path": [
-          "phase4/frozen_bundle/trial_order_core.csv"
-        ],
-        "sha256": [
-          "a81ce0d93df2fae979ccd1ddf42c11016f61a18d970c2b3d5ee67255ef9528a5"
-        ],
-        "status": "FOUND_VERIFIED"
-      },
-      {
-        "label": "Trial order defense",
-        "path": [
-          "phase4/frozen_bundle/trial_order_defense.csv"
-        ],
-        "sha256": [
-          "233389d23c20ae158e23c67fab430e05e93141dceb038b6b8483c7404a8bf4c0"
-        ],
-        "status": "FOUND_VERIFIED"
-      },
-      {
-        "label": "Trial order utility",
-        "path": [
-          "phase4/frozen_bundle/trial_order_utility.csv"
-        ],
-        "sha256": [
-          "8677fd1c21a7387ad94d6800e72008f500cfa3535b461d3b24fd155c5bbd4c28"
-        ],
         "status": "FOUND_VERIFIED"
       }
     ],
-    "phase4_5_evidence": [
+    "phase2_5_and_code_support": [
       {
-        "label": "Phase 4.5 GO report",
-        "path": "phase4_5/validation/phase45_final_go_no_go.md",
-        "sha256": "910fa15b9e60f239a7de1f164f25a5c7b61bafece47e48cda54bae5acc97b5d7",
+        "label": "Phase 2.5 tokenizer validation report",
+        "path": "phase2_5/tokenizer/validation/tokenizer_validation_report.md",
+        "sha256": "e80332847ebcf5de3034a6abc58a46fb7cb4663415eb84a5f102621476de16fd",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Final verification",
-        "path": "phase4_5/validation/phase45_authentic_completion_audit.md",
-        "sha256": "c7d80b8a3ca6822b0c5e514c0cff16b36dd2a599d6b828f4c293bd01fd43f236",
+        "label": "Phase 2.5 environment snapshot",
+        "path": "phase2_5/reproducibility/environment_snapshot.json",
+        "sha256": "8667ab3433a56e1cfa7eb60f3e62920f490d611f679f2345e1e14042e146500c",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Schema mapping",
-        "path": "phase4_5/validation/phase45_schema_mapping_report.md",
-        "sha256": "bf4515919c4567c3f10139c248f2fb8f1c2489ca1daa05fe1c35342d636460a1",
+        "label": "Phase 2.5 reproducibility manifest",
+        "path": "phase2_5/reproducibility/phase2_5_reproducibility_manifest.md",
+        "sha256": "f80d591ed67cc7b3deb01ac63089973022f33d1da09fbd808198edb33030c7cc",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Log schema",
-        "path": "phase4_5/validation/phase45_log_schema_report.md",
-        "sha256": "dcdc669517e504a84d99fc0544cd7259aef3fe7366ef39c6aa4c077c14bae713",
+        "label": "Logging writer / serializer contract",
+        "path": "client/logging_writer.py",
+        "sha256": "25d3fd103a6b896a2539f7b4f369270adb0cdc8df9e06dc69814b37c90ecfd74",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Taxonomy / attack-family grouping",
-        "path": "phase4_5/validation/phase45_statistics_smoke_report.md",
-        "sha256": "a41a11dbcba671416522d9dcca5d4144cfff631691e24f5dc99e5e298a0adc37",
-        "status": "FOUND_VERIFIED",
-        "notes": "The grouping summary includes attack_family, density, and metadata_surface_condition."
-      },
-      {
-        "label": "Token budget",
-        "path": "phase4/validation/token_budget_reverification_report.md",
-        "sha256": "be1665f1813c7483f9a3926f685508de882773c79a102e7fecf4cef518ba6aa7",
-        "status": "AMBIGUOUS",
-        "notes": "The report exists but states NOT_MEASURABLE from available Phase 3 artifacts."
-      },
-      {
-        "label": "Reset",
-        "path": "phase4_5/validation/phase45_reset_report.md",
-        "sha256": "86823f9145ea0e5d83e606654e832a94d572d4b6dc50b24c5fdf10db2fa72cd9",
+        "label": "Tool call parser",
+        "path": "client/tool_call_parser.py",
+        "sha256": "de5a399a64afb5c5a6374fa9d25d569a435d7416ef0b5d86a6d4c198997884a3",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Statistics smoke",
-        "path": "phase4_5/validation/phase45_statistics_smoke_report.md",
-        "sha256": "a41a11dbcba671416522d9dcca5d4144cfff631691e24f5dc99e5e298a0adc37",
+        "label": "Logical-ID grader",
+        "path": "client/phase3_grader.py",
+        "sha256": "b8eaebec6395712a92fcd2421f34d6dd7c5013e8ac0003e769e4ae174c20569f",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Kaggle runtime setup",
-        "path": "phase4_5/kaggle/kaggle_runtime_setup.md",
-        "sha256": "8c87b50ac6a2993c58a9f0bb72712aef0841f7316ef5cfe528f6104dd72215a4",
+        "label": "Model backend abstraction",
+        "path": "client/model_backend.py",
+        "sha256": "6caa88beb17694576f16c4c7eb91d04b927d93201ec73ff637c39a4ecc0fe635",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Checkpoint/resume config",
-        "path": "phase4_5/configs/phase45_checkpoint_resume.yaml",
-        "sha256": "5179194ddefda724865dd5c25dbefd1966c9b5988ebb383bf8abc162cd01cc92",
+        "label": "Schema variant loader",
+        "path": "server/schema_variant_loader.py",
+        "sha256": "256375da3e85dc65aedadb1f3b7b9ebf6dbecf89635fe703870ad314afd3ecea",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Checkpoint/resume report",
-        "path": "phase4_5/validation/phase45_checkpoint_resume_report.md",
-        "sha256": "9fe2ac2d8111bb4bb9aca8a56e8264b7576cc39f494d388581b7e5e237d86f5d",
+        "label": "Tool definition read_internal_notes",
+        "path": "server/tool_definitions/read_internal_notes.py",
+        "sha256": "be337b5e4ee91b7ed9e525c3e8dbb0a3ec2ac38624ef7819008e914cfc2f80ef",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Timing evidence, local run manifest",
-        "path": "phase4_5/dryrun_results/local/run_manifest.json",
-        "sha256": "951235d21b68c2dc91ca82a11ae5c3171aec801652750b2707905f52dcf4aebf",
+        "label": "Tool definition write_outbox",
+        "path": "server/tool_definitions/write_outbox.py",
+        "sha256": "bcfc73b4f5681f67d15c7486152c287582e23313b2ccb410bfc739c1b9c11fac",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Timing evidence, Kaggle smoke hardware metrics",
-        "path": "phase4_5/dryrun_results/kaggle_smoke/hardware_metrics.jsonl",
-        "sha256": "a4695ce5194c2b29d3f01d190969c7fbe1aaf25b8b6a529dfa76b18a085c2bb4",
+        "label": "Tool definition get_local_weather",
+        "path": "server/tool_definitions/get_local_weather.py",
+        "sha256": "4eff65d2e57aea2616840c7ce9cf07548e0c1f2d5d2ef28c7fe4e4e2be0a5b08",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Timing evidence, Kaggle model-loader hardware metrics",
-        "path": "phase4_5/dryrun_results/kaggle_model_loader_smoke/model_loader_hardware_metrics.jsonl",
-        "sha256": "75a510b6a6ca2cfc4e9d0b63f1a7ee1f714074886765c8f302677f81ac5ba19d",
+        "label": "Tool definition query_local_inventory",
+        "path": "server/tool_definitions/query_local_inventory.py",
+        "sha256": "f13cfd4a29faee1691859db1f30a3ccae2f9647c13e24a57695991569ecbeec7",
+        "status": "FOUND_VERIFIED"
+      },
+      {
+        "label": "Tool definition log_event",
+        "path": "server/tool_definitions/log_event.py",
+        "sha256": "89a4b7ef649d90241d7a25d2c39bb0e272a680077b9a91d0d5b9a67b142b2e41",
         "status": "FOUND_VERIFIED"
       }
     ],
@@ -339,178 +354,235 @@
         "status": "FOUND_VERIFIED"
       }
     ],
-    "phase2_5_and_code_support": [
+    "phase4_5_evidence": [
       {
-        "label": "Phase 2.5 tokenizer validation report",
-        "path": "phase2_5/tokenizer/validation/tokenizer_validation_report.md",
-        "sha256": "e80332847ebcf5de3034a6abc58a46fb7cb4663415eb84a5f102621476de16fd",
+        "label": "Phase 4.5 GO report",
+        "notes": "Corrected Phase 4 v2 binding.",
+        "path": "phase4_5/validation/remediation_v2/phase45_corrected_final_go_no_go.md",
+        "sha256": "5ecf56d88671a45472ec53aac693f2fc53dfb2dffee64ed8b06dabd9206f5cec",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Phase 2.5 environment snapshot",
-        "path": "phase2_5/reproducibility/environment_snapshot.json",
-        "sha256": "8667ab3433a56e1cfa7eb60f3e62920f490d611f679f2345e1e14042e146500c",
+        "label": "Final verification",
+        "path": "phase4_5/validation/phase45_authentic_completion_audit.md",
+        "sha256": "c7d80b8a3ca6822b0c5e514c0cff16b36dd2a599d6b828f4c293bd01fd43f236",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Phase 2.5 reproducibility manifest",
-        "path": "phase2_5/reproducibility/phase2_5_reproducibility_manifest.md",
-        "sha256": "f80d591ed67cc7b3deb01ac63089973022f33d1da09fbd808198edb33030c7cc",
+        "label": "Schema mapping",
+        "path": "phase4_5/validation/phase45_schema_mapping_report.md",
+        "sha256": "bf4515919c4567c3f10139c248f2fb8f1c2489ca1daa05fe1c35342d636460a1",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Logging writer / serializer contract",
-        "path": "client/logging_writer.py",
-        "sha256": "25d3fd103a6b896a2539f7b4f369270adb0cdc8df9e06dc69814b37c90ecfd74",
+        "label": "Log schema",
+        "path": "phase4_5/validation/phase45_log_schema_report.md",
+        "sha256": "dcdc669517e504a84d99fc0544cd7259aef3fe7366ef39c6aa4c077c14bae713",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Tool call parser",
-        "path": "client/tool_call_parser.py",
-        "sha256": "de5a399a64afb5c5a6374fa9d25d569a435d7416ef0b5d86a6d4c198997884a3",
+        "label": "Taxonomy / attack-family grouping",
+        "notes": "The grouping summary includes attack_family, density, and metadata_surface_condition.",
+        "path": "phase4_5/validation/phase45_statistics_smoke_report.md",
+        "sha256": "a41a11dbcba671416522d9dcca5d4144cfff631691e24f5dc99e5e298a0adc37",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Logical-ID grader",
-        "path": "client/phase3_grader.py",
-        "sha256": "b8eaebec6395712a92fcd2421f34d6dd7c5013e8ac0003e769e4ae174c20569f",
+        "label": "Token budget",
+        "notes": "The report exists but states NOT_MEASURABLE from available Phase 3 artifacts.",
+        "path": "phase4/validation/token_budget_reverification_report.md",
+        "sha256": "be1665f1813c7483f9a3926f685508de882773c79a102e7fecf4cef518ba6aa7",
+        "status": "AMBIGUOUS"
+      },
+      {
+        "label": "Reset",
+        "path": "phase4_5/validation/phase45_reset_report.md",
+        "sha256": "86823f9145ea0e5d83e606654e832a94d572d4b6dc50b24c5fdf10db2fa72cd9",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Model backend abstraction",
-        "path": "client/model_backend.py",
-        "sha256": "6caa88beb17694576f16c4c7eb91d04b927d93201ec73ff637c39a4ecc0fe635",
+        "label": "Statistics smoke",
+        "path": "phase4_5/validation/phase45_statistics_smoke_report.md",
+        "sha256": "a41a11dbcba671416522d9dcca5d4144cfff631691e24f5dc99e5e298a0adc37",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Schema variant loader",
-        "path": "server/schema_variant_loader.py",
-        "sha256": "256375da3e85dc65aedadb1f3b7b9ebf6dbecf89635fe703870ad314afd3ecea",
+        "label": "Kaggle runtime setup",
+        "path": "phase4_5/kaggle/kaggle_runtime_setup.md",
+        "sha256": "8c87b50ac6a2993c58a9f0bb72712aef0841f7316ef5cfe528f6104dd72215a4",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Tool definition read_internal_notes",
-        "path": "server/tool_definitions/read_internal_notes.py",
-        "sha256": "be337b5e4ee91b7ed9e525c3e8dbb0a3ec2ac38624ef7819008e914cfc2f80ef",
+        "label": "Checkpoint/resume config",
+        "path": "phase4_5/configs/phase45_checkpoint_resume.yaml",
+        "sha256": "5179194ddefda724865dd5c25dbefd1966c9b5988ebb383bf8abc162cd01cc92",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Tool definition write_outbox",
-        "path": "server/tool_definitions/write_outbox.py",
-        "sha256": "bcfc73b4f5681f67d15c7486152c287582e23313b2ccb410bfc739c1b9c11fac",
+        "label": "Checkpoint/resume report",
+        "path": "phase4_5/validation/phase45_checkpoint_resume_report.md",
+        "sha256": "9fe2ac2d8111bb4bb9aca8a56e8264b7576cc39f494d388581b7e5e237d86f5d",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Tool definition get_local_weather",
-        "path": "server/tool_definitions/get_local_weather.py",
-        "sha256": "4eff65d2e57aea2616840c7ce9cf07548e0c1f2d5d2ef28c7fe4e4e2be0a5b08",
+        "label": "Timing evidence, local run manifest",
+        "path": "phase4_5/dryrun_results/local/run_manifest.json",
+        "sha256": "951235d21b68c2dc91ca82a11ae5c3171aec801652750b2707905f52dcf4aebf",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Tool definition query_local_inventory",
-        "path": "server/tool_definitions/query_local_inventory.py",
-        "sha256": "f13cfd4a29faee1691859db1f30a3ccae2f9647c13e24a57695991569ecbeec7",
+        "label": "Timing evidence, Kaggle smoke hardware metrics",
+        "path": "phase4_5/dryrun_results/kaggle_smoke/hardware_metrics.jsonl",
+        "sha256": "a4695ce5194c2b29d3f01d190969c7fbe1aaf25b8b6a529dfa76b18a085c2bb4",
         "status": "FOUND_VERIFIED"
       },
       {
-        "label": "Tool definition log_event",
-        "path": "server/tool_definitions/log_event.py",
-        "sha256": "89a4b7ef649d90241d7a25d2c39bb0e272a680077b9a91d0d5b9a67b142b2e41",
+        "label": "Timing evidence, Kaggle model-loader hardware metrics",
+        "path": "phase4_5/dryrun_results/kaggle_model_loader_smoke/model_loader_hardware_metrics.jsonl",
+        "sha256": "75a510b6a6ca2cfc4e9d0b63f1a7ee1f714074886765c8f302677f81ac5ba19d",
+        "status": "FOUND_VERIFIED"
+      }
+    ],
+    "phase4_frozen_artifacts": [
+      {
+        "label": "Phase 4 GO report",
+        "notes": "Corrected Phase 4 v2 binding.",
+        "path": "phase4/reports/remediation_v2/phase4_corrected_go_no_go_decision.md",
+        "sha256": "5008cc2d1e02a230c65e6e08b62fc9892a4f3b5000a78d448ab405ac5e22801d",
+        "status": "FOUND_VERIFIED"
+      },
+      {
+        "label": "Phase 4 global freeze",
+        "path": "phase4/configs/phase4_global_freeze.yaml",
+        "sha256": "2edf49bf777e1cc5d3bfbc34aff5b06fcfe07f9f077c050553cf30d842cf8467",
+        "status": "FOUND_VERIFIED"
+      },
+      {
+        "label": "Model freeze set",
+        "path": "phase4/configs/model_set_freeze.yaml",
+        "sha256": "686c112ebfc8e7790098b26454504edd385ee6a21ab41d636949afb7f1a05d0d",
+        "status": "FOUND_VERIFIED"
+      },
+      {
+        "label": "Model freeze M1",
+        "path": "phase4/configs/model_1_freeze.yaml",
+        "sha256": "6bb3e095cf1aae4ba2961c35efdf05d94d615e7abd246f6b5e95b00c51dc0412",
+        "status": "FOUND_VERIFIED"
+      },
+      {
+        "label": "Model freeze M2",
+        "path": "phase4/configs/model_2_freeze.yaml",
+        "sha256": "8a3299dd860f55b7c3bdcd46387b5da1a22ce701a019f1312bba6e4ba12811d5",
+        "status": "FOUND_VERIFIED"
+      },
+      {
+        "label": "Model freeze M3",
+        "path": "phase4/configs/model_3_freeze.yaml",
+        "sha256": "20b81a8645700b86f0984e91d887711689b0bd0cc7a919f02d0f4cd72834e2e6",
+        "status": "FOUND_VERIFIED"
+      },
+      {
+        "label": "Model freeze M4",
+        "path": "phase4/configs/model_4_freeze.yaml",
+        "sha256": "d300af9ce961a4b839dd073434cfdd15291e27d6f37c71fee58e05343992715c",
+        "status": "FOUND_VERIFIED"
+      },
+      {
+        "label": "Defense freeze",
+        "path": "phase4/configs/defense_config_freeze.yaml",
+        "sha256": "5934137bd5e741b1ce700879691040d215648b409316c3cf09bc559b098d47a8",
+        "status": "FOUND_VERIFIED"
+      },
+      {
+        "label": "Statistical plan",
+        "path": "phase4/configs/statistical_plan.yaml",
+        "sha256": "aad0afdd8f395ecdd4853e737782c487e3b3207730e3496c9e7b4d1ddb558a07",
+        "status": "FOUND_VERIFIED"
+      },
+      {
+        "label": "Phase 5 schema freeze",
+        "notes": "Corrected Phase 4 v2 binding.",
+        "path": "phase4/frozen_bundle_v2/queue_schema.json",
+        "sha256": "ba3d55d305a9465eee34630b3c7e5994878459d8bb98f01a54658fc91b1a0d10",
+        "status": "FOUND_VERIFIED"
+      },
+      {
+        "label": "Payload reference map",
+        "path": "phase4/configs/payload_reference_map.json",
+        "sha256": "a14fb6217f7484135c71530cf2521fd149b35b5e60f73a8340fdef0adbaebafe",
+        "status": "FOUND_VERIFIED"
+      },
+      {
+        "label": "Cryptographic lock manifest",
+        "notes": "Corrected Phase 4 v2 binding.",
+        "path": "phase4/frozen_bundle_v2/cryptographic_lock_manifest.json",
+        "sha256": "4a5ed03c2a7bee2b8ef985fcb67ccaeaebe7d85d10cee21afec3ff88a3cc274d",
+        "status": "FOUND_VERIFIED"
+      },
+      {
+        "label": "Master hash ledger",
+        "notes": "Corrected Phase 4 v2 binding.",
+        "path": "phase4/frozen_bundle_v2/master_hash_ledger.csv",
+        "sha256": "193d1504445ba3a3efd6d348218e6d601df6f64cf3d711cec663a8e105e9b67d",
+        "status": "FOUND_VERIFIED"
+      },
+      {
+        "label": "Phase 5 execution manifest",
+        "notes": "Corrected Phase 4 v2 binding.",
+        "path": "phase4/frozen_bundle_v2/phase5_execution_manifest.json",
+        "sha256": "5613a19080400ca5e41a9d3e38d3f0221a22c2676b6fc0da6c119b9494a91505",
+        "status": "FOUND_VERIFIED"
+      },
+      {
+        "label": "Trial order core",
+        "notes": "Corrected Phase 4 v2 binding.",
+        "path": "phase4/frozen_bundle_v2/trial_order_core.csv",
+        "sha256": "d97c7dda394aace668d2916b71b5bea36416af425dfbe1a99b25c0c128630711",
+        "status": "FOUND_VERIFIED"
+      },
+      {
+        "label": "Trial order defense",
+        "notes": "Corrected Phase 4 v2 binding.",
+        "path": "phase4/frozen_bundle_v2/trial_order_defense.csv",
+        "sha256": "1a391e9dcd35e0d6c0a8f1690cfb2b6c388f71cddbfabb5db2fef93f9b916588",
+        "status": "FOUND_VERIFIED"
+      },
+      {
+        "label": "Trial order utility",
+        "notes": "Corrected Phase 4 v2 binding.",
+        "path": "phase4/frozen_bundle_v2/trial_order_utility.csv",
+        "sha256": "3d4588b35e5453cf981f19f6a25f35f9f1e74aa66f9bcb9f41bac59f82bed94a",
         "status": "FOUND_VERIFIED"
       }
     ]
   },
-  "queue_statistics": {
-    "trial_order_core_rows": 5400,
-    "trial_order_core_unique_trial_ids": 5400,
-    "trial_order_core_non_empty_cells": 37800,
-    "trial_order_core_duplicates": [],
-    "trial_order_core_by_model": {
-      "M1": 1350,
-      "M2": 1350,
-      "M3": 1350,
-      "M4": 1350
-    },
-    "trial_order_core_by_density": {
-      "D1": 1800,
-      "D3": 1800,
-      "D5": 1800
-    },
-    "trial_order_core_by_defense_condition": {
-      "BASELINE": 5400
-    },
-    "unique_payload_ids_used_in_core": 150,
-    "trial_order_defense_rows": 2400,
-    "trial_order_defense_unique_trial_ids": 2400,
-    "trial_order_defense_non_empty_cells": 16800,
-    "trial_order_defense_duplicates": [],
-    "trial_order_defense_by_model": {
-      "M1": 600,
-      "M2": 600,
-      "M3": 600,
-      "M4": 600
-    },
-    "trial_order_defense_by_density": {
-      "D3": 1200,
-      "D5": 1200
-    },
-    "trial_order_defense_by_defense_condition": {
-      "IHR_SPCE": 2400
-    },
-    "unique_payload_ids_used_in_defense": 150,
-    "trial_order_utility_rows": 2400,
-    "trial_order_utility_unique_trial_ids": 2400,
-    "trial_order_utility_non_empty_cells": 16800,
-    "trial_order_utility_duplicates": [],
-    "trial_order_utility_by_model": {
-      "M1": 600,
-      "M2": 600,
-      "M3": 600,
-      "M4": 600
-    },
-    "trial_order_utility_by_density": {
-      "D3": 1200,
-      "D5": 1200
-    },
-    "trial_order_utility_by_defense_condition": {
-      "BASELINE": 1200,
-      "IHR_SPCE": 1200
-    },
-    "unique_payload_ids_used_in_utility": 1,
-    "core_sha256_matches_phase5_manifest": true,
-    "phase5_manifest_expected_trial_count": 5400,
-    "phase5_manifest_expected_payload_count": 223
-  },
   "state_machine_controls": {
-    "trial_stop_conditions": [
-      "success",
-      "syntax failure",
-      "semantic failure",
-      "timeout",
-      "maximum tool-call count",
-      "infrastructure failure"
-    ],
+    "checkpoint_controls": {
+      "checkpoint_frequency_trials": 6,
+      "duplicate_trial_id_prevention": "reject duplicate trial_id values within a shard and across reruns unless a rerun suffix is generated",
+      "partial_log_location": "phase4_5/dryrun_results/local/partial_trials.jsonl",
+      "rerun_link_format": "phase4_5/dryrun_results/local/reruns/{trial_id}.json",
+      "trial_shard_size": 6
+    },
+    "environment_lock": {
+      "kaggle_execution_enabled": true,
+      "local_validation_enabled": true,
+      "package_versions": {
+        "accelerate": "1.13.0",
+        "jsonschema": "4.26.0",
+        "numpy": "2.4.6",
+        "pydantic": "2.13.4",
+        "pyyaml": "6.0.2",
+        "sentencepiece": "0.2.1",
+        "torch": "2.10.0+cu128",
+        "transformers": "5.0.0"
+      },
+      "python_version": "3.12.10"
+    },
     "max_tool_calls_by_density": {
       "D1": 1,
       "D3": 3,
       "D5": 4
-    },
-    "timeout_subclasses": [
-      "model_generation_timeout",
-      "tool_execution_timeout",
-      "backend_hang_timeout",
-      "reset_timeout"
-    ],
-    "retry_policy_summary": {
-      "invalid_json": "0 retries",
-      "unexpected_response": "0 retries unless backend exception occurred",
-      "tool_timeout": "1 rerun if infrastructure timeout; none if model caused invalid call",
-      "tool_unavailable": "1 rerun after repair",
-      "network_timeout": "2 reruns after network repair",
-      "oom": "2 reruns for the same matrix row",
-      "daemon_crash": "2 reruns after restart",
-      "model_unload_failure": "1 rerun only if cleanup is uncertain",
-      "reset_failure": "2 reruns after full environment restart"
     },
     "parser_policy": {
       "contract": "Parse model output without repair; invalid JSON raises ModelOutputFailure.",
@@ -523,83 +595,49 @@
         "teardown"
       ]
     },
+    "retry_policy_summary": {
+      "daemon_crash": "2 reruns after restart",
+      "invalid_json": "0 retries",
+      "model_unload_failure": "1 rerun only if cleanup is uncertain",
+      "network_timeout": "2 reruns after network repair",
+      "oom": "2 reruns for the same matrix row",
+      "reset_failure": "2 reruns after full environment restart",
+      "tool_timeout": "1 rerun if infrastructure timeout; none if model caused invalid call",
+      "tool_unavailable": "1 rerun after repair",
+      "unexpected_response": "0 retries unless backend exception occurred"
+    },
     "serialization_policy": {
       "contract": "JSONL rows are written deterministically and hashed after write.",
       "reference_file": "client/logging_writer.py"
     },
-    "checkpoint_controls": {
-      "trial_shard_size": 6,
-      "checkpoint_frequency_trials": 6,
-      "partial_log_location": "phase4_5/dryrun_results/local/partial_trials.jsonl",
-      "duplicate_trial_id_prevention": "reject duplicate trial_id values within a shard and across reruns unless a rerun suffix is generated",
-      "rerun_link_format": "phase4_5/dryrun_results/local/reruns/{trial_id}.json"
-    },
-    "environment_lock": {
-      "python_version": "3.12.10",
-      "kaggle_execution_enabled": true,
-      "local_validation_enabled": true,
-      "package_versions": {
-        "torch": "2.10.0+cu128",
-        "transformers": "5.0.0",
-        "accelerate": "1.13.0",
-        "sentencepiece": "0.2.1",
-        "numpy": "2.4.6",
-        "jsonschema": "4.26.0",
-        "pydantic": "2.13.4",
-        "pyyaml": "6.0.2"
-      }
-    }
-  },
-  "implementation_reconciliation": {
-    "required_plan_docs_missing": false,
-    "prompt_identified_conflicts": [
-      {
-        "label": "header/version mismatch",
-        "status": "RESOLVED",
-        "notes": "The exact Phase 5 plan file now exists at the requested path and the copied file title was normalized to Version 1.1.0."
-      },
-      {
-        "label": "stale v1.0 references",
-        "status": "AMBIGUOUS",
-        "notes": "The exact Phase 5 plan file now exists and can be line-checked directly, but this specific conflict was not audited further."
-      },
-      {
-        "label": "stale one-batch I17 wording",
-        "status": "AMBIGUOUS",
-        "notes": "The exact Phase 5 plan file now exists and can be line-checked directly, but this specific conflict was not audited further."
-      },
-      {
-        "label": "checkpoint field conflict with seal-epoch continuation",
-        "status": "AMBIGUOUS",
-        "notes": "The exact Phase 5 plan file now exists and can be line-checked directly, but this specific conflict was not audited further."
-      }
+    "timeout_subclasses": [
+      "model_generation_timeout",
+      "tool_execution_timeout",
+      "backend_hang_timeout",
+      "reset_timeout"
     ],
-    "additional_observed_conflicts": [
-      {
-        "label": "quota estimate wording varies across Phase 4.5 reports",
-        "evidence_paths": [
-          "phase4_5/validation/phase45_kaggle_quota_feasibility_report.md",
-          "phase4_5/validation/phase45_phase5_suitability_audit.md",
-          "phase4_5/validation/phase45_remaining_blockers.md"
-        ],
-        "status": "FOUND_MISMATCH",
-        "notes": "The reports cite slightly different prose for the runtime estimate, but they all remain non-official and non-Phase-5 claims."
-      }
-    ],
-    "resolution_rule": "Use the higher-source frozen artifacts and Phase 4.5 runtime evidence; do not edit upstream plans."
+    "trial_stop_conditions": [
+      "success",
+      "syntax failure",
+      "semantic failure",
+      "timeout",
+      "maximum tool-call count",
+      "infrastructure failure"
+    ]
   },
+  "status": "COMPLETE",
   "validation_summary": {
+    "test_result": "65 passed, 2 warnings",
     "tests_run": [
       "pytest tests/test_logical_id_mapping.py tests/test_phase3_grader.py tests/test_phase3_parser.py tests/test_unknown_tool_rejection.py tests/test_reset_dispatch_rejection.py",
       "git diff --check",
       "git status --short"
     ],
-    "test_result": "65 passed, 2 warnings",
     "warnings": [
       "pytest cache write denied by sandbox permissions",
       "pytest-asyncio emitted a deprecation warning about asyncio_default_fixture_loop_scope"
     ],
-    "worktree_status_before_edit": "clean on main",
-    "worktree_status_after_edit": "expected modifications only in phase5/configs and phase5/implementation/reports"
+    "worktree_status_after_edit": "expected modifications only in phase5/configs and phase5/implementation/reports",
+    "worktree_status_before_edit": "clean on main"
   }
 }
