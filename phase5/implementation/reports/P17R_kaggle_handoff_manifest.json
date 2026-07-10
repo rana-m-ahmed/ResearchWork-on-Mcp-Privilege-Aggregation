@@ -1,0 +1,7 @@
+{
+  "candidate_sha_source": "EXTERNAL_P18_HANDOFF",
+  "candidate_sha": null,
+  "required_length": 40,
+  "required_checkout_mode": "detached",
+  "requires_remote_reachability": true
+}

@@ -9,17 +9,21 @@ This runbook outlines the required execution path for the Kaggle validation Note
 
 ## Pre-Execution Steps
 
-1. Create a Kaggle Notebook and import `phase5_kaggle_nonofficial_validation.ipynb`.
-2. Turn on **Internet** in the notebook settings.
-3. Select an appropriate GPU accelerator (e.g., **GPU P100** or **GPU T4 x2**).
-4. Add Kaggle Secrets:
+1. Obtain the final SHA from the P18-approved handoff.
+2. Create a Kaggle Notebook and import `phase5_kaggle_nonofficial_validation.ipynb`.
+3. Turn on **Internet** in the notebook settings.
+4. Select an appropriate GPU accelerator (e.g., **GPU P100** or **GPU T4 x2**).
+5. Add Kaggle Secrets:
    - **Label:** `HF_TOKEN` -> **Value:** Your Hugging Face token.
    - **Label:** `GITHUB_TOKEN` -> **Value:** Your GitHub fine-grained token.
-5. Attach both secrets to the notebook.
+6. Attach both secrets to the notebook.
+7. Add an Environment Variable in Kaggle (or inject it programmatically before the first cell):
+   - **Variable Name:** `PHASE5_CANDIDATE_SHA`
+   - **Value:** The exact 40-character commit SHA.
 
 ## Execution
 1. Click **Run All**.
-2. The notebook will dynamically load the `CANDIDATE_SHA` deployed during P15R handoff.
+2. Confirm that the notebook prints the exact checked-out SHA matching your `PHASE5_CANDIDATE_SHA`.
 3. It will verify dependencies, execute strict Gate 0, run framework validation assertions (`pytest`), and then use the Phase 5 repository utility to perform the D3/D5 synthetic smoke trials and sequentially test M1-M4 loading logic.
 4. After finalizing all tests, it will clone a separate evidence copy of the repository and securely commit/push the validation artifacts to the `phase5-kaggle-nonofficial-evidence` branch using `GITHUB_TOKEN`.
 5. The final verdict will be printed. It must be `KAGGLE IMPLEMENTATION VERDICT: GO FOR FINAL READINESS AUDIT`.

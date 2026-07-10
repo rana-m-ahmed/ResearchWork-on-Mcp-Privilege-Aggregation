@@ -18,15 +18,14 @@ cells = []
 # --- 1. Configuration ---
 cells.append(markdown_cell("### 1. Configuration & Constants"))
 config_code = """import os
-import json
+import re
 
-# The commit SHA is injected dynamically during final P15R handoff.
-# DO NOT permanently hardcode a stale SHA here.
-try:
-    with open('handoff_manifest.json', 'r') as f:
-        CANDIDATE_SHA = json.load(f).get('candidate_sha', 'TO_BE_REPLACED')
-except FileNotFoundError:
-    CANDIDATE_SHA = "TO_BE_REPLACED"
+CANDIDATE_SHA = os.environ.get("PHASE5_CANDIDATE_SHA", "").strip()
+
+if not re.fullmatch(r"[0-9a-f]{40}", CANDIDATE_SHA):
+    raise RuntimeError(
+        "Set PHASE5_CANDIDATE_SHA to the exact P18-approved 40-character commit SHA."
+    )
 
 REPO_URL = "https://github.com/rana-m-ahmed/ResearchWork-on-Mcp-Privilege-Aggregation.git"
 REPO_DIR = "/kaggle/working/research_repo"
