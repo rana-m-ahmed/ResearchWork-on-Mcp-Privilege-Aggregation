@@ -29,11 +29,12 @@ if not re.fullmatch(r"[0-9a-f]{40}", CANDIDATE_SHA):
         "Set PHASE5_CANDIDATE_SHA to the exact P18-approved 40-character commit SHA."
     )
 
-REPO_URL = "https://github.com/rana-m-ahmed/ResearchWork-on-Mcp-Privilege-Aggregation.git"
-REPO_DIR = "/kaggle/working/research_repo"
-OUTPUT_DIR = "/kaggle/working/phase5_nonofficial_validation"
-HF_SECRET_LABEL = "HF_TOKEN"
-GITHUB_SECRET_LABEL = "GITHUB_TOKEN"
+os.environ["REPO_URL"] = "https://github.com/rana-m-ahmed/ResearchWork-on-Mcp-Privilege-Aggregation.git"
+os.environ["REPO_DIR"] = "/kaggle/working/research_repo"
+os.environ["OUTPUT_DIR"] = "/kaggle/working/phase5_nonofficial_validation"
+
+# For convenience in python cells
+OUTPUT_DIR = os.environ["OUTPUT_DIR"]
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 os.makedirs(f"{OUTPUT_DIR}/gate0", exist_ok=True)
@@ -73,11 +74,11 @@ rm -rf "$REPO_DIR"
 git clone "$REPO_URL" "$REPO_DIR"
 cd "$REPO_DIR"
 git fetch --all --tags
-git checkout --detach "$CANDIDATE_SHA"
+git checkout --detach "$PHASE5_CANDIDATE_SHA"
 
 HEAD_SHA=$(git rev-parse HEAD)
-if [ "$HEAD_SHA" != "$CANDIDATE_SHA" ]; then
-    echo "ERROR: HEAD is $HEAD_SHA, expected $CANDIDATE_SHA"
+if [ "$HEAD_SHA" != "$PHASE5_CANDIDATE_SHA" ]; then
+    echo "ERROR: HEAD is $HEAD_SHA, expected $PHASE5_CANDIDATE_SHA"
     exit 1
 fi
 echo "Exact source checkout successful."
