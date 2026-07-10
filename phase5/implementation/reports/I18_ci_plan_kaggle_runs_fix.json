@@ -1,0 +1,51 @@
+{
+  "changed_paths": [
+    "phase5/queues/batch_partitioner.py",
+    "phase5/tests/test_cli_contract.py",
+    "phase5/evidence/manifest_builder.py",
+    "phase5/implementation/reports/I18_ci_plan_kaggle_runs_fix.md",
+    "phase5/implementation/reports/I18_ci_plan_kaggle_runs_fix.json"
+  ],
+  "root_cause": "The plan-kaggle-runs command regenerated batch_partition_manifest_v2.md with one extra trailing blank line, triggering the immutable write guard and exit code 20. The CLI contract test also asserted the legacy batch manifest path instead of the active v2 path.",
+  "status": "PASS",
+  "verification": [
+    {
+      "command": "python -m phase5 plan-kaggle-runs --timing-report phase4_5/validation/phase45_kaggle_quota_feasibility_report.md --safe-session-hours 7.5 --output .tmp/kaggle_run_plan.json",
+      "result": "PASS"
+    },
+    {
+      "command": "python -m pytest phase5/tests/test_cli_contract.py::test_plan_kaggle_runs_cli_writes_outputs -q",
+      "result": "PASS"
+    },
+    {
+      "command": "python -m pytest phase5/tests/test_cli_contract.py phase5/tests/test_batch_partition_and_planner.py phase5/tests/test_campaign_runner.py phase5/tests/test_kaggle_handoff.py -q",
+      "result": "PASS",
+      "summary": "35 passed"
+    },
+    {
+      "command": "python -m pytest phase5/tests -q",
+      "result": "PASS",
+      "summary": "227 passed"
+    },
+    {
+      "command": "python -m compileall phase5",
+      "result": "PASS"
+    },
+    {
+      "command": "python phase5/scripts/check_phase5_instructions.py",
+      "result": "PASS"
+    },
+    {
+      "command": "python phase5/scripts/lint_phase5_forbidden_analysis.py --root phase5",
+      "result": "PASS"
+    },
+    {
+      "command": "python phase5/scripts/lint_phase5_secrets.py --root phase5",
+      "result": "PASS"
+    },
+    {
+      "command": "phase5-source-ci selected pytest and workflow YAML parse commands",
+      "result": "PASS"
+    }
+  ]
+}
