@@ -7,12 +7,12 @@
 - INDEPENDENT IMPLEMENTATION AUDIT: PASS
 
 - AUTHORIZED SOURCE TAG: `phase5-official-source-v1`
-- AUTHORIZED SOURCE COMMIT: `9bde4f8d7a9d8abf12d4e83dbd4d3f06fbc1e0c2`
+- AUTHORIZED SOURCE COMMIT: `9bde4f8760eb02a09f29ec607434f6b49c1c1cf1`
 - AUTHORIZED DATASET VERSION: `P5-DV-1.0.0-A7C91E42`
 
 - Successful non-official Kaggle source commit: `6e2cafe989ce60572a868b9a31dbcd0b6a1f8898`
 - Executed smoke-script hash: `c708cd3c6eab21a420384025290d1a6fc2f4122a3cb644b88261e65c5e717a4d`
-- Official freeze commit: `9bde4f8d7a9d8abf12d4e83dbd4d3f06fbc1e0c2`
+- Official freeze commit: `9bde4f8760eb02a09f29ec607434f6b49c1c1cf1`
 - Annotated tag object: `phase5-official-source-v1`
 - Common-source hash: `a7324b63b1307de2dc9e90510ee7372b0b3aad685c4eec51182521191426dc79`
 
