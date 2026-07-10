@@ -1,0 +1,24 @@
+fault,coverage,status,evidence
+missing real adapter,unit and CLI,PASS,test_missing_or_unmarked_processor_blocks_campaign_dispatch
+unmarked planning processor,unit,PASS,test_missing_or_unmarked_processor_blocks_campaign_dispatch
+planning metadata acceptance,unit and CLI,PASS,test_plan_only_cannot_create_accepted_or_finalized_counts
+official output during development,unit,PASS,test_development_result_rejects_official_or_nonexecuted_output
+unsealed execution adapter,unit,PASS,test_unsealed_adapter_and_official_v3_dispatch_remain_blocked
+schema validation failure,unit,PASS,test_acceptance_proof_fails_closed_on_schema_or_evidence_failure
+missing evidence hash,unit,PASS,test_acceptance_proof_fails_closed_on_schema_or_evidence_failure
+PREPARED durability failure,agent-loop integration,PASS,test_durability_failure_prevents_model_invocation
+DISPATCHED durability failure,agent-loop integration,PASS,test_durability_failure_prevents_model_invocation
+reset failure,agent-loop integration,PASS,test_agent_loop_timeout_and_infrastructure_failures
+orphan replacement identity,adapter integration,PASS,test_orphan_replacement_uses_new_attempt_and_parent_lineage
+duplicate accepted target,acceptance proof and lineage,PASS,unique_accepted_attempt invariant plus existing lineage tests
+sync while sealed,sync/seal tests,PASS,existing Phase 5 session and sync suite
+remote divergence,sync tests,PASS,existing Phase 5 sync suite
+credential purge before reseal,sync tests,PASS,existing Phase 5 sync and local qualification suite
+source reverification failure,session reverify tests,PASS,existing Phase 5 sync suite
+notebook unresolved placeholders,static notebook validation,PASS,validate_public_cli_only
+wrong model identity,model adapter tests,PASS,existing Phase 5 model backend suite
+queue hash mismatch,queue loader tests,PASS,existing Phase 5 queue suite
+manifest hash mismatch,campaign tests,PASS,existing Phase 5 campaign suite
+concrete frozen-control loading,implementation,BLOCKED,load_frozen_state_machine_controls intentionally raises
+concrete model inference binding,implementation,BLOCKED,FrozenModelBackendAdapter validates identity only
+real non-official Kaggle qualification,external,BLOCKED,requires Kaggle GPU sessions

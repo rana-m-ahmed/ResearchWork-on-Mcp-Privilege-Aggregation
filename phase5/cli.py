@@ -12,7 +12,13 @@ from . import __version__
 from .campaign import build_dashboard, build_resume_plan, run_campaign
 from .gate0 import run_gate0
 from .kaggle import plan_kaggle_runs
-from .domain.errors import ExitCode, NotImplementedCommandError, Phase5Error
+from .domain.errors import (
+    ExitCode,
+    MissingFrozenSettingError,
+    NotImplementedCommandError,
+    OfficialDispatchBlockedError,
+    Phase5Error,
+)
 from .domain.enums import ModelSlot
 from .domain.identifiers import BatchId
 from .domain.session import Phase5Session
@@ -94,6 +100,11 @@ def build_parser() -> argparse.ArgumentParser:
     run_campaign.add_argument("--batch-manifest", required=False, default="phase5/manifests/batch_partition_manifest_v2.json")
     run_campaign.add_argument("--run-plan", required=False, default="phase5/validation/kaggle_run_plan_v2.json")
     run_campaign.add_argument("--output", required=False)
+    campaign_mode = run_campaign.add_mutually_exclusive_group(required=True)
+    campaign_mode.add_argument("--official", action="store_true")
+    campaign_mode.add_argument("--plan-only", action="store_true")
+    run_campaign.add_argument("--dataset-version", required=False)
+    run_campaign.add_argument("--seal-epoch", required=False, type=int)
 
     session_open = add_planned_command("session-open", "Open a new operational campaign session.")
     session_open.add_argument("--model-slot", required=True)
@@ -103,7 +114,12 @@ def build_parser() -> argparse.ArgumentParser:
     session_open.add_argument("--output", required=False)
 
     run_batch = add_planned_command("run-batch", "Execute a single frozen batch.")
-    run_batch.add_argument("--batch-id", required=False)
+    run_batch.add_argument("--batch-id", required=True)
+    run_batch.add_argument("--official", action="store_true", required=True)
+    run_batch.add_argument("--dataset-version", required=True)
+    run_batch.add_argument("--model-slot", required=True)
+    run_batch.add_argument("--run-id", required=True)
+    run_batch.add_argument("--seal-epoch", required=True, type=int)
 
     validate_batch = add_planned_command("validate-batch", "Validate a frozen batch contract.")
     validate_batch.add_argument("--batch-id", required=False)
@@ -295,6 +311,21 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if args.command == "run-campaign":
         try:
+            if args.official:
+                required = {
+                    "dataset-version": args.dataset_version,
+                    "run-id": args.run_id,
+                    "seal-epoch": args.seal_epoch,
+                }
+                missing = [name for name, value in required.items() if value in {None, ""}]
+                if missing:
+                    raise MissingFrozenSettingError(
+                        f"official run-campaign is missing required parameters: {', '.join(missing)}"
+                    )
+                raise OfficialDispatchBlockedError(
+                    "official dispatch is disabled until the qualified real execution adapter "
+                    "and v3 authorization receipt are configured"
+                )
             session, report = run_campaign(
                 model_slot=_parse_model_slot(args.model_slot),
                 run_id=getattr(args, "run_id", None),
@@ -304,11 +335,22 @@ def main(argv: Sequence[str] | None = None) -> int:
                 run_plan_path=Path(args.run_plan),
                 root=Path.cwd(),
                 session=None,
+                plan_only=bool(args.plan_only),
             )
             _write_json_md_report(report, getattr(args, "output", None), Path("phase5/validation/campaign_run_report.json"))
             return int(ExitCode.SUCCESS)
         except Phase5Error as exc:
             print(f"CAMPAIGN_FAILURE: {exc}", file=sys.stderr)
+            return int(exc.exit_code)
+
+    if args.command == "run-batch":
+        try:
+            raise OfficialDispatchBlockedError(
+                "run-batch official dispatch is disabled until the qualified real execution adapter "
+                "and v3 authorization receipt are configured"
+            )
+        except Phase5Error as exc:
+            print(f"BATCH_FAILURE: {exc}", file=sys.stderr)
             return int(exc.exit_code)
 
     if args.command == "session-open":

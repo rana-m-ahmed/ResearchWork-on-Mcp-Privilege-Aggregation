@@ -506,16 +506,19 @@ def test_p16_checkpoint_resume_and_git_sync_demonstration(tmp_path: Path) -> Non
         utcdate="20260708",
         until_safety_horizon=True,
         max_batches=2,
+        plan_only=True,
     )
     resumed_session, resumed_report = run_campaign(
         model_slot=ModelSlot.M1,
         run_id=campaign_session.run_id,
         until_safety_horizon=True,
         session=campaign_session,
+        plan_only=True,
     )
     assert report.stop_reason in {"complete", "interrupted"}
     assert resumed_session.state in {SessionState.SEALED, SessionState.REVERIFIED_AFTER_SYNC}
-    assert resumed_report.processed_batch_ids[:2] == report.processed_batch_ids[:2]
+    assert all(result.status == "PLAN_ONLY" for result in report.batch_results)
+    assert all(result.accepted_count == 0 and not result.finalized for result in resumed_report.batch_results)
 
 
 def test_p16_local_mcp_discovery_hides_reset_and_rejects_public_hosts() -> None:

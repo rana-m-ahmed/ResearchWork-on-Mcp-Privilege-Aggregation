@@ -420,3 +420,33 @@ def test_agent_loop_rejects_token_overflow_and_no_session_reuse(tmp_path: Path) 
     assert backend_two.calls[0]["history_snapshot"] == ()
     assert backend_one.calls[0]["session"] is not backend_two.calls[0]["session"]
     assert record_one.session_token != record_two.session_token
+
+
+@pytest.mark.parametrize("failure_event", ["PREPARED", "DISPATCHED"])
+def test_durability_failure_prevents_model_invocation(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    failure_event: str,
+) -> None:
+    backend_calls: list[int] = []
+    original_append = __import__("phase5.runtime.agent_loop", fromlist=["AttemptEventLogWriter"]).AttemptEventLogWriter.append
+
+    def fail_event_write(writer, event):
+        if event.event_type.value == failure_event:
+            raise OSError(f"synthetic {failure_event} durability failure")
+        return original_append(writer, event)
+
+    def record_generate(self, **kwargs):
+        backend_calls.append(1)
+        return json.dumps({"terminal_response": "done"})
+
+    monkeypatch.setattr("phase5.runtime.agent_loop.AttemptEventLogWriter.append", fail_event_write)
+    monkeypatch.setattr(FakeBackend, "generate", record_generate)
+
+    with pytest.raises(OSError, match="durability failure"):
+        _run(
+            tmp_path=tmp_path,
+            suffix=f"durability-{failure_event.lower()}",
+            backend_outputs=[json.dumps({"terminal_response": "done"})],
+        )
+    assert backend_calls == []

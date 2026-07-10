@@ -55,6 +55,10 @@ class SchemaInvariantError(Phase5Error):
     exit_code = ExitCode.SCHEMA_INVARIANT_FAILURE
 
 
+class OfficialDispatchBlockedError(SchemaInvariantError):
+    """Official-capable dispatch was attempted without complete authorization."""
+
+
 class SyncSafetyError(Phase5Error):
     exit_code = ExitCode.SYNC_SAFETY_FAILURE
 

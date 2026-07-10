@@ -8,7 +8,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 
-from .domain.errors import FrozenArtifactHashError, MissingFrozenSettingError, SchemaInvariantError
+from .domain.errors import (
+    FrozenArtifactHashError,
+    MissingFrozenSettingError,
+    OfficialDispatchBlockedError,
+    SchemaInvariantError,
+)
 from .domain.enums import Density, ModelSlot, SessionState, TrialPhase
 from .guards import repo_root
 from .kaggle.run_planner import DEFAULT_RUN_PLAN_JSON
@@ -546,14 +551,17 @@ def load_campaign_plan(
     )
 
 
-def _batch_result_for_plan(batch: CampaignBatchPlan, *, p95_trial_seconds: float) -> CampaignBatchResult:
+def planning_batch_result(batch: CampaignBatchPlan, *, p95_trial_seconds: float) -> CampaignBatchResult:
+    """Render a non-official estimate that can never represent finalized work."""
+
     payload = json.dumps(batch.to_mapping(), sort_keys=True, separators=(",", ":"))
     return CampaignBatchResult(
         batch_id=batch.batch_id,
-        accepted_count=batch.row_count,
-        finalized=True,
+        accepted_count=0,
+        finalized=False,
         estimated_seconds=float(batch.row_count * p95_trial_seconds),
         batch_hash=_sha256_bytes(payload.encode("utf-8")),
+        status="PLAN_ONLY",
     )
 
 
@@ -569,6 +577,7 @@ def run_campaign(
     session: CampaignSession | None = None,
     max_batches: int | None = None,
     batch_processor: Callable[[CampaignBatchPlan, float], CampaignBatchResult] | None = None,
+    plan_only: bool = False,
 ) -> tuple[CampaignSession, CampaignRunReport]:
     plan = load_campaign_plan(
         model_slot=model_slot,
@@ -598,7 +607,18 @@ def run_campaign(
         load_overhead_seconds=plan.load_overhead_seconds,
     )
 
-    processor = batch_processor or (lambda batch, p95: _batch_result_for_plan(batch, p95_trial_seconds=p95))
+    if plan_only and batch_processor is not None:
+        raise OfficialDispatchBlockedError("plan-only mode cannot accept a batch execution processor")
+    if not plan_only and batch_processor is None:
+        raise OfficialDispatchBlockedError(
+            "run-campaign requires an explicitly configured real execution adapter; "
+            "use plan-only mode only for non-official estimates"
+        )
+    if not plan_only and getattr(batch_processor, "real_execution_adapter", False) is not True:
+        raise OfficialDispatchBlockedError(
+            "campaign batch processor is not a qualified real execution adapter"
+        )
+    processor = batch_processor or (lambda batch, p95: planning_batch_result(batch, p95_trial_seconds=p95))
     elapsed_seconds = plan.load_overhead_seconds
     processed_results: list[CampaignBatchResult] = []
     barrier_records: list[SealEpochRecord] = []
@@ -620,14 +640,21 @@ def run_campaign(
         result = processor(batch, controller.p95_trial_seconds)
         if result.batch_id != batch.batch_id:
             raise SchemaInvariantError("batch processor returned a mismatched batch identifier")
+        if plan_only and (result.accepted_count != 0 or result.finalized or result.status != "PLAN_ONLY"):
+            raise OfficialDispatchBlockedError("plan-only processor attempted to create accepted or finalized work")
+        if not plan_only and result.status == "PLAN_ONLY":
+            raise OfficialDispatchBlockedError("planning results cannot enter an execution campaign")
         processed_results.append(result)
-        operational_session = operational_session.record_batch(
-            batch_id=batch.batch_id,
-            accepted_count=result.accepted_count,
-            finalized=result.finalized,
-            estimated_seconds=result.estimated_seconds,
-        )
+        if not plan_only:
+            operational_session = operational_session.record_batch(
+                batch_id=batch.batch_id,
+                accepted_count=result.accepted_count,
+                finalized=result.finalized,
+                estimated_seconds=result.estimated_seconds,
+            )
         elapsed_seconds += result.estimated_seconds
+        if plan_only:
+            continue
 
         decision = controller.decide(
             elapsed_seconds=elapsed_seconds,
@@ -663,7 +690,11 @@ def run_campaign(
         dataset_version=plan.dataset_version,
         state=operational_session.state.value,
         seal_epoch=operational_session.seal_epoch,
-        processed_batch_ids=operational_session.processed_batch_ids,
+        processed_batch_ids=(
+            tuple(result.batch_id for result in processed_results)
+            if plan_only
+            else operational_session.processed_batch_ids
+        ),
         remaining_batch_ids=remaining_after_run,
         finalized_batch_count=operational_session.finalized_batch_count,
         accepted_finalized_count=operational_session.accepted_finalized_count,

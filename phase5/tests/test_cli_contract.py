@@ -25,6 +25,7 @@ def test_official_campaign_commands_default_to_reconciled_v2_plan() -> None:
             "P5RUN-P5-DV-1.0.1-A7C91E42-M1-20260710-ABCDEF12",
             "--utcdate",
             "20260710",
+            "--plan-only",
         ])
         assert args.run_plan == "phase5/validation/kaggle_run_plan_v2.json"
         assert args.batch_manifest == "phase5/manifests/batch_partition_manifest_v2.json"
@@ -174,6 +175,7 @@ def test_campaign_cli_smoke_writes_operational_reports(tmp_path: Path) -> None:
             "--utcdate",
             "20260708",
             "--until-safety-horizon",
+            "--plan-only",
             "--output",
             str(campaign_output),
         ],

@@ -136,7 +136,16 @@ def validate_editable_parameter_whitelist(notebook: dict[str, object], schema: P
     text = notebook_text(notebook)
     match = re.search(r"KaggleHandoffParameters\((.*?)\)", text, re.DOTALL)
     if match is None:
-        issues.append("missing-kagglehandoffparameters-call")
+        required_env = {
+            "PHASE5_REPOSITORY_URL",
+            "PHASE5_SOURCE_TAG",
+            "PHASE5_EXPECTED_SOURCE_COMMIT",
+            "PHASE5_MODEL_SLOT",
+            "PHASE5_OPERATOR_CONFIRMATION",
+        }
+        found_env = set(re.findall(r'os\.environ\.get\("(PHASE5_[A-Z_]+)"', text))
+        if found_env != required_env:
+            issues.append(f"operational-parameter-whitelist-mismatch:{sorted(found_env)!r}")
         return issues
     arg_block = match.group(1)
     found = tuple(re.findall(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*=", arg_block))
@@ -150,11 +159,14 @@ def validate_public_cli_only(notebook: dict[str, object], handoff_source: str) -
     text = notebook_text(notebook)
     if "phase5.sync" in text or "phase5.campaign" in text or "phase5.cli" in text:
         issues.append("notebook-imports-internal-phase5-logic")
-    for import_hint in ALLOWED_NOTEBOOK_IMPORTS:
-        if import_hint not in text:
-            issues.append(f"missing-import:{import_hint}")
-    if "from phase5.kaggle.handoff import" not in text:
-        issues.append("notebook-must-import-handoff-module")
+    if "subprocess.run" not in text or '"-m","phase5"' not in text:
+        issues.append("notebook-must-execute-public-cli")
+    if "AUTHORIZE_OFFICIAL_" not in text:
+        issues.append("notebook-missing-explicit-operator-confirmation")
+    if "I17E_DEVELOPMENT_LOCK = True" not in text:
+        issues.append("notebook-missing-development-dispatch-lock")
+    if re.search(r"<[A-Z0-9_]+>", text):
+        issues.append("notebook-contains-unresolved-placeholder")
 
     if "python -m phase5" not in handoff_source:
         issues.append("handoff-source-missing-public-cli-prefix")

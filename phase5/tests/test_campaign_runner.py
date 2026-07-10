@@ -29,6 +29,22 @@ from phase5.guards import scan_text_for_forbidden_analysis
 from phase5.runtime.session import CampaignSession
 
 
+class FakeExecutedBatchProcessor:
+    real_execution_adapter = True
+
+    def __init__(self, *, estimated_seconds: float | None = None) -> None:
+        self.estimated_seconds = estimated_seconds
+
+    def __call__(self, batch, p95_seconds):
+        return CampaignBatchResult(
+            batch_id=batch.batch_id,
+            accepted_count=batch.row_count,
+            finalized=True,
+            estimated_seconds=self.estimated_seconds or float(batch.row_count * p95_seconds),
+            batch_hash="f" * 64,
+        )
+
+
 def _batch_id() -> BatchId:
     return BatchId.build(
         "P5-DV-1.0.0-A7C91E42",
@@ -119,6 +135,7 @@ def test_campaign_run_processes_multiple_batches_and_reseals() -> None:
         utcdate="20260708",
         until_safety_horizon=True,
         max_batches=3,
+        batch_processor=FakeExecutedBatchProcessor(),
     )
 
     assert session.state in {SessionState.SEALED, SessionState.REVERIFIED_AFTER_SYNC}
@@ -136,6 +153,7 @@ def test_campaign_run_resume_is_duplicate_safe() -> None:
         utcdate="20260708",
         until_safety_horizon=True,
         max_batches=2,
+        batch_processor=FakeExecutedBatchProcessor(),
     )
 
     resumed_session, resumed_report = run_campaign(
@@ -143,6 +161,7 @@ def test_campaign_run_resume_is_duplicate_safe() -> None:
         run_id=first_session.run_id,
         until_safety_horizon=True,
         session=first_session,
+        batch_processor=FakeExecutedBatchProcessor(),
     )
 
     assert resumed_session.processed_batch_ids[:2] == first_report.processed_batch_ids
@@ -151,21 +170,12 @@ def test_campaign_run_resume_is_duplicate_safe() -> None:
 
 
 def test_campaign_run_stops_before_safety_horizon() -> None:
-    def _fat_batch_processor(batch, p95_seconds):
-        return CampaignBatchResult(
-            batch_id=batch.batch_id,
-            accepted_count=batch.row_count,
-            finalized=True,
-            estimated_seconds=27000.0,
-            batch_hash="f" * 64,
-        )
-
     session, report = run_campaign(
         model_slot=ModelSlot.M1,
         run_id="P5RUN-P5-DV-1.0.1-A7C91E42-M1-20260708-ABCDEF12",
         utcdate="20260708",
         until_safety_horizon=True,
-        batch_processor=_fat_batch_processor,
+        batch_processor=FakeExecutedBatchProcessor(estimated_seconds=27000.0),
     )
 
     assert report.stop_reason == "safety-horizon"
