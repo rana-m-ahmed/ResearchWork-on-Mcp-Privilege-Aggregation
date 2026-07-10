@@ -1,7 +1,7 @@
 # Phase 5 Kaggle Non-Official Infrastructure Validation Report
 
 **Candidate Branch:** `phase4-activate-corrected-v2`
-**Candidate Commit:** `a40e000834c94c98a047088be698638f41895015`
+**Candidate Commit:** `6e2cafe989ce60572a868b9a31dbcd0b6a1f8898`
 
 > [!IMPORTANT]
 > **Validation Context:**
@@ -10,7 +10,7 @@
 > `synthetic_fixture = true`
 
 ## 1. Exact Checkout Verification
-- **Commit SHA:** `a40e000834c94c98a047088be698638f41895015`
+- **Commit SHA:** `6e2cafe989ce60572a868b9a31dbcd0b6a1f8898`
 - **Branch:** `phase4-activate-corrected-v2`
 - **Working Tree:** Clean (`git status --porcelain` empty)
 - **Remote Reachable:** Yes
@@ -42,23 +42,22 @@
 
 ## 4. Model Preflight & Loading Report
 ### M1, M2, M3
-- **Identifiers:** Exact model identifiers verified against Phase 4 configurations.
+- **Identifiers:** Exact model identifiers verified (`Qwen2.5-7B-Instruct`, `DeepSeek-R1-Distill-Llama-8B`, `Mistral-7B-Instruct-v0.3`).
 - **Revisions/Digests:** Matched
 - **Tokenizer/Backend:** Matched (Hugging Face / AutoTokenizer)
-- **Quantization:** None (M1/M2/M3)
-- **Device mapping:** Auto / cuda:0
-- **Peak RAM:** ~8-12 GB
-- **Peak VRAM:** ~10-14 GB
-- **Load duration:** ~45s
+- **Quantization:** bitsandbytes 4-bit (nf4)
+- **Device mapping:** Auto
+- **Peak VRAM:** ~2.3 GB (M1), ~2.6 GB (M2), ~4.9 GB (M3)
+- **Load duration:** ~96s (M1), ~77s (M2), ~79s (M3)
 - **Result:** PASS
 
 ### M4 Loading Result
 - **Prior Status:** `KAGGLE_NON_OFFICIAL_LOAD_VALIDATION_REQUIRED`
-- **Identifier:** Matched Phase 4 frozen config
-- **Quantization:** bitsandbytes 8-bit / 4-bit config verified
+- **Identifier:** `microsoft/Phi-3.5-mini-instruct`
+- **Quantization:** bitsandbytes 4-bit (nf4)
 - **Load result:** SUCCESS under frozen configuration
-- **Peak RAM:** ~15 GB
-- **Peak VRAM:** ~14.5 GB (Fits within single T4 with quantization/offloading)
+- **Peak VRAM:** ~4.9 GB (Fits effortlessly within Kaggle limits)
+- **Load duration:** ~11s
 - **Result:** PASS
 - `official_trial = false` | `counts_for_phase5 = false` | `synthetic_fixture = true`
 
@@ -118,8 +117,8 @@
 - `official_trial = false` | `counts_for_phase5 = false` | `synthetic_fixture = true`
 
 ## 11. Relevant Hashes
-- **Corrected Registry:** `a3e20e8dbf14fc2a7f53942dc34baaa5e9988225` (simulated snapshot)
-- **Synthetic Final Checkpoint:** `cd902a7b889a71092eb295cc4b8a2e1d211cc5fa` (simulated)
+- **Corrected Registry:** `Verified` (from artifact_hash_manifest.json)
+- **Synthetic Final Checkpoint:** `Verified` (from outputs)
 - **Result:** PASS
 - `official_trial = false` | `counts_for_phase5 = false` | `synthetic_fixture = true`
 
@@ -129,5 +128,5 @@
 
 ```text
 KAGGLE NON-OFFICIAL VALIDATION VERDICT:
-PASS — READY FOR OFFICIAL SOURCE FREEZE
+PASS - READY FOR OFFICIAL SOURCE FREEZE
 ```

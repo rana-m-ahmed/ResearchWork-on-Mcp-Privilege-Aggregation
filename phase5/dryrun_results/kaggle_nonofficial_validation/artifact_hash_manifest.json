@@ -1,0 +1,11 @@
+{
+  "model_loading_results.json": "ab5b1cf179d6cf8fb3b88f32341e5e8553dc3189d7baf6076be97faf1fe68cc1",
+  "NONOFFICIAL-SYNTHETIC-D3-TD_evidence.json": "532ef2265f6356c3706e3fda5df14fac7881d99a391ea68fbc92f21aee91c616",
+  "synthetic_canary_results.json": "c9e38f8dacf8748ae53edbb8ca643fb2354aac8f4d6a5b011e3efb2c09b1d081",
+  "NONOFFICIAL-SYNTHETIC-D5-CA_evidence.json": "08258156f22dea890f041814e2a40cd29490e98bfa490535a0c96e5e3cb5ec66",
+  "installed_dependencies.txt": "0f9a8abbb3ca2c1ab74912b0d61b50becbc1935212e9eaf85411952e8a1e4c68",
+  "NONOFFICIAL-SYNTHETIC-D5-TD_evidence.json": "9e1f034e8df37ca8d9ee4b022739a7c66f4e124b583d465983ee972594f021f2",
+  "NONOFFICIAL-SYNTHETIC-D3-CA_evidence.json": "967248ed60ffc62f2223a7f73d61932de5ab3eade68db664ddd3f17cf09c2864",
+  "logs/pytest_validation_suite.txt": "4c6917a8b32d65e2d7f6ec11f34d029e061f3155e47d08de1ff33d0292f4ffd0",
+  "gate0/gate0_output.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
