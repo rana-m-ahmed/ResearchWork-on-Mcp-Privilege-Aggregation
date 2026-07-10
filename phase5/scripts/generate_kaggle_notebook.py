@@ -90,7 +90,6 @@ cells.append(markdown_cell("### 4. Dependency Verification"))
 deps_bash = """%%bash
 cd "$REPO_DIR"
 pip install pytest
-pip install -e .
 pip freeze > "$OUTPUT_DIR/installed_dependencies.txt"
 """
 cells.append(code_cell(deps_bash))
