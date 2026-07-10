@@ -1,0 +1,17 @@
+{
+  "artifact": "I17E_authority_conflict",
+  "base_commit": "b48144157d167669511332df4884542f951c1bdc",
+  "branch": "phase5/real-official-execution",
+  "conflict": {
+    "higher_source": "phase5/AGENTS.md",
+    "higher_source_rule": "Do not add official trial logic, inferential analysis, output repair, or nested Docker support here.",
+    "requested_behavior": "Implement real official Phase 5 batch and campaign execution logic."
+  },
+  "evidence_branches_changed": false,
+  "official_tags_created": false,
+  "official_trials_executed": false,
+  "resolution_required": "Commit an authorized governance amendment that explicitly permits the bounded I17E official execution adapter implementation.",
+  "runtime_source_changes": [],
+  "status": "BLOCKED_BEFORE_IMPLEMENTATION",
+  "worktree": "D:/phase5-real-official-execution"
+}
