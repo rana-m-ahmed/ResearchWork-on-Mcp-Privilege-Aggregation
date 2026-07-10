@@ -17,10 +17,10 @@ except ImportError as e:
     BitsAndBytesConfig = None
 
 FROZEN_MODELS = {
-    "M1": {"id": "google/gemma-2-9b-it", "revision": "main"},
-    "M2": {"id": "meta-llama/Meta-Llama-3.1-8B-Instruct", "revision": "main"},
-    "M3": {"id": "Qwen/Qwen2.5-7B-Instruct", "revision": "main"},
-    "M4": {"id": "mistralai/Mistral-Nemo-Instruct-2407", "revision": "main"}
+    "M1": {"id": "Qwen/Qwen2.5-7B-Instruct", "revision": "main"},
+    "M2": {"id": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B", "revision": "main"},
+    "M3": {"id": "mistralai/Mistral-7B-Instruct-v0.3", "revision": "main"},
+    "M4": {"id": "microsoft/Phi-3.5-mini-instruct", "revision": "main"}
 }
 
 def get_cpu_gb():
@@ -65,12 +65,13 @@ def run_smoke(dry_run=False, output_dir="/kaggle/working/phase5_nonofficial_vali
                 bnb_4bit_use_double_quant=True,
                 bnb_4bit_quant_type="nf4",
             )
-            tokenizer = AutoTokenizer.from_pretrained(cfg["id"], revision=cfg["revision"])
+            tokenizer = AutoTokenizer.from_pretrained(cfg["id"], revision=cfg["revision"], trust_remote_code=True)
             model = AutoModelForCausalLM.from_pretrained(
                 cfg["id"], 
                 revision=cfg["revision"],
                 quantization_config=bnb_config,
-                device_map="auto"
+                device_map="auto",
+                trust_remote_code=True
             )
             
             load_time = time.time() - start_time
@@ -114,12 +115,13 @@ def run_smoke(dry_run=False, output_dir="/kaggle/working/phase5_nonofficial_vali
                 bnb_4bit_use_double_quant=True,
                 bnb_4bit_quant_type="nf4",
             )
-            tokenizer = AutoTokenizer.from_pretrained(cfg["id"], revision=cfg["revision"])
+            tokenizer = AutoTokenizer.from_pretrained(cfg["id"], revision=cfg["revision"], trust_remote_code=True)
             model = AutoModelForCausalLM.from_pretrained(
                 cfg["id"], 
                 revision=cfg["revision"],
                 quantization_config=bnb_config,
-                device_map="auto"
+                device_map="auto",
+                trust_remote_code=True
             )
 
         for trial_id, dom, atk in matrix:
