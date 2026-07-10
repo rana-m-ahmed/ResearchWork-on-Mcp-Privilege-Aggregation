@@ -14,6 +14,11 @@
     "mixing_original_and_corrected_artifacts": "prohibited",
     "original_package_role": "preserved immutable audit evidence"
   },
+  "official_source_binding": {
+    "dataset_version": "P5-DV-1.0.0-A7C91E42",
+    "official_source_ref": "refs/tags/phase5-official-source-v1",
+    "official_source_tag": "phase5-official-source-v1"
+  },
   "corrected_required_artifacts": {
     "cell_integrity_report": {
       "path": "phase4/frozen_bundle_v2/cell_integrity_report.json",
