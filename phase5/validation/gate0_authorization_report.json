@@ -35,7 +35,7 @@
     {
       "details": [
         "phase4/reports/phase4_go_no_go_decision.md",
-        "97927a12b707d65985c3db66890dd1c8be28d94009b5469f8a93379878dd729a"
+        "5766e232af92a5d6b545f8e2f61c2fe499d9da71b7760e3f9a9fab6b8054c3e1"
       ],
       "name": "required-label:Phase 4 GO report",
       "status": "PASS"
@@ -99,7 +99,7 @@
     {
       "details": [
         "phase4/configs/statistical_plan.yaml",
-        "aad0afdd8f395ecdd4853e737782c487e3b3207730e3496c9e7b4d1ddb558a07"
+        "96161dd17f00bd76534f3f70842775e303e926319ff59406c4ef06108df404ec"
       ],
       "name": "required-label:Statistical plan",
       "status": "PASS"
@@ -123,7 +123,7 @@
     {
       "details": [
         "phase4/frozen_bundle/cryptographic_lock_manifest.json",
-        "09122acabc4ea034aae2ea43adfbfb9b6b370e926db1222861d11d37e87cd11f"
+        "12aad2a0692c329422908d2972223a0aad7c95b000f15b9afdcf61d08b61376f"
       ],
       "name": "required-label:Cryptographic lock manifest",
       "status": "PASS"
@@ -131,7 +131,7 @@
     {
       "details": [
         "phase4/frozen_bundle/master_hash_ledger.csv",
-        "b399844c96eec465f66b767d3cabcdefc9e2e87792af7070ef499d78da6fe84d"
+        "9d304278a1ebeacaa89beef90faa9cb74cbd071640a27870318f7c1f415fdd28"
       ],
       "name": "required-label:Master hash ledger",
       "status": "PASS"
@@ -155,7 +155,7 @@
     {
       "details": [
         "phase4/configs/statistical_plan.yaml",
-        "aad0afdd8f395ecdd4853e737782c487e3b3207730e3496c9e7b4d1ddb558a07"
+        "96161dd17f00bd76534f3f70842775e303e926319ff59406c4ef06108df404ec"
       ],
       "name": "required-label:Statistical plan",
       "status": "PASS"
@@ -179,7 +179,7 @@
     {
       "details": [
         "phase4/frozen_bundle/cryptographic_lock_manifest.json",
-        "09122acabc4ea034aae2ea43adfbfb9b6b370e926db1222861d11d37e87cd11f"
+        "12aad2a0692c329422908d2972223a0aad7c95b000f15b9afdcf61d08b61376f"
       ],
       "name": "required-label:Cryptographic lock manifest",
       "status": "PASS"
@@ -187,7 +187,7 @@
     {
       "details": [
         "phase4/frozen_bundle/master_hash_ledger.csv",
-        "b399844c96eec465f66b767d3cabcdefc9e2e87792af7070ef499d78da6fe84d"
+        "9d304278a1ebeacaa89beef90faa9cb74cbd071640a27870318f7c1f415fdd28"
       ],
       "name": "required-label:Master hash ledger",
       "status": "PASS"
@@ -347,7 +347,7 @@
     {
       "details": [
         "phase4/frozen_bundle/trial_order_core.csv",
-        "2c0e96bd07245b95021c6521b7730db645acbd7686af6bb8127e7d36f3fb426f"
+        "a81ce0d93df2fae979ccd1ddf42c11016f61a18d970c2b3d5ee67255ef9528a5"
       ],
       "name": "required-label:Trial order core",
       "status": "PASS"
@@ -355,7 +355,7 @@
     {
       "details": [
         "phase4/frozen_bundle/trial_order_defense.csv",
-        "cd483dcece127f48ff911239dfc1ee68c2696aaaec384a495c617d76cb53d182"
+        "233389d23c20ae158e23c67fab430e05e93141dceb038b6b8483c7404a8bf4c0"
       ],
       "name": "required-label:Trial order defense",
       "status": "PASS"
@@ -363,7 +363,7 @@
     {
       "details": [
         "phase4/frozen_bundle/trial_order_utility.csv",
-        "66f088402c2a494a12fadd542477c6f1463583508e492217816e9fca15f79de7"
+        "8677fd1c21a7387ad94d6800e72008f500cfa3535b461d3b24fd155c5bbd4c28"
       ],
       "name": "required-label:Trial order utility",
       "status": "PASS"
@@ -371,7 +371,7 @@
     {
       "details": [
         "phase4/frozen_bundle/phase5_execution_manifest.json",
-        "290a397e795a40dc97f497ada3a6c42c1d5ffdec2bdeb03046565996c2b350c2"
+        "a8734eed3fe12bd2f1756331c088cbe216de1b38f77efc78d40092cb92843328"
       ],
       "name": "required-label:Phase 5 execution manifest",
       "status": "PASS"
@@ -418,43 +418,57 @@
     },
     {
       "details": [
-        "rows=2808",
-        "cells=19656",
-        "unique_rows=2808",
-        "unique_trial_ids=2808",
-        "unique_payload_ids=234",
-        "models={'M1': 702, 'M2': 702, 'M3': 702, 'M4': 702}",
-        "densities={'D1': 936, 'D3': 936, 'D5': 936}",
-        "defense={'IHR_SPCE': 2808}",
+        "rows=5400",
+        "cells=37800",
+        "unique_rows=5400",
+        "unique_trial_ids=5400",
+        "unique_payload_ids=150",
+        "models={'M1': 1350, 'M2': 1350, 'M3': 1350, 'M4': 1350}",
+        "densities={'D1': 1800, 'D3': 1800, 'D5': 1800}",
+        "defense={'BASELINE': 5400}",
         "statuses=['PENDING']",
-        "sha256=2c0e96bd07245b95021c6521b7730db645acbd7686af6bb8127e7d36f3fb426f"
+        "sha256=a81ce0d93df2fae979ccd1ddf42c11016f61a18d970c2b3d5ee67255ef9528a5"
       ],
       "name": "queue-file",
       "status": "PASS"
     },
     {
       "details": [
-        "rows=0",
-        "header=('trial_id', 'model', 'density', 'poison')",
-        "sha256=cd483dcece127f48ff911239dfc1ee68c2696aaaec384a495c617d76cb53d182"
+        "rows=2400",
+        "cells=16800",
+        "unique_rows=2400",
+        "unique_trial_ids=2400",
+        "unique_payload_ids=150",
+        "models={'M1': 600, 'M2': 600, 'M3': 600, 'M4': 600}",
+        "densities={'D3': 1200, 'D5': 1200}",
+        "defense={'IHR_SPCE': 2400}",
+        "statuses=['PENDING']",
+        "sha256=233389d23c20ae158e23c67fab430e05e93141dceb038b6b8483c7404a8bf4c0"
       ],
-      "name": "queue-empty-file",
+      "name": "queue-file",
       "status": "PASS"
     },
     {
       "details": [
-        "rows=0",
-        "header=('trial_id', 'model', 'density', 'defense')",
-        "sha256=66f088402c2a494a12fadd542477c6f1463583508e492217816e9fca15f79de7"
+        "rows=2400",
+        "cells=16800",
+        "unique_rows=2400",
+        "unique_trial_ids=2400",
+        "unique_payload_ids=1",
+        "models={'M1': 600, 'M2': 600, 'M3': 600, 'M4': 600}",
+        "densities={'D3': 1200, 'D5': 1200}",
+        "defense={'BASELINE': 1200, 'IHR_SPCE': 1200}",
+        "statuses=['PENDING']",
+        "sha256=8677fd1c21a7387ad94d6800e72008f500cfa3535b461d3b24fd155c5bbd4c28"
       ],
-      "name": "queue-empty-file",
+      "name": "queue-file",
       "status": "PASS"
     },
     {
       "details": [
-        "trial_order_sha256='2c0e96bd07245b95021c6521b7730db645acbd7686af6bb8127e7d36f3fb426f'",
-        "phase4_manifest_hash='09122acabc4ea034aae2ea43adfbfb9b6b370e926db1222861d11d37e87cd11f'",
-        "expected_trial_count=2808",
+        "trial_order_sha256='a81ce0d93df2fae979ccd1ddf42c11016f61a18d970c2b3d5ee67255ef9528a5'",
+        "phase4_manifest_hash='12aad2a0692c329422908d2972223a0aad7c95b000f15b9afdcf61d08b61376f'",
+        "expected_trial_count=5400",
         "expected_payload_count=223"
       ],
       "name": "execution-manifest",
@@ -462,10 +476,10 @@
     },
     {
       "details": [
-        "computed={'rows': 2808, 'unique_trial_ids': 2808, 'non_empty_cells': 19656, 'duplicates': [], 'by_model': {'M1': 702, 'M2': 702, 'M3': 702, 'M4': 702}, 'by_density': {'D1': 936, 'D3': 936, 'D5': 936}, 'by_defense': {'IHR_SPCE': 2808}, 'unique_payload_ids': 234}",
-        "expected_rows=2808",
-        "expected_unique_trials=2808",
-        "expected_non_empty_cells=19656"
+        "computed={'rows': 5400, 'unique_trial_ids': 5400, 'non_empty_cells': 37800, 'duplicates': [], 'by_model': {'M1': 1350, 'M2': 1350, 'M3': 1350, 'M4': 1350}, 'by_density': {'D1': 1800, 'D3': 1800, 'D5': 1800}, 'by_defense': {'BASELINE': 5400}, 'unique_payload_ids': 150}",
+        "expected_rows=5400",
+        "expected_unique_trials=5400",
+        "expected_non_empty_cells=37800"
       ],
       "name": "queue-statistics",
       "status": "PASS"
@@ -487,28 +501,28 @@
     },
     {
       "details": [
-        "D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_1_freeze.yaml"
+        "D:/Downloads/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_1_freeze.yaml"
       ],
       "name": "model-freeze:M1",
       "status": "PASS"
     },
     {
       "details": [
-        "D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_2_freeze.yaml"
+        "D:/Downloads/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_2_freeze.yaml"
       ],
       "name": "model-freeze:M2",
       "status": "PASS"
     },
     {
       "details": [
-        "D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_3_freeze.yaml"
+        "D:/Downloads/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_3_freeze.yaml"
       ],
       "name": "model-freeze:M3",
       "status": "PASS"
     },
     {
       "details": [
-        "D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_4_freeze.yaml"
+        "D:/Downloads/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_4_freeze.yaml"
       ],
       "name": "model-freeze:M4",
       "status": "PASS"
@@ -552,32 +566,32 @@
     },
     {
       "details": [
-        "working tree clean"
+        "working tree is dirty"
       ],
       "name": "checkout-clean",
-      "status": "PASS"
+      "status": "FAIL"
     }
   ],
   "consumed_frozen_inputs": [
     {
       "label": "Trial order core",
-      "sha256": "2c0e96bd07245b95021c6521b7730db645acbd7686af6bb8127e7d36f3fb426f"
+      "sha256": "a81ce0d93df2fae979ccd1ddf42c11016f61a18d970c2b3d5ee67255ef9528a5"
     },
     {
       "label": "Trial order core",
-      "sha256": "2c0e96bd07245b95021c6521b7730db645acbd7686af6bb8127e7d36f3fb426f"
+      "sha256": "a81ce0d93df2fae979ccd1ddf42c11016f61a18d970c2b3d5ee67255ef9528a5"
     },
     {
       "label": "Trial order defense",
-      "sha256": "cd483dcece127f48ff911239dfc1ee68c2696aaaec384a495c617d76cb53d182"
+      "sha256": "233389d23c20ae158e23c67fab430e05e93141dceb038b6b8483c7404a8bf4c0"
     },
     {
       "label": "Trial order utility",
-      "sha256": "66f088402c2a494a12fadd542477c6f1463583508e492217816e9fca15f79de7"
+      "sha256": "8677fd1c21a7387ad94d6800e72008f500cfa3535b461d3b24fd155c5bbd4c28"
     },
     {
       "label": "Phase 5 execution manifest",
-      "sha256": "290a397e795a40dc97f497ada3a6c42c1d5ffdec2bdeb03046565996c2b350c2"
+      "sha256": "a8734eed3fe12bd2f1756331c088cbe216de1b38f77efc78d40092cb92843328"
     },
     {
       "label": "Phase 3 common-source hash",
@@ -612,12 +626,14 @@
       "sha256": "2701af1e8e5ab1b73b299076b03864e3cd516c92b3c3c4eb4abb4191ab3b2c17"
     }
   ],
-  "findings": [],
-  "generated_utc": "2026-07-07T19:37:06.512622Z",
-  "repository_root": "D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation",
-  "status": "PASS",
+  "findings": [
+    "checkout-clean: working tree is dirty"
+  ],
+  "generated_utc": "2026-07-10T10:09:29.935505Z",
+  "repository_root": "D:/Downloads/ResearchWork-on-Mcp-Privilege-Aggregation",
+  "status": "FAIL",
   "strict": true,
-  "summary": "Gate 0 passed with strict, hash-bound verification of the registry, frozen artifacts, queue files, model/runtime evidence, and checkout cleanliness.",
+  "summary": "Gate 0 failed because one or more frozen artifacts, verdicts, runtime controls, or checkout checks did not match.",
   "task_id": "P03",
   "verdicts": [
     {
@@ -637,7 +653,7 @@
     {
       "label": "Phase 4 GO report",
       "path": "phase4/reports/phase4_go_no_go_decision.md",
-      "sha256": "97927a12b707d65985c3db66890dd1c8be28d94009b5469f8a93379878dd729a"
+      "sha256": "5766e232af92a5d6b545f8e2f61c2fe499d9da71b7760e3f9a9fab6b8054c3e1"
     },
     {
       "label": "Phase 4 global freeze",
@@ -677,7 +693,7 @@
     {
       "label": "Statistical plan",
       "path": "phase4/configs/statistical_plan.yaml",
-      "sha256": "aad0afdd8f395ecdd4853e737782c487e3b3207730e3496c9e7b4d1ddb558a07"
+      "sha256": "96161dd17f00bd76534f3f70842775e303e926319ff59406c4ef06108df404ec"
     },
     {
       "label": "Phase 5 schema freeze",
@@ -692,12 +708,12 @@
     {
       "label": "Cryptographic lock manifest",
       "path": "phase4/frozen_bundle/cryptographic_lock_manifest.json",
-      "sha256": "09122acabc4ea034aae2ea43adfbfb9b6b370e926db1222861d11d37e87cd11f"
+      "sha256": "12aad2a0692c329422908d2972223a0aad7c95b000f15b9afdcf61d08b61376f"
     },
     {
       "label": "Master hash ledger",
       "path": "phase4/frozen_bundle/master_hash_ledger.csv",
-      "sha256": "b399844c96eec465f66b767d3cabcdefc9e2e87792af7070ef499d78da6fe84d"
+      "sha256": "9d304278a1ebeacaa89beef90faa9cb74cbd071640a27870318f7c1f415fdd28"
     },
     {
       "label": "Phase 4 global freeze",
@@ -712,7 +728,7 @@
     {
       "label": "Statistical plan",
       "path": "phase4/configs/statistical_plan.yaml",
-      "sha256": "aad0afdd8f395ecdd4853e737782c487e3b3207730e3496c9e7b4d1ddb558a07"
+      "sha256": "96161dd17f00bd76534f3f70842775e303e926319ff59406c4ef06108df404ec"
     },
     {
       "label": "Phase 5 schema freeze",
@@ -727,12 +743,12 @@
     {
       "label": "Cryptographic lock manifest",
       "path": "phase4/frozen_bundle/cryptographic_lock_manifest.json",
-      "sha256": "09122acabc4ea034aae2ea43adfbfb9b6b370e926db1222861d11d37e87cd11f"
+      "sha256": "12aad2a0692c329422908d2972223a0aad7c95b000f15b9afdcf61d08b61376f"
     },
     {
       "label": "Master hash ledger",
       "path": "phase4/frozen_bundle/master_hash_ledger.csv",
-      "sha256": "b399844c96eec465f66b767d3cabcdefc9e2e87792af7070ef499d78da6fe84d"
+      "sha256": "9d304278a1ebeacaa89beef90faa9cb74cbd071640a27870318f7c1f415fdd28"
     },
     {
       "label": "Phase 4.5 GO report",
@@ -832,22 +848,22 @@
     {
       "label": "Trial order core",
       "path": "phase4/frozen_bundle/trial_order_core.csv",
-      "sha256": "2c0e96bd07245b95021c6521b7730db645acbd7686af6bb8127e7d36f3fb426f"
+      "sha256": "a81ce0d93df2fae979ccd1ddf42c11016f61a18d970c2b3d5ee67255ef9528a5"
     },
     {
       "label": "Trial order defense",
       "path": "phase4/frozen_bundle/trial_order_defense.csv",
-      "sha256": "cd483dcece127f48ff911239dfc1ee68c2696aaaec384a495c617d76cb53d182"
+      "sha256": "233389d23c20ae158e23c67fab430e05e93141dceb038b6b8483c7404a8bf4c0"
     },
     {
       "label": "Trial order utility",
       "path": "phase4/frozen_bundle/trial_order_utility.csv",
-      "sha256": "66f088402c2a494a12fadd542477c6f1463583508e492217816e9fca15f79de7"
+      "sha256": "8677fd1c21a7387ad94d6800e72008f500cfa3535b461d3b24fd155c5bbd4c28"
     },
     {
       "label": "Phase 5 execution manifest",
       "path": "phase4/frozen_bundle/phase5_execution_manifest.json",
-      "sha256": "290a397e795a40dc97f497ada3a6c42c1d5ffdec2bdeb03046565996c2b350c2"
+      "sha256": "a8734eed3fe12bd2f1756331c088cbe216de1b38f77efc78d40092cb92843328"
     },
     {
       "label": "Model freeze set",

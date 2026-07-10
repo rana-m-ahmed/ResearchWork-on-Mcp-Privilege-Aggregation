@@ -20,8 +20,6 @@
   "payload_id": "kaggle_smoke_01",
   "phase1_payload_hash": "b913d5ae30d568588539ee592a978420358a31f42263b8d7571e31ef0e7ab4c6",
   "payload_hash": "sha256:AUTHENTIC_KAGGLE_EXECUTION",
-  "task_id": "mock_task_id",
-  "task_hash": "sha256:mock_task_hash",
   "adversarial_payload_present": true,
   "payload_condition": "PHASE1_HASH_AUTHORIZED"
 }

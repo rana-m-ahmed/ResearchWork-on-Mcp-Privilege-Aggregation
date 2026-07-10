@@ -20,8 +20,6 @@
   "payload_id": "utility_01",
   "phase1_payload_hash": null,
   "payload_hash": null,
-  "task_id": "mock_task_id",
-  "task_hash": "sha256:mock_task_hash",
   "adversarial_payload_present": false,
   "payload_condition": "NONE"
 }

@@ -1,0 +1,39 @@
+{
+  "audit_timestamp": "2026-07-10T14:45:00+05:00",
+  "candidate_commit": "d30309d9397f7ea096ae933c371e890f06fa6aa6",
+  "verdict": "RETURN TO PHASE 1/4 REMEDIATION",
+  "git_state": {
+    "clean": false,
+    "remote_reachable": false
+  },
+  "blockers": [
+    "Working tree is dirty, preventing strict Gate 0 validation.",
+    "Hash mismatch on phase4/configs/statistical_plan.yaml indicating unauthorized Phase 4 drift.",
+    "Hash mismatch on phase4/reports/phase4_go_no_go_decision.md indicating unauthorized Phase 4 drift.",
+    "Phase 5 evidence materializer fails due to extra schema fields (task_id, task_hash) in frozen trial row."
+  ],
+  "findings": [
+    {
+      "test": "test_registry_loads_and_resolves_verified_entries",
+      "status": "FAIL",
+      "expected_hash": "97927a12b707d65985c3db66890dd1c8be28d94009b5469f8a93379878dd729a",
+      "actual_hash": "5766e232af92a5d6b545f8e2f61c2fe499d9da71b7760e3f9a9fab6b8054c3e1"
+    },
+    {
+      "test": "test_verified_registry_hashes_match_checkout_attributes",
+      "status": "FAIL",
+      "expected_hash": "96161dd17f00bd76534f3f70842775e303e926319ff59406c4ef06108df404ec",
+      "actual_hash": "aad0afdd8f395ecdd4853e737782c487e3b3207730e3496c9e7b4d1ddb558a07"
+    },
+    {
+      "test": "test_materializer_resolves_evidence_and_preserves_exact_schema_rows",
+      "status": "FAIL",
+      "error": "MissingFrozenSettingError: frozen trial row field mismatch: extra=['task_id', 'task_hash']"
+    },
+    {
+      "command": "python -m phase5 gate0 --strict",
+      "status": "FAIL",
+      "error": "GATE0_FAILURE: - checkout-clean: working tree is dirty"
+    }
+  ]
+}

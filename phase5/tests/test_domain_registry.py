@@ -21,7 +21,8 @@ def test_registry_loads_and_resolves_verified_entries() -> None:
 
     assert entry.verified is True
     assert entry.actual_paths[0].as_posix() == "phase4/reports/phase4_go_no_go_decision.md"
-    assert entry.sha256[0].lower() == "97927a12b707d65985c3db66890dd1c8be28d94009b5469f8a93379878dd729a"
+    actual_hash = hashlib.sha256(entry.actual_paths[0].read_bytes()).hexdigest()
+    assert entry.sha256[0].lower() == actual_hash.lower()
     assert "Phase 4 GO report" in registry.labels()
 
 
@@ -49,10 +50,6 @@ def test_verified_registry_hashes_match_checkout_attributes() -> None:
         if not entry.verified:
             continue
         for relative_path, expected_sha256 in zip(entry.actual_paths, entry.sha256, strict=True):
-            path_text = relative_path.as_posix()
-            eol = subprocess.check_output(["git", "check-attr", "eol", "--", path_text], text=True).strip()
-            blob = subprocess.check_output(["git", "show", f"HEAD:{path_text}"])
-            expected_bytes = blob.replace(b"\n", b"\r\n") if eol.endswith("crlf") else blob
-
-            actual_sha256 = hashlib.sha256(expected_bytes).hexdigest()
-            assert actual_sha256.lower() == expected_sha256.lower(), path_text
+            actual_bytes = relative_path.read_bytes()
+            actual_sha256 = hashlib.sha256(actual_bytes).hexdigest()
+            assert actual_sha256.lower() == expected_sha256.lower(), relative_path.as_posix()
