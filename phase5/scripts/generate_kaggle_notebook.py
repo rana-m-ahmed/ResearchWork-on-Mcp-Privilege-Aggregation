@@ -1,5 +1,6 @@
 import json
 import os
+import re
 
 OUTPUT_DIR = "d:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation/phase5/kaggle"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -8,8 +9,9 @@ def markdown_cell(text):
     return {"cell_type": "markdown", "metadata": {}, "source": [text]}
 
 def code_cell(source_code):
-    lines = [line + "\\n" for line in source_code.split("\\n")]
-    if lines and lines[-1] == "\\n":
+    # Split by actual newline and append newline to each line except maybe the last
+    lines = [line + "\n" for line in source_code.split("\n")]
+    if lines and lines[-1] == "\n":
         lines.pop()
     return {"cell_type": "code", "execution_count": None, "metadata": {}, "outputs": [], "source": lines}
 
@@ -159,11 +161,9 @@ cells.append(code_cell(pkg_py))
 
 # --- 9. Controlled Synchronization ---
 cells.append(markdown_cell("### 9. Controlled Synchronization Barrier (GitHub Non-Official Evidence Push)"))
-sync_bash = """%%bash
-# Retrieve token securely via python, avoiding shell history if possible,
+sync_py = """# Retrieve token securely via python, avoiding shell history if possible,
 # but we need it for git push. We inject it into a temporary git config and purge immediately.
-"""
-sync_py = """import os
+import os
 import subprocess
 try:
     from kaggle_secrets import UserSecretsClient
@@ -211,7 +211,7 @@ except ImportError:
 except Exception as e:
     print(f"Synchronization failed: {e}")
 """
-cells.append(code_cell(sync_bash + sync_py))
+cells.append(code_cell(sync_py))
 
 # --- 10. Verdict ---
 cells.append(markdown_cell("### 10. Verdict Display"))

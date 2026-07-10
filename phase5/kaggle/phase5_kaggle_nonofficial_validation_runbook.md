@@ -17,9 +17,11 @@ This runbook outlines the required execution path for the Kaggle validation Note
    - **Label:** `HF_TOKEN` -> **Value:** Your Hugging Face token.
    - **Label:** `GITHUB_TOKEN` -> **Value:** Your GitHub fine-grained token.
 6. Attach both secrets to the notebook.
-7. Add an Environment Variable in Kaggle (or inject it programmatically before the first cell):
-   - **Variable Name:** `PHASE5_CANDIDATE_SHA`
-   - **Value:** The exact 40-character commit SHA.
+7. Add an Environment Variable in Kaggle (or inject it programmatically by creating a new cell at the absolute top of the notebook):
+   ```python
+   import os
+   os.environ["PHASE5_CANDIDATE_SHA"] = "3815927f919e755939fd4085c3bc1bef8fa9ca6a"
+   ```
 
 ## Execution
 1. Click **Run All**.
