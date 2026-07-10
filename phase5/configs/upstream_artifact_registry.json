@@ -96,7 +96,7 @@
       {
         "label": "Statistical plan",
         "path": "phase4/configs/statistical_plan.yaml",
-        "sha256": "96161dd17f00bd76534f3f70842775e303e926319ff59406c4ef06108df404ec",
+        "sha256": "aad0afdd8f395ecdd4853e737782c487e3b3207730e3496c9e7b4d1ddb558a07",
         "status": "FOUND_VERIFIED"
       },
       {
@@ -269,25 +269,25 @@
       {
         "label": "Phase 3 model config M1",
         "path": "phase3/configs/model_1.yaml",
-        "sha256": "1384aca9060515140a3cc1a2edfc76ff1bafe3ba96bbcc79d737cc93e35af457",
+        "sha256": "a822f01e550417b6144693c5ac5d413140cfdc1c358f0c6306a287d59aa2280b",
         "status": "FOUND_VERIFIED"
       },
       {
         "label": "Phase 3 model config M2",
         "path": "phase3/configs/model_2.yaml",
-        "sha256": "00c7c8bd43f583006b213ab79e83d5d5bff521a351da064c49657b1e477a06e8",
+        "sha256": "25be49c75318cc0ddcb4552761a564d3fbdf51d3fdfa3bec7c1eddcd7a8f3b49",
         "status": "FOUND_VERIFIED"
       },
       {
         "label": "Phase 3 model config M3",
         "path": "phase3/configs/model_3.yaml",
-        "sha256": "8a2d896826b48d3272b9db6b10b76e52e8ecd31344a3313e7afa0bac79eec417",
+        "sha256": "17232ad83dbec29959ca5de4a5e3afcc2e1317d49d7477f5f7da3277bba4b247",
         "status": "FOUND_VERIFIED"
       },
       {
         "label": "Phase 3 model config M4",
         "path": "phase3/configs/model_4.yaml",
-        "sha256": "2f502f10b113d9d6d2c744b688d822020a3e642e8b41d7a7e4e731970ebf7786",
+        "sha256": "f0d0a789ccba0b1aacecc93195baef3eac644f8684de345922a6aec50608a458",
         "status": "FOUND_VERIFIED"
       },
       {
