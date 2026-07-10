@@ -1,0 +1,39 @@
+{
+  "artifact": "I17R_final_launch_setup",
+  "official_trials_executed": false,
+  "frozen_phase4_or_phase45_modified": false,
+  "official_source_tag": "phase5-official-source-v2",
+  "official_source_commit": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+  "official_tag_object": "38fab6c096f0de72a649eabd2f3c460ba8221ca7",
+  "dataset_version": "P5-DV-1.0.1-A7C91E42",
+  "superseded": {
+    "official_source_tag": "phase5-official-source-v1",
+    "dataset_version": "P5-DV-1.0.0-A7C91E42",
+    "official_accepted_trials": 0,
+    "status": "SUPERSEDED BEFORE OFFICIAL DISPATCH"
+  },
+  "m4_reconciliation": {
+    "prior_status": "LOAD_FAILURE",
+    "final_non_official_kaggle_status": "PASS",
+    "active_official_run_plan_status": "LOAD_SUCCESS",
+    "executed_source_commit": "6e2cafe989ce60572a868b9a31dbcd0b6a1f8898",
+    "executed_run_kaggle_smoke_sha256": "c708cd3c6eab21a420384025290d1a6fc2f4122a3cb644b88261e65c5e717a4d",
+    "real_synthetic_generation": "PASS",
+    "official_trials_executed": 0
+  },
+  "evidence_branch_heads": {
+    "phase5-model-1": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+    "phase5-model-2": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+    "phase5-model-3": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+    "phase5-model-4": "c38a339327891b229bcce12d7c04a8a4e6cc63d5"
+  },
+  "targeted_tests": {
+    "affected_pytest_slice": "45 passed",
+    "secret_lint": "PASS",
+    "diff_check": "PASS",
+    "remote_tag_visible": true,
+    "remote_branch_heads_equal_source_commit": true
+  },
+  "verdict": "READY_TO_RUN_M1",
+  "remaining_blockers": []
+}

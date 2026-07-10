@@ -1,0 +1,72 @@
+{
+  "artifact": "official_evidence_branch_mapping",
+  "branches": [
+    {
+      "automatic_pull_merge_rebase_allowed": false,
+      "checkpoint_allowlist": "phase5/configs/sync_allowlist.yaml",
+      "dataset_version": "P5-DV-1.0.1-A7C91E42",
+      "exact_model_id": "Qwen/Qwen2.5-7B-Instruct",
+      "expected_initial_remote_head": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+      "force_push_allowed": false,
+      "model_slot": "M1",
+      "official_evidence_branch": "phase5-model-1",
+      "official_source_commit": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+      "official_source_tag": "phase5-official-source-v2",
+      "remote_sha_verified_after_checkpoint_push": true,
+      "source_paths_stageable_by_checkpoint_sync": false,
+      "unexpected_remote_divergence": "ABORT"
+    },
+    {
+      "automatic_pull_merge_rebase_allowed": false,
+      "checkpoint_allowlist": "phase5/configs/sync_allowlist.yaml",
+      "dataset_version": "P5-DV-1.0.1-A7C91E42",
+      "exact_model_id": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+      "expected_initial_remote_head": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+      "force_push_allowed": false,
+      "model_slot": "M2",
+      "official_evidence_branch": "phase5-model-2",
+      "official_source_commit": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+      "official_source_tag": "phase5-official-source-v2",
+      "remote_sha_verified_after_checkpoint_push": true,
+      "source_paths_stageable_by_checkpoint_sync": false,
+      "unexpected_remote_divergence": "ABORT"
+    },
+    {
+      "automatic_pull_merge_rebase_allowed": false,
+      "checkpoint_allowlist": "phase5/configs/sync_allowlist.yaml",
+      "dataset_version": "P5-DV-1.0.1-A7C91E42",
+      "exact_model_id": "mistralai/Mistral-7B-Instruct-v0.3",
+      "expected_initial_remote_head": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+      "force_push_allowed": false,
+      "model_slot": "M3",
+      "official_evidence_branch": "phase5-model-3",
+      "official_source_commit": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+      "official_source_tag": "phase5-official-source-v2",
+      "remote_sha_verified_after_checkpoint_push": true,
+      "source_paths_stageable_by_checkpoint_sync": false,
+      "unexpected_remote_divergence": "ABORT"
+    },
+    {
+      "automatic_pull_merge_rebase_allowed": false,
+      "checkpoint_allowlist": "phase5/configs/sync_allowlist.yaml",
+      "dataset_version": "P5-DV-1.0.1-A7C91E42",
+      "exact_model_id": "microsoft/Phi-3.5-mini-instruct",
+      "expected_initial_remote_head": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+      "force_push_allowed": false,
+      "model_slot": "M4",
+      "official_evidence_branch": "phase5-model-4",
+      "official_source_commit": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+      "official_source_tag": "phase5-official-source-v2",
+      "remote_sha_verified_after_checkpoint_push": true,
+      "source_paths_stageable_by_checkpoint_sync": false,
+      "unexpected_remote_divergence": "ABORT"
+    }
+  ],
+  "checkpoint_allowlist": "phase5/configs/sync_allowlist.yaml",
+  "dataset_version": "P5-DV-1.0.1-A7C91E42",
+  "official_accepted_trials_before_supersession": 0,
+  "official_source_commit": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+  "official_source_tag": "phase5-official-source-v2",
+  "official_tag_object": "38fab6c096f0de72a649eabd2f3c460ba8221ca7",
+  "v1_superseded_before_official_dispatch": true
+}
