@@ -1,0 +1,16 @@
+{
+  "status": "RECORDED",
+  "official_source_tag": "phase5-official-source-v1",
+  "official_source_commit": "9bde4f8d7a9d8abf12d4e83dbd4d3f06fbc1e0c2",
+  "dataset_version": "P5-DV-1.0.0-A7C91E42",
+  "source_commit_before_freeze": "6e2cafe989ce60572a868b9a31dbcd0b6a1f8898",
+  "source_commit_after_freeze": "9bde4f8d7a9d8abf12d4e83dbd4d3f06fbc1e0c2",
+  "tag_object": "phase5-official-source-v1",
+  "common_source_hash": "a7324b63b1307de2dc9e90510ee7372b0b3aad685c4eec51182521191426dc79",
+  "official_source_manifest_hash": "6509c6d298fdefb60d05251a7a2658a9b5b1b3dae118e898f09fd90578ef2dd9",
+  "official_source_hash_ledger_hash": "a5cc8cdc91abbad888366d6703811aee144ee871d03b444fe8f150474544fb22",
+  "hash_bound_integrity_manifest": [
+    "phase5/manifests/official_source_manifest.json",
+    "phase5/manifests/official_source_hash_ledger.csv"
+  ]
+}
