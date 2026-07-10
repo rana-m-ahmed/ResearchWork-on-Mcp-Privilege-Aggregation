@@ -9,13 +9,13 @@ It is intentionally narrow.
 - Keep the notebook thin and deterministic.
 - Route bootstrap, session, sync, and finalize actions through the public
   `python -m phase5` CLI.
-- Keep notebook parameters limited to branch references and approved
+- Keep notebook parameters limited to source references, branch references, and approved
   operational limits.
 
 ## Allowed Parameters
 
 - `repository_branch`
-- `source_branch`
+- `source_tag_or_commit`
 - `model_branch`
 - `evidence_branch`
 - `approved_operational_limits`
@@ -31,6 +31,7 @@ The approved operational limits object is limited to:
   cells.
 - Output repair, hidden retries, or nested Docker assumptions.
 - Secret values.
+- Branch-HEAD source execution for official launch.
 - Trial execution in this task.
 - Rebalancing or recreating the frozen trial matrix.
 

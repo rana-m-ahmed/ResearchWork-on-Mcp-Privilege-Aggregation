@@ -32,14 +32,14 @@
       "minLength": 1,
       "type": "string"
     },
-    "source_branch": {
+    "source_tag_or_commit": {
       "minLength": 1,
       "type": "string"
     }
   },
   "required": [
     "repository_branch",
-    "source_branch",
+    "source_tag_or_commit",
     "model_branch",
     "evidence_branch",
     "approved_operational_limits"

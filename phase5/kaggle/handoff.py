@@ -32,7 +32,7 @@ NOTEBOOK_STAGE_SEQUENCE = (
 )
 EDITABLE_PARAMETER_KEYS = (
     "repository_branch",
-    "source_branch",
+    "source_tag_or_commit",
     "model_branch",
     "evidence_branch",
     "approved_operational_limits",
@@ -47,22 +47,22 @@ PUBLIC_TOKEN_ENV_NAME = "GITHUB_TOKEN"
 DEFAULT_NOTEBOOK_REPO_ROOT = Path("/kaggle/working/ResearchWork-on-Mcp-Privilege-Aggregation")
 DEFAULT_GATE0_REPORT_DIR = Path("phase5/validation")
 DEFAULT_TIMING_REPORT = Path("phase4_5/validation/phase45_kaggle_quota_feasibility_report.md")
-DEFAULT_RUN_PLAN = Path("phase5/validation/kaggle_run_plan.json")
-DEFAULT_BATCH_MANIFEST = Path("phase5/manifests/batch_partition_manifest.json")
+DEFAULT_RUN_PLAN = Path("phase5/validation/kaggle_run_plan_v2.json")
+DEFAULT_BATCH_MANIFEST = Path("phase5/manifests/batch_partition_manifest_v2.json")
 DEFAULT_CLI_OUTPUT = Path("phase5/validation/p15_handoff_report.json")
 DEFAULT_SYNC_RECEIPT = Path("<SYNC_RECEIPT_PATH>")
 DEFAULT_CANARY_BATCH_ID = "<CANARY_BATCH_ID>"
 DEFAULT_RUN_ID = "<RUN_ID>"
 DEFAULT_MODEL_SLOT = "<MODEL_SLOT>"
 DEFAULT_REPO_URL = "<REPOSITORY_URL>"
-DEFAULT_SOURCE_BRANCH = "<SOURCE_BRANCH>"
+DEFAULT_SOURCE_TAG_OR_COMMIT = "<SOURCE_TAG_OR_COMMIT>"
 DEFAULT_EVIDENCE_BRANCH = "<EVIDENCE_BRANCH>"
 
 
 @dataclass(frozen=True, slots=True)
 class KaggleHandoffParameters:
     repository_branch: str
-    source_branch: str
+    source_tag_or_commit: str
     model_branch: str
     evidence_branch: str
     approved_operational_limits: Mapping[str, object]
@@ -73,7 +73,7 @@ class KaggleHandoffParameters:
             "evidence_branch": self.evidence_branch,
             "model_branch": self.model_branch,
             "repository_branch": self.repository_branch,
-            "source_branch": self.source_branch,
+            "source_tag_or_commit": self.source_tag_or_commit,
         }
 
 
@@ -136,8 +136,8 @@ def validate_handoff_parameters(parameters: KaggleHandoffParameters) -> KaggleHa
     _require_allowed_parameter_keys(parameters)
     if not parameters.repository_branch:
         raise SchemaInvariantError("repository_branch must be provided")
-    if not parameters.source_branch:
-        raise SchemaInvariantError("source_branch must be provided")
+    if not parameters.source_tag_or_commit:
+        raise SchemaInvariantError("source_tag_or_commit must be provided")
     if not parameters.model_branch:
         raise SchemaInvariantError("model_branch must be provided")
     if not parameters.evidence_branch:

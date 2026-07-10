@@ -19,7 +19,6 @@ from ..domain.errors import FrozenArtifactHashError, MissingFrozenSettingError, 
 from ..guards import repo_root
 from ..queues.batch_partitioner import (
     DEFAULT_BATCH_SIZE,
-    DEFAULT_DATASET_VERSION,
     BatchPartitionManifest,
     build_default_batch_partition_manifest,
 )
@@ -33,8 +32,9 @@ WORKLOAD_COUNTS = {
 }
 DEFAULT_SAFE_SESSION_HOURS = 7.5
 DEFAULT_TIMING_REPORT = Path("phase4_5/validation/phase45_kaggle_quota_feasibility_report.md")
-DEFAULT_BATCH_MANIFEST = Path("phase5/manifests/batch_partition_manifest.json")
-DEFAULT_RUN_PLAN_JSON = Path("phase5/validation/kaggle_run_plan.json")
+DEFAULT_BATCH_MANIFEST = Path("phase5/manifests/batch_partition_manifest_v2.json")
+DEFAULT_RUN_PLAN_JSON = Path("phase5/validation/kaggle_run_plan_v2.json")
+DEFAULT_M4_RECONCILIATION = Path("phase5/validation/m4_loader_status_reconciliation.json")
 DEFAULT_MODEL_LOADER_OUTPUTS = Path("phase4_5/dryrun_results/kaggle_model_loader_smoke/model_loader_outputs.jsonl")
 DEFAULT_MODEL_LOADER_TRIALS = Path("phase4_5/dryrun_results/kaggle_model_loader_smoke/model_loader_trials.jsonl")
 DEFAULT_KAGGLE_SMOKE_METRICS = Path("phase4_5/dryrun_results/kaggle_smoke/hardware_metrics.jsonl")
@@ -42,6 +42,7 @@ DEFAULT_KAGGLE_SMOKE_INVALIDS = Path("phase4_5/dryrun_results/kaggle_smoke/inval
 DEFAULT_KAGGLE_SMOKE_FAILURES = Path("phase4_5/dryrun_results/kaggle_smoke/failures.jsonl")
 DEFAULT_CHECKPOINT_RESUME = Path("phase4_5/configs/phase45_checkpoint_resume.yaml")
 FROZEN_TIMING_EVIDENCE_GENERATED_UTC = "2026-07-05T12:56:48.678168Z"
+I17R_DATASET_VERSION = "P5-DV-1.0.1-A7C91E42"
 
 
 def _sha256_bytes(data: bytes) -> str:
@@ -382,6 +383,29 @@ def _load_model_loader_status(path: Path) -> dict[str, str]:
     return values
 
 
+def _apply_m4_reconciliation(repository_root: Path, load_status: dict[str, str]) -> tuple[dict[str, str], tuple[str, str] | None]:
+    path = repository_root / DEFAULT_M4_RECONCILIATION
+    if not path.is_file():
+        return load_status, None
+    data = json.loads(path.read_text(encoding="utf-8"))
+    required = {
+        "model_slot": "M4",
+        "model_id": "microsoft/Phi-3.5-mini-instruct",
+        "prior_status": "LOAD_FAILURE",
+        "final_non_official_kaggle_status": "PASS",
+        "active_official_run_plan_status": "LOAD_SUCCESS",
+        "official_trials_executed": 0,
+    }
+    for key, expected in required.items():
+        if data.get(key) != expected:
+            raise FrozenArtifactHashError(f"M4 reconciliation field mismatch for {key}: expected {expected!r}")
+    if load_status.get("M4") != "LOAD_FAILURE":
+        raise FrozenArtifactHashError("M4 reconciliation expected the historical loader status to be LOAD_FAILURE")
+    reconciled = dict(load_status)
+    reconciled["M4"] = "LOAD_SUCCESS"
+    return reconciled, ("M4 loader status reconciliation", _sha256_bytes(path.read_bytes()))
+
+
 def _load_invalid_rate(invalids_path: Path, failures_path: Path, total_trials: int) -> float:
     invalid_count = len(_load_jsonl(invalids_path))
     failure_count = len(_load_jsonl(failures_path))
@@ -434,6 +458,7 @@ def load_timing_evidence(
 
     load_seconds = _load_model_loader_outputs(model_loader_outputs)
     load_status = _load_model_loader_status(model_loader_trials)
+    load_status, reconciliation_evidence = _apply_m4_reconciliation(repository_root, load_status)
     invalid_rate = _load_invalid_rate(invalid_trials, failures, sample_count)
     if invalid_rate < 0 or invalid_rate >= 1:
         raise SchemaInvariantError("invalid-attempt rate must be in the range [0, 1)")
@@ -450,6 +475,8 @@ def load_timing_evidence(
         ("Failures", _sha256_bytes(failures.read_bytes())),
         ("Checkpoint/resume config", _sha256_bytes(checkpoint_resume.read_bytes())),
     )
+    if reconciliation_evidence is not None:
+        evidence_inputs = (*evidence_inputs, reconciliation_evidence)
     return TimingEvidence(
         timing_report_path=timing_report,
         timing_report_sha256=_sha256_bytes(timing_report.read_bytes()),
@@ -591,7 +618,7 @@ def plan_kaggle_runs(
     )
     batch_manifest = build_default_batch_partition_manifest(
         batch_size=DEFAULT_BATCH_SIZE,
-        dataset_version=DEFAULT_DATASET_VERSION,
+        dataset_version=I17R_DATASET_VERSION,
         source_evidence=timing_evidence.evidence_inputs,
         generated_utc=timing_evidence.evidence_generated_utc,
     )
