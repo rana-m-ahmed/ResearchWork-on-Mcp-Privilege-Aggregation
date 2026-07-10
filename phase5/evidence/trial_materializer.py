@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -39,6 +40,7 @@ class VerifiedEvidenceReference(EvidenceReference):
 class MaterializedTrialRow:
     row: dict[str, Any]
     evidence_references: tuple[VerifiedEvidenceReference, ...]
+    schema_id: str
     grader_predicate_evidence: GraderPredicateEvidence | None = None
     tid_result: TidResult | None = None
 
@@ -71,7 +73,22 @@ def verify_evidence_references(
     return tuple(verify_evidence_reference(reference, evidence_root) for reference in references)
 
 
-def _canonical_row(mapping: Mapping[str, Any]) -> dict[str, Any]:
+def _corrected_queue_schema_path() -> Path:
+    return Path(__file__).resolve().parents[2] / "phase4" / "frozen_bundle_v2" / "queue_schema.json"
+
+
+def _load_corrected_queue_fields() -> tuple[str, ...]:
+    path = _corrected_queue_schema_path()
+    if not path.is_file():
+        return ()
+    data = json.loads(path.read_text(encoding="utf-8"))
+    fields = data.get("fields")
+    if not isinstance(fields, list) or not all(isinstance(item, str) for item in fields):
+        raise SchemaInvariantError("corrected queue schema must define string fields")
+    return tuple(fields)
+
+
+def _canonical_official_trial_row(mapping: Mapping[str, Any]) -> dict[str, Any]:
     keys = set(mapping)
     aliases = sorted(key for key in keys if key in PROHIBITED_FIELD_ALIASES)
     if aliases:
@@ -91,6 +108,54 @@ def _canonical_row(mapping: Mapping[str, Any]) -> dict[str, Any]:
     return row
 
 
+def _canonical_corrected_queue_row(mapping: Mapping[str, Any]) -> dict[str, Any]:
+    fields = _load_corrected_queue_fields()
+    if not fields:
+        raise MissingFrozenSettingError("corrected queue schema is missing")
+    keys = set(mapping)
+    missing = [field for field in fields if field not in mapping]
+    extra = [field for field in mapping if field not in fields]
+    if missing or extra:
+        details = []
+        if missing:
+            details.append(f"missing={missing}")
+        if extra:
+            details.append(f"extra={extra}")
+        raise MissingFrozenSettingError(f"corrected queue row field mismatch: {'; '.join(details)}")
+    row = {field: mapping[field] for field in fields}
+    if row["status"] != "PENDING":
+        raise SchemaInvariantError("corrected queue rows must materialize from PENDING rows")
+    if not row["task_id"] or not row["task_hash"]:
+        raise SchemaInvariantError("corrected queue materialization must preserve task identity")
+    if row["payload_condition"] == "NONE":
+        if row["payload_id"] not in {"", None} or row["phase1_payload_hash"] not in {"", None}:
+            raise SchemaInvariantError("utility corrected queue rows must preserve null payload semantics")
+    elif row["payload_condition"] == "PHASE1_HASH_AUTHORIZED":
+        if not row["payload_id"]:
+            raise SchemaInvariantError("adversarial corrected queue rows must preserve payload identity")
+    else:
+        raise SchemaInvariantError(f"unknown corrected queue payload_condition: {row['payload_condition']!r}")
+    return row
+
+
+def _canonical_row(mapping: Mapping[str, Any]) -> tuple[dict[str, Any], str]:
+    if set(mapping) == FROZEN_TRIAL_FIELD_SET:
+        return _canonical_official_trial_row(mapping), "phase5_official_trial_schema"
+    corrected_fields = set(_load_corrected_queue_fields())
+    if corrected_fields and set(mapping) == corrected_fields:
+        return _canonical_corrected_queue_row(mapping), "phase4_corrected_v2_queue_schema"
+    official_missing = [field for field in FROZEN_TRIAL_FIELDS if field not in mapping]
+    official_extra = [field for field in mapping if field not in FROZEN_TRIAL_FIELD_SET]
+    queue_fields = _load_corrected_queue_fields()
+    queue_missing = [field for field in queue_fields if field not in mapping]
+    queue_extra = [field for field in mapping if field not in set(queue_fields)]
+    raise MissingFrozenSettingError(
+        "row field mismatch for all materialization schemas: "
+        f"official_missing={official_missing}; official_extra={official_extra}; "
+        f"queue_missing={queue_missing}; queue_extra={queue_extra}"
+    )
+
+
 def materialize_frozen_trial_row(
     mapping: Mapping[str, Any],
     *,
@@ -106,10 +171,11 @@ def materialize_frozen_trial_row(
         if evidence_references
         else ()
     )
-    row = _canonical_row(mapping)
+    row, schema_id = _canonical_row(mapping)
     return MaterializedTrialRow(
         row=row,
         evidence_references=verified_references,
+        schema_id=schema_id,
         grader_predicate_evidence=grader_predicate_evidence,
         tid_result=tid_result,
     )

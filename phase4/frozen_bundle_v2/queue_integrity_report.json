@@ -1,0 +1,118 @@
+{
+  "cross_queue_collisions": [],
+  "deterministic_ordering": "PRESERVED_FROM phase4/remediation/v2 CSV byte order",
+  "generated_utc": "2026-07-10T12:44:28.849565Z",
+  "per_model_total": {
+    "M1": 2550,
+    "M2": 2550,
+    "M3": 2550,
+    "M4": 2550
+  },
+  "queues": {
+    "core": {
+      "by_attack_family": {
+        "CROSS_CAPABILITY_ESCALATION": 3168,
+        "DATA_EXFILTRATION": 1692,
+        "DIRECT_OVERRIDE": 540
+      },
+      "by_defense_condition": {
+        "BASELINE": 5400
+      },
+      "by_density": {
+        "D1": 1800,
+        "D3": 1800,
+        "D5": 1800
+      },
+      "by_metadata_surface_condition": {
+        "CLEAN": 1800,
+        "POISON_CA": 1800,
+        "POISON_TD": 1800
+      },
+      "by_model": {
+        "M1": 1350,
+        "M2": 1350,
+        "M3": 1350,
+        "M4": 1350
+      },
+      "duplicate_trial_ids": [],
+      "non_empty_cells": 59400,
+      "path": "phase4/frozen_bundle_v2/trial_order_core.csv",
+      "row_count": 5400,
+      "sha256": "d97c7dda394aace668d2916b71b5bea36416af425dfbe1a99b25c0c128630711",
+      "unique_payload_ids": 150,
+      "unique_task_ids": 150,
+      "unique_trial_ids": 5400
+    },
+    "defense": {
+      "by_attack_family": {
+        "CROSS_CAPABILITY_ESCALATION": 1408,
+        "DATA_EXFILTRATION": 752,
+        "DIRECT_OVERRIDE": 240
+      },
+      "by_defense_condition": {
+        "IHR_SPCE": 2400
+      },
+      "by_density": {
+        "D3": 1200,
+        "D5": 1200
+      },
+      "by_metadata_surface_condition": {
+        "POISON_CA": 1200,
+        "POISON_TD": 1200
+      },
+      "by_model": {
+        "M1": 600,
+        "M2": 600,
+        "M3": 600,
+        "M4": 600
+      },
+      "duplicate_trial_ids": [],
+      "non_empty_cells": 26400,
+      "path": "phase4/frozen_bundle_v2/trial_order_defense.csv",
+      "row_count": 2400,
+      "sha256": "1a391e9dcd35e0d6c0a8f1690cfb2b6c388f71cddbfabb5db2fef93f9b916588",
+      "unique_payload_ids": 150,
+      "unique_task_ids": 100,
+      "unique_trial_ids": 2400
+    },
+    "utility": {
+      "by_attack_family": {
+        "NONE": 2400
+      },
+      "by_defense_condition": {
+        "BASELINE": 1200,
+        "IHR_SPCE": 1200
+      },
+      "by_density": {
+        "D3": 1200,
+        "D5": 1200
+      },
+      "by_metadata_surface_condition": {
+        "CLEAN": 2400
+      },
+      "by_model": {
+        "M1": 600,
+        "M2": 600,
+        "M3": 600,
+        "M4": 600
+      },
+      "duplicate_trial_ids": [],
+      "non_empty_cells": 24000,
+      "path": "phase4/frozen_bundle_v2/trial_order_utility.csv",
+      "row_count": 2400,
+      "sha256": "3d4588b35e5453cf981f19f6a25f35f9f1e74aa66f9bcb9f41bac59f82bed94a",
+      "unique_payload_ids": 0,
+      "unique_task_ids": 100,
+      "unique_trial_ids": 2400
+    }
+  },
+  "report": "phase4_corrected_v2_queue_integrity_report",
+  "required_totals": {
+    "core": 5400,
+    "defense": 2400,
+    "each_model": 2550,
+    "total": 10200,
+    "utility": 2400
+  },
+  "status": "PASS"
+}

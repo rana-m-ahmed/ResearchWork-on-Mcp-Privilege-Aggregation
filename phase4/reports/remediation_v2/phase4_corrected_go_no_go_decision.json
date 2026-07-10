@@ -1,0 +1,24 @@
+{
+  "corrected_lock_hash": "4a5ed03c2a7bee2b8ef985fcb67ccaeaebe7d85d10cee21afec3ff88a3cc274d",
+  "corrected_package_created": true,
+  "corrected_package_path": "phase4/frozen_bundle_v2/",
+  "missing_dependencies": [],
+  "queue_hashes": {
+    "core": "d97c7dda394aace668d2916b71b5bea36416af425dfbe1a99b25c0c128630711",
+    "defense": "1a391e9dcd35e0d6c0a8f1690cfb2b6c388f71cddbfabb5db2fef93f9b916588",
+    "utility": "3d4588b35e5453cf981f19f6a25f35f9f1e74aa66f9bcb9f41bac59f82bed94a"
+  },
+  "queue_summary": {
+    "M1": 2550,
+    "M2": 2550,
+    "M3": 2550,
+    "M4": 2550,
+    "core": 5400,
+    "defense": 2400,
+    "total": 10200,
+    "utility": 2400
+  },
+  "ready_for_phase5": true,
+  "status": "PASS",
+  "verdict": "PASS"
+}

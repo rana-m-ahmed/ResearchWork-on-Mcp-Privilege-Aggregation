@@ -24,7 +24,7 @@ except Exception:  # pragma: no cover
     yaml = None
 
 from ..domain.config import ArtifactRegistry, load_upstream_artifact_registry
-from ..domain.enums import DefenseCondition, Density, ModelSlot, PayloadCondition
+from ..domain.enums import AttackFamily, DefenseCondition, Density, MetadataSurfaceCondition, ModelSlot, PayloadCondition
 from ..domain.errors import FrozenArtifactHashError, MissingFrozenSettingError, SchemaInvariantError
 from ..domain.identifiers import TrialId
 from ..guards import repo_root
@@ -36,18 +36,18 @@ QUEUE_LABELS = {
     "defense": "Trial order defense",
     "utility": "Trial order utility",
 }
-QUEUE_PATHS = {
-    "core": Path("phase4/frozen_bundle/trial_order_core.csv"),
-    "defense": Path("phase4/frozen_bundle/trial_order_defense.csv"),
-    "utility": Path("phase4/frozen_bundle/trial_order_utility.csv"),
-}
 CORE_QUEUE_HEADER = (
     "trial_id",
     "model_id",
     "density",
-    "payload_id",
-    "payload_condition",
+    "metadata_surface_condition",
+    "attack_family",
     "defense_condition",
+    "payload_id",
+    "phase1_payload_hash",
+    "task_id",
+    "task_hash",
+    "payload_condition",
     "status",
 )
 DEFENSE_QUEUE_HEADER = CORE_QUEUE_HEADER
@@ -130,9 +130,14 @@ class FrozenQueueRow:
     trial_id: TrialId
     model_id: ModelSlot
     density: Density
-    payload_id: str
-    payload_condition: PayloadCondition
+    metadata_surface_condition: MetadataSurfaceCondition
+    attack_family: AttackFamily
     defense_condition: DefenseCondition
+    payload_id: str
+    phase1_payload_hash: str | None
+    task_id: str
+    task_hash: str
+    payload_condition: PayloadCondition
     status: str
     source_path: Path
     source_sha256: str
@@ -181,9 +186,14 @@ class FrozenQueue:
             str(row.trial_id),
             row.model_id.value,
             row.density.value,
-            row.payload_id,
-            row.payload_condition.value,
+            row.metadata_surface_condition.value,
+            row.attack_family.value,
             row.defense_condition.value,
+            row.payload_id,
+            row.phase1_payload_hash or "",
+            row.task_id,
+            row.task_hash,
+            row.payload_condition.value,
             row.status,
         )) for row in self.rows]
         return {
@@ -328,24 +338,39 @@ def _queue_row_from_mapping(
     trial_id = TrialId.parse(mapping["trial_id"])
     model_id = ModelSlot.from_value(mapping["model_id"])
     density = Density.from_value(mapping["density"])
-    payload_id = mapping["payload_id"]
-    payload_condition = PayloadCondition.from_value(mapping["payload_condition"])
+    metadata_surface_condition = MetadataSurfaceCondition.from_value(mapping["metadata_surface_condition"])
+    attack_family = AttackFamily.from_value(mapping["attack_family"])
     defense_condition = DefenseCondition.from_value(mapping["defense_condition"])
+    payload_id = mapping["payload_id"]
+    phase1_payload_hash = mapping["phase1_payload_hash"] or None
+    task_id = mapping["task_id"]
+    task_hash = mapping["task_hash"]
+    payload_condition = PayloadCondition.from_value(mapping["payload_condition"])
     status = mapping["status"]
 
-    if not payload_id:
-        raise SchemaInvariantError("payload_id must be a non-empty string")
+    if not task_id or not task_hash:
+        raise SchemaInvariantError("corrected queue rows must preserve task_id and task_hash")
 
-    if queue_name == "utility" and payload_id == "NONE":
+    if queue_name == "utility":
+        if payload_id or phase1_payload_hash is not None:
+            raise SchemaInvariantError("corrected utility queue rows must use empty payload_id and phase1_payload_hash")
         if payload_condition is not PayloadCondition.NONE:
-            raise SchemaInvariantError("frozen utility queue rows with no payload must use payload_condition=NONE")
+            raise SchemaInvariantError("corrected utility queue rows must use payload_condition=NONE")
+        if metadata_surface_condition is not MetadataSurfaceCondition.CLEAN:
+            raise SchemaInvariantError("corrected utility queue rows must use CLEAN metadata surface")
+        if attack_family is not AttackFamily.NONE:
+            raise SchemaInvariantError("corrected utility queue rows must use attack_family=NONE")
     else:
+        if not payload_id:
+            raise SchemaInvariantError("corrected adversarial queue rows must preserve payload_id")
         if payload_id not in payload_reference_map:
             raise MissingFrozenSettingError(f"payload reference is missing: {payload_id!r}")
         if payload_reference_map[payload_id] is not None:
             raise SchemaInvariantError(f"payload reference map must preserve null reference placeholders: {payload_id!r}")
         if payload_condition is not PayloadCondition.PHASE1_HASH_AUTHORIZED:
-            raise SchemaInvariantError("frozen queue rows must use PHASE1_HASH_AUTHORIZED")
+            raise SchemaInvariantError("corrected adversarial queue rows must use PHASE1_HASH_AUTHORIZED")
+        if attack_family is AttackFamily.NONE:
+            raise SchemaInvariantError("corrected adversarial queue rows must preserve a non-NONE attack_family")
 
     if status != "PENDING":
         raise SchemaInvariantError(f"frozen queue rows must remain pending: {trial_id}")
@@ -360,9 +385,14 @@ def _queue_row_from_mapping(
         trial_id=trial_id,
         model_id=model_id,
         density=density,
-        payload_id=payload_id,
-        payload_condition=payload_condition,
+        metadata_surface_condition=metadata_surface_condition,
+        attack_family=attack_family,
         defense_condition=defense_condition,
+        payload_id=payload_id,
+        phase1_payload_hash=phase1_payload_hash,
+        task_id=task_id,
+        task_hash=task_hash,
+        payload_condition=payload_condition,
         status=status,
         source_path=source_path,
         source_sha256=source_sha256,
@@ -447,7 +477,7 @@ def _load_single_queue(
         "by_model": dict(sorted(Counter(row[1] for row in data_rows).items())),
         "by_density": dict(sorted(Counter(row[2] for row in data_rows).items())),
         "by_defense": dict(sorted(Counter(row[5] for row in data_rows).items())),
-        "unique_payload_ids": len({row[3] for row in data_rows}),
+        "unique_payload_ids": len({row[6] for row in data_rows if row[6]}),
     }
     expected_by_model = dict(sorted(_require_mapping(expected_model_counts, f"trial_order_{queue_name}_by_model").items())) if expected_model_counts else {}
     expected_by_density = dict(sorted(_require_mapping(expected_density_counts, f"trial_order_{queue_name}_by_density").items())) if expected_density_counts else {}
@@ -590,12 +620,19 @@ def load_frozen_queue_bundle(
     manifest = _load_json(repository_root / manifest_entry.actual_paths[0])
     hashes = _require_mapping(manifest.get("hashes"), "phase5_execution_manifest.hashes")
     metrics = _require_mapping(manifest.get("metrics"), "phase5_execution_manifest.metrics")
-    if hashes.get("trial_order_sha256") != core.source_sha256:
-        raise FrozenArtifactHashError("phase 5 execution manifest does not reference the frozen core queue hash")
-    if hashes.get("phase4_manifest_hash") != current_registry.require(_PHASE4_LOCK_LABEL).sha256[0]:
-        raise FrozenArtifactHashError("phase 5 execution manifest does not reference the frozen cryptographic lock")
-    if metrics.get("expected_trial_count") != core.row_count:
-        raise SchemaInvariantError("phase 5 execution manifest expected_trial_count does not match the core queue")
+    if hashes.get("trial_order_core_sha256") != core.source_sha256:
+        raise FrozenArtifactHashError("phase 5 execution manifest does not reference the corrected core queue hash")
+    if hashes.get("trial_order_defense_sha256") != defense.source_sha256:
+        raise FrozenArtifactHashError("phase 5 execution manifest does not reference the corrected defense queue hash")
+    if hashes.get("trial_order_utility_sha256") != utility.source_sha256:
+        raise FrozenArtifactHashError("phase 5 execution manifest does not reference the corrected utility queue hash")
+    if hashes.get("phase4_corrected_lock_hash") != current_registry.require(_PHASE4_LOCK_LABEL).sha256[0]:
+        raise FrozenArtifactHashError("phase 5 execution manifest does not reference the corrected cryptographic lock")
+    bundle_total = core.row_count + defense.row_count + utility.row_count
+    if metrics.get("expected_trial_count") != bundle_total:
+        raise SchemaInvariantError(
+            f"phase 5 execution manifest expected_trial_count does not match corrected queues: {bundle_total}"
+        )
 
     return FrozenQueueBundle(core=core, defense=defense, utility=utility)
 
@@ -645,7 +682,7 @@ def validate_frozen_queue_bundle(
     queue_hashes = tuple((queue.queue_name, queue.source_sha256) for queue in bundle.queues())
     manifest = _load_json(repository_root / manifest_entry.actual_paths[0])
     metrics = _require_mapping(manifest.get("metrics"), "phase5_execution_manifest.metrics")
-    if metrics.get("expected_trial_count") != bundle.core.row_count:
+    if metrics.get("expected_trial_count") != sum(queue.row_count for queue in bundle.queues()):
         findings.append("expected_trial_count mismatch")
     summary = (
         "Frozen queue loading passed with strict hash verification, queue separation, exact order preservation, "

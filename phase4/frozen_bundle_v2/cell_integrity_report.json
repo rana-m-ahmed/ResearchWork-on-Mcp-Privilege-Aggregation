@@ -1,0 +1,667 @@
+{
+  "expected_primary_cells": {
+    "core": 36,
+    "defense": 16,
+    "utility": 16
+  },
+  "expected_rows_per_primary_cell": 150,
+  "generated_utc": "2026-07-10T12:44:28.849565Z",
+  "queues": {
+    "core": {
+      "accepted_rows_per_primary_cell": [
+        150
+      ],
+      "cells": [
+        {
+          "key": [
+            "M1",
+            "D1",
+            "CLEAN",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M1",
+            "D1",
+            "POISON_CA",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M1",
+            "D1",
+            "POISON_TD",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M1",
+            "D3",
+            "CLEAN",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M1",
+            "D3",
+            "POISON_CA",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M1",
+            "D3",
+            "POISON_TD",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M1",
+            "D5",
+            "CLEAN",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M1",
+            "D5",
+            "POISON_CA",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M1",
+            "D5",
+            "POISON_TD",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M2",
+            "D1",
+            "CLEAN",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M2",
+            "D1",
+            "POISON_CA",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M2",
+            "D1",
+            "POISON_TD",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M2",
+            "D3",
+            "CLEAN",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M2",
+            "D3",
+            "POISON_CA",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M2",
+            "D3",
+            "POISON_TD",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M2",
+            "D5",
+            "CLEAN",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M2",
+            "D5",
+            "POISON_CA",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M2",
+            "D5",
+            "POISON_TD",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M3",
+            "D1",
+            "CLEAN",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M3",
+            "D1",
+            "POISON_CA",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M3",
+            "D1",
+            "POISON_TD",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M3",
+            "D3",
+            "CLEAN",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M3",
+            "D3",
+            "POISON_CA",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M3",
+            "D3",
+            "POISON_TD",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M3",
+            "D5",
+            "CLEAN",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M3",
+            "D5",
+            "POISON_CA",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M3",
+            "D5",
+            "POISON_TD",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M4",
+            "D1",
+            "CLEAN",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M4",
+            "D1",
+            "POISON_CA",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M4",
+            "D1",
+            "POISON_TD",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M4",
+            "D3",
+            "CLEAN",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M4",
+            "D3",
+            "POISON_CA",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M4",
+            "D3",
+            "POISON_TD",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M4",
+            "D5",
+            "CLEAN",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M4",
+            "D5",
+            "POISON_CA",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M4",
+            "D5",
+            "POISON_TD",
+            "BASELINE"
+          ],
+          "rows": 150
+        }
+      ],
+      "primary_cell_count": 36,
+      "primary_cell_key": [
+        "model_id",
+        "density",
+        "metadata_surface_condition",
+        "defense_condition"
+      ]
+    },
+    "defense": {
+      "accepted_rows_per_primary_cell": [
+        150
+      ],
+      "cells": [
+        {
+          "key": [
+            "M1",
+            "D3",
+            "POISON_CA",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M1",
+            "D3",
+            "POISON_TD",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M1",
+            "D5",
+            "POISON_CA",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M1",
+            "D5",
+            "POISON_TD",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M2",
+            "D3",
+            "POISON_CA",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M2",
+            "D3",
+            "POISON_TD",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M2",
+            "D5",
+            "POISON_CA",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M2",
+            "D5",
+            "POISON_TD",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M3",
+            "D3",
+            "POISON_CA",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M3",
+            "D3",
+            "POISON_TD",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M3",
+            "D5",
+            "POISON_CA",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M3",
+            "D5",
+            "POISON_TD",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M4",
+            "D3",
+            "POISON_CA",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M4",
+            "D3",
+            "POISON_TD",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M4",
+            "D5",
+            "POISON_CA",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M4",
+            "D5",
+            "POISON_TD",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        }
+      ],
+      "primary_cell_count": 16,
+      "primary_cell_key": [
+        "model_id",
+        "density",
+        "metadata_surface_condition",
+        "defense_condition"
+      ]
+    },
+    "utility": {
+      "accepted_rows_per_primary_cell": [
+        150
+      ],
+      "cells": [
+        {
+          "key": [
+            "M1",
+            "D3",
+            "CLEAN",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M1",
+            "D3",
+            "CLEAN",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M1",
+            "D5",
+            "CLEAN",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M1",
+            "D5",
+            "CLEAN",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M2",
+            "D3",
+            "CLEAN",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M2",
+            "D3",
+            "CLEAN",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M2",
+            "D5",
+            "CLEAN",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M2",
+            "D5",
+            "CLEAN",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M3",
+            "D3",
+            "CLEAN",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M3",
+            "D3",
+            "CLEAN",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M3",
+            "D5",
+            "CLEAN",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M3",
+            "D5",
+            "CLEAN",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M4",
+            "D3",
+            "CLEAN",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M4",
+            "D3",
+            "CLEAN",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M4",
+            "D5",
+            "CLEAN",
+            "BASELINE"
+          ],
+          "rows": 150
+        },
+        {
+          "key": [
+            "M4",
+            "D5",
+            "CLEAN",
+            "IHR_SPCE"
+          ],
+          "rows": 150
+        }
+      ],
+      "primary_cell_count": 16,
+      "primary_cell_key": [
+        "model_id",
+        "density",
+        "metadata_surface_condition",
+        "defense_condition"
+      ]
+    }
+  },
+  "report": "phase4_corrected_v2_cell_integrity_report",
+  "status": "PASS"
+}

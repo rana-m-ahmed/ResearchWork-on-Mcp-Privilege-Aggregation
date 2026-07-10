@@ -1,0 +1,31 @@
+{
+  "bound_corrected_lock_hash": "4a5ed03c2a7bee2b8ef985fcb67ccaeaebe7d85d10cee21afec3ff88a3cc274d",
+  "bound_corrected_package": "phase4/frozen_bundle_v2/",
+  "bound_model_runtime_identities": "phase4/configs/model_*_freeze.yaml",
+  "bound_queue_hashes": {
+    "core": "d97c7dda394aace668d2916b71b5bea36416af425dfbe1a99b25c0c128630711",
+    "defense": "1a391e9dcd35e0d6c0a8f1690cfb2b6c388f71cddbfabb5db2fef93f9b916588",
+    "utility": "3d4588b35e5453cf981f19f6a25f35f9f1e74aa66f9bcb9f41bac59f82bed94a"
+  },
+  "bound_schema_hash": "ba3d55d305a9465eee34630b3c7e5994878459d8bb98f01a54658fc91b1a0d10",
+  "checks": {
+    "checkpoint_resume": "PASS",
+    "forbidden_claims": "PASS",
+    "grader": "PASS",
+    "model_tokenizer_backend_identity": "PASS",
+    "outcome_taxonomy": "PASS",
+    "payload_loading_and_hashes": "PASS",
+    "prompt_compilation": "PASS",
+    "reset_isolation": "PASS",
+    "schema_mapping": "PASS",
+    "tid": "PASS",
+    "timing_and_run_plan_inputs": "PASS",
+    "token_budgets": "PASS",
+    "utility_smoke": "PASS",
+    "write_ahead_logging": "PASS"
+  },
+  "generated_utc": "2026-07-10T12:44:28.849565Z",
+  "m4_status": "KAGGLE_NON_OFFICIAL_LOAD_VALIDATION_REQUIRED",
+  "status": "PASS",
+  "verdict": "GO TO PHASE 5 REBINDING"
+}

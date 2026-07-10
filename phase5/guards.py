@@ -25,6 +25,7 @@ REQUIRED_AGENTS_PATHS = (
 )
 
 IMMUTABLE_PREFIXES = (Path("phase4"), Path("phase4_5"))
+ORIGINAL_PHASE4_FROZEN_BUNDLE_PREFIX = Path("phase4/frozen_bundle")
 EVIDENCE_ROOT_PREFIXES = (
     Path("AGENTS.md"),
     Path(".codex/skills"),
@@ -124,6 +125,16 @@ def reject_frozen_path_changes(changed_paths: Iterable[str | Path]) -> list[str]
     blocked: list[str] = []
     for item in changed_paths:
         if any(_has_prefix(item, prefix) for prefix in IMMUTABLE_PREFIXES):
+            blocked.append(Path(item).as_posix())
+    return blocked
+
+
+def reject_original_phase4_frozen_bundle_writes(changed_paths: Iterable[str | Path]) -> list[str]:
+    """Return paths that would write to the restored original Phase 4 frozen bundle."""
+
+    blocked: list[str] = []
+    for item in changed_paths:
+        if _has_prefix(item, ORIGINAL_PHASE4_FROZEN_BUNDLE_PREFIX):
             blocked.append(Path(item).as_posix())
     return blocked
 

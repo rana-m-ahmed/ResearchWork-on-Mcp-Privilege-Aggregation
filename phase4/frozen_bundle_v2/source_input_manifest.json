@@ -1,0 +1,26 @@
+{
+  "authoritative_inputs": {
+    "phase3/tasks/benign_tasks_d1.jsonl": "91b3a636681688f87c76039e1a7807c2514e4fb546f5e67d4de5fd4269725744",
+    "phase3/tasks/benign_tasks_d3.jsonl": "b3e7e5fb96ed4fa5591d69a2a4d82499a020c2f927fe5809de367ae02caf9933",
+    "phase3/tasks/benign_tasks_d5.jsonl": "224fb3b228633c1df7ecd35101522d8e727a5d79d37b60c1dffc901090dc179b",
+    "phase4/configs/defense_config_freeze.yaml": "5934137bd5e741b1ce700879691040d215648b409316c3cf09bc559b098d47a8",
+    "phase4/configs/model_set_freeze.yaml": "686c112ebfc8e7790098b26454504edd385ee6a21ab41d636949afb7f1a05d0d",
+    "phase4/configs/payload_reference_map.json": "a14fb6217f7484135c71530cf2521fd149b35b5e60f73a8340fdef0adbaebafe"
+  },
+  "corrected_candidate": {
+    "phase4/remediation/v2/trial_order_core.csv": "d97c7dda394aace668d2916b71b5bea36416af425dfbe1a99b25c0c128630711",
+    "phase4/remediation/v2/trial_order_defense.csv": "1a391e9dcd35e0d6c0a8f1690cfb2b6c388f71cddbfabb5db2fef93f9b916588",
+    "phase4/remediation/v2/trial_order_utility.csv": "3d4588b35e5453cf981f19f6a25f35f9f1e74aa66f9bcb9f41bac59f82bed94a"
+  },
+  "generated_utc": "2026-07-10T12:44:28.849565Z",
+  "manifest": "phase4_corrected_v2_source_input_manifest",
+  "original_package_hashes_after_restoration": {
+    "phase4/frozen_bundle/cryptographic_lock_manifest.json": "09122acabc4ea034aae2ea43adfbfb9b6b370e926db1222861d11d37e87cd11f",
+    "phase4/frozen_bundle/master_hash_ledger.csv": "b399844c96eec465f66b767d3cabcdefc9e2e87792af7070ef499d78da6fe84d",
+    "phase4/frozen_bundle/phase5_execution_manifest.json": "290a397e795a40dc97f497ada3a6c42c1d5ffdec2bdeb03046565996c2b350c2",
+    "phase4/frozen_bundle/trial_order_core.csv": "2c0e96bd07245b95021c6521b7730db645acbd7686af6bb8127e7d36f3fb426f",
+    "phase4/frozen_bundle/trial_order_defense.csv": "cd483dcece127f48ff911239dfc1ee68c2696aaaec384a495c617d76cb53d182",
+    "phase4/frozen_bundle/trial_order_utility.csv": "66f088402c2a494a12fadd542477c6f1463583508e492217816e9fca15f79de7"
+  },
+  "status": "PASS"
+}

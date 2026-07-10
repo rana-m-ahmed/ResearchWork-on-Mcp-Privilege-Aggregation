@@ -20,7 +20,7 @@ def test_registry_loads_and_resolves_verified_entries() -> None:
     entry = registry.require("Phase 4 GO report")
 
     assert entry.verified is True
-    assert entry.actual_paths[0].as_posix() == "phase4/reports/phase4_go_no_go_decision.md"
+    assert entry.actual_paths[0].as_posix() == "phase4/reports/remediation_v2/phase4_corrected_go_no_go_decision.md"
     actual_hash = hashlib.sha256(entry.actual_paths[0].read_bytes()).hexdigest()
     assert entry.sha256[0].lower() == actual_hash.lower()
     assert "Phase 4 GO report" in registry.labels()
