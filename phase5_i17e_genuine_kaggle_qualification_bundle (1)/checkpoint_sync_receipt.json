@@ -1,0 +1,8 @@
+{
+  "counts_for_phase5": false,
+  "evidence_branch": "phase5-kaggle-nonofficial-adapter-qualification",
+  "official_trial": false,
+  "publication_evidence": false,
+  "status": "pending_on_kaggle_push",
+  "synthetic_fixture": true
+}

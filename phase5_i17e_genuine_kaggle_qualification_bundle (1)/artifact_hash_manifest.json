@@ -1,0 +1,83 @@
+{
+  "counts_for_phase5": false,
+  "files": [
+    {
+      "bytes": 344,
+      "path": "I17E_genuine_kaggle_qualification.json",
+      "sha256": "4c40e67118a34a4c520071d5197b10f1edcca13a5aa0a8e3d19aa8bf7748d7d4"
+    },
+    {
+      "bytes": 36,
+      "path": "I17E_genuine_kaggle_qualification.md",
+      "sha256": "4ef0dcaba98e216b0f12d218230b7320d0f85dbd69b251b0d6ed882c00b2466b"
+    },
+    {
+      "bytes": 455,
+      "path": "agent_loop_evidence.json",
+      "sha256": "661168b13a30351c64fc6426dfc2189a28944f5ab0f43298db12ffea12944daa"
+    },
+    {
+      "bytes": 232,
+      "path": "checkpoint_sync_receipt.json",
+      "sha256": "681c9ac8bd02a464caf02a755dc5737c5cfbda47c39ec40e8c2b2c524d25193c"
+    },
+    {
+      "bytes": 144,
+      "path": "credential_purge_receipt.json",
+      "sha256": "0a33fe95eeb9e237176ff72ed426f49ad4783f287136dbf266b6898bcdbe75f1"
+    },
+    {
+      "bytes": 1348,
+      "path": "decoded_generation_transcripts.json",
+      "sha256": "3a5830c6c3f08f994152d50452bede1d279e94f254c29cb12eb92b32c38c06f9"
+    },
+    {
+      "bytes": 6854,
+      "path": "dependency_and_quantization_status.json",
+      "sha256": "4c9e6f8edf00c5bdc827081878bca8fd69871bd3e9c9e77049c277cbbb88ec66"
+    },
+    {
+      "bytes": 276,
+      "path": "grader_tid_materialization.json",
+      "sha256": "e8a785137a23fede3e9863d25d2376775cd35eee639fd19ab55adf52fa2f1d60"
+    },
+    {
+      "bytes": 10502,
+      "path": "model_generation_evidence.json",
+      "sha256": "5adbbe1fc96b16e32f32697bf8dd52b17ccf94f20c86553c4e852d3e41c08b66"
+    },
+    {
+      "bytes": 333,
+      "path": "orphan_resume_evidence.json",
+      "sha256": "f730b999e2d7fd5ab2e1e1580774e19322751d338ff5ca99b1b08facd4903dd5"
+    },
+    {
+      "bytes": 2651,
+      "path": "raw_token_id_evidence.json",
+      "sha256": "c866fb8e6a939493219b065c42f84b69c3eedaee50b559f4f575736b135167f0"
+    },
+    {
+      "bytes": 761,
+      "path": "reset_evidence.json",
+      "sha256": "574ffa19cca8eaeceb4441ca38aa298816e837a52a0d5078edc0e3d282c5226a"
+    },
+    {
+      "bytes": 6854,
+      "path": "resolved_model_authority.json",
+      "sha256": "4c9e6f8edf00c5bdc827081878bca8fd69871bd3e9c9e77049c277cbbb88ec66"
+    },
+    {
+      "bytes": 3162,
+      "path": "runtime_identity.json",
+      "sha256": "e592135338790c37b89bdaa871c7d4f127bdc4e48c57e8855c172cdfc955b212"
+    },
+    {
+      "bytes": 1277,
+      "path": "tool_execution_evidence.json",
+      "sha256": "b8b7670297bb960923bf9f68bab4bce9699ed201ef4c60c14664030b74ad1b43"
+    }
+  ],
+  "official_trial": false,
+  "publication_evidence": false,
+  "synthetic_fixture": true
+}

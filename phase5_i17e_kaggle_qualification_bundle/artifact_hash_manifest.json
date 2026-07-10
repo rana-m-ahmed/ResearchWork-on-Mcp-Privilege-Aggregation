@@ -1,0 +1,48 @@
+{
+  "counts_for_phase5": false,
+  "files": [
+    {
+      "bytes": 365,
+      "path": "I17E_real_kaggle_qualification.json",
+      "sha256": "f469dcdcce7967a6dac0d7df8fdd37b7ea2ad34f55168c624dd6b487aa63aa17"
+    },
+    {
+      "bytes": 299,
+      "path": "I17E_real_kaggle_qualification.md",
+      "sha256": "e26556f1a6aaa06152636a8ced840d0fb7e4afb6e948c03fd61f3f6ec3dd87be"
+    },
+    {
+      "bytes": 466,
+      "path": "checkpoint_sync_results.json",
+      "sha256": "119a5bdbc48f657144655780f15090aa5b280739286532f55a5c033cf7ee375e"
+    },
+    {
+      "bytes": 393,
+      "path": "durability_resume_results.json",
+      "sha256": "d60e86c32528ade5c84cf8cd59a9bb2d0177b79e15757c58fb390d52075098ee"
+    },
+    {
+      "bytes": 2423,
+      "path": "gate_checks.json",
+      "sha256": "ba014f5d9c6859300972efdb08c5b38046c1cb9bb039533837779bb5251123bd"
+    },
+    {
+      "bytes": 15778,
+      "path": "model_loading_results.json",
+      "sha256": "897451f091bf9e67caa461f4a18574b1de1f92ca73204cc7af9d13c546f41fe7"
+    },
+    {
+      "bytes": 3484,
+      "path": "runtime_identity.json",
+      "sha256": "b7a3edb27f492883e4d5f36ecc6febeb91fbd08d051b148646686fd6ca187e39"
+    },
+    {
+      "bytes": 15838,
+      "path": "synthetic_pipeline_results.json",
+      "sha256": "d2896d7b4a7c0ede28a06a7d588b235e1ca70f5b94bd934d782f060d974bb77c"
+    }
+  ],
+  "official_trial": false,
+  "publication_evidence": false,
+  "synthetic_fixture": true
+}

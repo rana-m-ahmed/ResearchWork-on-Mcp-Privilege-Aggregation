@@ -1,0 +1,11 @@
+{
+  "accepted_target_uniqueness": "passed",
+  "checkpoint_resume_next_pending": "passed",
+  "counts_for_phase5": false,
+  "finalize_replacement": "passed",
+  "interrupt_after_dispatched": "preserved_orphan",
+  "official_trial": false,
+  "publication_evidence": false,
+  "replacement_attempt": "P5-NONOFFICIAL-I17E-QUALIFICATION-M1-SYNTHETIC-ATTEMPT-REPLACEMENT",
+  "synthetic_fixture": true
+}

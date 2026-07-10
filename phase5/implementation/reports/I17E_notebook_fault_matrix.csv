@@ -1,0 +1,4 @@
+check,result,notes
+stub_prints,passed,replaced with run_checked subprocess execution
+official_flags,passed,all generated artifacts use non-official synthetic flags
+candidate_source,passed,resolved from origin/phase5/real-official-execution

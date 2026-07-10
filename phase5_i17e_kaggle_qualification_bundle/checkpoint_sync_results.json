@@ -1,0 +1,13 @@
+{
+  "close_seal": "passed",
+  "counts_for_phase5": false,
+  "credential_purge": "passed",
+  "credential_retrieval": "requires PHASE5_GIT_PUSH_TOKEN",
+  "evidence_branch": "phase5-kaggle-nonofficial-adapter-qualification",
+  "official_trial": false,
+  "publication_evidence": false,
+  "remote_sha_verification": "pending on Kaggle push",
+  "source_hash": "43337406c04ee0b7fefbcc527bf29056725fc72a",
+  "stop_model_and_fastmcp": "passed",
+  "synthetic_fixture": true
+}

@@ -1,0 +1,58 @@
+{
+  "artifact_folder": "phase5_i17e_kaggle_qualification_bundle/",
+  "candidate_commit": "43337406c04ee0b7fefbcc527bf29056725fc72a",
+  "counts_for_phase5": false,
+  "evidence_branch": "phase5-kaggle-nonofficial-adapter-qualification",
+  "intake_status": "ACCEPTED_AS_NON_OFFICIAL_SYNTHETIC_QUALIFICATION_ARTIFACT",
+  "model_slots": [
+    {
+      "backend": "real",
+      "exact_model_id": "Qwen/Qwen2.5-7B-Instruct",
+      "model_slot": "M1",
+      "status": "passed",
+      "tokenizer": "Qwen/Qwen2.5-7B-Instruct"
+    },
+    {
+      "backend": "real",
+      "exact_model_id": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+      "model_slot": "M2",
+      "status": "passed",
+      "tokenizer": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B"
+    },
+    {
+      "backend": "real",
+      "exact_model_id": "mistralai/Mistral-7B-Instruct-v0.3",
+      "model_slot": "M3",
+      "status": "passed",
+      "tokenizer": "mistralai/Mistral-7B-Instruct-v0.3"
+    },
+    {
+      "backend": "real",
+      "exact_model_id": "microsoft/Phi-3.5-mini-instruct",
+      "model_slot": "M4",
+      "status": "passed",
+      "tokenizer": "microsoft/Phi-3.5-mini-instruct"
+    }
+  ],
+  "official_trial": false,
+  "publication_evidence": false,
+  "qualification_id": "P5-NONOFFICIAL-I17E-QUALIFICATION",
+  "residual_caveats": [
+    "non_official_only",
+    "revision_digest_unspecified_for_all_model_slots",
+    "bitsandbytes_not_installed",
+    "generation_evidence_is_torch_backend_import_check_not_full_decoded_model_transcript",
+    "remote_sha_verification_pending_on_kaggle_push"
+  ],
+  "runtime": {
+    "cuda_from_nvidia_smi": "13.0",
+    "gpu_count": 2,
+    "gpu_model": "Tesla T4",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "python": "3.12.13",
+    "pytorch": "2.10.0+cu128",
+    "pytorch_cuda": "12.8",
+    "transformers": "5.0.0"
+  },
+  "synthetic_fixture": true
+}

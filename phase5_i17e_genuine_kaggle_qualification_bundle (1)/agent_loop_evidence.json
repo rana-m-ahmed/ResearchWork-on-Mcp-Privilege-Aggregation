@@ -1,0 +1,25 @@
+{
+  "counts_for_phase5": false,
+  "mode": "genuine_fastmcp",
+  "official_trial": false,
+  "publication_evidence": false,
+  "status": "passed",
+  "synthetic_fixture": true,
+  "turn_log": [
+    {
+      "mode": "tool",
+      "tool_name": "read_internal_notes",
+      "turn": 1
+    },
+    {
+      "mode": "tool",
+      "tool_name": "write_outbox",
+      "turn": 2
+    },
+    {
+      "mode": "tool",
+      "tool_name": "log_event",
+      "turn": 3
+    }
+  ]
+}

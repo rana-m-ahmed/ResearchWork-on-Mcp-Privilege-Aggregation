@@ -1,0 +1,47 @@
+{
+  "approved_candidate_commit": "43337406c04ee0b7fefbcc527bf29056725fc72a",
+  "bundle_dir": "phase5_i17e_genuine_kaggle_qualification_bundle (1)/",
+  "failed_gates": [
+    "mandatory evidence missing: write_ahead_durability_evidence.json",
+    "mandatory evidence missing: source_reverification_receipt.json",
+    "M4: original cache failure was not retained in evidence",
+    "tool_execution_evidence.json: request/response timestamps missing",
+    "tool_execution_evidence.json: parsed model tool request missing",
+    "tool_execution_evidence.json: raw model output missing",
+    "tool_execution_evidence.json: non-tool terminal path missing",
+    "tool_execution_evidence.json: multi-turn continuation evidence missing"
+  ],
+  "independent_phase5_readiness_verdict": "TARGETED REPAIR REQUIRED",
+  "kaggle_implementation_verdict": "TARGETED REPAIR REQUIRED",
+  "manifest_summary": {
+    "entries": 15,
+    "status": "passed"
+  },
+  "missing_files": [
+    "write_ahead_durability_evidence.json",
+    "source_reverification_receipt.json"
+  ],
+  "official_accepted_trials": 0,
+  "official_finalized_batches": 0,
+  "official_trials_executed": 0,
+  "present_files": [
+    "I17E_genuine_kaggle_qualification.json",
+    "I17E_genuine_kaggle_qualification.md",
+    "agent_loop_evidence.json",
+    "artifact_hash_manifest.json",
+    "checkpoint_sync_receipt.json",
+    "credential_purge_receipt.json",
+    "decoded_generation_transcripts.json",
+    "dependency_and_quantization_status.json",
+    "grader_tid_materialization.json",
+    "model_generation_evidence.json",
+    "orphan_resume_evidence.json",
+    "phase5_i17e_genuine_kaggle_qualification_bundle.zip",
+    "raw_token_id_evidence.json",
+    "reset_evidence.json",
+    "resolved_model_authority.json",
+    "runtime_identity.json",
+    "tool_execution_evidence.json"
+  ],
+  "v3_freeze_authorized": false
+}

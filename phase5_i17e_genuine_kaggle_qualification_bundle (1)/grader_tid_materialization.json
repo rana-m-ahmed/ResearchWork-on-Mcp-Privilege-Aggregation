@@ -1,0 +1,9 @@
+{
+  "counts_for_phase5": false,
+  "materialized_tid": "P5-NONOFFICIAL-I17E-QUALIFICATION-TID-001",
+  "official_trial": false,
+  "publication_evidence": false,
+  "status": "passed",
+  "synthetic_fixture": true,
+  "tid_source": "non-official synthetic grader materialization"
+}

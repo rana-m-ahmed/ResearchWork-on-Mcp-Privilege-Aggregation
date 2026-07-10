@@ -1,0 +1,30 @@
+{
+  "counts_for_phase5": false,
+  "official_trial": false,
+  "publication_evidence": false,
+  "reset_after": {
+    "event_log_after_reset": [],
+    "extra_state_after_reset": {},
+    "outbox_after_reset": [],
+    "runtime_state_cleared": true,
+    "scratch_dir_cleared": false,
+    "trial_id_after_reset": null
+  },
+  "reset_before": {
+    "event_log_after_reset": [],
+    "extra_state_after_reset": {},
+    "outbox_after_reset": [],
+    "runtime_state_cleared": true,
+    "scratch_dir_cleared": false,
+    "trial_id_after_reset": null
+  },
+  "reset_checks": {
+    "event_log_empty": true,
+    "extra_state_empty": true,
+    "outbox_empty": true,
+    "scratch_dir_empty": true,
+    "trial_id_none": true
+  },
+  "status": "passed",
+  "synthetic_fixture": true
+}
