@@ -29,6 +29,12 @@ if not re.fullmatch(r"[0-9a-f]{40}", CANDIDATE_SHA):
         "Set PHASE5_CANDIDATE_SHA to the exact P18-approved 40-character commit SHA."
     )
 
+try:
+    from kaggle_secrets import UserSecretsClient
+    os.environ["HF_TOKEN"] = UserSecretsClient().get_secret("HF_TOKEN")
+except Exception:
+    print("Warning: Could not retrieve HF_TOKEN from Kaggle secrets.")
+
 os.environ["REPO_URL"] = "https://github.com/rana-m-ahmed/ResearchWork-on-Mcp-Privilege-Aggregation.git"
 os.environ["REPO_DIR"] = "/kaggle/working/research_repo"
 os.environ["OUTPUT_DIR"] = "/kaggle/working/phase5_nonofficial_validation"
@@ -73,8 +79,11 @@ checkout_bash = """%%bash
 rm -rf "$REPO_DIR"
 git clone "$REPO_URL" "$REPO_DIR"
 cd "$REPO_DIR"
+git config core.filemode false
+git config core.autocrlf false
 git fetch --all --tags
 git checkout --detach "$PHASE5_CANDIDATE_SHA"
+git reset --hard HEAD
 
 HEAD_SHA=$(git rev-parse HEAD)
 if [ "$HEAD_SHA" != "$PHASE5_CANDIDATE_SHA" ]; then
@@ -82,6 +91,8 @@ if [ "$HEAD_SHA" != "$PHASE5_CANDIDATE_SHA" ]; then
     exit 1
 fi
 echo "Exact source checkout successful."
+echo "Git status after checkout:"
+git status
 """
 cells.append(code_cell(checkout_bash))
 
@@ -90,6 +101,7 @@ cells.append(markdown_cell("### 4. Dependency Verification"))
 deps_bash = """%%bash
 cd "$REPO_DIR"
 pip install pytest
+pip install -U bitsandbytes accelerate
 pip freeze > "$OUTPUT_DIR/installed_dependencies.txt"
 """
 cells.append(code_cell(deps_bash))
@@ -98,6 +110,9 @@ cells.append(code_cell(deps_bash))
 cells.append(markdown_cell("### 5. Gate 0 Authorization"))
 gate0_bash = """%%bash
 cd "$REPO_DIR"
+echo "Git diff before Gate 0:"
+git diff
+git status
 python -m phase5 gate0 --strict --root . > "$OUTPUT_DIR/gate0/gate0_output.txt" 2>&1
 EXIT_CODE=$?
 cat "$OUTPUT_DIR/gate0/gate0_output.txt"
