@@ -103,7 +103,7 @@ def test_plan_kaggle_runs_cli_writes_outputs(tmp_path: Path) -> None:
     assert result.returncode == 0
     assert output.is_file()
     assert output.with_suffix(".md").is_file()
-    assert (Path("phase5/manifests/batch_partition_manifest.json")).is_file()
+    assert (Path("phase5/manifests/batch_partition_manifest_v2.json")).is_file()
 
 
 def test_campaign_cli_smoke_writes_operational_reports(tmp_path: Path) -> None:

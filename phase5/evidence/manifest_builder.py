@@ -455,7 +455,7 @@ class FinalizationBundle:
         if output_root.exists():
             raise SchemaInvariantError(f"finalization output already exists: {output_root.as_posix()}")
         output_root.parent.mkdir(parents=True, exist_ok=True)
-        with tempfile.TemporaryDirectory(dir=output_root.parent, prefix=f".{output_root.name}.") as temp_dir:
+        with tempfile.TemporaryDirectory(dir=output_root.parent, prefix=".stage.") as temp_dir:
             stage_root = Path(temp_dir)
             atomic_write_text(stage_root / "accepted_rows.jsonl", self.accepted_rows_jsonl)
             self.archive_index.write(stage_root / "archive_index.json", stage_root / "archive_index.md")

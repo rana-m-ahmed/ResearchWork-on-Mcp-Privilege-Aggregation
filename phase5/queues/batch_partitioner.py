@@ -205,7 +205,7 @@ class BatchPartitionManifest:
         lines.extend(["", "## Source Evidence"])
         for label, sha256 in self.source_evidence:
             lines.append(f"- {label}: `{sha256}`")
-        lines.extend(["", "## Manifest Hash", f"- `{self.manifest_sha256}`", ""])
+        lines.extend(["", "## Manifest Hash", f"- `{self.manifest_sha256}`"])
         return "\n".join(lines)
 
     def write(self, manifest_path: Path, markdown_path: Path | None = None) -> None:
