@@ -111,14 +111,14 @@ def _full_trial_row() -> dict[str, object]:
 def test_frozen_queue_bundle_reconciles_real_fixture() -> None:
     bundle = load_frozen_queue_bundle()
 
-    assert bundle.core.row_count == 2808
-    assert bundle.defense.row_count == 0
-    assert bundle.utility.row_count == 0
-    assert bundle.core.model_counts() == {"M1": 702, "M2": 702, "M3": 702, "M4": 702}
-    assert bundle.core.density_counts() == {"D1": 936, "D3": 936, "D5": 936}
-    assert bundle.core.defense_counts() == {"IHR_SPCE": 2808}
+    assert bundle.core.row_count == 5400
+    assert bundle.defense.row_count == 2400
+    assert bundle.utility.row_count == 2400
+    assert bundle.core.model_counts() == {"M1": 1350, "M2": 1350, "M3": 1350, "M4": 1350}
+    assert bundle.core.density_counts() == {"D1": 1800, "D3": 1800, "D5": 1800}
+    assert bundle.core.defense_counts() == {"BASELINE": 5400}
     assert bundle.core.status_values() == ("PENDING",)
-    assert list(bundle.iter_rows()) == list(bundle.core.rows)
+    assert len(list(bundle.iter_rows())) == bundle.core.row_count + bundle.defense.row_count + bundle.utility.row_count
 
     registry = _actual_registry()
     assert bundle.core.source_sha256 == registry.require("Trial order core").sha256[0]
@@ -145,7 +145,7 @@ def test_no_concatenation_or_reordering_in_bundle_iteration() -> None:
         density=Density.D3,
         payload_id="PAYLOAD_000001",
         payload_condition=PayloadCondition.PHASE1_HASH_AUTHORIZED,
-        defense_condition=DefenseCondition.IHR_SPCE,
+        defense_condition=DefenseCondition.BASELINE,
         status="PENDING",
         source_path=Path("phase4/frozen_bundle/trial_order_core.csv"),
         source_sha256="core",
@@ -261,9 +261,9 @@ def test_utility_row_semantics_and_d1_structure() -> None:
 
 
 def test_queue_loader_helpers_return_specific_queue_views() -> None:
-    assert load_core_queue().row_count == 2808
-    assert load_defense_queue().row_count == 0
-    assert load_utility_queue().row_count == 0
+    assert load_core_queue().row_count == 5400
+    assert load_defense_queue().row_count == 2400
+    assert load_utility_queue().row_count == 2400
 
 
 def test_validation_report_rendering_is_deterministic(tmp_path: Path) -> None:

@@ -50,8 +50,8 @@ CORE_QUEUE_HEADER = (
     "defense_condition",
     "status",
 )
-DEFENSE_QUEUE_HEADER = ("trial_id", "model", "density", "poison")
-UTILITY_QUEUE_HEADER = ("trial_id", "model", "density", "defense")
+DEFENSE_QUEUE_HEADER = CORE_QUEUE_HEADER
+UTILITY_QUEUE_HEADER = CORE_QUEUE_HEADER
 FROZEN_QUEUE_HEADER = CORE_QUEUE_HEADER
 _PHASE4_LOCK_LABEL = "Cryptographic lock manifest"
 _PAYLOAD_REFERENCE_LABEL = "Payload reference map"
@@ -313,7 +313,7 @@ def _queue_row_from_mapping(
     source_sha256: str,
     mapping: Mapping[str, str],
     payload_reference_map: Mapping[str, object],
-    expected_defense_condition: DefenseCondition,
+    expected_defense_condition: DefenseCondition | None,
 ) -> FrozenQueueRow:
     missing = [field for field in CORE_QUEUE_HEADER if field not in mapping]
     extra = [field for field in mapping if field not in CORE_QUEUE_HEADER]
@@ -335,15 +335,21 @@ def _queue_row_from_mapping(
 
     if not payload_id:
         raise SchemaInvariantError("payload_id must be a non-empty string")
-    if payload_id not in payload_reference_map:
-        raise MissingFrozenSettingError(f"payload reference is missing: {payload_id!r}")
-    if payload_reference_map[payload_id] is not None:
-        raise SchemaInvariantError(f"payload reference map must preserve null reference placeholders: {payload_id!r}")
+
+    if queue_name == "utility" and payload_id == "NONE":
+        if payload_condition is not PayloadCondition.NONE:
+            raise SchemaInvariantError("frozen utility queue rows with no payload must use payload_condition=NONE")
+    else:
+        if payload_id not in payload_reference_map:
+            raise MissingFrozenSettingError(f"payload reference is missing: {payload_id!r}")
+        if payload_reference_map[payload_id] is not None:
+            raise SchemaInvariantError(f"payload reference map must preserve null reference placeholders: {payload_id!r}")
+        if payload_condition is not PayloadCondition.PHASE1_HASH_AUTHORIZED:
+            raise SchemaInvariantError("frozen queue rows must use PHASE1_HASH_AUTHORIZED")
+
     if status != "PENDING":
         raise SchemaInvariantError(f"frozen queue rows must remain pending: {trial_id}")
-    if payload_condition is not PayloadCondition.PHASE1_HASH_AUTHORIZED:
-        raise SchemaInvariantError("frozen queue rows must use PHASE1_HASH_AUTHORIZED")
-    if defense_condition is not expected_defense_condition:
+    if expected_defense_condition is not None and defense_condition is not expected_defense_condition:
         raise SchemaInvariantError(
             f"frozen queue rows must use defense_condition={expected_defense_condition.value}"
         )
@@ -371,7 +377,7 @@ def _load_single_queue(
     registry_doc: Mapping[str, object],
     *,
     expected_header: tuple[str, ...],
-    expected_defense_condition: DefenseCondition,
+    expected_defense_condition: DefenseCondition | None,
 ) -> FrozenQueue:
     label = QUEUE_LABELS[queue_name]
     entry = registry.require(label)
@@ -398,24 +404,13 @@ def _load_single_queue(
             f"{queue_name} queue row-count mismatch: expected {expected_rows}, got {len(data_rows)}"
         )
 
-    if queue_name in {"defense", "utility"}:
-        if data_rows:
-            raise SchemaInvariantError(f"{queue_name} queue must remain header-only")
-        return FrozenQueue(
-            queue_name=queue_name,
-            source_path=path,
-            source_sha256=actual_sha256,
-            header=header,
-            rows=(),
-        )
-
-    expected_model_counts = stats.get("trial_order_core_by_model")
-    expected_density_counts = stats.get("trial_order_core_by_density")
-    expected_defense_counts = stats.get("trial_order_core_by_defense_condition")
-    expected_unique_trials = stats.get("trial_order_core_unique_trial_ids")
-    expected_non_empty_cells = stats.get("trial_order_core_non_empty_cells")
-    expected_duplicates = stats.get("trial_order_core_duplicates")
-    expected_payload_ids = stats.get("unique_payload_ids_used_in_core")
+    expected_model_counts = stats.get(f"trial_order_{queue_name}_by_model")
+    expected_density_counts = stats.get(f"trial_order_{queue_name}_by_density")
+    expected_defense_counts = stats.get(f"trial_order_{queue_name}_by_defense_condition")
+    expected_unique_trials = stats.get(f"trial_order_{queue_name}_unique_trial_ids")
+    expected_non_empty_cells = stats.get(f"trial_order_{queue_name}_non_empty_cells")
+    expected_duplicates = stats.get(f"trial_order_{queue_name}_duplicates")
+    expected_payload_ids = stats.get(f"unique_payload_ids_used_in_{queue_name}")
 
     rows: list[FrozenQueueRow] = []
     seen_trial_ids: set[str] = set()
@@ -423,7 +418,7 @@ def _load_single_queue(
     for order_index, row in enumerate(data_rows, start=1):
         if len(row) != len(FROZEN_QUEUE_HEADER):
             raise SchemaInvariantError(
-                f"core queue row {order_index} has {len(row)} cells, expected {len(FROZEN_QUEUE_HEADER)}"
+                f"{queue_name} queue row {order_index} has {len(row)} cells, expected {len(FROZEN_QUEUE_HEADER)}"
             )
         mapping = dict(zip(FROZEN_QUEUE_HEADER, row, strict=True))
         queue_row = _queue_row_from_mapping(
@@ -437,7 +432,7 @@ def _load_single_queue(
         )
         row_tuple = tuple(row)
         if queue_row.trial_id.value in seen_trial_ids:
-            raise SchemaInvariantError(f"duplicate trial_id found in core queue: {queue_row.trial_id}")
+            raise SchemaInvariantError(f"duplicate trial_id found in {queue_name} queue: {queue_row.trial_id}")
         if row_tuple in seen_row_tuples:
             raise SchemaInvariantError(f"duplicate frozen queue row found at {queue_row.row_reference}")
         seen_trial_ids.add(queue_row.trial_id.value)
@@ -454,9 +449,9 @@ def _load_single_queue(
         "by_defense": dict(sorted(Counter(row[5] for row in data_rows).items())),
         "unique_payload_ids": len({row[3] for row in data_rows}),
     }
-    expected_by_model = dict(sorted(_require_mapping(expected_model_counts, "trial_order_core_by_model").items()))
-    expected_by_density = dict(sorted(_require_mapping(expected_density_counts, "trial_order_core_by_density").items()))
-    expected_by_defense = dict(sorted(_require_mapping(expected_defense_counts, "trial_order_core_by_defense_condition").items()))
+    expected_by_model = dict(sorted(_require_mapping(expected_model_counts, f"trial_order_{queue_name}_by_model").items())) if expected_model_counts else {}
+    expected_by_density = dict(sorted(_require_mapping(expected_density_counts, f"trial_order_{queue_name}_by_density").items())) if expected_density_counts else {}
+    expected_by_defense = dict(sorted(_require_mapping(expected_defense_counts, f"trial_order_{queue_name}_by_defense_condition").items())) if expected_defense_counts else {}
     if (
         row_metrics["unique_trial_ids"] != expected_unique_trials
         or row_metrics["non_empty_cells"] != expected_non_empty_cells
@@ -467,7 +462,7 @@ def _load_single_queue(
         or row_metrics["unique_payload_ids"] != expected_payload_ids
     ):
         raise SchemaInvariantError(
-            "core queue statistics do not reconcile with the frozen registry summary"
+            f"{queue_name} queue statistics do not reconcile with the frozen registry summary"
         )
 
     return FrozenQueue(
@@ -565,7 +560,7 @@ def load_frozen_queue_bundle(
         payload_reference_map,
         registry_doc,
         expected_header=CORE_QUEUE_HEADER,
-        expected_defense_condition=expected_defense_condition,
+        expected_defense_condition=DefenseCondition.BASELINE,
     )
     defense = _load_single_queue(
         repository_root,
@@ -583,7 +578,7 @@ def load_frozen_queue_bundle(
         payload_reference_map,
         registry_doc,
         expected_header=UTILITY_QUEUE_HEADER,
-        expected_defense_condition=expected_defense_condition,
+        expected_defense_condition=None,
     )
 
     manifest_entry = current_registry.require(_PHASE5_MANIFEST_LABEL)

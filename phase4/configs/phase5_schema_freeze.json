@@ -21,7 +21,5 @@
   "phase1_payload_hash": "sha256:string|null",
   "payload_hash": "sha256:string|null",
   "adversarial_payload_present": true,
-  "task_id": "string",
-  "task_hash": "sha256:string",
   "payload_condition": "NONE|PHASE1_HASH_AUTHORIZED"
 }

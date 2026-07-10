@@ -630,8 +630,19 @@ def _verify_queue_statistics(
     findings.extend(_findings_for_check(core_check))
     consumed.append(("Trial order core", core_metrics.get("sha256", "")))
 
-    defense_check = _verify_zero_row_queue(defense_path, registry.require("Trial order defense").sha256[0])
-    utility_check = _verify_zero_row_queue(utility_path, registry.require("Trial order utility").sha256[0])
+    expected_defense_rows = queue_stats.get("trial_order_defense_rows")
+    defense_check, _ = _verify_queue_file(
+        defense_path,
+        registry.require("Trial order defense").sha256[0],
+        expected_row_count=expected_defense_rows if isinstance(expected_defense_rows, int) else None,
+    )
+
+    expected_utility_rows = queue_stats.get("trial_order_utility_rows")
+    utility_check, _ = _verify_queue_file(
+        utility_path,
+        registry.require("Trial order utility").sha256[0],
+        expected_row_count=expected_utility_rows if isinstance(expected_utility_rows, int) else None,
+    )
     checks.extend([defense_check, utility_check])
     findings.extend(_findings_for_check(defense_check))
     findings.extend(_findings_for_check(utility_check))
