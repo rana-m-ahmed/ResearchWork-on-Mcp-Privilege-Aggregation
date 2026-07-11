@@ -2,13 +2,17 @@
 
 from __future__ import annotations
 
+import json
 import logging
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from ..campaign import CampaignBatchPlan
 from ..domain.identifiers import AttemptId
 from ..evidence import AttemptEventLogWriter, AttemptEventType
+from ..evidence.workspace import AttemptWorkspaceMetadata
+from ..domain.errors import MissingFrozenSettingError, SchemaInvariantError
 from ..evidence.trial_materializer import materialize_frozen_trial_row
 from ..grading.frozen_grader import FrozenGraderAdapter
 from ..grading.tid import LogicalTidAdapter, compute_logical_tid
@@ -32,6 +36,7 @@ class SharedExecutionEngine(RealTrialPipeline):
         counts_for_phase5: bool,
         publication_evidence: bool,
         synthetic_fixture: bool,
+        dataset_version: str = "P5-DV-1.0.2-A7C91E42",
         root: Path | None = None,
     ) -> None:
         self.real_pipeline = True
@@ -39,6 +44,7 @@ class SharedExecutionEngine(RealTrialPipeline):
         self.counts_for_phase5 = counts_for_phase5
         self.publication_evidence = publication_evidence
         self.synthetic_fixture = synthetic_fixture
+        self.dataset_version = dataset_version
         self.root = root or Path.cwd()
 
         # Official boundaries assertions
@@ -69,6 +75,23 @@ class SharedExecutionEngine(RealTrialPipeline):
             )
             self.backend.attach_tokenizer(self.tokenizer)
 
+    def _load_task_description(self, row: FrozenQueueRow) -> str:
+        registry_path = self.root / "phase5" / "manifests" / "frozen_task_content_registry_v2.json"
+        if not registry_path.is_file():
+            raise MissingFrozenSettingError(f"frozen task content registry is missing: {registry_path.as_posix()}")
+        registry = json.loads(registry_path.read_text(encoding="utf-8"))
+        matches = [entry for entry in registry if entry.get("task_id") == row.task_id]
+        if len(matches) != 1:
+            raise SchemaInvariantError(f"frozen task registry must contain exactly one entry for {row.task_id!r}")
+        entry = matches[0]
+        content = entry.get("canonical_task_content")
+        if not isinstance(content, dict) or content.get("task_hash") != row.task_hash:
+            raise SchemaInvariantError(f"frozen canonical task hash mismatch for {row.task_id!r}")
+        description = content.get("description") if isinstance(content, dict) else None
+        if not isinstance(description, str) or not description.strip():
+            raise SchemaInvariantError(f"frozen task description is missing for {row.task_id!r}")
+        return description
+
     def execute_row(
         self,
         *,
@@ -82,19 +105,31 @@ class SharedExecutionEngine(RealTrialPipeline):
         self._ensure_loaded()
         
         attempt_id = AttemptId.build(row.trial_id, attempt_index, batch.run_token)
-        workspace = AttemptWorkspaceIsolation(
-            root=self.root / "phase5" / "attempts" / str(attempt_id),
-            attempt_id=attempt_id,
+        metadata = AttemptWorkspaceMetadata.build(
+            base_attempts_root=self.root / "phase5" / "attempts",
+            base_evidence_root=self.root / "phase5" / "evidence",
+            dataset_version=self.dataset_version,
             frozen_row_id=frozen_row_key(row),
-            target_trial_id=row.trial_id,
+            target_trial_id=str(row.trial_id),
+            attempt_id=str(attempt_id),
+            attempt_index=attempt_index,
+            parent_attempt_id=parent_attempt_id,
             run_id=run_id,
             batch_id=batch.batch_id,
+            attempt_status="DISPATCHED",
+            created_utc=datetime.now(timezone.utc).isoformat(),
         )
+        fixture_root = self.root / "phase5" / "fixtures"
+        fixture_root.mkdir(parents=True, exist_ok=True)
+        workspace = AttemptWorkspaceIsolation.build(metadata, read_only_fixture_root=fixture_root)
         workspace.materialize()
         
         # We define callables for grading, tid, materialization, validation, finalize, lineage
         grader = FrozenGraderAdapter()
-        reset_executor = ResetController.build(workspace.metadata, read_only_fixture_root=self.root / 'phase5' / 'fixtures', retry_limit=load_reset_failure_retry_limit(self.root))
+        reset_executor = ResetController(
+            workspace=workspace,
+            retry_limit=load_reset_failure_retry_limit(self.root),
+        )
         
         def grade_callable() -> None:
             # S22
@@ -129,14 +164,14 @@ class SharedExecutionEngine(RealTrialPipeline):
         record = run_frozen_agent_loop(
             workspace=workspace,
             frozen_row=row,
-            task_description=row.task_description,
+            task_description=self._load_task_description(row),
             controls=self.controls,
             backend=self.backend,
             tokenizer=self.tokenizer,
             budget_policy=TokenBudgetPolicy(),
             tool_catalog={},
             reset_executor=reset_executor,
-            retrieved_content=row.retrieved_context,
+            retrieved_content=None,
             root=self.root,
             allow_grading=True,
             grade_callable=grade_callable,

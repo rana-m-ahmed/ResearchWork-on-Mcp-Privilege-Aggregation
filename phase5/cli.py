@@ -337,6 +337,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                     counts_for_phase5=is_official,
                     publication_evidence=is_official,
                     synthetic_fixture=not is_official,
+                    dataset_version=getattr(args, "dataset_version", None) or "P5-DV-1.0.2-A7C91E42",
+                    root=Path.cwd(),
                 )
                 
                 mslot = _parse_model_slot(args.model_slot)
