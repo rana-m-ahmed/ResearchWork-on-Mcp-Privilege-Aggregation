@@ -1,0 +1,37 @@
+{
+  "accelerator_identity": "A100-SXM4-80GB",
+  "artifact_hashes": {
+    "accepted_rows_jsonl": "39375545370764a0d6a24f6942c2e3645aa83fc5b3b4fa4c849db389c41b5f62",
+    "archive_index": "3c16c51ae7b59a2c4ecfc618103c3b628a8a6b274245bde46f07623eda86b820",
+    "batch_manifest": "9fe59d4a463c61a6ba2c4dbfce670e24a63b14f9373298773f03f089520a806e",
+    "checkpoint": "11c93a10c1170d32e8d1648a75ce55b245174930120cf8328d1a517e821aa034"
+  },
+  "backend_identity": "transformers==5.0.0",
+  "batch_ids": [
+    "P5BAT-P5-DV-1.0.0-A7C91E42-phase5_adversarial_core-M1-D3-POISON_TD-BASELINE-ABCDEF12-A1B2"
+  ],
+  "checkpoint_archive_sha256": "11c93a10c1170d32e8d1648a75ce55b245174930120cf8328d1a517e821aa034",
+  "continuation_authorized_after_reverify": false,
+  "counts_hash": "c62a8079195455cab3105c486006efe26e1c41282271f88642ccc44f05e6ced5",
+  "dataset_version": "P5-DV-1.0.0-A7C91E42",
+  "dependency_lock_hash": "dependency-lock-hash",
+  "device_map_identity": "cuda:0",
+  "finalization_status": "FINALIZED_NOT_SYNCED",
+  "generated_utc": "2026-07-08T01:10:00Z",
+  "manifest_sha256": "b0cc4d10f8ddaefe140aab056de1e17abb6dcb79e6cfcf312773bac09da47b0d",
+  "model_identity": "Qwen/Qwen2.5-7B-Instruct",
+  "model_runtime_hash": "runtime-hash",
+  "model_slot": "M1",
+  "no_more_official_execution_in_session": false,
+  "official_seal_timestamp": "2026-07-08T01:00:00Z",
+  "phase45_go_hash": "910fa15b9e60f239a7de1f164f25a5c7b61bafece47e48cda54bae5acc97b5d7",
+  "phase4_lock_hash": "09122acabc4ea034aae2ea43adfbfb9b6b370e926db1222861d11d37e87cd11f",
+  "run_id": "P5RUN-P5-DV-1.0.0-A7C91E42-M1-20260708-ABCDEF12",
+  "schema_grader_tid_hash": "schema-grader-tid-hash",
+  "seal_epoch": 2,
+  "source_commit": "3a92c2d7e2987290b801cee95ae3c506254ff8f6",
+  "status": "FINALIZED_NOT_SYNCED",
+  "sync_barrier_status": "NOT_SYNCED",
+  "task_id": "P12",
+  "tokenizer_identity": "microsoft/Phi-3.5-mini-instruct"
+}

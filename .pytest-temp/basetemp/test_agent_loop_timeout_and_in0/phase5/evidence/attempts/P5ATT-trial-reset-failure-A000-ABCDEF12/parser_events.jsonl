@@ -1,0 +1,5 @@
+{"description":"LOAD_FROZEN_ROW","details":{},"event_type":"STATE_TRANSITION","state_code":"S0","state_index":0,"timestamp_seconds":146537.281}
+{"description":"VERIFY_ROW_AND_HASHES","details":{"frozen_row_id":"trial-001"},"event_type":"STATE_TRANSITION","state_code":"S1","state_index":1,"timestamp_seconds":146537.281}
+{"description":"CREATE_ATTEMPT_WORKSPACE","details":{},"event_type":"STATE_TRANSITION","state_code":"S2","state_index":2,"timestamp_seconds":146537.296}
+{"description":"START_OR_VERIFY_MCP_PROCESS","details":{"tool_names":["echo","pair"]},"event_type":"STATE_TRANSITION","state_code":"S3","state_index":3,"timestamp_seconds":146537.312}
+{"description":"PRE_TRIAL_RESET","details":{},"event_type":"STATE_TRANSITION","state_code":"S4","state_index":4,"timestamp_seconds":146537.328}

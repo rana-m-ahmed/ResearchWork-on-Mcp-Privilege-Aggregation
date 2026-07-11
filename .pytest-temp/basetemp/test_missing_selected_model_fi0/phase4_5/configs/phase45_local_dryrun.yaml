@@ -1,0 +1,15 @@
+pipeline: phase4_5_local_dryrun
+source_of_truth: github
+official_trial: false
+counts_for_phase5: false
+selected_model_slot: M1
+selected_model_identifier: Qwen/Qwen2.5-7B-Instruct
+densities:
+  - D3
+  - D5
+metadata_surfaces:
+  - POISON_TD
+  - POISON_CA
+minimum_accepted_trials_per_cell: 5
+verdict_on_pass: LOCAL_PREFLIGHT_PASS
+verdict_on_fail: REVISE_PHASE45

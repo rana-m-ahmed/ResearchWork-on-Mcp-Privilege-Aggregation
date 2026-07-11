@@ -1,0 +1,488 @@
+{
+  "accepted_finalized_count": 0,
+  "barrier_records": [],
+  "batch_manifest_sha256": "8d9bd8b408d9ca3a75b3675c0a243096e295de19b3f2fd55b923470cb0989dd5",
+  "batch_results": [
+    {
+      "accepted_count": 0,
+      "batch_hash": "56102b6538011f1f36b2ce29c439556bd3813549c5e5163dff56f61f5c912047",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-12B362BC-9D9E",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "fa28d24ea9da3b87a40db652b590a30fb775d1a78453f0983044cdd031450efd",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-4B0755A0-42E2",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "faf3fc53b3e4c1c38a4f32b2029647334160891f4531f92c64d215b31a3a786e",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-22E77E66-BCF9",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "278cfb7d8954c5c49f36f3943705566f256a6d05dbdd3040eae20db1634ce456",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-938BDCF9-A6F4",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "b618a5340dbbbb53e50d649168602176b8ecb4d1d90ab0de57ea3ab6518afb91",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-2C4B6580-E4DE",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "2989425153448f2bda41c612af41fba88c30513a038ace4d20500685d1f48fe7",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-BFCA2896-86CC",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "13fba7c0d8e1960fe1cdb5c749463ace9e91bda583262f550efb2253c1f186b0",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-35AED0EB-9A8B",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "e684e63c46004d45942b67037e86d48b484fb1c6aabee17a3bdf5184d94e08e3",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-08B1E799-BF0B",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "dda6bbe21e397f1526ff33ef9439be6ff25acc433a295cee1f5a32b2e02b1466",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-13F51A02-A918",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "eb5b679af691467d9c53b79317639063de1c8575b15b32a1ba9b818ffdefb76a",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-5367370C-BD6D",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "dc6f44154c56a398ffa375a6b846ce83402542be835ac03e2abdf2adc67d83e0",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-F1B9B31D-FC35",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "f67d4456c738418de13c4f72529c21664e7fa557466d838d644b949a7f1d9697",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-79976FAD-6E19",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "503b7f4576ab0e56d48c696b4de08b8c8c053a7b64bd6481b55598dcf7a8f9d7",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-029451A5-55C7",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "3d1522c09dda97ccba57b0ea7acd10c76a1e459927a06b406fa91e8176006a34",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-4F14678F-173F",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "1ca0278dc9a06c8c76128ab0ee0e395c4362170a611dab897124d92c7873b9bb",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-981E50DE-5ACF",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "d913041675bb2b2b265b84040ecf34c1a2bbf62bdefce25ddc8bb0a21e3ff5e8",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-5D456242-D069",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "b8b3ad650d9dd2c17b5d4a242ef781526907f4b02dfb20693d2b8c69c675e4b5",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-20707223-F6E6",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "0cd143682ab6a5fa77512bb47d90477a55a2a5396350da2db49306bec6dd7c67",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-16DAC271-8923",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "7260847d07b000ff1c6319863a58aae516baa4b4a7719f6c8abb60d42517540e",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-BC94E2BE-453F",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "282eb68fc968808d721ae2942585379e6afdf618cac5cb536d2a96ee8ad082bb",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-C8E1825A-6BC9",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "e14e14fcb291667183832ca50f4df2e70813a95abb2c6c97916b4b7166f868c2",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-85AF85B3-0D3B",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "095a16754e6612cb0575d2168ed58f218c106b6a86cb90c63a375658b6b1e612",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-F3CAF2ED-4338",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "c10b3d170b53b841391b29033038fdaaf0c20ddc81360b8f21e636549e1e0879",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-975FEC97-E1A2",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "1eb43223882a26d58db16b716e7cfe94845703c115cfa079974fbe56dba903da",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-E0374C27-EC9F",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "1cb747fdef8f0fa3130b75660456c01d07be68d9492b4cb41f8499a17d48b0ff",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-C71A0A5B-4475",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "8727fd40adee308d8478e1a10aeb1898bab3a177de0ad0d3b4ba9d04ff71503d",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-F392D35B-8BDC",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "b2258829d98e04e5f9060f8acfb3658b5074e655ab4d6a74499e8767b13edd0a",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-7F2F0EA2-694F",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "28733957b42cd4f510d49d3fa0d9647bd46fd08dcffe610177a00864907bc3ba",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-FF1F1831-F433",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "35cb9288896aaceb8a04426d9e352d636c4612774bfe04ef5acf42568ba680d4",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-AAC9A82E-8809",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "e891f94c1bfd27a9fac1844a17243bc7b0a0b4d0dff7d80b1cdf5deb14d89cde",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-FA6B3FD5-CAD9",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "cfd837ae136a8ffcc0a8fd90c1d7c473625023ee79280d1796a26e09cc895a95",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-63589F21-8F7E",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "a746a12129ca9d3cd2e971221f0cc5b7374fd1286f9b3198fc8e0203613a6f54",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-A6B550C7-9D34",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "00f1956478fed553720c8de156e829314bfd9aaf740855d08232d6a3d4d2e50e",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-6AC1964E-CE12",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "c8086755dbd69813aec9789861c38867843270a4af70a642a5292c5890f8453b",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-2A0D066A-E763",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "dc1b176954714d12c9d8032a487b07f81a8c42669d931a990dc923c78fac51c4",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-CDADA650-F1C2",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "660ac7cbf47d1245dab6fcdcde83dae91342982c678e6a079010d4c409178a30",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-ECCEDEF0-E26E",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "1acda36231ea7942d78937811afd34f2daba6c1e6c24f678ed51aac6b383c73f",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-13A54A3E-264B",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "f34ebd5d20cf4ddc682e93553d2300e5db0607efa4155e9f5ad091d832ba35e4",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-B4C4F651-95DE",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "1fbe2d41934d82de431c95684a5667680de303c4bc2bd8f8b2d57d71d0805d3e",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-F78E9CCD-595A",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "8d4aa2103cc35a97bf5d6c0af1a3ee89aeb5b3fd09ef7b4ab9d10cb7be98d2cc",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-E40FB98A-5A1D",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "b865e32ec56106bfee04306a3c936713f4868b72c5657e4433360c1e14869099",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-0F296F8A-72FF",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "1412366c3ff1a092ed8fc3b413d6cc12117503ffbacbb3de2f605202b3298198",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-DD7275D3-DA7E",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "da25b45cd9465728819f8759513138471d6a76d0d276cf5738828fd88f918cba",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-35F25A1B-A1E0",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "9a1589db04900fc2695446fe387fa0a0696572a4413c03ed99927c260f2e9342",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-FA903E72-A460",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "a3006ad65313b61e376502a19c413ce851d665617cee3aaaea426f2d07c2a601",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-FC0F1C7A-E9EA",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "968aa5eee84a8e25867ceb66ac262944002fae3e199bf8abd12cc46e4738936e",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-4BC2B31C-57C7",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "3f28953e87f349f77854075605041bd616c4b26e0e97a3e6cf318509a4356d9c",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-0D069848-27E0",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "796adb42d1f6dfd3f4381f7ecfb7ceace04db0b7c9bcd57e7fdb322016c94e5c",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-920B91C2-6848",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "e862f6fa3591dc770d46b8f12feba44afd25eb85802d7a81509ec8879d140464",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-3956AA98-4034",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "8d8751ce0e3c2eaf72763aa8a3ec17a06e9bb84635fcd2a2061568512760d45e",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-CF5759C0-96F7",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    },
+    {
+      "accepted_count": 0,
+      "batch_hash": "487b991fe9151330d44f8a6b00ec8feefda21ed330a5586a2f9dd7d692bb6f57",
+      "batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-DA7875D2-41CB",
+      "estimated_seconds": 357.0,
+      "finalized": false,
+      "status": "PLAN_ONLY"
+    }
+  ],
+  "checkpoint_barrier_interval_trials": 6,
+  "dataset_version": "P5-DV-1.0.1-A7C91E42",
+  "elapsed_seconds": 18319.42,
+  "finalized_batch_count": 0,
+  "interrupted": false,
+  "invalid_attempt_count": 0,
+  "local_commit_sha": null,
+  "model_slot": "M1",
+  "orphan_attempt_count": 0,
+  "processed_batch_ids": [
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-12B362BC-9D9E",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-4B0755A0-42E2",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-22E77E66-BCF9",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-938BDCF9-A6F4",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-2C4B6580-E4DE",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-BFCA2896-86CC",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-35AED0EB-9A8B",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-08B1E799-BF0B",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-13F51A02-A918",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-5367370C-BD6D",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-F1B9B31D-FC35",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-79976FAD-6E19",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-029451A5-55C7",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-4F14678F-173F",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-981E50DE-5ACF",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-5D456242-D069",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-20707223-F6E6",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-16DAC271-8923",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-BC94E2BE-453F",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-C8E1825A-6BC9",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-85AF85B3-0D3B",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-F3CAF2ED-4338",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-975FEC97-E1A2",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-E0374C27-EC9F",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-C71A0A5B-4475",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-F392D35B-8BDC",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-7F2F0EA2-694F",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-FF1F1831-F433",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-AAC9A82E-8809",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-FA6B3FD5-CAD9",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-63589F21-8F7E",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-A6B550C7-9D34",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-6AC1964E-CE12",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-2A0D066A-E763",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-CDADA650-F1C2",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-ECCEDEF0-E26E",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-13A54A3E-264B",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-B4C4F651-95DE",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-F78E9CCD-595A",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-E40FB98A-5A1D",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-0F296F8A-72FF",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-DD7275D3-DA7E",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-35F25A1B-A1E0",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-FA903E72-A460",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-FC0F1C7A-E9EA",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-4BC2B31C-57C7",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-0D069848-27E0",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-920B91C2-6848",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-3956AA98-4034",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-CF5759C0-96F7",
+    "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-DA7875D2-41CB"
+  ],
+  "remaining_batch_ids": [],
+  "remote_commit_sha": null,
+  "resume_required": false,
+  "run_id": "P5RUN-P5-DV-1.0.1-A7C91E42-M1-20260708-ABCDEF12",
+  "run_plan_sha256": "be7393d020e3d7696d01efafd79c1fc24b368765191d5e294fc096887fc715ad",
+  "safe_session_seconds": 27000.0,
+  "seal_epoch": 1,
+  "seal_epoch_hashes": [],
+  "state": "SEALED",
+  "stop_reason": "complete",
+  "sync_margin_seconds": 42.839999999999996
+}

@@ -1,0 +1,10 @@
+{"description":"LOAD_FROZEN_ROW","details":{},"event_type":"STATE_TRANSITION","state_code":"S0","state_index":0,"timestamp_seconds":146538.343}
+{"description":"VERIFY_ROW_AND_HASHES","details":{"frozen_row_id":"trial-001"},"event_type":"STATE_TRANSITION","state_code":"S1","state_index":1,"timestamp_seconds":146538.359}
+{"description":"CREATE_ATTEMPT_WORKSPACE","details":{},"event_type":"STATE_TRANSITION","state_code":"S2","state_index":2,"timestamp_seconds":146538.359}
+{"description":"START_OR_VERIFY_MCP_PROCESS","details":{"tool_names":["echo","pair"]},"event_type":"STATE_TRANSITION","state_code":"S3","state_index":3,"timestamp_seconds":146538.375}
+{"description":"PRE_TRIAL_RESET","details":{},"event_type":"STATE_TRANSITION","state_code":"S4","state_index":4,"timestamp_seconds":146538.39}
+{"description":"VERIFY_RESET_AND_DISCOVERY_INVARIANTS","details":{"reset_status":"PASS"},"event_type":"STATE_TRANSITION","state_code":"S5","state_index":5,"timestamp_seconds":146538.406}
+{"description":"COMPILE_INITIAL_CONTEXT","details":{"prompt_sha256":"2afe40712cad8ef996d02c5303b1e5e0fc827349a57bfc43a8f8b81a39527f13"},"event_type":"STATE_TRANSITION","state_code":"S6","state_index":6,"timestamp_seconds":146538.437}
+{"description":"VERIFY_INITIAL_TOKEN_BUDGET","details":{"allowed":true,"classification":null,"input_tokens":63,"limit":10000,"over_by":0,"reserved_output_tokens":512,"total_budget":10512},"event_type":"STATE_TRANSITION","state_code":"S7","state_index":7,"timestamp_seconds":146538.453}
+{"description":"WRITE_RAW_PROMPT_AND_PREPARED_EVENT","details":{"compiled_prompt_path":"D:/phase5-real-official-execution/.pytest-temp/basetemp/test_durability_failure_preven1/phase5/evidence/attempts/P5ATT-trial-durability-dispatched-A000-ABCDEF12/compiled_prompt.txt"},"event_type":"STATE_TRANSITION","state_code":"S8","state_index":8,"timestamp_seconds":146538.453}
+{"description":"WRITE_AND_FSYNC_DISPATCHED_EVENT","details":{"turn_index":0},"event_type":"STATE_TRANSITION","state_code":"S9","state_index":9,"timestamp_seconds":146538.468}

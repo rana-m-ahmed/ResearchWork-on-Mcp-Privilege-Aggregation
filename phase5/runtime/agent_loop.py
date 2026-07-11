@@ -272,14 +272,32 @@ def load_frozen_state_machine_controls(root: Path | None = None) -> FrozenStateM
     """Load the frozen controls from the registry and fail closed on missing values."""
 
     repository_root = (root or repo_root()).resolve()
-    registry_path = repository_root / "phase5" / "configs" / "upstream_artifact_registry.json"
+    registry_path = repository_root / "phase5" / "configs" / "frozen_state_machine_controls_v2.json"
     if not registry_path.is_file():
-        raise MissingFrozenSettingError(f"upstream artifact registry is missing: {registry_path.as_posix()}")
-    registry = load_upstream_artifact_registry(registry_path)
-    controls = registry.require("state_machine_controls", verified_only=False)
-    raise MissingFrozenSettingError(
-        "state_machine_controls are not currently exposed as a frozen registry mapping: "
-        f"{controls.label!r}"
+        raise MissingFrozenSettingError(f"frozen state machine controls registry is missing: {registry_path.as_posix()}")
+    
+    with open(registry_path, "r", encoding="utf-8") as f:
+        controls_data = json.load(f)
+        
+    return FrozenStateMachineControls(
+        max_model_turns=_load_int(controls_data.get("max_model_turns"), "max_model_turns"),
+        max_total_tool_calls=_load_int(controls_data.get("max_total_tool_calls"), "max_total_tool_calls"),
+        max_identical_consecutive_tool_calls=_load_int(controls_data.get("max_identical_consecutive_tool_calls"), "max_identical_consecutive_tool_calls"),
+        max_identical_total_tool_calls=_load_int(controls_data.get("max_identical_total_tool_calls"), "max_identical_total_tool_calls"),
+        per_model_turn_timeout_seconds=_load_float(controls_data.get("per_model_turn_timeout_seconds"), "per_model_turn_timeout_seconds"),
+        per_tool_call_timeout_seconds=_load_float(controls_data.get("per_tool_call_timeout_seconds"), "per_tool_call_timeout_seconds"),
+        whole_trial_timeout_seconds=_load_float(controls_data.get("whole_trial_timeout_seconds"), "whole_trial_timeout_seconds"),
+        multiple_tool_call_policy=_load_string(controls_data.get("multiple_tool_call_policy"), "multiple_tool_call_policy"),
+        tool_error_reinsertion_policy=_load_string(controls_data.get("tool_error_reinsertion_policy"), "tool_error_reinsertion_policy"),
+        malformed_output_policy=_load_string(controls_data.get("malformed_output_policy"), "malformed_output_policy"),
+        terminal_response_policy=_load_string(controls_data.get("terminal_response_policy"), "terminal_response_policy"),
+        conversation_serialization_version=controls_data.get("conversation_serialization_version"),
+        tool_result_serialization_version=controls_data.get("tool_result_serialization_version"),
+        parser_version=controls_data.get("parser_version"),
+        trial_stop_conditions=tuple(controls_data.get("trial_stop_conditions", ())),
+        max_tool_calls_by_density=controls_data.get("max_tool_calls_by_density", {}),
+        timeout_subclasses=tuple(controls_data.get("timeout_subclasses", ())),
+        forbidden_tool_names=tuple(controls_data.get("forbidden_tool_names", ()))
     )
 
 

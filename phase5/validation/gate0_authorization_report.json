@@ -511,28 +511,28 @@
     },
     {
       "details": [
-        "D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_1_freeze.yaml"
+        "D:/phase5-real-official-execution/phase4/configs/model_1_freeze.yaml"
       ],
       "name": "model-freeze:M1",
       "status": "PASS"
     },
     {
       "details": [
-        "D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_2_freeze.yaml"
+        "D:/phase5-real-official-execution/phase4/configs/model_2_freeze.yaml"
       ],
       "name": "model-freeze:M2",
       "status": "PASS"
     },
     {
       "details": [
-        "D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_3_freeze.yaml"
+        "D:/phase5-real-official-execution/phase4/configs/model_3_freeze.yaml"
       ],
       "name": "model-freeze:M3",
       "status": "PASS"
     },
     {
       "details": [
-        "D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_4_freeze.yaml"
+        "D:/phase5-real-official-execution/phase4/configs/model_4_freeze.yaml"
       ],
       "name": "model-freeze:M4",
       "status": "PASS"
@@ -576,10 +576,10 @@
     },
     {
       "details": [
-        "working tree clean"
+        "working tree is dirty"
       ],
       "name": "checkout-clean",
-      "status": "PASS"
+      "status": "FAIL"
     }
   ],
   "consumed_frozen_inputs": [
@@ -636,12 +636,14 @@
       "sha256": "2701af1e8e5ab1b73b299076b03864e3cd516c92b3c3c4eb4abb4191ab3b2c17"
     }
   ],
-  "findings": [],
-  "generated_utc": "2026-07-10T14:44:37.488943Z",
-  "repository_root": "D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation",
-  "status": "PASS",
+  "findings": [
+    "checkout-clean: working tree is dirty"
+  ],
+  "generated_utc": "2026-07-11T09:23:03.711837Z",
+  "repository_root": "D:/phase5-real-official-execution",
+  "status": "FAIL",
   "strict": true,
-  "summary": "Gate 0 passed with strict, hash-bound verification of the registry, frozen artifacts, queue files, model/runtime evidence, and checkout cleanliness.",
+  "summary": "Gate 0 failed because one or more frozen artifacts, verdicts, runtime controls, or checkout checks did not match.",
   "task_id": "P03",
   "verdicts": [
     {

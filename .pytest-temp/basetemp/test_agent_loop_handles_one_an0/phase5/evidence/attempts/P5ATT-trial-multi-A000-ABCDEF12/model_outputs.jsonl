@@ -1,0 +1,2 @@
+{"elapsed_seconds":0.0,"raw_output":"{\"tool_calls\": [{\"tool_name\": \"echo\", \"arguments\": {\"value\": \"A\"}, \"tool_call_id\": \"call-1\"}, {\"tool_name\": \"pair\", \"arguments\": {\"left\": \"L\", \"right\": \"R\"}, \"tool_call_id\": \"call-2\"}]}","session_token":"3408A220","turn_index":0}
+{"elapsed_seconds":0.0,"raw_output":"{\"terminal_response\": \"done\"}","session_token":"3408A220","turn_index":1}

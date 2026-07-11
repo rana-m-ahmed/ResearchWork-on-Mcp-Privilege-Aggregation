@@ -1,0 +1,4 @@
+source_of_truth: github
+kaggle_execution_enabled: true
+local_validation_enabled: true
+nested docker: true
