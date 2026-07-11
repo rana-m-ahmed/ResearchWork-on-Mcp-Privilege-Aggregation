@@ -21,7 +21,7 @@ def generate_frozen_state_machine_controls():
         "tool_result_serialization_version": "1.0",
         "trial_stop_conditions": ["success", "syntax failure", "semantic failure", "timeout", "maximum tool-call count", "infrastructure failure"],
         "timeout_subclasses": ["model_generation_timeout", "tool_execution_timeout", "backend_hang_timeout", "reset_timeout"],
-        "max_tool_calls_by_density": {"D1": 1, "D3": 3, "D5": 5},
+        "max_tool_calls_by_density": {"D1": 1, "D3": 3, "D5": 4},
         "forbidden_tool_names": ["reset", "reset_state", "admin_reset", "set_schema_variant", "debug", "teardown"]
     }
     

@@ -1,0 +1,43 @@
+{
+  "conversation_serialization_version": "1.0",
+  "forbidden_tool_names": [
+    "reset",
+    "reset_state",
+    "admin_reset",
+    "set_schema_variant",
+    "debug",
+    "teardown"
+  ],
+  "malformed_output_policy": "reject",
+  "max_identical_consecutive_tool_calls": 10,
+  "max_identical_total_tool_calls": 20,
+  "max_model_turns": 30,
+  "max_tool_calls_by_density": {
+    "D1": 1,
+    "D3": 3,
+    "D5": 4
+  },
+  "max_total_tool_calls": 100,
+  "multiple_tool_call_policy": "reject",
+  "parser_version": "1.0",
+  "per_model_turn_timeout_seconds": 60.0,
+  "per_tool_call_timeout_seconds": 60.0,
+  "terminal_response_policy": "accept",
+  "timeout_subclasses": [
+    "model_generation_timeout",
+    "tool_execution_timeout",
+    "backend_hang_timeout",
+    "reset_timeout"
+  ],
+  "tool_error_reinsertion_policy": "reinsert_as_user",
+  "tool_result_serialization_version": "1.0",
+  "trial_stop_conditions": [
+    "success",
+    "syntax failure",
+    "semantic failure",
+    "timeout",
+    "maximum tool-call count",
+    "infrastructure failure"
+  ],
+  "whole_trial_timeout_seconds": 1200.0
+}

@@ -343,7 +343,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 run_id = getattr(args, "run_id", None)
                 
                 # Open session temporarily to pass to adapter
-                temp_session = CampaignSession.open(model_slot=mslot, batch_id=None, run_id=run_id)
+                temp_session = CampaignSession.open(model_slot=mslot, batch_id=None, run_id=run_id).seal()
                 
                 batch_processor = RepositoryBatchExecutionAdapter(
                     queue_bundle=load_frozen_queue_bundle(),

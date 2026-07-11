@@ -250,9 +250,9 @@ def test_agent_loop_terminal_answer_emits_expected_state_order(tmp_path: Path) -
     assert (workspace.workspace_root / "model_outputs.jsonl").is_file()
 
 
-def test_frozen_state_machine_control_loader_fails_closed() -> None:
+def test_frozen_state_machine_control_loader_fails_closed(tmp_path: Path) -> None:
     with pytest.raises(MissingFrozenSettingError):
-        load_frozen_state_machine_controls()
+        load_frozen_state_machine_controls(tmp_path)
 
 
 def test_agent_loop_handles_one_and_multiple_tool_calls_in_parser_order(tmp_path: Path) -> None:
