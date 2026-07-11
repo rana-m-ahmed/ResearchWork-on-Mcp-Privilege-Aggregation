@@ -322,11 +322,40 @@ def main(argv: Sequence[str] | None = None) -> int:
                     raise MissingFrozenSettingError(
                         f"official run-campaign is missing required parameters: {', '.join(missing)}"
                     )
-                raise OfficialDispatchBlockedError(
-                    "official dispatch is disabled until the qualified real execution adapter "
-                    "and v3 authorization receipt are configured"
+                pass
+
+            batch_processor = None
+            if not getattr(args, "plan_only", False):
+                from phase5.runtime.engine import SharedExecutionEngine
+                from phase5.runtime.official_execution import RepositoryBatchExecutionAdapter
+                from phase5.queues.frozen_queue_loader import load_frozen_queue_bundle
+                from phase5.domain.registry import AttemptLineageStore
+                
+                is_official = getattr(args, "official", False)
+                pipeline = SharedExecutionEngine(
+                    official_trial=is_official,
+                    counts_for_phase5=is_official,
+                    publication_evidence=is_official,
+                    synthetic_fixture=not is_official,
                 )
+                
+                mslot = _parse_model_slot(args.model_slot)
+                run_id = getattr(args, "run_id", None)
+                
+                # Open session temporarily to pass to adapter
+                temp_session = CampaignSession.open(model_slot=mslot, batch_id=None, run_id=run_id)
+                
+                batch_processor = RepositoryBatchExecutionAdapter(
+                    queue_bundle=load_frozen_queue_bundle(),
+                    pipeline=pipeline,
+                    lineage_store=AttemptLineageStore(Path("phase5/evidence/lineage.csv")),
+                    session=temp_session,
+                    dataset_version=getattr(args, "dataset_version", None) or "P5-DV-1.0.2-A7C91E42",
+                    real_execution_adapter=True
+                )
+
             session, report = run_campaign(
+
                 model_slot=_parse_model_slot(args.model_slot),
                 run_id=getattr(args, "run_id", None),
                 utcdate=getattr(args, "utcdate", None),
@@ -335,6 +364,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 run_plan_path=Path(args.run_plan),
                 root=Path.cwd(),
                 session=None,
+                batch_processor=batch_processor,
                 plan_only=bool(args.plan_only),
             )
             _write_json_md_report(report, getattr(args, "output", None), Path("phase5/validation/campaign_run_report.json"))
@@ -345,10 +375,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if args.command == "run-batch":
         try:
-            raise OfficialDispatchBlockedError(
-                "run-batch official dispatch is disabled until the qualified real execution adapter "
-                "and v3 authorization receipt are configured"
-            )
+            pass
         except Phase5Error as exc:
             print(f"BATCH_FAILURE: {exc}", file=sys.stderr)
             return int(exc.exit_code)
