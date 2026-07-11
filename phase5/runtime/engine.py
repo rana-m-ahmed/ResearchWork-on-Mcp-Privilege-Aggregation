@@ -8,7 +8,7 @@ from typing import Any
 
 from ..campaign import CampaignBatchPlan
 from ..domain.identifiers import AttemptId
-from ..evidence.artifacts import AttemptEventLogWriter, AttemptEventType
+from ..evidence import AttemptEventLogWriter, AttemptEventType
 from ..evidence.manifest_builder import build_attempt_manifest
 from ..evidence.trial_materializer import materialize_frozen_trial_row
 from ..grading.frozen_grader import FrozenGraderAdapter
