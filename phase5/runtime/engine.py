@@ -62,8 +62,12 @@ class SharedExecutionEngine(RealTrialPipeline):
 
     def _ensure_loaded(self) -> None:
         if self.backend is None:
-            self.backend = build_frozen_model_backend_adapter()
-            self.tokenizer = build_exact_tokenizer(root=self.root)
+            self.backend = build_frozen_model_backend_adapter(root=self.root)
+            self.tokenizer = build_exact_tokenizer(
+                root=self.root,
+                revision=self.model_identity.huggingface_commit_sha,
+            )
+            self.backend.attach_tokenizer(self.tokenizer)
 
     def execute_row(
         self,

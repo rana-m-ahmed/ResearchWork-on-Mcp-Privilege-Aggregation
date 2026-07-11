@@ -21,6 +21,7 @@ def _prepare_frozen_model_root(tmp_path: Path, *, mutate: tuple[Path, tuple[str,
     root = tmp_path
     for relative in (
         "phase5/configs/upstream_artifact_registry.json",
+        "phase5/manifests/model_runtime_authority_v2.json",
         "phase4/configs/model_set_freeze.yaml",
         "phase4/configs/model_1_freeze.yaml",
         "phase4_5/configs/phase45_selected_model.yaml",

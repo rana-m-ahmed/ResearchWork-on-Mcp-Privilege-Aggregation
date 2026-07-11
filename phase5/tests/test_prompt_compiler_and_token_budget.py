@@ -188,6 +188,7 @@ def test_null_payload_compile_matches_golden_fixture() -> None:
 
     expected_prompt = (FIXTURE_ROOT / "compiled_prompt_null_payload.txt").read_bytes()
     expected_metadata = json.loads((FIXTURE_ROOT / "compiled_prompt_null_payload_metadata.json").read_text(encoding="utf-8"))
+    expected_metadata["tokenizer_identity"] = "Qwen/Qwen2.5-7B-Instruct"
     expected_turn_counts = json.loads((FIXTURE_ROOT / "token_counts_per_turn_null_payload.json").read_text(encoding="utf-8"))
 
     assert artifact.prompt_bytes == expected_prompt
@@ -292,7 +293,7 @@ def test_tokenizer_identity_mismatch_fails_closed(monkeypatch: pytest.MonkeyPatc
 
 
 def test_loaded_tokenizer_identity_mismatch_fails_closed(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr("phase5.runtime.token_budget.load_frozen_tokenizer_identity", lambda root=None: "microsoft/Phi-3.5-mini-instruct")
+    monkeypatch.setattr("phase5.runtime.token_budget.load_frozen_tokenizer_identity", lambda root=None: "Qwen/Qwen2.5-7B-Instruct")
     with pytest.raises(TokenizerIdentityMismatchError):
         build_exact_tokenizer(tokenizer_loader=lambda *args, **kwargs: _fake_tokenizer("wrong/tokenizer"))
 
@@ -356,14 +357,13 @@ def test_history_and_tool_results_are_serialized_verbatim() -> None:
 
 
 def test_frozen_tokenizer_identity_is_loaded_from_registry() -> None:
-    assert load_frozen_tokenizer_identity() == "microsoft/Phi-3.5-mini-instruct"
+    assert load_frozen_tokenizer_identity() == "Qwen/Qwen2.5-7B-Instruct"
 
 
-def test_registry_label_failure_fails_closed(monkeypatch: pytest.MonkeyPatch) -> None:
-    class FakeRegistry:
-        def require(self, label: str) -> object:
-            raise MissingFrozenSettingError(f"missing {label}")
-
-    monkeypatch.setattr("phase5.runtime.token_budget.load_upstream_artifact_registry", lambda *args, **kwargs: FakeRegistry())
+def test_backend_identity_failure_fails_closed(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        "phase5.runtime.token_budget.load_frozen_model_backend_identity",
+        lambda root=None: (_ for _ in ()).throw(MissingFrozenSettingError("missing frozen model")),
+    )
     with pytest.raises(MissingFrozenSettingError):
         load_frozen_tokenizer_identity()

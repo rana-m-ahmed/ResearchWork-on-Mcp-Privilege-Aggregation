@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+import json
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -14,6 +15,7 @@ from ..guards import repo_root
 _SELECTED_MODEL_PATH = Path("phase4_5/configs/phase45_selected_model.yaml")
 _LOCAL_DRYRUN_PATH = Path("phase4_5/configs/phase45_local_dryrun.yaml")
 _MODEL_SET_PATH = Path("phase4/configs/model_set_freeze.yaml")
+_RUNTIME_AUTHORITY_PATH = Path("phase5/manifests/model_runtime_authority_v2.json")
 
 _PLACEHOLDER_DIGEST_MARKERS = (
     "AUTHENTIC_KAGGLE_EXECUTION",
@@ -83,6 +85,7 @@ class FrozenModelBackendIdentity:
     local_dryrun_path: Path
     model_set_path: Path
     model_freeze_path: Path
+    huggingface_commit_sha: str
 
     @property
     def model_digest_is_placeholder(self) -> bool:
@@ -98,6 +101,7 @@ class FrozenModelBackendIdentity:
             "ollama_version": self.ollama_version,
             "quantization": self.quantization,
             "tokenizer_identity": self.tokenizer_identity,
+            "huggingface_commit_sha": self.huggingface_commit_sha,
         }
 
 
@@ -202,6 +206,26 @@ def load_frozen_model_backend_identity(root: Path | None = None) -> FrozenModelB
             f"tokenizer identity mismatch: expected {selected_model_identifier!r}, got {tokenizer_identity!r}"
         )
 
+    runtime_authority_path = repository_root / _RUNTIME_AUTHORITY_PATH
+    if not runtime_authority_path.is_file():
+        raise MissingFrozenSettingError(f"model runtime authority is missing: {runtime_authority_path.as_posix()}")
+    runtime_authority = json.loads(runtime_authority_path.read_text(encoding="utf-8"))
+    runtime_entry = runtime_authority.get(selected_model_id) if isinstance(runtime_authority, Mapping) else None
+    if not isinstance(runtime_entry, Mapping):
+        raise MissingFrozenSettingError(f"runtime authority is missing model slot {selected_model_id!r}")
+    authority_identifier = _require_string(
+        runtime_entry.get("exact_model_identifier"), label="exact_model_identifier", path=runtime_authority_path
+    )
+    if authority_identifier != selected_model_identifier:
+        raise RuntimeMismatchError(
+            f"runtime authority identity mismatch: expected {selected_model_identifier!r}, got {authority_identifier!r}"
+        )
+    huggingface_commit_sha = _require_string(
+        runtime_entry.get("huggingface_commit_sha"), label="huggingface_commit_sha", path=runtime_authority_path
+    )
+    if len(huggingface_commit_sha) != 40 or any(c not in "0123456789abcdef" for c in huggingface_commit_sha):
+        raise SchemaInvariantError("huggingface_commit_sha must be a lowercase 40-character commit SHA")
+
     return FrozenModelBackendIdentity(
         model_id=selected_model_id,
         exact_model_identifier=selected_model_identifier,
@@ -215,14 +239,72 @@ def load_frozen_model_backend_identity(root: Path | None = None) -> FrozenModelB
         local_dryrun_path=local_dryrun_path,
         model_set_path=model_set_path,
         model_freeze_path=model_freeze_path,
+        huggingface_commit_sha=huggingface_commit_sha,
     )
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(slots=True)
 class FrozenModelBackendAdapter:
     """Validated runtime adapter for the frozen Phase 5 model/backend tuple."""
 
     identity: FrozenModelBackendIdentity
+    _model: Any = field(default=None, init=False, repr=False)
+    _tokenizer: Any = field(default=None, init=False, repr=False)
+
+    def attach_tokenizer(self, tokenizer: Any) -> None:
+        """Reuse the identity-checked tokenizer used by prompt accounting."""
+
+        self._tokenizer = tokenizer
+
+    def _ensure_runtime_loaded(self) -> None:
+        if self._model is not None:
+            return
+        try:
+            import torch
+            from transformers import AutoModelForCausalLM, AutoTokenizer
+        except Exception as exc:
+            raise RuntimeMismatchError("torch and transformers are required for real model execution") from exc
+        if not torch.cuda.is_available():
+            raise RuntimeMismatchError("the frozen M1 float16 backend requires a CUDA GPU")
+        if self._tokenizer is None:
+            self._tokenizer = AutoTokenizer.from_pretrained(
+                self.tokenizer_identity,
+                revision=self.identity.huggingface_commit_sha,
+                trust_remote_code=True,
+            )
+        try:
+            self._model = AutoModelForCausalLM.from_pretrained(
+                self.exact_model_identifier,
+                revision=self.identity.huggingface_commit_sha,
+                torch_dtype=torch.float16,
+                device_map="auto",
+                trust_remote_code=True,
+            )
+            self._model.eval()
+        except Exception as exc:
+            raise RuntimeMismatchError(
+                f"failed to load frozen model {self.exact_model_identifier!r} at "
+                f"revision {self.identity.huggingface_commit_sha!r}"
+            ) from exc
+
+    def generate(self, *, prompt_text: str, conversation_history: Any, session: Any, turn_index: int, controls: Any) -> str:
+        """Run deterministic generation through the immutable Hugging Face revision."""
+
+        self._ensure_runtime_loaded()
+        import torch
+
+        encoded = self._tokenizer(prompt_text, return_tensors="pt", add_special_tokens=False)
+        input_device = next(self._model.parameters()).device
+        encoded = {name: tensor.to(input_device) for name, tensor in encoded.items()}
+        with torch.inference_mode():
+            output = self._model.generate(
+                **encoded,
+                max_new_tokens=512,
+                do_sample=False,
+                pad_token_id=self._tokenizer.eos_token_id,
+            )
+        generated_ids = output[0, encoded["input_ids"].shape[1]:]
+        return self._tokenizer.decode(generated_ids, skip_special_tokens=True)
 
     @property
     def model_id(self) -> str:

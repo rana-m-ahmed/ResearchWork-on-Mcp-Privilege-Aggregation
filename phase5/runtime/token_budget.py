@@ -8,7 +8,6 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 
-from ..domain.config import load_upstream_artifact_registry
 from ..domain.errors import (
     InfrastructureInvalidAttemptError,
     MissingFrozenSettingError,
@@ -17,15 +16,15 @@ from ..domain.errors import (
     TokenProtocolDefectError,
 )
 from ..guards import repo_root
+from .model_backend_adapter import load_frozen_model_backend_identity
 from .prompt_serialization import ConversationTurn, normalize_turns, render_turn_stream
 
 
-FROZEN_MODEL_SLOT = "M4"
 DEFAULT_INPUT_TOKEN_LIMIT = 3584
 DEFAULT_RESERVED_OUTPUT_TOKENS = 512
 DEFAULT_TOTAL_TOKEN_LIMIT = DEFAULT_INPUT_TOKEN_LIMIT + DEFAULT_RESERVED_OUTPUT_TOKENS
-EXPECTED_TOKENIZER_IDENTITY = "microsoft/Phi-3.5-mini-instruct"
-_MODEL_FREEZE_LABEL = "Model freeze M4"
+FROZEN_MODEL_SLOT = "M1"
+EXPECTED_TOKENIZER_IDENTITY = "Qwen/Qwen2.5-7B-Instruct"
 
 
 class TokenizerIdentityMismatchError(TokenProtocolDefectError):
@@ -133,35 +132,10 @@ def _sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def _yaml_loader() -> Callable[[str], Mapping[str, Any]]:
-    try:
-        import yaml
-    except Exception as exc:  # pragma: no cover - exercised by failure tests if missing
-        raise TokenizerLoadError("PyYAML is required to resolve the frozen tokenizer identity") from exc
-    return yaml.safe_load
-
-
 def load_frozen_tokenizer_identity(root: Path | None = None) -> str:
-    """Resolve the frozen tokenizer identity through the registry and frozen model config."""
+    """Resolve the tokenizer from the same selected-model authority as the backend."""
 
-    repository_root = (root or repo_root()).resolve()
-    registry = load_upstream_artifact_registry(repository_root / "phase5" / "configs" / "upstream_artifact_registry.json")
-    entry = registry.require(_MODEL_FREEZE_LABEL)
-    model_freeze_path = repository_root / entry.actual_paths[0]
-    if not model_freeze_path.is_file():
-        raise MissingFrozenSettingError(f"frozen model config is missing: {model_freeze_path.as_posix()}")
-
-    yaml_safe_load = _yaml_loader()
-    model_config = yaml_safe_load(model_freeze_path.read_text(encoding="utf-8"))
-    if not isinstance(model_config, dict):
-        raise SchemaInvariantError("frozen model config must be a mapping")
-
-    tokenizer_identity = model_config.get("tokenizer_identity")
-    if tokenizer_identity != EXPECTED_TOKENIZER_IDENTITY:
-        raise TokenizerIdentityMismatchError(
-            f"frozen tokenizer identity mismatch: expected {EXPECTED_TOKENIZER_IDENTITY!r}, got {tokenizer_identity!r}"
-        )
-    return tokenizer_identity
+    return load_frozen_model_backend_identity(root).tokenizer_identity
 
 
 def _tokenizer_name(tokenizer: Any) -> str | None:
@@ -181,16 +155,12 @@ def build_exact_tokenizer(
     *,
     root: Path | None = None,
     tokenizer_loader: Callable[..., Any] | None = None,
-    local_files_only: bool = True,
+    local_files_only: bool = False,
+    revision: str | None = None,
 ) -> Any:
     """Load the exact frozen tokenizer or fail closed."""
 
     tokenizer_identity = load_frozen_tokenizer_identity(root)
-    if tokenizer_identity != EXPECTED_TOKENIZER_IDENTITY:
-        raise TokenizerIdentityMismatchError(
-            f"unexpected tokenizer identity: expected {EXPECTED_TOKENIZER_IDENTITY!r}, got {tokenizer_identity!r}"
-        )
-
     try:
         if tokenizer_loader is None:
             try:
@@ -199,24 +169,29 @@ def build_exact_tokenizer(
                 raise TokenizerLoadError("transformers is required to load the frozen tokenizer") from exc
             tokenizer = AutoTokenizer.from_pretrained(
                 tokenizer_identity,
+                revision=revision,
                 trust_remote_code=True,
                 local_files_only=local_files_only,
             )
         else:
             tokenizer = tokenizer_loader(
                 tokenizer_identity,
+                revision=revision,
                 trust_remote_code=True,
                 local_files_only=local_files_only,
             )
     except Phase5Error:
         raise
     except Exception as exc:
-        raise TokenizerLoadError(f"failed to load the frozen tokenizer {tokenizer_identity!r}") from exc
+        raise TokenizerLoadError(
+            f"failed to load the frozen tokenizer {tokenizer_identity!r}"
+            f" at revision {revision!r}: {type(exc).__name__}: {exc}"
+        ) from exc
 
     loaded_name = _tokenizer_name(tokenizer)
-    if loaded_name not in {tokenizer_identity, EXPECTED_TOKENIZER_IDENTITY}:
+    if loaded_name != tokenizer_identity:
         raise TokenizerIdentityMismatchError(
-            f"loaded tokenizer identity mismatch: expected {EXPECTED_TOKENIZER_IDENTITY!r}, got {loaded_name!r}"
+            f"loaded tokenizer identity mismatch: expected {tokenizer_identity!r}, got {loaded_name!r}"
         )
     return tokenizer
 
