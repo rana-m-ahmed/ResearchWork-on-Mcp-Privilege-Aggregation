@@ -276,11 +276,15 @@ class FrozenModelBackendAdapter:
             self._model = AutoModelForCausalLM.from_pretrained(
                 self.exact_model_identifier,
                 revision=self.identity.huggingface_commit_sha,
-                torch_dtype=torch.float16,
+                dtype=torch.float16,
                 device_map="auto",
                 trust_remote_code=True,
             )
             self._model.eval()
+            self._model.generation_config.do_sample = False
+            self._model.generation_config.temperature = None
+            self._model.generation_config.top_p = None
+            self._model.generation_config.top_k = None
         except Exception as exc:
             raise RuntimeMismatchError(
                 f"failed to load frozen model {self.exact_model_identifier!r} at "

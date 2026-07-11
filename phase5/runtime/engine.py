@@ -199,6 +199,9 @@ class SharedExecutionEngine(RealTrialPipeline):
             FrozenTrialRow.from_mapping(self._runtime_row_mapping(runtime_row))
             
         def finalize_callable() -> None:
+            workspace.write_json_snapshot("finalization_prepared.json", {"status": "PREPARED"})
+
+        def seal_evidence_index() -> None:
             records = []
             for path in sorted(workspace.workspace_root.iterdir()):
                 if path.is_file() and path != workspace.metadata.artifact_index_path:
@@ -235,6 +238,14 @@ class SharedExecutionEngine(RealTrialPipeline):
             finalize_callable=finalize_callable,
             lineage_callable=lineage_callable,
         )
+
+        # The loop appends its terminal event after S26. Seal the write-once index
+        # after control returns so it covers the complete log and final manifest.
+        seal_evidence_index()
+        event_log_sha256 = hashlib.sha256(workspace.metadata.event_log_path.read_bytes()).hexdigest()
+        materialized_row_path = workspace.workspace_root / "materialized_trial_row.json"
+        materialized_row_sha256 = hashlib.sha256(materialized_row_path.read_bytes()).hexdigest()
+        evidence_index_sha256 = hashlib.sha256(workspace.metadata.artifact_index_path.read_bytes()).hexdigest()
         
         proof = TrialAcceptanceProof(
             infrastructure_valid=True,
@@ -244,14 +255,14 @@ class SharedExecutionEngine(RealTrialPipeline):
             schema_validation_passed=True,
             evidence_hashes_resolved=True,
             unique_accepted_attempt=True,
-            event_log_sha256="0" * 64,
-            materialized_row_sha256="0" * 64,
-            evidence_index_sha256="0" * 64,
+            event_log_sha256=event_log_sha256,
+            materialized_row_sha256=materialized_row_sha256,
+            evidence_index_sha256=evidence_index_sha256,
         )
         
         return ExecutedTrialResult(
             frozen_row_id=frozen_row_key(row),
-            target_trial_id=row.trial_id,
+            target_trial_id=str(row.trial_id),
             attempt_id=str(attempt_id),
             attempt_index=attempt_index,
             parent_attempt_id=parent_attempt_id,

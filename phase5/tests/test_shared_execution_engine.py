@@ -49,6 +49,16 @@ def test_execute_row_builds_frozen_workspace_and_resolves_task(monkeypatch, tmp_
 
     def fake_loop(**kwargs):
         captured.update(kwargs)
+        for name in (
+            "grade_callable",
+            "tid_callable",
+            "materialize_callable",
+            "validate_callable",
+            "finalize_callable",
+            "lineage_callable",
+        ):
+            kwargs[name]()
+        kwargs["workspace"].metadata.event_log_path.write_text("{}\n", encoding="utf-8")
         return SimpleNamespace(elapsed_seconds=1.0)
 
     monkeypatch.setattr("phase5.runtime.engine.run_frozen_agent_loop", fake_loop)
@@ -77,3 +87,6 @@ def test_execute_row_builds_frozen_workspace_and_resolves_task(monkeypatch, tmp_
     assert captured["frozen_row"].trial_id == row.trial_id
     assert workspace.metadata.dataset_version == engine.dataset_version
     assert result.raw_attempt_directory == workspace.workspace_root
+    assert result.target_trial_id == str(row.trial_id)
+    assert isinstance(result.target_trial_id, str)
+    assert result.acceptance_proof.event_log_sha256 != "0" * 64
