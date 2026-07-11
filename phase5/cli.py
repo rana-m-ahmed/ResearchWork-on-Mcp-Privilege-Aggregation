@@ -100,7 +100,7 @@ def build_parser() -> argparse.ArgumentParser:
     run_campaign.add_argument("--batch-manifest", required=False, default="phase5/manifests/batch_partition_manifest_v2.json")
     run_campaign.add_argument("--run-plan", required=False, default="phase5/validation/kaggle_run_plan_v2.json")
     run_campaign.add_argument("--output", required=False)
-    campaign_mode = run_campaign.add_mutually_exclusive_group(required=True)
+    campaign_mode = run_campaign.add_mutually_exclusive_group(required=False)
     campaign_mode.add_argument("--official", action="store_true")
     campaign_mode.add_argument("--plan-only", action="store_true")
     run_campaign.add_argument("--dataset-version", required=False)
