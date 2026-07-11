@@ -9,15 +9,14 @@ from typing import Any
 from ..campaign import CampaignBatchPlan
 from ..domain.identifiers import AttemptId
 from ..evidence import AttemptEventLogWriter, AttemptEventType
-from ..evidence.manifest_builder import build_attempt_manifest
 from ..evidence.trial_materializer import materialize_frozen_trial_row
 from ..grading.frozen_grader import FrozenGraderAdapter
 from ..grading.tid import LogicalTidAdapter, compute_logical_tid
 from ..queues.frozen_queue_loader import FrozenQueueRow
 from .agent_loop import run_frozen_agent_loop, load_frozen_state_machine_controls
-from .model_backend_adapter import build_model_backend, load_frozen_model_backend_identity
+from .model_backend_adapter import build_frozen_model_backend_adapter, load_frozen_model_backend_identity
 from .official_execution import ExecutedTrialResult, RealTrialPipeline, TrialAcceptanceProof, frozen_row_key
-from .reset_controller import build_frozen_reset_controller
+from .reset_controller import ResetController, load_reset_failure_retry_limit
 from .token_budget import build_exact_tokenizer, TokenBudgetPolicy
 from .workspace_isolation import AttemptWorkspaceIsolation
 
@@ -60,13 +59,11 @@ class SharedExecutionEngine(RealTrialPipeline):
         # unless actually executing.
         self.backend = None
         self.tokenizer = None
-        self.reset_executor = None
 
     def _ensure_loaded(self) -> None:
         if self.backend is None:
-            self.backend = build_model_backend(self.model_identity.model_id)
+            self.backend = build_frozen_model_backend_adapter()
             self.tokenizer = build_exact_tokenizer(root=self.root)
-            self.reset_executor = build_frozen_reset_controller()
 
     def execute_row(
         self,
@@ -93,6 +90,7 @@ class SharedExecutionEngine(RealTrialPipeline):
         
         # We define callables for grading, tid, materialization, validation, finalize, lineage
         grader = FrozenGraderAdapter()
+        reset_executor = ResetController.build(workspace.metadata, read_only_fixture_root=self.root / 'phase5' / 'fixtures', retry_limit=load_reset_failure_retry_limit(self.root))
         
         def grade_callable() -> None:
             # S22
@@ -133,7 +131,7 @@ class SharedExecutionEngine(RealTrialPipeline):
             tokenizer=self.tokenizer,
             budget_policy=TokenBudgetPolicy(),
             tool_catalog={},
-            reset_executor=self.reset_executor,
+            reset_executor=reset_executor,
             retrieved_content=row.retrieved_context,
             root=self.root,
             allow_grading=True,
