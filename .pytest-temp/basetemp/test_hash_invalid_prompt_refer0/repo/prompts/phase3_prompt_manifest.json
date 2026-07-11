@@ -1,1 +1,0 @@
-{"system_prompt": "prompts/phase3_system_prompt.txt", "tool_call_contract": "prompts/phase3_tool_call_contract.txt", "user_task_template": "prompts/phase3_user_task_template.txt", "tool_result_template": "prompts/phase3_tool_result_template.txt"}

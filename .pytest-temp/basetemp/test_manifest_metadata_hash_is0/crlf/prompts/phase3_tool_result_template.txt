@@ -1,2 +1,0 @@
-Tool Result [{{tool_name}}]:
-{{tool_output}}

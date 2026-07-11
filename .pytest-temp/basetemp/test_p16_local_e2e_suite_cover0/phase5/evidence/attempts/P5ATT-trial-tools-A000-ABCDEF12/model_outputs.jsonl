@@ -1,3 +1,0 @@
-{"elapsed_seconds":0.0,"raw_output":"{\"tool_calls\": [{\"tool_name\": \"read\", \"arguments\": {\"key\": \"alpha\"}}]}","session_token":"B9600FF1","turn_index":0}
-{"elapsed_seconds":0.0,"raw_output":"{\"tool_calls\": [{\"tool_name\": \"write\", \"arguments\": {\"value\": \"alpha\"}}]}","session_token":"B9600FF1","turn_index":1}
-{"elapsed_seconds":0.0,"raw_output":"{\"terminal_response\": \"done\"}","session_token":"B9600FF1","turn_index":2}

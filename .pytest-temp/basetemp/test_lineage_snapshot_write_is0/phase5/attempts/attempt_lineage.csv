@@ -1,2 +1,0 @@
-dataset_version,frozen_row_id,target_trial_id,attempt_id,attempt_index,parent_attempt_id,run_id,batch_id,attempt_status,invalid_reason,counts_toward_cell_n,accepted_attempt,raw_attempt_directory
-P5-DV-1.0.0-A7C91E42,row_001,trial-001,P5ATT-trial-001-A000-ABCDEF12,0,,P5RUN-P5-DV-1.0.0-A7C91E42-M1-20260708-ABCDEF12,P5BAT-P5-DV-1.0.0-A7C91E42-phase5_adversarial_core-M1-D3-POISON_TD-BASELINE-ABCDEF12-A1B2,DISPATCHED,,False,False,D:/phase5-real-official-execution/.pytest-temp/basetemp/test_lineage_snapshot_write_is0/phase5/evidence/attempts/P5ATT-trial-001-A000-ABCDEF12

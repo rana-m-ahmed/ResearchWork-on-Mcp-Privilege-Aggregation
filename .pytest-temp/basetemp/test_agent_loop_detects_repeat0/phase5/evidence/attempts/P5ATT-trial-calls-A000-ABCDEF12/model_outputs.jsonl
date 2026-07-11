@@ -1,1 +1,0 @@
-{"elapsed_seconds":0.0,"raw_output":"{\"tool_calls\": [{\"tool_name\": \"echo\", \"arguments\": {\"value\": \"a\"}}, {\"tool_name\": \"pair\", \"arguments\": {\"left\": \"b\", \"right\": \"c\"}}]}","session_token":"2819AAA6","turn_index":0}

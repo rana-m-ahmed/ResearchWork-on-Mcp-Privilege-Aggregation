@@ -1,1 +1,0 @@
-{"arguments":{"value":"A A A A"},"call_index":0,"elapsed_seconds":0.1,"exposed_tool_name":"echo","logical_tool_name":"logical_echo","metadata":{"tool_error_reinsertion_policy":"reinsert_raw","tool_result_serialization_version":"tool-result-v1"},"result_text":"echo:A A A A","tool_call_id":null}
