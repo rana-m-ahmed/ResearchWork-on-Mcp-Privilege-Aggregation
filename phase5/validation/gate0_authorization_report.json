@@ -639,7 +639,7 @@
   "findings": [
     "checkout-clean: working tree is dirty"
   ],
-  "generated_utc": "2026-07-11T09:23:03.711837Z",
+  "generated_utc": "2026-07-11T10:16:40.038808Z",
   "repository_root": "D:/phase5-real-official-execution",
   "status": "FAIL",
   "strict": true,
