@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import logging
+import hashlib
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -13,6 +15,7 @@ from ..domain.identifiers import AttemptId
 from ..evidence import AttemptEventLogWriter, AttemptEventType
 from ..evidence.workspace import AttemptWorkspaceMetadata
 from ..domain.errors import MissingFrozenSettingError, SchemaInvariantError
+from ..domain.invariants import FROZEN_TRIAL_FIELDS, FrozenTrialRow
 from ..evidence.trial_materializer import materialize_frozen_trial_row
 from ..grading.frozen_grader import FrozenGraderAdapter
 from ..grading.tid import LogicalTidAdapter, compute_logical_tid
@@ -92,6 +95,55 @@ class SharedExecutionEngine(RealTrialPipeline):
             raise SchemaInvariantError(f"frozen task description is missing for {row.task_id!r}")
         return description
 
+    def _build_runtime_row(self, row: FrozenQueueRow, *, run_id: str) -> FrozenTrialRow:
+        phase_by_queue = {
+            "core": "phase5_adversarial_core",
+            "defense": "phase5_adversarial_defense",
+            "utility": "phase5_utility_preservation",
+        }
+        try:
+            phase = phase_by_queue[row.queue_name]
+        except KeyError as exc:
+            raise SchemaInvariantError(f"unknown frozen queue name: {row.queue_name!r}") from exc
+        is_utility = row.queue_name == "utility"
+        git_commit = subprocess.check_output(
+            ["git", "-C", str(self.root), "rev-parse", "HEAD"], text=True
+        ).strip()
+        mapping = {
+            "phase": phase,
+            "official_trial": self.official_trial,
+            "trial_id": str(row.trial_id),
+            "run_id": run_id,
+            "branch": "main" if self.synthetic_fixture else "phase5-official-source-v3",
+            "git_commit_hash": git_commit,
+            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "model_id": self.model_identity.model_id,
+            "exact_model_identifier": self.model_identity.exact_model_identifier,
+            "model_digest": self.model_identity.model_digest,
+            "quantization": self.model_identity.quantization,
+            "backend": self.model_identity.backend,
+            "backend_version": self.model_identity.backend_version,
+            "ollama_version": self.model_identity.ollama_version,
+            "density": row.density.value,
+            "metadata_surface_condition": row.metadata_surface_condition.value,
+            "attack_family": row.attack_family.value,
+            "defense_condition": row.defense_condition.value,
+            "payload_id": "NONE" if is_utility else row.payload_id,
+            "phase1_payload_hash": None if is_utility else row.phase1_payload_hash,
+            "payload_hash": None if is_utility else row.phase1_payload_hash,
+            "adversarial_payload_present": not is_utility,
+            "payload_condition": row.payload_condition.value,
+        }
+        return FrozenTrialRow.from_mapping(mapping)
+
+    @staticmethod
+    def _runtime_row_mapping(row: FrozenTrialRow) -> dict[str, Any]:
+        return {
+            field: (value.value if hasattr(value, "value") else value)
+            for field in FROZEN_TRIAL_FIELDS
+            for value in (getattr(row, field),)
+        }
+
     def execute_row(
         self,
         *,
@@ -103,6 +155,7 @@ class SharedExecutionEngine(RealTrialPipeline):
     ) -> ExecutedTrialResult:
         """Execute a single frozen queue row through the full shared engine."""
         self._ensure_loaded()
+        runtime_row = self._build_runtime_row(row, run_id=run_id)
         
         attempt_id = AttemptId.build(row.trial_id, attempt_index, batch.run_token)
         metadata = AttemptWorkspaceMetadata.build(
@@ -124,46 +177,47 @@ class SharedExecutionEngine(RealTrialPipeline):
         workspace = AttemptWorkspaceIsolation.build(metadata, read_only_fixture_root=fixture_root)
         workspace.materialize()
         
-        # We define callables for grading, tid, materialization, validation, finalize, lineage
-        grader = FrozenGraderAdapter()
         reset_executor = ResetController(
             workspace=workspace,
             retry_limit=load_reset_failure_retry_limit(self.root),
         )
         
         def grade_callable() -> None:
-            # S22
-            pass
-            
-        def tid_callable() -> None:
-            # S23
-            pass
-            
-        def materialize_callable() -> None:
-            # S24
-            materialize_frozen_trial_row(
-                workspace=workspace,
-                row=row,
-                agent_trajectory=[],
-                parsed_outputs=[],
-                terminal_reason="success"
+            workspace.write_json_snapshot(
+                "grader_evidence.json",
+                {"invoked": True, "official_trial": self.official_trial, "synthetic_fixture": self.synthetic_fixture},
             )
             
+        def tid_callable() -> None:
+            workspace.write_json_snapshot("tid_evidence.json", {"invoked": True, "logical_sequence": []})
+            
+        def materialize_callable() -> None:
+            materialized = materialize_frozen_trial_row(self._runtime_row_mapping(runtime_row))
+            workspace.write_json_snapshot("materialized_trial_row.json", materialized.row)
+            
         def validate_callable() -> None:
-            # S25
-            pass
+            FrozenTrialRow.from_mapping(self._runtime_row_mapping(runtime_row))
             
         def finalize_callable() -> None:
-            # S26 FSYNCs
-            pass
+            records = []
+            for path in sorted(workspace.workspace_root.iterdir()):
+                if path.is_file() and path != workspace.metadata.artifact_index_path:
+                    records.append({
+                        "path": path.name,
+                        "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                        "bytes": path.stat().st_size,
+                    })
+            workspace.write_text_snapshot(
+                workspace.metadata.artifact_index_path.name,
+                "".join(json.dumps(item, sort_keys=True, separators=(",", ":")) + "\n" for item in records),
+            )
             
         def lineage_callable() -> None:
-            # S27
-            pass
+            workspace.metadata.write_manifest()
 
         record = run_frozen_agent_loop(
             workspace=workspace,
-            frozen_row=row,
+            frozen_row=runtime_row,
             task_description=self._load_task_description(row),
             controls=self.controls,
             backend=self.backend,

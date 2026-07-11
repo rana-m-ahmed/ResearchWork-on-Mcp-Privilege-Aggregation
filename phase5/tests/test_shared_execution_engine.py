@@ -32,6 +32,15 @@ def test_execute_row_builds_frozen_workspace_and_resolves_task(monkeypatch, tmp_
     engine.counts_for_phase5 = False
     engine.publication_evidence = False
     engine.controls = object()
+    engine.model_identity = SimpleNamespace(
+        model_id="M1",
+        exact_model_identifier="Qwen/Qwen2.5-7B-Instruct",
+        model_digest="sha256:SYNTHETIC_FIXTURE",
+        quantization="float16",
+        backend="transformers",
+        backend_version="transformers==5.0.0",
+        ollama_version=None,
+    )
     engine.backend = object()
     engine.tokenizer = object()
     monkeypatch.setattr(engine, "_ensure_loaded", lambda: None)
@@ -44,6 +53,10 @@ def test_execute_row_builds_frozen_workspace_and_resolves_task(monkeypatch, tmp_
 
     monkeypatch.setattr("phase5.runtime.engine.run_frozen_agent_loop", fake_loop)
     monkeypatch.setattr("phase5.runtime.engine.load_reset_failure_retry_limit", lambda root: 0)
+    monkeypatch.setattr(
+        "phase5.runtime.engine.subprocess.check_output",
+        lambda *args, **kwargs: "a" * 40 + "\n",
+    )
     batch = SimpleNamespace(
         run_token="ABCDEF12",
         batch_id="P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-D3-POISON_TD-BASELINE-ABCDEF12-A1B2",
@@ -60,5 +73,7 @@ def test_execute_row_builds_frozen_workspace_and_resolves_task(monkeypatch, tmp_
     reset_executor = captured["reset_executor"]
     assert reset_executor.workspace is workspace
     assert captured["task_description"] == task_entry["canonical_task_content"]["description"]
+    assert captured["frozen_row"].phase.value == "phase5_adversarial_core"
+    assert captured["frozen_row"].trial_id == row.trial_id
     assert workspace.metadata.dataset_version == engine.dataset_version
     assert result.raw_attempt_directory == workspace.workspace_root
