@@ -329,7 +329,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 from phase5.runtime.engine import SharedExecutionEngine
                 from phase5.runtime.official_execution import RepositoryBatchExecutionAdapter
                 from phase5.queues.frozen_queue_loader import load_frozen_queue_bundle
-                from phase5.domain.registry import AttemptLineageStore
+                from phase5.attempts import AttemptLineageStore
                 
                 is_official = getattr(args, "official", False)
                 pipeline = SharedExecutionEngine(
