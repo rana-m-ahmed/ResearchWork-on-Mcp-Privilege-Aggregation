@@ -1,0 +1,132 @@
+{
+  "attempt_id": "P5-NONOFFICIAL-I17E-QUALIFICATION-M1-DURABILITY-001",
+  "controlled_failure_tests": {
+    "dispatched_fsync_failure": {
+      "accepted_count": 0,
+      "attempt_finalized": false,
+      "model_invocation_count": 0
+    },
+    "prepared_fsync_failure": {
+      "accepted_count": 0,
+      "attempt_finalized": false,
+      "model_invocation_count": 0
+    }
+  },
+  "counts_for_phase5": false,
+  "event_log_path": "write_ahead_durability_ledger.jsonl",
+  "event_log_sha256": "bef47e8a76a7241583f755b6e5efae6ad408fc1fe4832add454233b29da49109",
+  "events": [
+    {
+      "attempt_id": "P5-NONOFFICIAL-I17E-QUALIFICATION-M1-DURABILITY-001",
+      "counts_for_phase5": false,
+      "current_event_hash": "038676564aa1e48475938e0d9279cd04832bec233fd297584afe09b1c3937081",
+      "event_name": "prompt_persisted",
+      "file_path": "durability_01_prompt_persisted.json",
+      "file_sha256": "95c3965c25b1d84d5569ba21579c65a98629ee49552040ef24a8caca6fe35ed5",
+      "fsync_result": "success",
+      "official_trial": false,
+      "previous_event_hash": "ROOT",
+      "publication_evidence": false,
+      "sequence_number": 1,
+      "synthetic_fixture": true,
+      "timestamp_utc": "2026-07-11T08:01:55.554106+00:00"
+    },
+    {
+      "attempt_id": "P5-NONOFFICIAL-I17E-QUALIFICATION-M1-DURABILITY-001",
+      "counts_for_phase5": false,
+      "current_event_hash": "a7abc05a85df03136d3bd3e9f359de6aa415871905990656eb44486bb0096acf",
+      "event_name": "prepared_appended",
+      "file_path": "durability_02_prepared_appended.json",
+      "file_sha256": "d265645172ac7e83400c3821cbcdfca5216daba800500a4c8a397dd737f35ed4",
+      "fsync_result": "success",
+      "official_trial": false,
+      "previous_event_hash": "038676564aa1e48475938e0d9279cd04832bec233fd297584afe09b1c3937081",
+      "publication_evidence": false,
+      "sequence_number": 2,
+      "synthetic_fixture": true,
+      "timestamp_utc": "2026-07-11T08:01:55.557964+00:00"
+    },
+    {
+      "attempt_id": "P5-NONOFFICIAL-I17E-QUALIFICATION-M1-DURABILITY-001",
+      "counts_for_phase5": false,
+      "current_event_hash": "f1e7b9d5016542e250af8c1810f8483ff115c6eb9e9a5f251d9e92cf86b94e8c",
+      "event_name": "dispatched_appended",
+      "file_path": "durability_03_dispatched_appended.json",
+      "file_sha256": "e8f983f7c7580f0956cd477dab8878dfb25336b9449ee30d6f042117f6326906",
+      "fsync_result": "success",
+      "official_trial": false,
+      "previous_event_hash": "a7abc05a85df03136d3bd3e9f359de6aa415871905990656eb44486bb0096acf",
+      "publication_evidence": false,
+      "sequence_number": 3,
+      "synthetic_fixture": true,
+      "timestamp_utc": "2026-07-11T08:01:55.561483+00:00"
+    },
+    {
+      "attempt_id": "P5-NONOFFICIAL-I17E-QUALIFICATION-M1-DURABILITY-001",
+      "counts_for_phase5": false,
+      "current_event_hash": "ebdd97316a6d46e68f0dbcb472b7d98c300bee030d681bd9e433d73180024351",
+      "event_name": "raw_model_output_persisted",
+      "file_path": "durability_04_raw_model_output_persisted.json",
+      "file_sha256": "0355ba15b993030c16555f70a0387de1b24bede028699e3c01d0901a0b23ad57",
+      "fsync_result": "success",
+      "official_trial": false,
+      "previous_event_hash": "f1e7b9d5016542e250af8c1810f8483ff115c6eb9e9a5f251d9e92cf86b94e8c",
+      "publication_evidence": false,
+      "sequence_number": 4,
+      "synthetic_fixture": true,
+      "timestamp_utc": "2026-07-11T08:01:55.564911+00:00"
+    },
+    {
+      "attempt_id": "P5-NONOFFICIAL-I17E-QUALIFICATION-M1-DURABILITY-001",
+      "counts_for_phase5": false,
+      "current_event_hash": "69ccc8b6c307adbce93ea81eb5ad90890a8a6ffd9f7987fd23228c4a852aa0a7",
+      "event_name": "tool_events_persisted",
+      "file_path": "durability_05_tool_events_persisted.json",
+      "file_sha256": "243cbc6f7db8cad7d2d133a2911641ff996e19581f9118199362fb85bb8f56d7",
+      "fsync_result": "success",
+      "official_trial": false,
+      "previous_event_hash": "ebdd97316a6d46e68f0dbcb472b7d98c300bee030d681bd9e433d73180024351",
+      "publication_evidence": false,
+      "sequence_number": 5,
+      "synthetic_fixture": true,
+      "timestamp_utc": "2026-07-11T08:01:55.568543+00:00"
+    },
+    {
+      "attempt_id": "P5-NONOFFICIAL-I17E-QUALIFICATION-M1-DURABILITY-001",
+      "counts_for_phase5": false,
+      "current_event_hash": "f477fb0007041b57e75aea2c53c4ccd0df86016568c51f90769f79958d73f4a8",
+      "event_name": "grader_tid_materializer_completed",
+      "file_path": "durability_06_grader_tid_materializer_completed.json",
+      "file_sha256": "3ce37f6ba7a3d7183cbcaa70d49c93209ed05184fdbfff5957e0ba1f70c5d9fc",
+      "fsync_result": "success",
+      "official_trial": false,
+      "previous_event_hash": "69ccc8b6c307adbce93ea81eb5ad90890a8a6ffd9f7987fd23228c4a852aa0a7",
+      "publication_evidence": false,
+      "sequence_number": 6,
+      "synthetic_fixture": true,
+      "timestamp_utc": "2026-07-11T08:01:55.572308+00:00"
+    },
+    {
+      "attempt_id": "P5-NONOFFICIAL-I17E-QUALIFICATION-M1-DURABILITY-001",
+      "counts_for_phase5": false,
+      "current_event_hash": "dbbd4af13691e762322196e1384f19c319e855e305389f82bea56d8dab23cdba",
+      "event_name": "finalized_appended",
+      "file_path": "durability_07_finalized_appended.json",
+      "file_sha256": "e48fc5d5af83b1a55e92d47e134537d853a32f09bdae9a395b2d961e8a853bc2",
+      "fsync_result": "success",
+      "official_trial": false,
+      "previous_event_hash": "f477fb0007041b57e75aea2c53c4ccd0df86016568c51f90769f79958d73f4a8",
+      "publication_evidence": false,
+      "sequence_number": 7,
+      "synthetic_fixture": true,
+      "timestamp_utc": "2026-07-11T08:01:55.576108+00:00"
+    }
+  ],
+  "official_trial": false,
+  "ordering_proof": {
+    "finalized_after_grader_tid_materializer": true,
+    "model_invocation_after_dispatched_fsync": true
+  },
+  "publication_evidence": false,
+  "synthetic_fixture": true
+}

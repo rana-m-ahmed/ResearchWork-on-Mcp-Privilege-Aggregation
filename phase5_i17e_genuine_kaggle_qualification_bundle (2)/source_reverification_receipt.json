@@ -1,0 +1,43 @@
+{
+  "actual_detached_head": "43337406c04ee0b7fefbcc527bf29056725fc72a",
+  "candidate_source_commit": "43337406c04ee0b7fefbcc527bf29056725fc72a",
+  "clean_worktree_result": true,
+  "counts_for_phase5": false,
+  "credential_presence_check": {
+    "git_write_credential_present": false
+  },
+  "expected_source_commit": "43337406c04ee0b7fefbcc527bf29056725fc72a",
+  "fastmcp_process_state": {
+    "running": false
+  },
+  "missing_source_artifacts": [
+    "phase5/kaggle/phase5_official_qualification.ipynb",
+    "phase5/kaggle/phase5_official_qualification.py"
+  ],
+  "model_process_state": {
+    "running": false
+  },
+  "model_registry_hash": "686c112ebfc8e7790098b26454504edd385ee6a21ab41d636949afb7f1a05d0d",
+  "notebook_sha256": "808ced94a4a43cbd33554799641f7fc7ae98724f592f5c4a16fa9e281d1953b8",
+  "official_execution_adapter_sha256": null,
+  "official_trial": false,
+  "overall_verdict": "PASS",
+  "phase45_authority_hashes": {
+    "phase4/configs/model_set_freeze.yaml": "686c112ebfc8e7790098b26454504edd385ee6a21ab41d636949afb7f1a05d0d"
+  },
+  "phase4_corrected_lock_hashes": {
+    "phase4_5/kaggle/requirements.lock.txt": "6c16eea4d775facf286f91f509ef0ba7f95bd4a5d63dd7277b1e6723cbb41b68"
+  },
+  "publication_evidence": false,
+  "queue_manifest_hash": "66b4ba50578d29e2121a01d2b198c44679ae58839e5354fee425ffa6f9cc2ed9",
+  "reverification_timestamp_utc": "2026-07-11T08:01:55.912306+00:00",
+  "run_campaign_sha256": "64dbed4d44359106de779ad6cefdd64b878b88aff8ed0bffc52c812a7595c0e5",
+  "source_authority": "origin/phase5/real-official-execution",
+  "source_hashes": {
+    "phase4/configs/model_set_freeze.yaml": "686c112ebfc8e7790098b26454504edd385ee6a21ab41d636949afb7f1a05d0d",
+    "phase4_5/kaggle/requirements.lock.txt": "6c16eea4d775facf286f91f509ef0ba7f95bd4a5d63dd7277b1e6723cbb41b68",
+    "phase5/__init__.py": "64dbed4d44359106de779ad6cefdd64b878b88aff8ed0bffc52c812a7595c0e5",
+    "phase5/kaggle/phase5_runner.ipynb": "808ced94a4a43cbd33554799641f7fc7ae98724f592f5c4a16fa9e281d1953b8"
+  },
+  "synthetic_fixture": true
+}

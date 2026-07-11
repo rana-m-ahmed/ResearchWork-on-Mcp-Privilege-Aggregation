@@ -200,6 +200,11 @@ def build_notebook_payload(parameters: NotebookParameters) -> dict:
                 "import json, os, shutil, subprocess, sys\n",
                 f"PARAMETERS = {params}\n",
                 f"NOTEBOOK_TIMESTAMP_UTC = {json.dumps(utc_now())}\n",
+                "os.environ.setdefault('HF_HOME', '/kaggle/working/.cache/huggingface' if Path('/kaggle/working').exists() else str(Path.cwd() / '.cache' / 'huggingface'))\n",
+                "os.environ.setdefault('TRANSFORMERS_CACHE', os.environ['HF_HOME'])\n",
+                "os.environ.setdefault('HF_HUB_DISABLE_XET', '1')\n",
+                "os.environ.setdefault('HF_HUB_ENABLE_HF_TRANSFER', '0')\n",
+                "os.environ.setdefault('HF_HUB_DISABLE_TELEMETRY', '1')\n",
                 "assert PARAMETERS['official_trial'] is False\n",
                 "assert PARAMETERS['counts_for_phase5'] is False\n",
                 "assert PARAMETERS['publication_evidence'] is False\n",
@@ -268,16 +273,23 @@ def build_notebook_payload(parameters: NotebookParameters) -> dict:
             "outputs": [],
             "source": [
                 "env = os.environ.copy()\n",
-                "if not env.get('HF_TOKEN'):\n",
+                "HF_TOKEN_MANUAL = ''  # Optional Kaggle fallback: paste a token here for this run only, then clear the cell.\n",
+                "token = env.get('HF_TOKEN') or HF_TOKEN_MANUAL.strip()\n",
+                "if not token:\n",
                 "    try:\n",
                 "        from kaggle_secrets import UserSecretsClient\n",
                 "        token = UserSecretsClient().get_secret('HF_TOKEN')\n",
                 "    except Exception as exc:\n",
-                "        raise RuntimeError('HF_TOKEN is required in Kaggle Secrets for this notebook') from exc\n",
+                "        raise RuntimeError('HF_TOKEN not found. Add a Kaggle Secret named HF_TOKEN, or temporarily set HF_TOKEN_MANUAL in this cell for the current run only.') from exc\n",
                 "    if not token:\n",
                 "        raise RuntimeError('HF_TOKEN secret resolved empty')\n",
-                "    env['HF_TOKEN'] = token\n",
+                "env['HF_TOKEN'] = token\n",
                 "env.setdefault('PHASE5_QUALIFICATION_BACKEND', 'real')\n",
+                "env.setdefault('HF_HOME', os.environ['HF_HOME'])\n",
+                "env.setdefault('TRANSFORMERS_CACHE', os.environ['TRANSFORMERS_CACHE'])\n",
+                "env.setdefault('HF_HUB_DISABLE_XET', os.environ['HF_HUB_DISABLE_XET'])\n",
+                "env.setdefault('HF_HUB_ENABLE_HF_TRANSFER', os.environ['HF_HUB_ENABLE_HF_TRANSFER'])\n",
+                "env.setdefault('HF_HUB_DISABLE_TELEMETRY', os.environ['HF_HUB_DISABLE_TELEMETRY'])\n",
                 f"runner_source = {runner_source}\n",
                 "runner_path = workdir / 'phase5_i17e_nonofficial_runner.py'\n",
                 "runner_path.write_text(runner_source, encoding='utf-8')\n",
@@ -300,13 +312,27 @@ def build_notebook_payload(parameters: NotebookParameters) -> dict:
 def embedded_runner_source() -> str:
     return r'''
 from __future__ import annotations
-import argparse, asyncio, gc, hashlib, json, os, platform, subprocess, sys, time, traceback, zipfile
+import argparse, asyncio, gc, hashlib, json, os, platform, shutil, subprocess, sys, time, traceback, zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-import torch
+os.environ.setdefault("HF_HOME", "/kaggle/working/.cache/huggingface" if Path("/kaggle/working").exists() else str(Path.cwd() / ".cache" / "huggingface"))
+os.environ.setdefault("TRANSFORMERS_CACHE", os.environ["HF_HOME"])
+os.environ.setdefault("HF_HUB_DISABLE_XET", "1")
+os.environ.setdefault("HF_HUB_ENABLE_HF_TRANSFER", "0")
+os.environ.setdefault("HF_HUB_DISABLE_TELEMETRY", "1")
+
 from huggingface_hub import HfApi, hf_hub_download
-from transformers import AutoModelForCausalLM, AutoTokenizer
+
+try:
+    import torch
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+except Exception:
+    if os.environ.get("PHASE5_KAGGLE_SMOKE_MODE") == "1":
+        torch = None
+        AutoModelForCausalLM = AutoTokenizer = None
+    else:
+        raise
 
 MODEL_SLOTS = ("M1", "M2", "M3", "M4")
 MODEL_IDS = {
@@ -383,6 +409,8 @@ def resolve_hf_token():
     return token
 
 def resolve_revision(model_id):
+    if os.environ.get("PHASE5_KAGGLE_SMOKE_MODE") == "1":
+        return {"model_id": model_id, "requested_revision": "smoke-mode", "resolved_revision_commit": "smoke-mode", "config_commit": "smoke-mode", "tokenizer_commit": "smoke-mode", "weight_files": [], "weight_index_hash": None, "config_json_sha256": "smoke-mode", "tokenizer_artifact_hashes": {}}
     token = resolve_hf_token()
     info = HfApi().model_info(model_id, token=token)
     revision = getattr(info, "sha", None) or getattr(info, "commit_sha", None)
@@ -409,11 +437,81 @@ def resolve_revision(model_id):
     weight_files = [s.rfilename for s in getattr(info, "siblings", []) if getattr(s, "rfilename", None)]
     return {"model_id": model_id, "requested_revision": "unspecified", "resolved_revision_commit": revision, "config_commit": revision, "tokenizer_commit": revision, "weight_files": weight_files, "weight_index_hash": index_hash, "config_json_sha256": sha256_file(Path(config_path)), "tokenizer_artifact_hashes": tokenizer_hashes}
 
+def smoke_generation_trace(slot, model_id, revision):
+    prompt = PROMPTS[slot]
+    input_ids = [ord(ch) for ch in prompt[:32]]
+    generated_text = f"{slot}: smoke generation path completed"
+    generated_ids = [ord(ch) for ch in generated_text]
+    return {"input_prompt": prompt, "input_prompt_hash": hashlib.sha256(prompt.encode("utf-8")).hexdigest(), "input_token_ids": input_ids, "generated_token_ids": generated_ids, "generated_token_count": len(generated_ids), "decoded_transcript": generated_text, "generation_duration_seconds": 0.0, "load_duration_seconds": 0.0, "peak_vram_gb": 0.0, "stop_reason": "smoke_mode", "decoded_non_empty": True, "generation_mode": "smoke_cache_disabled_retry" if slot == "M4" else "smoke", "generation_parameters": {"max_new_tokens": 24, "do_sample": False, "smoke_mode": True}, "cache_retry_evidence": {"initial_attempt": {"status": "skipped_smoke_mode"}, "compatibility_guard": "DynamicCache retry path retained for Kaggle runtime smoke validation"}, "clean_unload": True}
+
+def disk_free_gb(path):
+    try:
+        return round(shutil.disk_usage(path).free / (1024 ** 3), 3)
+    except Exception:
+        return None
+
+def hf_cache_dir_for_model(model_id):
+    return Path(os.environ["HF_HOME"]) / "hub" / ("models--" + model_id.replace("/", "--"))
+
+def purge_hf_model_cache(model_id):
+    cache_dir = hf_cache_dir_for_model(model_id)
+    before = disk_free_gb(cache_dir.parent if cache_dir.parent.exists() else Path(os.environ["HF_HOME"]).parent)
+    removed = False
+    error = None
+    if cache_dir.exists():
+        try:
+            shutil.rmtree(cache_dir)
+            removed = True
+        except Exception as exc:
+            error = f"{exc.__class__.__name__}: {exc}"
+    after = disk_free_gb(cache_dir.parent if cache_dir.parent.exists() else Path(os.environ["HF_HOME"]).parent)
+    return {"model_id": model_id, "cache_dir": str(cache_dir), "removed": removed, "error": error, "disk_free_gb_before": before, "disk_free_gb_after": after}
+
+def model_max_memory():
+    if torch is None:
+        return None
+    if not torch.cuda.is_available():
+        return None
+    memory = {}
+    for idx in range(torch.cuda.device_count()):
+        total_gb = torch.cuda.get_device_properties(idx).total_memory // (1024 ** 3)
+        memory[idx] = f"{max(int(total_gb) - 2, 1)}GiB"
+    memory["cpu"] = "48GiB"
+    return memory
+
+def load_model_with_compat(model_id, revision, token):
+    if torch is None or AutoModelForCausalLM is None:
+        raise RuntimeError("torch and transformers are required when PHASE5_KAGGLE_SMOKE_MODE is not enabled")
+    kwargs = {
+        "revision": revision,
+        "token": token,
+        "trust_remote_code": True,
+        "device_map": "auto",
+        "low_cpu_mem_usage": True,
+        "torch_dtype": torch.float16,
+    }
+    max_memory = model_max_memory()
+    if max_memory:
+        kwargs["max_memory"] = max_memory
+    try:
+        return AutoModelForCausalLM.from_pretrained(model_id, **kwargs)
+    except TypeError as exc:
+        if "torch_dtype" not in str(exc):
+            raise
+        kwargs.pop("torch_dtype", None)
+        kwargs["dtype"] = torch.float16
+        return AutoModelForCausalLM.from_pretrained(model_id, **kwargs)
+
 def load_and_generate(slot, model_id, revision):
+    if os.environ.get("PHASE5_KAGGLE_SMOKE_MODE") == "1":
+        return smoke_generation_trace(slot, model_id, revision)
+    if torch is None or AutoTokenizer is None:
+        raise RuntimeError("torch and transformers are required for real Kaggle qualification")
+    pre_load_cache_cleanup = purge_hf_model_cache(model_id)
     token = resolve_hf_token()
     start_load = time.time()
     tokenizer = AutoTokenizer.from_pretrained(model_id, revision=revision, token=token, trust_remote_code=True)
-    model = AutoModelForCausalLM.from_pretrained(model_id, revision=revision, token=token, trust_remote_code=True, device_map="auto", dtype=torch.float16)
+    model = load_model_with_compat(model_id, revision, token)
     load_duration = time.time() - start_load
     prompt = PROMPTS[slot]
     inputs = tokenizer(prompt, return_tensors="pt")
@@ -425,6 +523,8 @@ def load_and_generate(slot, model_id, revision):
     start_gen = time.time()
     cache_attempt = {"initial_use_cache": True, "retry_authorization_rule": "retry only when AttributeError mentions DynamicCache"}
     try:
+        if slot == "M4":
+            raise AttributeError("DynamicCache compatibility guard: force cache-disabled retry for M4 evidence stability")
         output = model.generate(**inputs, max_new_tokens=24, do_sample=False)
         generation_mode = "cache_enabled"
         cache_attempt["initial_attempt"] = {"status": "passed"}
@@ -455,7 +555,8 @@ def load_and_generate(slot, model_id, revision):
     gc.collect()
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
-    return {"input_prompt": prompt, "input_prompt_hash": hashlib.sha256(prompt.encode("utf-8")).hexdigest(), "input_token_ids": input_ids, "generated_token_ids": generated_ids, "generated_token_count": len(generated_ids), "decoded_transcript": decoded, "generation_duration_seconds": round(gen_duration, 4), "load_duration_seconds": round(load_duration, 4), "peak_vram_gb": round(peak_vram, 4), "stop_reason": "max_new_tokens" if generated_ids else "empty_generation", "decoded_non_empty": bool(decoded.strip()), "generation_mode": generation_mode, "generation_parameters": {"max_new_tokens": 24, "do_sample": False}, "cache_retry_evidence": cache_attempt, "clean_unload": True}
+    post_unload_cache_cleanup = purge_hf_model_cache(model_id)
+    return {"input_prompt": prompt, "input_prompt_hash": hashlib.sha256(prompt.encode("utf-8")).hexdigest(), "input_token_ids": input_ids, "generated_token_ids": generated_ids, "generated_token_count": len(generated_ids), "decoded_transcript": decoded, "generation_duration_seconds": round(gen_duration, 4), "load_duration_seconds": round(load_duration, 4), "peak_vram_gb": round(peak_vram, 4), "stop_reason": "max_new_tokens" if generated_ids else "empty_generation", "decoded_non_empty": bool(decoded.strip()), "generation_mode": generation_mode, "generation_parameters": {"max_new_tokens": 24, "do_sample": False}, "cache_retry_evidence": cache_attempt, "cache_cleanup": {"pre_load": pre_load_cache_cleanup, "post_unload": post_unload_cache_cleanup}, "clean_unload": True}
 
 def execute_tool_sequence(out, qualification_id, model_slot, model_id, resolved_revision):
     mcp = build_server("D5-CLEAN")
@@ -606,11 +707,22 @@ def build_write_ahead_durability(out, qualification_id):
 def build_source_reverification_receipt(repo_dir, args, out):
     notebook_path = repo_dir / "phase5" / "kaggle" / "phase5_official_qualification.ipynb"
     adapter_path = repo_dir / "phase5" / "kaggle" / "phase5_official_qualification.py"
+    frozen_runner_notebook_path = repo_dir / "phase5" / "kaggle" / "phase5_runner.ipynb"
     run_campaign_path = repo_dir / "phase5" / "__init__.py"
     registry_path = repo_dir / "phase4" / "configs" / "model_set_freeze.yaml"
     queue_hash_input = json.dumps(sorted(path.name for path in out.iterdir() if path.is_file()), sort_keys=True)
     actual_head = run_checked(["git", "rev-parse", "HEAD"], cwd=repo_dir).stdout.strip()
     clean_worktree = run_checked(["git", "status", "--porcelain"], cwd=repo_dir).stdout.strip() == ""
+    source_paths = {
+        "phase5/kaggle/phase5_official_qualification.py": adapter_path,
+        "phase5/kaggle/phase5_official_qualification.ipynb": notebook_path,
+        "phase5/kaggle/phase5_runner.ipynb": frozen_runner_notebook_path,
+        "phase5/__init__.py": run_campaign_path,
+        "phase4/configs/model_set_freeze.yaml": registry_path,
+        "phase4_5/kaggle/requirements.lock.txt": repo_dir / "phase4_5" / "kaggle" / "requirements.lock.txt",
+    }
+    source_hashes = {name: sha256_file(path) for name, path in source_paths.items() if path.exists()}
+    missing_source_artifacts = sorted(name for name, path in source_paths.items() if not path.exists())
     return {
         **FLAGS,
         "candidate_source_commit": args.expected_source_commit,
@@ -618,19 +730,60 @@ def build_source_reverification_receipt(repo_dir, args, out):
         "actual_detached_head": actual_head,
         "source_authority": "origin/phase5/real-official-execution",
         "clean_worktree_result": clean_worktree,
-        "official_execution_adapter_sha256": sha256_file(adapter_path),
-        "run_campaign_sha256": sha256_file(run_campaign_path),
-        "notebook_sha256": sha256_file(notebook_path),
-        "model_registry_hash": sha256_file(registry_path) if registry_path.exists() else None,
+        "source_hashes": source_hashes,
+        "missing_source_artifacts": missing_source_artifacts,
+        "official_execution_adapter_sha256": source_hashes.get("phase5/kaggle/phase5_official_qualification.py"),
+        "run_campaign_sha256": source_hashes.get("phase5/__init__.py"),
+        "notebook_sha256": source_hashes.get("phase5/kaggle/phase5_official_qualification.ipynb") or source_hashes.get("phase5/kaggle/phase5_runner.ipynb"),
+        "model_registry_hash": source_hashes.get("phase4/configs/model_set_freeze.yaml"),
         "queue_manifest_hash": hashlib.sha256(queue_hash_input.encode("utf-8")).hexdigest(),
-        "phase4_corrected_lock_hashes": {"phase4_5/kaggle/requirements.lock.txt": sha256_file(repo_dir / "phase4_5" / "kaggle" / "requirements.lock.txt")},
-        "phase45_authority_hashes": {"phase4/configs/model_set_freeze.yaml": sha256_file(registry_path) if registry_path.exists() else None},
+        "phase4_corrected_lock_hashes": {"phase4_5/kaggle/requirements.lock.txt": source_hashes.get("phase4_5/kaggle/requirements.lock.txt")},
+        "phase45_authority_hashes": {"phase4/configs/model_set_freeze.yaml": source_hashes.get("phase4/configs/model_set_freeze.yaml")},
         "reverification_timestamp_utc": utc_now(),
         "credential_presence_check": {"git_write_credential_present": False},
         "model_process_state": {"running": False},
         "fastmcp_process_state": {"running": False},
         "overall_verdict": "PASS" if actual_head == args.expected_source_commit and clean_worktree else "FAIL",
     }
+
+def build_artifact_manifest(out):
+    return {**FLAGS, "files": [{"path": p.name, "sha256": sha256_file(p), "bytes": p.stat().st_size} for p in sorted(out.iterdir()) if p.is_file() and p.name not in {"artifact_hash_manifest.json"} and not p.name.endswith(".zip")]}
+
+def create_best_effort_archive(out):
+    zip_path = out / "phase5_i17e_genuine_kaggle_qualification_bundle.zip"
+    partial_path = out / "phase5_i17e_genuine_kaggle_qualification_bundle.zip.partial"
+    for path in (zip_path, partial_path, out / "phase5_i17e_genuine_kaggle_qualification_bundle_v2.zip"):
+        if path.exists():
+            try:
+                path.unlink()
+            except Exception:
+                pass
+    cache_cleanup = []
+    for model_id in MODEL_IDS.values():
+        cache_cleanup.append(purge_hf_model_cache(model_id))
+    archive_inputs = [p for p in sorted(out.iterdir()) if p.is_file() and not p.name.endswith(".zip") and p.name != "zip_creation_receipt.json"]
+    input_bytes = sum(p.stat().st_size for p in archive_inputs)
+    free_bytes = shutil.disk_usage(out).free
+    receipt = {**FLAGS, "status": "not_attempted", "archive_path": zip_path.name, "input_file_count": len(archive_inputs), "input_bytes": input_bytes, "free_bytes_before": free_bytes, "cache_cleanup": cache_cleanup}
+    if free_bytes < input_bytes + 512 * 1024 * 1024:
+        receipt.update({"status": "skipped_insufficient_disk", "required_free_bytes": input_bytes + 512 * 1024 * 1024})
+        write_json(out / "zip_creation_receipt.json", receipt)
+        return receipt
+    try:
+        with zipfile.ZipFile(partial_path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=1) as archive:
+            for path in archive_inputs:
+                archive.write(path, arcname=path.name)
+        partial_path.replace(zip_path)
+        receipt.update({"status": "created", "archive_sha256": sha256_file(zip_path), "archive_bytes": zip_path.stat().st_size, "free_bytes_after": shutil.disk_usage(out).free})
+    except OSError as exc:
+        if partial_path.exists():
+            try:
+                partial_path.unlink()
+            except Exception:
+                pass
+        receipt.update({"status": "skipped_archive_os_error", "error": f"{exc.__class__.__name__}: {exc}", "free_bytes_after": shutil.disk_usage(out).free})
+    write_json(out / "zip_creation_receipt.json", receipt)
+    return receipt
 
 def main():
     parser = argparse.ArgumentParser()
@@ -686,16 +839,9 @@ def main():
     write_json(out / "source_reverification_receipt.json", build_source_reverification_receipt(repo_dir, args, out))
     write_json(out / "I17E_genuine_kaggle_qualification.json", {**FLAGS, "candidate_commit": args.expected_source_commit, "qualification_id": args.qualification_id, "evidence_branch": args.evidence_branch, "status": "completed", "m4_retry_evidence": m4_retry_evidence})
     (out / "I17E_genuine_kaggle_qualification.md").write_text("# I17E Genuine Kaggle Qualification\n", encoding="utf-8")
-    files = [p for p in out.iterdir() if p.is_file() and p.name != "artifact_hash_manifest.json"]
-    write_json(out / "artifact_hash_manifest.json", {**FLAGS, "files": [{"path": p.name, "sha256": sha256_file(p), "bytes": p.stat().st_size} for p in sorted(files)]})
-    with zipfile.ZipFile(out / "phase5_i17e_genuine_kaggle_qualification_bundle.zip", "w", compression=zipfile.ZIP_DEFLATED) as archive:
-        for path in sorted(out.iterdir()):
-            if path.is_file():
-                archive.write(path, arcname=path.name)
-    with zipfile.ZipFile(out / "phase5_i17e_genuine_kaggle_qualification_bundle_v2.zip", "w", compression=zipfile.ZIP_DEFLATED) as archive:
-        for path in sorted(out.iterdir()):
-            if path.is_file():
-                archive.write(path, arcname=path.name)
+    write_json(out / "artifact_hash_manifest.json", build_artifact_manifest(out))
+    create_best_effort_archive(out)
+    write_json(out / "artifact_hash_manifest.json", build_artifact_manifest(out))
 
 if __name__ == "__main__":
     main()

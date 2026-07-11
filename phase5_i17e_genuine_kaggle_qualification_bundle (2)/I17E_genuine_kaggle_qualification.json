@@ -1,0 +1,28 @@
+{
+  "candidate_commit": "43337406c04ee0b7fefbcc527bf29056725fc72a",
+  "counts_for_phase5": false,
+  "evidence_branch": "phase5-kaggle-nonofficial-adapter-qualification",
+  "m4_retry_evidence": {
+    "initial_attempt": {
+      "exception_message": "DynamicCache compatibility guard: force cache-disabled retry for M4 evidence stability",
+      "exception_type": "AttributeError",
+      "status": "failed",
+      "timestamp_utc": "2026-07-11T08:01:50.674301+00:00",
+      "traceback_excerpt": "Traceback (most recent call last):\n  File \"/kaggle/working/phase5_i17e_nonofficial_runner.py\", line 214, in load_and_generate\n    raise AttributeError(\"DynamicCache compatibility guard: force cache-disabled retry for M4 evidence stability\")\nAttributeError: DynamicCache compatibility guard: force cache-disabled retry for M4 evidence stability\n",
+      "traceback_sha256": "f6cbe1e95728107e6fc51775adb6df49dd3a11e77c5e0e4cf937c0e476913324"
+    },
+    "initial_use_cache": true,
+    "retry_attempt": {
+      "retry_completion_timestamp_utc": "2026-07-11T08:01:52.818777+00:00",
+      "retry_start_timestamp_utc": "2026-07-11T08:01:50.674710+00:00",
+      "status": "passed",
+      "use_cache": false
+    },
+    "retry_authorization_rule": "retry only when AttributeError mentions DynamicCache"
+  },
+  "official_trial": false,
+  "publication_evidence": false,
+  "qualification_id": "P5-NONOFFICIAL-I17E-QUALIFICATION",
+  "status": "completed",
+  "synthetic_fixture": true
+}

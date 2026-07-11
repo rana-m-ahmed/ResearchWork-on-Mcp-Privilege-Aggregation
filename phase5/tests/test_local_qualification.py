@@ -75,7 +75,8 @@ def test_notebook_payload_is_nonofficial_and_executable() -> None:
     assert "parsed_model_request" in text
     assert "UserSecretsClient" in text
     assert "resolve_hf_token" in text
-    assert "dtype=torch.float16" in text
+    assert "load_model_with_compat" in text
+    assert "torch_dtype" in text
     assert "phase5_i17e_genuine_kaggle_qualification_bundle.zip" in text
     assert "official_trial" in text
     assert "counts_for_phase5" in text

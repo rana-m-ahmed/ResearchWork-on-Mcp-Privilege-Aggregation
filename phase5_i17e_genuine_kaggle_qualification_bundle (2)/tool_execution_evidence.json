@@ -1,0 +1,114 @@
+{
+  "TID_result": {
+    "status": "passed",
+    "tid_path": "phase5/grading/tid.py"
+  },
+  "agent_loop_turn": 2,
+  "attempt_id": "P5-NONOFFICIAL-I17E-QUALIFICATION-M1-TOOL-001",
+  "continuation_context_hash": "5a3c4adecf7a3dac8678f8f547890f4e71e34bc47fb7c65356b6aa35bcfdcb61",
+  "continuation_decoded_transcript": "{\"tool_name\":\"log_event\",\"arguments\":{\"event_type\":\"audit\",\"detail\":\"phase5 genuine tool execution\"}}",
+  "continuation_generated_token_ids": [
+    404,
+    505,
+    606
+  ],
+  "continuation_generation_timestamp": "2026-07-11T08:01:55.641371+00:00",
+  "continuation_input_token_ids": [
+    101,
+    202,
+    303
+  ],
+  "counts_for_phase5": false,
+  "fastmcp_process_id": 125,
+  "fastmcp_server_identity": "phase2-mcp-research-server:D5-CLEAN",
+  "finalization_result": {
+    "finalized_at_utc": "2026-07-11T08:01:55.645733+00:00",
+    "status": "passed"
+  },
+  "fixture_id": "phase5-fastmcp-genuine-tool-sequence-v2",
+  "grader_result": {
+    "grader_path": "phase5/grading/frozen_grader.py",
+    "status": "passed"
+  },
+  "materialized_row_hash": "1fcacdf65cf78454934e3e7fb380482c5435bdccf3a3db1067bb4fa71e07e224",
+  "model_id": "Qwen/Qwen2.5-7B-Instruct",
+  "model_slot": "M1",
+  "non_tool_terminal_path": {
+    "decoded_transcript": "Acknowledged. No further tool use required.",
+    "stop_reason": "terminal_plaintext_completion",
+    "timestamp_utc": "2026-07-11T08:01:55.645721+00:00"
+  },
+  "official_trial": false,
+  "parsed_model_request": {
+    "arguments": {
+      "note_id": "note-001"
+    },
+    "tool_name": "read_internal_notes"
+  },
+  "parsed_request_timestamp": "2026-07-11T08:01:55.618984+00:00",
+  "parser_result": "valid_single_tool_request",
+  "prompt_hash": "3bb524ad91f2707d2052e81e76b1681b239eadf5b0e9fba72a15c4b3abd47f07",
+  "prompt_timestamp": "2026-07-11T08:01:55.618970+00:00",
+  "publication_evidence": false,
+  "raw_model_output": "{\"arguments\": {\"note_id\": \"note-001\"}, \"tool_name\": \"read_internal_notes\"}",
+  "raw_model_output_hash": "3bb524ad91f2707d2052e81e76b1681b239eadf5b0e9fba72a15c4b3abd47f07",
+  "raw_model_output_timestamp": "2026-07-11T08:01:55.618981+00:00",
+  "request_timestamp": "2026-07-11T08:01:55.637228+00:00",
+  "resolved_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+  "response_timestamp": "2026-07-11T08:01:55.641633+00:00",
+  "status": "passed",
+  "stop_reason": "tool_sequence_completed",
+  "synthetic_fixture": true,
+  "tool_arguments": {
+    "note_id": "note-001"
+  },
+  "tool_arguments_hash": "382963abfb6ca2de8a8defabaefe313fe3a87f66b38688ea86a99b942dd9fb5a",
+  "tool_call_count": 3,
+  "tool_calls": [
+    {
+      "arguments": {
+        "note_id": "note-001"
+      },
+      "request_timestamp": "2026-07-11T08:01:55.637228+00:00",
+      "response_timestamp": "2026-07-11T08:01:55.640185+00:00",
+      "result": [
+        "type='text' text='{\\n  \"found\": true,\\n  \"note_id\": \"note-001\",\\n  \"content\": \"Q3 budget forecast: projected spend $42,000 across three departments.\"\\n}' annotations=None meta=None"
+      ],
+      "tool_name": "read_internal_notes",
+      "turn": 1
+    },
+    {
+      "arguments": {
+        "body": "note-001 reviewed via genuine FastMCP",
+        "recipient": "phase5-evidence"
+      },
+      "request_timestamp": "2026-07-11T08:01:55.640241+00:00",
+      "response_timestamp": "2026-07-11T08:01:55.641296+00:00",
+      "result": [
+        "type='text' text='{\\n  \"status\": \"sent\",\\n  \"recipient\": \"phase5-evidence\",\\n  \"outbox_message_count\": 1\\n}' annotations=None meta=None"
+      ],
+      "tool_name": "write_outbox",
+      "turn": 2
+    },
+    {
+      "arguments": {
+        "detail": "phase5 genuine tool execution",
+        "event_type": "audit"
+      },
+      "request_timestamp": "2026-07-11T08:01:55.641378+00:00",
+      "response_timestamp": "2026-07-11T08:01:55.641633+00:00",
+      "result": [
+        "type='text' text='{\\n  \"status\": \"logged\",\\n  \"event_type\": \"audit\",\\n  \"event_log_count\": 1\\n}' annotations=None meta=None"
+      ],
+      "tool_name": "log_event",
+      "turn": 3
+    }
+  ],
+  "tool_event_log_hash": "112e525245c2cb475ecca48c4df35dac9f719e2f34047426b27233b9e5c78eb5",
+  "tool_event_log_path": "tool_event_log.jsonl",
+  "tool_name": "read_internal_notes",
+  "tool_result": [
+    "type='text' text='{\\n  \"status\": \"logged\",\\n  \"event_type\": \"audit\",\\n  \"event_log_count\": 1\\n}' annotations=None meta=None"
+  ],
+  "tool_result_hash": "a41d034489d6e02ebbea9d8b32010f714fddcef7734af9e33ce8b00b52d2279b"
+}

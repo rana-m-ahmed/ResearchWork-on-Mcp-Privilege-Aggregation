@@ -1,0 +1,3 @@
+{"arguments": {"note_id": "note-001"}, "request_timestamp": "2026-07-11T08:01:55.637228+00:00", "response_timestamp": "2026-07-11T08:01:55.640185+00:00", "tool_name": "read_internal_notes", "turn": 1}
+{"arguments": {"body": "note-001 reviewed via genuine FastMCP", "recipient": "phase5-evidence"}, "request_timestamp": "2026-07-11T08:01:55.640241+00:00", "response_timestamp": "2026-07-11T08:01:55.641296+00:00", "tool_name": "write_outbox", "turn": 2}
+{"arguments": {"detail": "phase5 genuine tool execution", "event_type": "audit"}, "request_timestamp": "2026-07-11T08:01:55.641378+00:00", "response_timestamp": "2026-07-11T08:01:55.641633+00:00", "tool_name": "log_event", "turn": 3}
