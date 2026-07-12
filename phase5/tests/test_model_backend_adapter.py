@@ -6,7 +6,7 @@ import pytest
 
 from phase5.domain.errors import FrozenArtifactHashError, MissingFrozenSettingError, RuntimeMismatchError, SchemaInvariantError
 from phase5.runtime import build_frozen_model_backend_adapter, load_frozen_model_backend_identity
-from phase5.runtime.model_backend_adapter import build_model_load_memory_plan
+from phase5.runtime.model_backend_adapter import build_model_load_memory_plan, serialize_frozen_prompt_for_model
 
 
 class _FakeCuda:
@@ -22,6 +22,25 @@ class _FakeCuda:
 
 class _FakeTorch:
     cuda = _FakeCuda()
+
+
+class _ChatTokenizer:
+    def apply_chat_template(self, messages, *, tokenize, add_generation_prompt):
+        assert messages == [{"role": "user", "content": "compiled prompt"}]
+        assert tokenize is False
+        assert add_generation_prompt is True
+        return "<|im_start|>user\ncompiled prompt<|im_end|>\n<|im_start|>assistant\n"
+
+
+def test_model_serialization_uses_immutable_tokenizer_chat_template() -> None:
+    serialized = serialize_frozen_prompt_for_model(_ChatTokenizer(), "compiled prompt")
+
+    assert serialized.endswith("<|im_start|>assistant\n")
+
+
+def test_model_serialization_fails_without_chat_template() -> None:
+    with pytest.raises(RuntimeMismatchError, match="required chat template"):
+        serialize_frozen_prompt_for_model(object(), "compiled prompt")
 
 
 def test_model_load_memory_plan_reserves_gpu_and_cpu_headroom(monkeypatch, tmp_path: Path) -> None:

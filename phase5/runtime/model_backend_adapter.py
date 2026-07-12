@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import tempfile
@@ -21,6 +22,7 @@ _RUNTIME_AUTHORITY_PATH = Path("phase5/manifests/model_runtime_authority_v2.json
 _GIB = 1024**3
 _GPU_HEADROOM_BYTES = 2 * _GIB
 _CPU_HEADROOM_BYTES = 4 * _GIB
+_FROZEN_INPUT_TOKEN_LIMIT = 3584
 
 
 def _available_cpu_memory_bytes() -> int:
@@ -61,6 +63,22 @@ def build_model_load_memory_plan(torch_module: Any) -> tuple[dict[Any, int], Pat
     offload_root.mkdir(parents=True, exist_ok=True)
     max_memory["cpu"] = usable_cpu_bytes
     return max_memory, offload_root
+
+
+def serialize_frozen_prompt_for_model(tokenizer: Any, prompt_text: str) -> str:
+    """Apply the immutable tokenizer's native generation boundary."""
+
+    apply_chat_template = getattr(tokenizer, "apply_chat_template", None)
+    if not callable(apply_chat_template):
+        raise RuntimeMismatchError("the frozen tokenizer does not expose its required chat template")
+    serialized = apply_chat_template(
+        [{"role": "user", "content": prompt_text}],
+        tokenize=False,
+        add_generation_prompt=True,
+    )
+    if not isinstance(serialized, str) or not serialized:
+        raise RuntimeMismatchError("the frozen tokenizer returned an invalid chat serialization")
+    return serialized
 
 _PLACEHOLDER_DIGEST_MARKERS = (
     "AUTHENTIC_KAGGLE_EXECUTION",
@@ -374,7 +392,14 @@ class FrozenModelBackendAdapter:
         self._ensure_runtime_loaded()
         import torch
 
-        encoded = self._tokenizer(prompt_text, return_tensors="pt", add_special_tokens=False)
+        serialized_prompt = serialize_frozen_prompt_for_model(self._tokenizer, prompt_text)
+        encoded = self._tokenizer(serialized_prompt, return_tensors="pt", add_special_tokens=False)
+        input_token_count = int(encoded["input_ids"].shape[1])
+        if input_token_count > _FROZEN_INPUT_TOKEN_LIMIT:
+            raise RuntimeMismatchError(
+                f"model-native prompt serialization exceeds the frozen input limit: "
+                f"{input_token_count} > {_FROZEN_INPUT_TOKEN_LIMIT}"
+            )
         input_device = next(self._model.parameters()).device
         encoded = {name: tensor.to(input_device) for name, tensor in encoded.items()}
         with torch.inference_mode():
@@ -387,6 +412,9 @@ class FrozenModelBackendAdapter:
         generated_ids = output[0, encoded["input_ids"].shape[1]:]
         decoded_output = self._tokenizer.decode(generated_ids, skip_special_tokens=True)
         self._last_generation_receipt = {
+            "compiled_prompt_sha256": hashlib.sha256(prompt_text.encode("utf-8")).hexdigest(),
+            "model_serialization": "tokenizer_chat_template",
+            "serialized_prompt_sha256": hashlib.sha256(serialized_prompt.encode("utf-8")).hexdigest(),
             "input_token_ids": encoded["input_ids"][0].detach().cpu().tolist(),
             "generated_token_ids": generated_ids.detach().cpu().tolist(),
             "decoded_output": decoded_output,
