@@ -377,6 +377,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     lineage_store=AttemptLineageStore(Path("phase5/evidence/lineage.csv")),
                     session=temp_session,
                     dataset_version=args.dataset_version,
+                    official_mode=is_official,
                     real_execution_adapter=True
                 )
 

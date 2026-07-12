@@ -15,7 +15,7 @@ from phase5.runtime.official_execution import (
     RepositoryBatchExecutionAdapter,
     TrialAcceptanceProof,
     frozen_row_key,
-    refuse_official_dispatch,
+    authorize_official_dispatch,
 )
 from phase5.runtime.session import CampaignSession
 
@@ -70,6 +70,40 @@ class SyntheticRealPipeline:
             publication_evidence=False,
             acceptance_proof=None if orphaned else _proof(),
             invalid_reason="synthetic interruption" if orphaned else None,
+            orphaned=orphaned,
+        )
+
+class OfficialRealPipeline:
+    real_pipeline = True
+    synthetic_fixture = False
+    official_trial = True
+
+    def __init__(self, root: Path, *, orphan_first: bool = False) -> None:
+        self.root = root
+        self.orphan_first = orphan_first
+        self.calls: list[tuple[str, int, str | None]] = []
+
+    def execute_row(self, *, row, batch, run_id, attempt_index, parent_attempt_id):
+        self.calls.append((str(row.trial_id), attempt_index, parent_attempt_id))
+        attempt_id = str(AttemptId.build(row.trial_id, attempt_index, "ABCDEF12"))
+        attempt_root = self.root / attempt_id
+        attempt_root.mkdir(parents=True, exist_ok=False)
+        orphaned = self.orphan_first and attempt_index == 0
+        return ExecutedTrialResult(
+            frozen_row_id=frozen_row_key(row),
+            target_trial_id=str(row.trial_id),
+            attempt_id=attempt_id,
+            attempt_index=attempt_index,
+            parent_attempt_id=parent_attempt_id,
+            raw_attempt_directory=attempt_root,
+            elapsed_seconds=0.01,
+            pipeline_executed=True,
+            synthetic_fixture=False,
+            official_trial=True,
+            counts_for_phase5=True,
+            publication_evidence=True,
+            acceptance_proof=None if orphaned else _proof(),
+            invalid_reason="official interruption" if orphaned else None,
             orphaned=orphaned,
         )
 
@@ -159,6 +193,30 @@ def test_repository_adapter_executes_frozen_rows_but_never_creates_official_coun
     assert all(not record.accepted_attempt and not record.counts_toward_cell_n for record in records)
 
 
+def test_repository_adapter_in_official_mode_creates_accepted_counts(tmp_path: Path) -> None:
+    plan = load_campaign_plan(model_slot="M1")
+    pipeline = OfficialRealPipeline(tmp_path / "attempts")
+    store = AttemptLineageStore(tmp_path / "lineage.csv")
+    adapter = RepositoryBatchExecutionAdapter(
+        queue_bundle=load_frozen_queue_bundle(),
+        pipeline=pipeline,
+        lineage_store=store,
+        session=_sealed_session(),
+        dataset_version=plan.dataset_version,
+        official_mode=True,
+    )
+
+    result = adapter(plan.batches[0], plan.p95_trial_seconds)
+
+    assert len(pipeline.calls) == plan.batches[0].row_count
+    assert result.status == "OFFICIAL_FINALIZED"
+    assert result.accepted_count == plan.batches[0].row_count
+    assert result.finalized is True
+    records = store.load_records()
+    assert len(records) == plan.batches[0].row_count
+    assert all(record.accepted_attempt and record.counts_toward_cell_n for record in records)
+
+
 def test_orphan_replacement_uses_new_attempt_and_parent_lineage(tmp_path: Path) -> None:
     plan = load_campaign_plan(model_slot="M1")
     pipeline = SyntheticRealPipeline(tmp_path / "attempts", orphan_first=True)
@@ -190,8 +248,8 @@ def test_unsealed_adapter_and_official_v3_dispatch_remain_blocked(tmp_path: Path
             session=CampaignSession.open(model_slot=ModelSlot.M1),
             dataset_version=plan.dataset_version,
         )
-    with pytest.raises(OfficialDispatchBlockedError, match="remains prohibited"):
-        refuse_official_dispatch(
-            dataset_version="P5-DV-1.0.2-A7C91E42",
+    with pytest.raises(OfficialDispatchBlockedError, match="mismatch"):
+        authorize_official_dispatch(
+            dataset_version="invalid-version",
             source_tag="phase5-official-source-v3",
         )

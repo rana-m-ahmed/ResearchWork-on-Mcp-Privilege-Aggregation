@@ -32,8 +32,8 @@ WORKLOAD_COUNTS = {
 }
 DEFAULT_SAFE_SESSION_HOURS = 7.5
 DEFAULT_TIMING_REPORT = Path("phase4_5/validation/phase45_kaggle_quota_feasibility_report.md")
-DEFAULT_BATCH_MANIFEST = Path("phase5/manifests/batch_partition_manifest_v2.json")
-DEFAULT_RUN_PLAN_JSON = Path("phase5/validation/kaggle_run_plan_v2.json")
+DEFAULT_BATCH_MANIFEST = Path("phase5/manifests/batch_partition_manifest_v3.json")
+DEFAULT_RUN_PLAN_JSON = Path("phase5/validation/kaggle_run_plan_v3.json")
 DEFAULT_M4_RECONCILIATION = Path("phase5/validation/m4_loader_status_reconciliation.json")
 DEFAULT_MODEL_LOADER_OUTPUTS = Path("phase4_5/dryrun_results/kaggle_model_loader_smoke/model_loader_outputs.jsonl")
 DEFAULT_MODEL_LOADER_TRIALS = Path("phase4_5/dryrun_results/kaggle_model_loader_smoke/model_loader_trials.jsonl")
@@ -42,7 +42,7 @@ DEFAULT_KAGGLE_SMOKE_INVALIDS = Path("phase4_5/dryrun_results/kaggle_smoke/inval
 DEFAULT_KAGGLE_SMOKE_FAILURES = Path("phase4_5/dryrun_results/kaggle_smoke/failures.jsonl")
 DEFAULT_CHECKPOINT_RESUME = Path("phase4_5/configs/phase45_checkpoint_resume.yaml")
 FROZEN_TIMING_EVIDENCE_GENERATED_UTC = "2026-07-05T12:56:48.678168Z"
-I17R_DATASET_VERSION = "P5-DV-1.0.1-A7C91E42"
+I17R_DATASET_VERSION = "P5-DV-1.0.2-A7C91E42"
 
 
 def _sha256_bytes(data: bytes) -> str:
