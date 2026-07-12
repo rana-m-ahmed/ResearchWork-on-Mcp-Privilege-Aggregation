@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import asyncio
+import json
 from dataclasses import dataclass
 from ipaddress import ip_address
 from typing import Any, Callable, Sequence
 
 from ..domain.errors import RuntimeMismatchError, SchemaInvariantError
 from .workspace_isolation import AttemptWorkspaceIsolation
+from .tool_dispatch import ToolSpecification
 
 try:  # pragma: no cover - validated by runtime tests
     from server.mock_server import build_server as default_server_factory
@@ -149,3 +151,44 @@ def build_validated_server(
         workspace=workspace,
     )
     return launcher.validate()
+
+
+def build_fastmcp_tool_catalog(verification: LaunchVerification) -> dict[str, ToolSpecification]:
+    """Build dispatch specifications backed by the validated FastMCP call path."""
+
+    tool_manager = getattr(verification.server, "_tool_manager", None)
+    registered = getattr(tool_manager, "_tools", None)
+    if not isinstance(registered, dict):
+        raise SchemaInvariantError("validated FastMCP object does not expose registered tool contracts")
+
+    catalog: dict[str, ToolSpecification] = {}
+    for tool_name in verification.tool_names:
+        tool = registered.get(tool_name)
+        parameters = getattr(tool, "parameters", None)
+        if not isinstance(parameters, dict):
+            raise SchemaInvariantError(f"FastMCP tool {tool_name!r} is missing its parameter schema")
+        required = parameters.get("required", ())
+        if not isinstance(required, (list, tuple)) or not all(isinstance(item, str) for item in required):
+            raise SchemaInvariantError(f"FastMCP tool {tool_name!r} has an invalid required-argument schema")
+
+        def handler(arguments: dict[str, Any], *, current_name: str = tool_name) -> str:
+            async def invoke() -> Any:
+                return await verification.server.call_tool(current_name, arguments)
+
+            response = asyncio.run(invoke())
+            if not isinstance(response, list) or not response:
+                raise SchemaInvariantError(f"FastMCP tool {current_name!r} returned an empty response")
+            text_parts = [getattr(item, "text", None) for item in response]
+            if not all(isinstance(item, str) for item in text_parts):
+                raise SchemaInvariantError(f"FastMCP tool {current_name!r} returned unsupported content")
+            if len(text_parts) == 1:
+                return text_parts[0]
+            return json.dumps(text_parts, ensure_ascii=False, separators=(",", ":"))
+
+        catalog[tool_name] = ToolSpecification(
+            exposed_tool_name=tool_name,
+            logical_tool_name=tool_name,
+            required_arguments=tuple(required),
+            handler=handler,
+        )
+    return catalog

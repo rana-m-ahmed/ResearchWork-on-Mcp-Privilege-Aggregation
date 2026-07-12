@@ -50,6 +50,26 @@ def test_parse_tool_calls_preserves_order_and_call_ids() -> None:
     assert parsed.metadata["mode"] == "tool"
 
 
+def test_parse_frozen_phase3_single_tool_contract() -> None:
+    parsed = parse_model_output(
+        json.dumps({"tool": "alpha", "arguments": {"x": 1}}, ensure_ascii=False),
+        parser_version="1.0",
+    )
+
+    assert parsed.terminal_response is None
+    assert len(parsed.tool_calls) == 1
+    assert parsed.tool_calls[0].tool_name == "alpha"
+    assert parsed.tool_calls[0].arguments == {"x": 1}
+
+
+def test_parse_rejects_mixed_tool_envelopes() -> None:
+    with pytest.raises(ModelOutputFailure):
+        parse_model_output(
+            json.dumps({"tool": "alpha", "arguments": {}, "tool_calls": []}),
+            parser_version="1.0",
+        )
+
+
 @pytest.mark.parametrize(
     "raw_output",
     [

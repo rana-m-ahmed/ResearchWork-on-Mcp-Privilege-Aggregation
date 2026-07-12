@@ -32,6 +32,7 @@ PLANNED_COMMANDS = (
     "checkpoint-status",
     "resume-plan",
     "run-campaign",
+    "run-m1-proof",
     "session-open",
     "session-close-seal",
     "session-seal",
@@ -106,6 +107,14 @@ def build_parser() -> argparse.ArgumentParser:
     run_campaign.add_argument("--dataset-version", required=False)
     run_campaign.add_argument("--seal-epoch", required=False, type=int)
     run_campaign.add_argument("--max-batches", required=False, type=int)
+
+    run_proof = subparsers.add_parser(
+        "run-m1-proof",
+        help="Run the bounded synthetic non-official M1 shared-engine proof.",
+    )
+    run_proof.add_argument("--dataset-version", required=True)
+    run_proof.add_argument("--run-id", required=True)
+    run_proof.set_defaults(command="run-m1-proof")
 
     session_open = add_planned_command("session-open", "Open a new operational campaign session.")
     session_open.add_argument("--model-slot", required=True)
@@ -310,18 +319,32 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(f"RESUME_FAILURE: {exc}", file=sys.stderr)
             return int(exc.exit_code)
 
+    if args.command == "run-m1-proof":
+        try:
+            from phase5.runtime.qualification_proof import run_m1_shared_engine_proof
+
+            run_m1_shared_engine_proof(
+                root=Path.cwd(),
+                dataset_version=args.dataset_version,
+                run_id=args.run_id,
+            )
+            return int(ExitCode.SUCCESS)
+        except Phase5Error as exc:
+            print(f"PROOF_FAILURE: {exc}", file=sys.stderr)
+            return int(exc.exit_code)
+
     if args.command == "run-campaign":
         try:
-            if args.official:
+            if args.official or not getattr(args, "plan_only", False):
                 required = {
                     "dataset-version": args.dataset_version,
-                    "run-id": args.run_id,
-                    "seal-epoch": args.seal_epoch,
                 }
+                if args.official:
+                    required.update({"run-id": args.run_id, "seal-epoch": args.seal_epoch})
                 missing = [name for name, value in required.items() if value in {None, ""}]
                 if missing:
                     raise MissingFrozenSettingError(
-                        f"official run-campaign is missing required parameters: {', '.join(missing)}"
+                        f"executable run-campaign is missing required parameters: {', '.join(missing)}"
                     )
                 pass
 
@@ -338,7 +361,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     counts_for_phase5=is_official,
                     publication_evidence=is_official,
                     synthetic_fixture=not is_official,
-                    dataset_version=getattr(args, "dataset_version", None) or "P5-DV-1.0.2-A7C91E42",
+                    dataset_version=args.dataset_version,
                     root=Path.cwd(),
                 )
                 
@@ -353,7 +376,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     pipeline=pipeline,
                     lineage_store=AttemptLineageStore(Path("phase5/evidence/lineage.csv")),
                     session=temp_session,
-                    dataset_version=getattr(args, "dataset_version", None) or "P5-DV-1.0.2-A7C91E42",
+                    dataset_version=args.dataset_version,
                     real_execution_adapter=True
                 )
 

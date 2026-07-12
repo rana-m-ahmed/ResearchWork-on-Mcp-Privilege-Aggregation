@@ -1,0 +1,26 @@
+task_id: M1_SHARED_ENGINE_KAGGLE_PROOF_REMEDIATION
+scope: bounded non-official synthetic M1 qualification proof
+frozen_sources:
+  - phase4/
+  - phase4_5/
+mutable_paths:
+  - phase5/runtime/
+  - phase5/configs/synthetic_m1_proof_v1.json
+  - phase5/cli.py
+  - phase5/kaggle/phase5_m1_shared_engine_kaggle_proof.ipynb
+  - phase5/tests/
+  - phase5/implementation/
+acceptance:
+  - dedicated run-m1-proof command uses SharedExecutionEngine
+  - exactly two governed synthetic fixtures cover terminal and FastMCP multi-turn paths
+  - controlled DISPATCHED orphan is linked to a finalized replacement
+  - model token IDs, placement, hardware, reset, grader, TID, materialization, lineage, and finalization evidence exist
+  - official_trial, counts_for_phase5, and publication_evidence remain false
+  - official trial counters remain zero
+  - notebook parses and all Phase 5 tests pass
+prohibitions:
+  - official trial execution
+  - official queue row dispatch
+  - publication evidence
+  - embedded credentials
+  - Phase 4 or Phase 4.5 modification

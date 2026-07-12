@@ -219,8 +219,10 @@ def test_m1_proof_notebook_is_dual_t4_bounded_and_packages_before_termination() 
     assert 'HF_ENABLE_PARALLEL_LOADING"] = "true"' in text
     assert 'HF_PARALLEL_LOADING_WORKERS"] = "4"' in text
     assert 'len(gpu_names) != 2' in text
-    assert '"--max-batches","1"' in text
-    assert "Bounded proof must process exactly one batch" in text
+    assert '"run-m1-proof"' in text
+    assert '"run-campaign"' not in text
+    assert '"official_trials":0' in text
+    assert '"official_accepted_trials":0' in text
 
     archive_cell = next(index for index, source in enumerate(code_cells) if "shutil.make_archive" in source)
     reverify_cell = next(index for index, source in enumerate(code_cells) if "m1_shared_engine_source_frozen_reverification" in source)

@@ -15,6 +15,7 @@ from phase5.runtime import (
     is_loopback_host,
     load_reset_failure_retry_limit,
     probe_reset_dispatch,
+    build_fastmcp_tool_catalog,
 )
 from server.mock_server import build_server
 
@@ -68,6 +69,18 @@ def test_discovery_surface_hides_reset_and_rejects_dispatch() -> None:
     assert probe.error_type == "ToolError"
     assert probe.error_message is not None
     assert "Unknown tool: reset" in probe.error_message
+
+
+def test_fastmcp_catalog_dispatches_through_registered_server() -> None:
+    verified = McpServerLauncher(variant_id="D3-CLEAN", server_factory=build_server).validate()
+    catalog = build_fastmcp_tool_catalog(verified)
+
+    assert tuple(sorted(catalog)) == verified.tool_names
+    assert catalog["read_internal_notes"].required_arguments == ("note_id",)
+    result = catalog["read_internal_notes"].handler({"note_id": "note-001"})
+    payload = json.loads(result)
+    assert payload["found"] is True
+    assert payload["note_id"] == "note-001"
 
 
 def test_workspace_isolation_copies_fixtures_and_rejects_traversal(tmp_path: Path) -> None:

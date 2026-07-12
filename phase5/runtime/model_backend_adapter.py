@@ -296,6 +296,7 @@ class FrozenModelBackendAdapter:
     _model: Any = field(default=None, init=False, repr=False)
     _tokenizer: Any = field(default=None, init=False, repr=False)
     _load_memory_plan: dict[str, Any] | None = field(default=None, init=False, repr=False)
+    _last_generation_receipt: dict[str, Any] | None = field(default=None, init=False, repr=False)
 
     def attach_tokenizer(self, tokenizer: Any) -> None:
         """Reuse the identity-checked tokenizer used by prompt accounting."""
@@ -360,6 +361,13 @@ class FrozenModelBackendAdapter:
                 f"revision {self.identity.huggingface_commit_sha!r}"
             ) from exc
 
+    def prepare_runtime(self) -> Mapping[str, Any]:
+        """Load and validate the immutable model before attempt dispatch."""
+        self._ensure_runtime_loaded()
+        if self._load_memory_plan is None:
+            raise RuntimeMismatchError("model runtime loaded without a placement receipt")
+        return dict(self._load_memory_plan)
+
     def generate(self, *, prompt_text: str, conversation_history: Any, session: Any, turn_index: int, controls: Any) -> str:
         """Run deterministic generation through the immutable Hugging Face revision."""
 
@@ -377,11 +385,22 @@ class FrozenModelBackendAdapter:
                 pad_token_id=self._tokenizer.eos_token_id,
             )
         generated_ids = output[0, encoded["input_ids"].shape[1]:]
-        return self._tokenizer.decode(generated_ids, skip_special_tokens=True)
+        decoded_output = self._tokenizer.decode(generated_ids, skip_special_tokens=True)
+        self._last_generation_receipt = {
+            "input_token_ids": encoded["input_ids"][0].detach().cpu().tolist(),
+            "generated_token_ids": generated_ids.detach().cpu().tolist(),
+            "decoded_output": decoded_output,
+            "input_device": str(input_device),
+        }
+        return decoded_output
 
     @property
     def load_memory_plan(self) -> Mapping[str, Any] | None:
         return dict(self._load_memory_plan) if self._load_memory_plan is not None else None
+
+    @property
+    def last_generation_receipt(self) -> Mapping[str, Any] | None:
+        return dict(self._last_generation_receipt) if self._last_generation_receipt is not None else None
 
     @property
     def model_id(self) -> str:

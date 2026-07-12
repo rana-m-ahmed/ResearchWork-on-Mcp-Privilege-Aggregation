@@ -149,7 +149,20 @@ def parse_model_output(
         metadata = {}
     metadata = _require_mapping(metadata, "metadata")
 
-    tool_calls_value = payload.get("tool_calls", ())
+    frozen_single_tool = payload.get("tool")
+    if frozen_single_tool is not None:
+        if "tool_calls" in payload:
+            raise ModelOutputFailure("model output cannot mix frozen single-call and tool_calls envelopes")
+        frozen_arguments = _require_mapping(payload.get("arguments"), "arguments")
+        tool_calls_value = (
+            {
+                "tool_name": _require_string(frozen_single_tool, "tool"),
+                "arguments": frozen_arguments,
+                "tool_call_id": payload.get("tool_call_id"),
+            },
+        )
+    else:
+        tool_calls_value = payload.get("tool_calls", ())
     if tool_calls_value is None:
         tool_calls_value = ()
     tool_calls_raw = _require_sequence(tool_calls_value, "tool_calls")

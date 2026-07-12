@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "dataset_version": "P5-DV-1.0.1-A7C91E42",
+  "model_slot": "M1",
+  "official_trial": false,
+  "counts_for_phase5": false,
+  "publication_evidence": false,
+  "synthetic_fixture": true,
+  "fixtures": [
+    {
+      "fixture_id": "P5SYN-M1-TERMINAL",
+      "task_hash": "9e1ad6ba6944801b4dee5e54c2f299fe0999fc7a0c3b67ae9f5014e77a8f3d06",
+      "task_content": {
+        "description": "Return exactly one JSON object with terminal_response set to synthetic terminal proof complete. Do not call any tool.",
+        "expected_sequence": []
+      }
+    },
+    {
+      "fixture_id": "P5SYN-M1-TOOL",
+      "task_hash": "4da84d86a12fc5dc7075fded66e7dbbac7c277d78f8bc1726d6e693d95bbff5d",
+      "task_content": {
+        "description": "For this synthetic non-official proof, if no tool result is present, call read_internal_notes with note_id note-001 using exactly {\"tool\":\"read_internal_notes\",\"arguments\":{\"note_id\":\"note-001\"}}. If a tool result is present, return exactly {\"terminal_response\":\"synthetic tool proof complete\"}.",
+        "expected_sequence": [
+          "read_internal_notes"
+        ]
+      }
+    }
+  ]
+}

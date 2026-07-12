@@ -635,14 +635,18 @@ def run_frozen_agent_loop(
             description="CAPTURE_AND_FSYNC_RAW_OUTPUT",
             details={"turn_index": turn_count, "byte_length": len(raw_output_text.encode("utf-8"))},
         )
+        output_record = {
+            "raw_output": raw_output_text,
+            "session_token": session_token,
+            "turn_index": turn_count,
+            "elapsed_seconds": model_elapsed,
+        }
+        generation_receipt = getattr(backend, "last_generation_receipt", None)
+        if generation_receipt is not None:
+            output_record["generation_receipt"] = dict(generation_receipt)
         append_jsonl_record(
             model_outputs_path,
-            {
-                "raw_output": raw_output_text,
-                "session_token": session_token,
-                "turn_index": turn_count,
-                "elapsed_seconds": model_elapsed,
-            },
+            output_record,
         )
         emit_attempt_event(
             event_type=AttemptEventType.MODEL_OUTPUT_CAPTURED,
@@ -676,6 +680,15 @@ def run_frozen_agent_loop(
             )
             break
         parsed_outputs.append(parsed_output)
+        history.append(
+            ConversationTurn(
+                turn_index=turn_count,
+                role="assistant",
+                content=parsed_output.raw_text,
+                turn_kind="model_output",
+                metadata={"parser_version": controls.parser_version},
+            )
+        )
         append_jsonl_record(
             parser_events_path,
             {
@@ -703,11 +716,10 @@ def run_frozen_agent_loop(
             terminal_response = parsed_output.terminal_response
             termination_reason = controls.terminal_response_policy
             termination_state = "S13"
+            turn_count += 1
             emit_attempt_event(
-                event_type=AttemptEventType.TERMINATED,
-                artifact_ref=None,
-                artifact_sha256=None,
-                details={"state": "S13", "reason": termination_reason},
+                event_type=AttemptEventType.TURN_COMPLETED,
+                details={"turn_index": turn_count, "terminal": True},
             )
             break
         if parsed_output.terminal_response is not None and parsed_output.tool_calls:
@@ -724,6 +736,11 @@ def run_frozen_agent_loop(
             details={"tool_call_count": len(parsed_output.tool_calls)},
         )
         if parsed_output.tool_calls:
+            if controls.multiple_tool_call_policy == "reject" and len(parsed_output.tool_calls) > 1:
+                termination_reason = "semantic failure"
+                termination_state = "S14"
+                notes.append("multiple tool calls rejected by frozen policy")
+                break
             tool_call_count += len(parsed_output.tool_calls)
             if tool_call_count > controls.max_total_tool_calls:
                 termination_reason = "maximum tool-call count"
@@ -828,7 +845,6 @@ def run_frozen_agent_loop(
         )
         for record in tool_results_batch:
             tool_results.append(record.to_conversation_turn(tool_result_serialization_version=controls.tool_result_serialization_version))
-            history.append(record.to_conversation_turn(tool_result_serialization_version=controls.tool_result_serialization_version))
 
         _state_transition(
             state_transitions,
@@ -864,6 +880,7 @@ def run_frozen_agent_loop(
             termination_state = "S18"
             notes.append("next turn would exceed the frozen token budget")
             break
+        prompt_artifact = next_prompt
 
         if clock() - whole_trial_started > controls.whole_trial_timeout_seconds:
             termination_reason = "whole-trial timeout"
@@ -888,6 +905,11 @@ def run_frozen_agent_loop(
         continue
 
         # Unreachable by design. The loop exits on one of the frozen terminal conditions.
+
+    emit_attempt_event(
+        event_type=AttemptEventType.TERMINATED,
+        details={"termination_reason": termination_reason, "termination_state": termination_state},
+    )
 
     _state_transition(
         state_transitions,
@@ -919,6 +941,10 @@ def run_frozen_agent_loop(
     )
     if getattr(post_reset, "status", None) not in {"PASS", "QUARANTINED"}:
         raise ResetFailureError(f"reset integrity check failed: {getattr(post_reset, 'status', None)!r}")
+    emit_attempt_event(
+        event_type=AttemptEventType.RESET_CHECKED,
+        details={"status": getattr(post_reset, "status", None)},
+    )
 
     evidence_ready = True
     if allow_grading:
@@ -926,26 +952,22 @@ def run_frozen_agent_loop(
             raise MissingFrozenSettingError("grading hooks are required when allow_grading is enabled")
         _state_transition(state_transitions, parser_events_path, state_index=22, state_code="S22", description="FROZEN_GRADING")
         grade_callable()
+        emit_attempt_event(event_type=AttemptEventType.GRADED, details={"state": "S22"})
         _state_transition(state_transitions, parser_events_path, state_index=23, state_code="S23", description="FROZEN_TID_CALCULATION")
         tid_callable()
         _state_transition(state_transitions, parser_events_path, state_index=24, state_code="S24", description="MATERIALIZE_FROZEN_SCHEMA_ROW")
         materialize_callable()
+        emit_attempt_event(event_type=AttemptEventType.TRIAL_ROW_MATERIALIZED, details={"state": "S24"})
         _state_transition(state_transitions, parser_events_path, state_index=25, state_code="S25", description="VALIDATE_SCHEMA_AND_INVARIANTS")
         validate_callable()
         _state_transition(state_transitions, parser_events_path, state_index=26, state_code="S26", description="FINALIZE_AND_FSYNC")
         finalize_callable()
+        emit_attempt_event(event_type=AttemptEventType.FINALIZED, details={"state": "S26"})
         _state_transition(state_transitions, parser_events_path, state_index=27, state_code="S27", description="UPDATE_LINEAGE_AND_MANIFEST")
         lineage_callable()
         grader_invoked = True
 
     total_elapsed = clock() - whole_trial_started
-    emit_attempt_event(
-        event_type=AttemptEventType.TERMINATED,
-        artifact_ref=None,
-        artifact_sha256=None,
-        details={"termination_reason": termination_reason, "termination_state": termination_state},
-    )
-
     return AgentLoopExecutionRecord(
         attempt_id=workspace.metadata.attempt_id,
         frozen_row_id=workspace.metadata.frozen_row_id,
@@ -953,7 +975,7 @@ def run_frozen_agent_loop(
         run_id=workspace.metadata.run_id,
         batch_id=workspace.metadata.batch_id,
         session_token=session_token,
-        status="PASS" if evidence_ready and termination_reason == "success" else "FAIL",
+        status="PASS" if evidence_ready and termination_reason == controls.terminal_response_policy else "FAIL",
         termination_reason=termination_reason,
         termination_state=termination_state,
         evidence_ready=evidence_ready,

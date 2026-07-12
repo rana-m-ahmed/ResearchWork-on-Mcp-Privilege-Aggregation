@@ -26,6 +26,8 @@ def test_execute_row_builds_frozen_workspace_and_resolves_task(monkeypatch, tmp_
 
     engine = object.__new__(SharedExecutionEngine)
     engine.root = tmp_path
+    engine.attempts_root = tmp_path / "phase5/attempts"
+    engine.evidence_root = tmp_path / "phase5/evidence"
     engine.dataset_version = "P5-DV-1.0.2-A7C91E42"
     engine.synthetic_fixture = True
     engine.official_trial = False
@@ -49,6 +51,11 @@ def test_execute_row_builds_frozen_workspace_and_resolves_task(monkeypatch, tmp_
 
     def fake_loop(**kwargs):
         captured.update(kwargs)
+        expected_tool = task_entry["canonical_task_content"]["expected_sequence"][0]
+        (kwargs["workspace"].workspace_root / "tool_transcript.jsonl").write_text(
+            json.dumps({"exposed_tool_name": expected_tool}) + "\n",
+            encoding="utf-8",
+        )
         for name in (
             "grade_callable",
             "tid_callable",
@@ -59,7 +66,7 @@ def test_execute_row_builds_frozen_workspace_and_resolves_task(monkeypatch, tmp_
         ):
             kwargs[name]()
         kwargs["workspace"].metadata.event_log_path.write_text("{}\n", encoding="utf-8")
-        return SimpleNamespace(elapsed_seconds=1.0)
+        return SimpleNamespace(elapsed_seconds=1.0, status="PASS", termination_reason="accept")
 
     monkeypatch.setattr("phase5.runtime.engine.run_frozen_agent_loop", fake_loop)
     monkeypatch.setattr("phase5.runtime.engine.load_reset_failure_retry_limit", lambda root: 0)

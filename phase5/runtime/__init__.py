@@ -38,6 +38,7 @@ from .token_budget import (
 from .mcp_server_launcher import (
     LaunchVerification,
     McpServerLauncher,
+    build_fastmcp_tool_catalog,
     ResetDispatchProbe,
     build_validated_server,
     discover_tool_names,
@@ -119,6 +120,7 @@ __all__ = [
     "budget_decision_for_turn",
     "build_exact_tokenizer",
     "build_validated_server",
+    "build_fastmcp_tool_catalog",
     "build_attempt_workspace_isolation",
     "build_frozen_model_backend_adapter",
     "classify_overflow",

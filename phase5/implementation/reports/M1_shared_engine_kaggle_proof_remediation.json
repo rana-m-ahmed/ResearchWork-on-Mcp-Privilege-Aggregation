@@ -1,0 +1,15 @@
+{
+  "dataset_version": "P5-DV-1.0.1-A7C91E42",
+  "model_slot": "M1",
+  "official_trial": false,
+  "counts_for_phase5": false,
+  "publication_evidence": false,
+  "synthetic_fixture": true,
+  "official_trials_executed": 0,
+  "official_trials_accepted": 0,
+  "proof_command": "python -m phase5 run-m1-proof",
+  "shared_engine": "phase5.runtime.engine.SharedExecutionEngine",
+  "compileall": "PASS",
+  "phase5_tests": "246 passed",
+  "status": "PASS"
+}
