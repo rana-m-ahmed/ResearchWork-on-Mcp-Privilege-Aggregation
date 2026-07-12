@@ -234,6 +234,19 @@ def test_compile_preserves_whitespace_and_counts_tool_messages() -> None:
     assert render_history(history, tool_result_template="Tool Result [{{tool_name}}]:\n{{tool_output}}") != ""
 
 
+def test_compile_preserves_nested_json_in_task_substitution() -> None:
+    nested_json = '{"tool":"read_internal_notes","arguments":{"note_id":"note-001"}}'
+    artifact = compile_frozen_prompt(
+        task_description=f"Call the tool using exactly {nested_json}.",
+        retrieved_content=None,
+        history=(),
+        tool_results=(),
+        tokenizer=_fake_tokenizer(),
+    )
+
+    assert nested_json in artifact.prompt_text
+
+
 def test_compile_normalizes_prompt_bytes_to_lf() -> None:
     artifact = compile_frozen_prompt(
         task_description="line one\r\nline two\rline three",

@@ -10,6 +10,6 @@
   "proof_command": "python -m phase5 run-m1-proof",
   "shared_engine": "phase5.runtime.engine.SharedExecutionEngine",
   "compileall": "PASS",
-  "phase5_tests": "246 passed",
+  "phase5_tests": "247 passed",
   "status": "PASS"
 }

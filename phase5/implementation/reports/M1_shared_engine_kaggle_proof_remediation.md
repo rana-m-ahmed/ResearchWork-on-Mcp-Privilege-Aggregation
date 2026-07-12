@@ -24,3 +24,7 @@ This change replaces the prior one-batch campaign proof with a dedicated, bounde
 Local tests validate orchestration, contracts, failures, notebook syntax, genuine FastMCP dispatch, and evidence requirements. The immutable M1 weight load and real `model.generate()` remain intentionally executable only in the Kaggle dual-T4 environment.
 
 Verification completed with `compileall` passing and all 246 Phase 5 tests passing.
+
+## Kaggle follow-up
+
+The first bounded proof run finalized the terminal replacement but stopped at S5 for the tool fixture. Root cause was the prompt renderer checking substituted output for any `}}` sequence, which incorrectly classified the closing braces in the fixture's nested JSON tool call as an unresolved template placeholder. Placeholder authority is now validated against the template before substitution, preserving literal JSON values while still rejecting missing template placeholders. The nested-JSON regression is covered directly; the complete suite now passes 247 tests.

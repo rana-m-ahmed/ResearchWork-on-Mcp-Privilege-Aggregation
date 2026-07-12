@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -52,14 +53,17 @@ def _load_json(path: Path) -> Mapping[str, Any]:
 
 
 def _render_template(template: str, substitutions: Mapping[str, str]) -> str:
+    placeholder_pattern = re.compile(r"\{\{([A-Za-z_][A-Za-z0-9_]*)\}\}")
+    template_placeholders = set(placeholder_pattern.findall(template))
+    unknown = sorted(template_placeholders - set(substitutions))
+    if unknown:
+        raise SchemaInvariantError(f"missing required placeholder {unknown[0]!r}")
     rendered = template
     for placeholder, value in substitutions.items():
         token = f"{{{{{placeholder}}}}}"
         if token not in rendered:
             raise SchemaInvariantError(f"missing required placeholder {placeholder!r}")
         rendered = rendered.replace(token, value)
-    if "{{" in rendered or "}}" in rendered:
-        raise SchemaInvariantError("template contains unresolved placeholders")
     return rendered
 
 
