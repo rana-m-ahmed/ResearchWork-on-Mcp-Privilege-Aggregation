@@ -176,6 +176,9 @@ class SharedExecutionEngine(RealTrialPipeline):
         fixture_root.mkdir(parents=True, exist_ok=True)
         workspace = AttemptWorkspaceIsolation.build(metadata, read_only_fixture_root=fixture_root)
         workspace.materialize()
+        load_memory_plan = getattr(self.backend, "load_memory_plan", None)
+        if load_memory_plan is not None:
+            workspace.write_json_snapshot("model_load_placement.json", load_memory_plan)
         
         reset_executor = ResetController(
             workspace=workspace,

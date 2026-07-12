@@ -209,6 +209,29 @@ def test_sync_barrier_stops_after_sync_failure(monkeypatch: pytest.MonkeyPatch, 
     assert [command[3] for command in captured] == ["session-close-seal", "sync-github"]
 
 
+def test_m1_proof_notebook_is_dual_t4_bounded_and_packages_before_termination() -> None:
+    notebook_path = Path("phase5/kaggle/phase5_m1_shared_engine_kaggle_proof.ipynb")
+    notebook = json.loads(notebook_path.read_text(encoding="utf-8"))
+    code_cells = ["".join(cell.get("source", [])) for cell in notebook["cells"] if cell.get("cell_type") == "code"]
+    text = "\n".join(code_cells)
+
+    assert 'PHASE5_REQUIRE_CUDA_DEVICE_COUNT"] = "2"' in text
+    assert 'HF_ENABLE_PARALLEL_LOADING"] = "true"' in text
+    assert 'HF_PARALLEL_LOADING_WORKERS"] = "4"' in text
+    assert 'len(gpu_names) != 2' in text
+    assert '"--max-batches","1"' in text
+    assert "Bounded proof must process exactly one batch" in text
+
+    archive_cell = next(index for index, source in enumerate(code_cells) if "shutil.make_archive" in source)
+    reverify_cell = next(index for index, source in enumerate(code_cells) if "m1_shared_engine_source_frozen_reverification" in source)
+    termination_cell = next(index for index, source in enumerate(code_cells) if "TERMINATION_GUARD" in source)
+    assert reverify_cell < archive_cell < termination_cell
+    assert all(
+        "subprocess.run" not in source and "subprocess.check_output" not in source
+        for source in code_cells[termination_cell + 1 :]
+    )
+
+
 def test_final_closure_plan_requires_reverify_before_reseal() -> None:
     plan = build_final_closure_plan(_parameters())
     assert [command.stage for command in plan.commands] == [

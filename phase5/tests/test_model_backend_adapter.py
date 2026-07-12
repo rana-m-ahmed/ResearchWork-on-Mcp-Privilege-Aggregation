@@ -11,8 +11,12 @@ from phase5.runtime.model_backend_adapter import build_model_load_memory_plan
 
 class _FakeCuda:
     @staticmethod
+    def device_count() -> int:
+        return 2
+
+    @staticmethod
     def mem_get_info(device: int) -> tuple[int, int]:
-        assert device == 0
+        assert device in {0, 1}
         return 16 * 1024**3, 16 * 1024**3
 
 
@@ -26,7 +30,7 @@ def test_model_load_memory_plan_reserves_gpu_and_cpu_headroom(monkeypatch, tmp_p
 
     max_memory, offload_folder = build_model_load_memory_plan(_FakeTorch())
 
-    assert max_memory == {0: 14 * 1024**3, "cpu": 26 * 1024**3}
+    assert max_memory == {0: 14 * 1024**3, 1: 14 * 1024**3, "cpu": 26 * 1024**3}
     assert offload_folder == tmp_path / "offload"
     assert offload_folder.is_dir()
 

@@ -40,18 +40,27 @@ def _available_cpu_memory_bytes() -> int:
 def build_model_load_memory_plan(torch_module: Any) -> tuple[dict[Any, int], Path]:
     """Reserve inference headroom and make any required offload explicit."""
 
-    free_gpu_bytes, total_gpu_bytes = torch_module.cuda.mem_get_info(0)
-    usable_gpu_bytes = min(int(free_gpu_bytes), int(total_gpu_bytes)) - _GPU_HEADROOM_BYTES
+    device_count = int(torch_module.cuda.device_count())
+    if device_count < 1:
+        raise RuntimeMismatchError("no CUDA devices are available for frozen model placement")
+    max_memory: dict[Any, int] = {}
+    for device_index in range(device_count):
+        free_gpu_bytes, total_gpu_bytes = torch_module.cuda.mem_get_info(device_index)
+        usable_gpu_bytes = min(int(free_gpu_bytes), int(total_gpu_bytes)) - _GPU_HEADROOM_BYTES
+        if usable_gpu_bytes < 4 * _GIB:
+            raise RuntimeMismatchError(
+                f"insufficient free GPU memory for the frozen M1 float16 backend on cuda:{device_index}"
+            )
+        max_memory[device_index] = usable_gpu_bytes
     usable_cpu_bytes = _available_cpu_memory_bytes() - _CPU_HEADROOM_BYTES
-    if usable_gpu_bytes < 4 * _GIB:
-        raise RuntimeMismatchError("insufficient free GPU memory for the frozen M1 float16 backend")
     if usable_cpu_bytes < 4 * _GIB:
         raise RuntimeMismatchError("insufficient free CPU memory for controlled M1 weight offload")
     offload_root = Path(
         os.environ.get("PHASE5_MODEL_OFFLOAD_DIR", str(Path(tempfile.gettempdir()) / "phase5-model-offload"))
     )
     offload_root.mkdir(parents=True, exist_ok=True)
-    return {0: usable_gpu_bytes, "cpu": usable_cpu_bytes}, offload_root
+    max_memory["cpu"] = usable_cpu_bytes
+    return max_memory, offload_root
 
 _PLACEHOLDER_DIGEST_MARKERS = (
     "AUTHENTIC_KAGGLE_EXECUTION",
@@ -323,7 +332,6 @@ class FrozenModelBackendAdapter:
                 max_memory=max_memory,
                 low_cpu_mem_usage=True,
                 offload_folder=offload_folder,
-                offload_state_dict=True,
                 use_safetensors=True,
                 trust_remote_code=True,
             )
@@ -335,6 +343,17 @@ class FrozenModelBackendAdapter:
             self._load_memory_plan["hf_device_map"] = {
                 str(name): str(device) for name, device in getattr(self._model, "hf_device_map", {}).items()
             }
+            required_device_count = int(os.environ.get("PHASE5_REQUIRE_CUDA_DEVICE_COUNT", "1"))
+            mapped_devices = {
+                int(device)
+                for device in getattr(self._model, "hf_device_map", {}).values()
+                if isinstance(device, int) or (isinstance(device, str) and device.isdigit())
+            }
+            missing_devices = set(range(required_device_count)) - mapped_devices
+            if missing_devices:
+                raise RuntimeMismatchError(
+                    f"frozen model placement did not use required CUDA devices: {sorted(missing_devices)}"
+                )
         except Exception as exc:
             raise RuntimeMismatchError(
                 f"failed to load frozen model {self.exact_model_identifier!r} at "
@@ -359,6 +378,10 @@ class FrozenModelBackendAdapter:
             )
         generated_ids = output[0, encoded["input_ids"].shape[1]:]
         return self._tokenizer.decode(generated_ids, skip_special_tokens=True)
+
+    @property
+    def load_memory_plan(self) -> Mapping[str, Any] | None:
+        return dict(self._load_memory_plan) if self._load_memory_plan is not None else None
 
     @property
     def model_id(self) -> str:
