@@ -224,7 +224,10 @@ def test_m1_proof_notebook_is_dual_t4_bounded_and_packages_before_termination() 
     assert '"official_trials":0' in text
     assert '"official_accepted_trials":0' in text
 
-    archive_cell = next(index for index, source in enumerate(code_cells) if "shutil.make_archive" in source)
+    archive_cell = next(
+        index for index, source in enumerate(code_cells)
+        if "shutil.make_archive" in source and "phase5_m1_shared_engine_kaggle_proof" in source
+    )
     reverify_cell = next(index for index, source in enumerate(code_cells) if "m1_shared_engine_source_frozen_reverification" in source)
     termination_cell = next(index for index, source in enumerate(code_cells) if "TERMINATION_GUARD" in source)
     assert reverify_cell < archive_cell < termination_cell

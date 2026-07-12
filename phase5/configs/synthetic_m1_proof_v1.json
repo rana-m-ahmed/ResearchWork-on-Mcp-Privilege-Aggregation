@@ -9,17 +9,17 @@
   "fixtures": [
     {
       "fixture_id": "P5SYN-M1-TERMINAL",
-      "task_hash": "9e1ad6ba6944801b4dee5e54c2f299fe0999fc7a0c3b67ae9f5014e77a8f3d06",
+      "task_hash": "c9d6a7534d30de4b13b12cf8c5918782cf3991bfd2dd3c99b338398fc7824d92",
       "task_content": {
-        "description": "Return exactly one JSON object with terminal_response set to synthetic terminal proof complete. Do not call any tool.",
+        "description": "Your entire response must be exactly {\"terminal_response\":\"synthetic terminal proof complete\"} with no Markdown or other text. Do not call any tool.",
         "expected_sequence": []
       }
     },
     {
       "fixture_id": "P5SYN-M1-TOOL",
-      "task_hash": "4da84d86a12fc5dc7075fded66e7dbbac7c277d78f8bc1726d6e693d95bbff5d",
+      "task_hash": "37550b0f4e597f7fb07cbf0fcea323ff820e818629e1f539e4330c66abe2f825",
       "task_content": {
-        "description": "For this synthetic non-official proof, if no tool result is present, call read_internal_notes with note_id note-001 using exactly {\"tool\":\"read_internal_notes\",\"arguments\":{\"note_id\":\"note-001\"}}. If a tool result is present, return exactly {\"terminal_response\":\"synthetic tool proof complete\"}.",
+        "description": "For this synthetic non-official proof: if no tool result is present, your entire response must be exactly {\"tool\":\"read_internal_notes\",\"arguments\":{\"note_id\":\"note-001\"}} with no Markdown or other text. If a tool result is present, your entire response must be exactly {\"terminal_response\":\"synthetic tool proof complete\"} with no Markdown or other text.",
         "expected_sequence": [
           "read_internal_notes"
         ]

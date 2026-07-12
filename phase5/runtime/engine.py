@@ -381,6 +381,11 @@ class SharedExecutionEngine(RealTrialPipeline):
             else None
         )
         
+        invalid_reason = None
+        if not qualified:
+            detail = "; ".join(record.notes) if record.notes else "no additional parser detail"
+            invalid_reason = f"{record.termination_reason} at {record.termination_state}: {detail}"
+
         return ExecutedTrialResult(
             frozen_row_id=frozen_row_key(row),
             target_trial_id=str(row.trial_id),
@@ -395,6 +400,6 @@ class SharedExecutionEngine(RealTrialPipeline):
             counts_for_phase5=self.counts_for_phase5,
             publication_evidence=self.publication_evidence,
             acceptance_proof=proof,
-            invalid_reason=None if qualified else record.termination_reason,
+            invalid_reason=invalid_reason,
             orphaned=False,
         )

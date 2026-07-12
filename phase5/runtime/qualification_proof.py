@@ -110,7 +110,9 @@ def _event_types(path: Path) -> list[str]:
 
 def _require_attempt(result: Any, *, tool_path: bool) -> None:
     if result.acceptance_proof is None or result.qualification_accepted is not True:
-        raise SchemaInvariantError(f"synthetic proof attempt did not qualify: {result.invalid_reason}")
+        raise SchemaInvariantError(
+            f"synthetic proof attempt {result.attempt_id} did not qualify: {result.invalid_reason}"
+        )
     root = result.raw_attempt_directory
     events = _event_types(root / "attempt_events.jsonl")
     required = {
