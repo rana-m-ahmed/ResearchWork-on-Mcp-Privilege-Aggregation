@@ -146,6 +146,16 @@ def test_campaign_run_processes_multiple_batches_and_reseals() -> None:
     assert report.processed_batch_ids == tuple(batch.batch_id for batch in load_campaign_plan(model_slot="M1").batches[:3])
 
 
+def test_campaign_run_rejects_nonpositive_batch_bound() -> None:
+    with pytest.raises(Phase5Error, match="max_batches must be positive"):
+        run_campaign(
+            model_slot=ModelSlot.M1,
+            until_safety_horizon=True,
+            max_batches=0,
+            batch_processor=FakeExecutedBatchProcessor(),
+        )
+
+
 def test_campaign_run_resume_is_duplicate_safe() -> None:
     first_session, first_report = run_campaign(
         model_slot=ModelSlot.M1,

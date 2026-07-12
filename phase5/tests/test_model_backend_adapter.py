@@ -6,6 +6,37 @@ import pytest
 
 from phase5.domain.errors import FrozenArtifactHashError, MissingFrozenSettingError, RuntimeMismatchError, SchemaInvariantError
 from phase5.runtime import build_frozen_model_backend_adapter, load_frozen_model_backend_identity
+from phase5.runtime.model_backend_adapter import build_model_load_memory_plan
+
+
+class _FakeCuda:
+    @staticmethod
+    def mem_get_info(device: int) -> tuple[int, int]:
+        assert device == 0
+        return 16 * 1024**3, 16 * 1024**3
+
+
+class _FakeTorch:
+    cuda = _FakeCuda()
+
+
+def test_model_load_memory_plan_reserves_gpu_and_cpu_headroom(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.setattr("phase5.runtime.model_backend_adapter._available_cpu_memory_bytes", lambda: 30 * 1024**3)
+    monkeypatch.setenv("PHASE5_MODEL_OFFLOAD_DIR", str(tmp_path / "offload"))
+
+    max_memory, offload_folder = build_model_load_memory_plan(_FakeTorch())
+
+    assert max_memory == {0: 14 * 1024**3, "cpu": 26 * 1024**3}
+    assert offload_folder == tmp_path / "offload"
+    assert offload_folder.is_dir()
+
+
+def test_model_load_memory_plan_fails_closed_on_insufficient_gpu(monkeypatch) -> None:
+    monkeypatch.setattr(_FakeCuda, "mem_get_info", staticmethod(lambda device: (5 * 1024**3, 16 * 1024**3)))
+    monkeypatch.setattr("phase5.runtime.model_backend_adapter._available_cpu_memory_bytes", lambda: 30 * 1024**3)
+
+    with pytest.raises(RuntimeMismatchError, match="insufficient free GPU memory"):
+        build_model_load_memory_plan(_FakeTorch())
 
 
 def _copy_text(source: Path, destination: Path, *, replacement: tuple[str, str] | None = None) -> None:

@@ -105,6 +105,7 @@ def build_parser() -> argparse.ArgumentParser:
     campaign_mode.add_argument("--plan-only", action="store_true")
     run_campaign.add_argument("--dataset-version", required=False)
     run_campaign.add_argument("--seal-epoch", required=False, type=int)
+    run_campaign.add_argument("--max-batches", required=False, type=int)
 
     session_open = add_planned_command("session-open", "Open a new operational campaign session.")
     session_open.add_argument("--model-slot", required=True)
@@ -367,6 +368,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 root=Path.cwd(),
                 session=None,
                 batch_processor=batch_processor,
+                max_batches=getattr(args, "max_batches", None),
                 plan_only=bool(args.plan_only),
             )
             _write_json_md_report(report, getattr(args, "output", None), Path("phase5/validation/campaign_run_report.json"))

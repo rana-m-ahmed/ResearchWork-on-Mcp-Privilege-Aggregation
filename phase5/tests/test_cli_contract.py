@@ -175,6 +175,8 @@ def test_campaign_cli_smoke_writes_operational_reports(tmp_path: Path) -> None:
             "--utcdate",
             "20260708",
             "--until-safety-horizon",
+            "--max-batches",
+            "1",
             "--plan-only",
             "--output",
             str(campaign_output),

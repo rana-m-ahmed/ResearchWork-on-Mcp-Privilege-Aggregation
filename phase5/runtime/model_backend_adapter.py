@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import os
+import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Mapping
@@ -16,6 +18,40 @@ _SELECTED_MODEL_PATH = Path("phase4_5/configs/phase45_selected_model.yaml")
 _LOCAL_DRYRUN_PATH = Path("phase4_5/configs/phase45_local_dryrun.yaml")
 _MODEL_SET_PATH = Path("phase4/configs/model_set_freeze.yaml")
 _RUNTIME_AUTHORITY_PATH = Path("phase5/manifests/model_runtime_authority_v2.json")
+_GIB = 1024**3
+_GPU_HEADROOM_BYTES = 2 * _GIB
+_CPU_HEADROOM_BYTES = 4 * _GIB
+
+
+def _available_cpu_memory_bytes() -> int:
+    meminfo = Path("/proc/meminfo")
+    if meminfo.is_file():
+        for line in meminfo.read_text(encoding="ascii").splitlines():
+            if line.startswith("MemAvailable:"):
+                return int(line.split()[1]) * 1024
+    try:
+        import psutil
+
+        return int(psutil.virtual_memory().available)
+    except Exception as exc:  # pragma: no cover - Linux Kaggle path is authoritative
+        raise RuntimeMismatchError("could not determine available CPU memory for frozen model placement") from exc
+
+
+def build_model_load_memory_plan(torch_module: Any) -> tuple[dict[Any, int], Path]:
+    """Reserve inference headroom and make any required offload explicit."""
+
+    free_gpu_bytes, total_gpu_bytes = torch_module.cuda.mem_get_info(0)
+    usable_gpu_bytes = min(int(free_gpu_bytes), int(total_gpu_bytes)) - _GPU_HEADROOM_BYTES
+    usable_cpu_bytes = _available_cpu_memory_bytes() - _CPU_HEADROOM_BYTES
+    if usable_gpu_bytes < 4 * _GIB:
+        raise RuntimeMismatchError("insufficient free GPU memory for the frozen M1 float16 backend")
+    if usable_cpu_bytes < 4 * _GIB:
+        raise RuntimeMismatchError("insufficient free CPU memory for controlled M1 weight offload")
+    offload_root = Path(
+        os.environ.get("PHASE5_MODEL_OFFLOAD_DIR", str(Path(tempfile.gettempdir()) / "phase5-model-offload"))
+    )
+    offload_root.mkdir(parents=True, exist_ok=True)
+    return {0: usable_gpu_bytes, "cpu": usable_cpu_bytes}, offload_root
 
 _PLACEHOLDER_DIGEST_MARKERS = (
     "AUTHENTIC_KAGGLE_EXECUTION",
@@ -250,6 +286,7 @@ class FrozenModelBackendAdapter:
     identity: FrozenModelBackendIdentity
     _model: Any = field(default=None, init=False, repr=False)
     _tokenizer: Any = field(default=None, init=False, repr=False)
+    _load_memory_plan: dict[str, Any] | None = field(default=None, init=False, repr=False)
 
     def attach_tokenizer(self, tokenizer: Any) -> None:
         """Reuse the identity-checked tokenizer used by prompt accounting."""
@@ -272,12 +309,22 @@ class FrozenModelBackendAdapter:
                 revision=self.identity.huggingface_commit_sha,
                 trust_remote_code=True,
             )
+        max_memory, offload_folder = build_model_load_memory_plan(torch)
+        self._load_memory_plan = {
+            "max_memory_bytes": {str(device): value for device, value in max_memory.items()},
+            "offload_folder": str(offload_folder),
+        }
         try:
             self._model = AutoModelForCausalLM.from_pretrained(
                 self.exact_model_identifier,
                 revision=self.identity.huggingface_commit_sha,
                 dtype=torch.float16,
                 device_map="auto",
+                max_memory=max_memory,
+                low_cpu_mem_usage=True,
+                offload_folder=offload_folder,
+                offload_state_dict=True,
+                use_safetensors=True,
                 trust_remote_code=True,
             )
             self._model.eval()
@@ -285,6 +332,9 @@ class FrozenModelBackendAdapter:
             self._model.generation_config.temperature = None
             self._model.generation_config.top_p = None
             self._model.generation_config.top_k = None
+            self._load_memory_plan["hf_device_map"] = {
+                str(name): str(device) for name, device in getattr(self._model, "hf_device_map", {}).items()
+            }
         except Exception as exc:
             raise RuntimeMismatchError(
                 f"failed to load frozen model {self.exact_model_identifier!r} at "

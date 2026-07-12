@@ -579,6 +579,8 @@ def run_campaign(
     batch_processor: Callable[[CampaignBatchPlan, float], CampaignBatchResult] | None = None,
     plan_only: bool = False,
 ) -> tuple[CampaignSession, CampaignRunReport]:
+    if max_batches is not None and max_batches <= 0:
+        raise SchemaInvariantError("max_batches must be positive when provided")
     plan = load_campaign_plan(
         model_slot=model_slot,
         run_plan_path=run_plan_path,
