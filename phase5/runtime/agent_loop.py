@@ -429,6 +429,7 @@ def run_frozen_agent_loop(
     parser_events_path = workspace.workspace_root / "parser_events.jsonl"
     model_outputs_path = workspace.workspace_root / "model_outputs.jsonl"
     tool_transcript_path = workspace.workspace_root / "tool_transcript.jsonl"
+    workspace.write_text_snapshot(tool_transcript_path.name, "")
     event_writer = AttemptEventLogWriter(workspace.metadata.event_log_path)
     history: list[ConversationTurn] = []
     tool_results: list[ConversationTurn] = []

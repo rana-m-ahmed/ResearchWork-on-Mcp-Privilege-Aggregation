@@ -248,6 +248,7 @@ def test_agent_loop_terminal_answer_emits_expected_state_order(tmp_path: Path) -
     assert record.state_transitions[-1].state_code == "S21"
     assert (workspace.workspace_root / "parser_events.jsonl").is_file()
     assert (workspace.workspace_root / "model_outputs.jsonl").is_file()
+    assert (workspace.workspace_root / "tool_transcript.jsonl").read_bytes() == b""
 
 
 def test_frozen_state_machine_control_loader_fails_closed(tmp_path: Path) -> None:
