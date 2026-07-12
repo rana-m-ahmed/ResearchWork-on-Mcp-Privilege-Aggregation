@@ -1,6 +1,6 @@
 {
-  "active_batch_manifest": "phase5/manifests/batch_partition_manifest_v2.json",
-  "active_run_plan": "phase5/validation/kaggle_run_plan_v2.json",
+  "active_batch_manifest": "phase5/manifests/batch_partition_manifest_v3.json",
+  "active_run_plan": "phase5/validation/kaggle_run_plan_v3.json",
   "artifact": "official_kaggle_launch_check",
   "branch_safety": {
     "automatic_pull_merge_rebase_allowed": false,
@@ -17,39 +17,39 @@
     "path": "phase5/kaggle/phase5_runner.ipynb",
     "source_parameter": "SOURCE_TAG_OR_COMMIT"
   },
-  "dataset_version": "P5-DV-1.0.1-A7C91E42",
+  "dataset_version": "P5-DV-1.0.2-A7C91E42",
   "evidence_branches": [
     {
-      "actual_initial_remote_head": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+      "actual_initial_remote_head": "ab520b400ee60a806115cc20ca623ff17121d3c8",
       "branch": "phase5-model-1",
-      "expected_initial_remote_head": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+      "expected_initial_remote_head": "ab520b400ee60a806115cc20ca623ff17121d3c8",
       "head_equals_official_source_commit": true,
       "model_id": "Qwen/Qwen2.5-7B-Instruct",
       "model_slot": "M1",
       "remote_exists": true
     },
     {
-      "actual_initial_remote_head": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+      "actual_initial_remote_head": "ab520b400ee60a806115cc20ca623ff17121d3c8",
       "branch": "phase5-model-2",
-      "expected_initial_remote_head": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+      "expected_initial_remote_head": "ab520b400ee60a806115cc20ca623ff17121d3c8",
       "head_equals_official_source_commit": true,
       "model_id": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
       "model_slot": "M2",
       "remote_exists": true
     },
     {
-      "actual_initial_remote_head": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+      "actual_initial_remote_head": "ab520b400ee60a806115cc20ca623ff17121d3c8",
       "branch": "phase5-model-3",
-      "expected_initial_remote_head": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+      "expected_initial_remote_head": "ab520b400ee60a806115cc20ca623ff17121d3c8",
       "head_equals_official_source_commit": true,
       "model_id": "mistralai/Mistral-7B-Instruct-v0.3",
       "model_slot": "M3",
       "remote_exists": true
     },
     {
-      "actual_initial_remote_head": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+      "actual_initial_remote_head": "ab520b400ee60a806115cc20ca623ff17121d3c8",
       "branch": "phase5-model-4",
-      "expected_initial_remote_head": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+      "expected_initial_remote_head": "ab520b400ee60a806115cc20ca623ff17121d3c8",
       "head_equals_official_source_commit": true,
       "model_id": "microsoft/Phi-3.5-mini-instruct",
       "model_slot": "M4",
@@ -63,11 +63,11 @@
     "status": "PASS"
   },
   "official_source": {
-    "commit": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
-    "remote_dereferenced_commit": "c38a339327891b229bcce12d7c04a8a4e6cc63d5",
+    "commit": "ab520b400ee60a806115cc20ca623ff17121d3c8",
+    "remote_dereferenced_commit": "ab520b400ee60a806115cc20ca623ff17121d3c8",
     "remote_visible": true,
-    "tag": "phase5-official-source-v2",
-    "tag_object": "38fab6c096f0de72a649eabd2f3c460ba8221ca7"
+    "tag": "phase5-official-source-v3",
+    "tag_object": "d70bb9d6d650c79fc8626d4fd166f8cd70b56b8c"
   },
   "ready_to_run_m1": true,
   "remaining_blockers": [],
@@ -81,9 +81,9 @@
     "total_batch_count": 204
   },
   "supersedes": {
-    "dataset_version": "P5-DV-1.0.0-A7C91E42",
+    "dataset_version": "P5-DV-1.0.1-A7C91E42",
     "official_accepted_trials": 0,
-    "official_source_tag": "phase5-official-source-v1",
+    "official_source_tag": "phase5-official-source-v2",
     "status": "SUPERSEDED BEFORE OFFICIAL DISPATCH"
   },
   "verdict": "READY_TO_RUN_M1"

@@ -5,8 +5,8 @@ This guide is the final I17R operator package for official Phase 5 Kaggle execut
 ## Final Authority
 
 - Official source tag: `phase5-official-source-v3`
-- Official source commit: `<<FINAL_SOURCE_COMMIT>>`
-- Official tag object: `<<FINAL_TAG_OBJECT>>`
+- Official source commit: `ab520b400ee60a806115cc20ca623ff17121d3c8`
+- Official tag object: `d70bb9d6d650c79fc8626d4fd166f8cd70b56b8c`
 - Dataset version: `P5-DV-1.0.2-A7C91E42`
 - Superseded before official dispatch: `phase5-official-source-v2`, `P5-DV-1.0.1-A7C91E42`
 - Official accepted trials before supersession: `0`
@@ -20,10 +20,10 @@ This guide is the final I17R operator package for official Phase 5 Kaggle execut
 
 | Model slot | Exact model ID | Evidence branch | Initial remote head | First pending batch | Batch count | Checkpoint threshold |
 | --- | --- | --- | --- | --- | --- | --- |
-| `M1` | `Qwen/Qwen2.5-7B-Instruct` | `phase5-model-1` | `<<FINAL_SOURCE_COMMIT>>` | `1` | `51` | `6` trials |
-| `M2` | `deepseek-ai/DeepSeek-R1-Distill-Llama-8B` | `phase5-model-2` | `<<FINAL_SOURCE_COMMIT>>` | `1` | `51` | `6` trials |
-| `M3` | `mistralai/Mistral-7B-Instruct-v0.3` | `phase5-model-3` | `<<FINAL_SOURCE_COMMIT>>` | `1` | `51` | `6` trials |
-| `M4` | `microsoft/Phi-3.5-mini-instruct` | `phase5-model-4` | `<<FINAL_SOURCE_COMMIT>>` | `1` | `51` | `6` trials |
+| `M1` | `Qwen/Qwen2.5-7B-Instruct` | `phase5-model-1` | `ab520b400ee60a806115cc20ca623ff17121d3c8` | `1` | `51` | `6` trials |
+| `M2` | `deepseek-ai/DeepSeek-R1-Distill-Llama-8B` | `phase5-model-2` | `ab520b400ee60a806115cc20ca623ff17121d3c8` | `1` | `51` | `6` trials |
+| `M3` | `mistralai/Mistral-7B-Instruct-v0.3` | `phase5-model-3` | `ab520b400ee60a806115cc20ca623ff17121d3c8` | `1` | `51` | `6` trials |
+| `M4` | `microsoft/Phi-3.5-mini-instruct` | `phase5-model-4` | `ab520b400ee60a806115cc20ca623ff17121d3c8` | `1` | `51` | `6` trials |
 
 Operational granularity remains: one canonical notebook, one model slot per campaign, preferred one long Kaggle session per model, many contiguous finalized batches per session, and extra sessions only when the safety horizon requires them. A Kaggle session is not one small batch, and all four models are not one inseparable session.
 
@@ -34,7 +34,7 @@ Operational granularity remains: one canonical notebook, one model slot per camp
 3. Enable Internet only for clone, preparation, dependency/model access if required, and GitHub sync.
 4. Attach required Kaggle Secrets without printing values.
 5. Set `SOURCE_TAG_OR_COMMIT = "phase5-official-source-v3"`.
-6. Set `EXPECTED_SOURCE_COMMIT = "<<FINAL_SOURCE_COMMIT>>"`.
+6. Set `EXPECTED_SOURCE_COMMIT = "ab520b400ee60a806115cc20ca623ff17121d3c8"`.
 7. Select one model slot and its evidence branch from the table above.
 8. Clone, fetch tags, checkout detached `SOURCE_TAG_OR_COMMIT`, and verify `git rev-parse HEAD` equals `EXPECTED_SOURCE_COMMIT`.
 9. Run Gate 0: `python -m phase5 gate0 --strict --root /kaggle/working/ResearchWork-on-Mcp-Privilege-Aggregation --report-dir phase5/validation`.
@@ -62,7 +62,7 @@ Do not print secret values. Do not store tokens permanently in `.git/config`. Do
 
 ## Resume Procedure
 
-For a fresh Kaggle session: clone the correct evidence branch, fetch and checkout detached `phase5-official-source-v3`, verify `HEAD == <<FINAL_SOURCE_COMMIT>>`, verify the expected remote checkpoint head, run Gate 0, load manifests and lineage, identify finalized accepted rows and preserved orphans, calculate the next contiguous pending batches, avoid duplicate accepted trials, and continue under a new run ID and seal epoch.
+For a fresh Kaggle session: clone the correct evidence branch, fetch and checkout detached `phase5-official-source-v3`, verify `HEAD == ab520b400ee60a806115cc20ca623ff17121d3c8`, verify the expected remote checkpoint head, run Gate 0, load manifests and lineage, identify finalized accepted rows and preserved orphans, calculate the next contiguous pending batches, avoid duplicate accepted trials, and continue under a new run ID and seal epoch.
 
 ## Safety
 

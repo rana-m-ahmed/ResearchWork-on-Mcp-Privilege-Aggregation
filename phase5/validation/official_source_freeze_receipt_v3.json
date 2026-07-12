@@ -1,0 +1,14 @@
+{
+  "artifact": "official_source_freeze_receipt_v3",
+  "dataset_version": "P5-DV-1.0.2-A7C91E42",
+  "frozen_hashes": {
+    "phase5/configs/frozen_state_machine_controls_v2.json": "c242ef50f4cae728481ff231b268f76d4960541d402b9e67a69bc9e5d42dd3b1",
+    "phase5/configs/upstream_artifact_registry.json": "2e896472df3b4f620bd30cff392a831db2d5807afb76ed1c215c2ec447d25e0a",
+    "phase5/manifests/batch_partition_manifest_v3.json": "a26d62fc1f0796171285907c9ffd484e1523c01be18365cf918fd99dbef552ed",
+    "phase5/manifests/official_source_manifest_v3.json": "08dd51ddca137418f94d9747f2882f940182ae321f28a854f228fa8e45669650"
+  },
+  "official_source_commit": "ab520b400ee60a806115cc20ca623ff17121d3c8",
+  "official_source_manifest": "phase5/manifests/official_source_manifest_v3.json",
+  "official_source_manifest_sha256": "08dd51ddca137418f94d9747f2882f940182ae321f28a854f228fa8e45669650",
+  "official_source_tag": "phase5-official-source-v3"
+}
