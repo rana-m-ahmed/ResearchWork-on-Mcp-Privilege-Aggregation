@@ -346,7 +346,7 @@ class FrozenModelBackendAdapter:
             self._model = AutoModelForCausalLM.from_pretrained(
                 self.exact_model_identifier,
                 revision=self.identity.huggingface_commit_sha,
-                dtype=torch.float16,
+                torch_dtype=torch.float16,
                 device_map="auto",
                 max_memory=max_memory,
                 low_cpu_mem_usage=True,
