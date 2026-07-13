@@ -90,12 +90,12 @@ def test_notebook_requires_detached_source_checkout_and_verification() -> None:
 def test_handoff_defaults_to_reconciled_v2_run_plan() -> None:
     from phase5.kaggle import DEFAULT_BATCH_MANIFEST, DEFAULT_RUN_PLAN
 
-    assert DEFAULT_RUN_PLAN.as_posix() == "phase5/validation/kaggle_run_plan_v2.json"
-    assert DEFAULT_BATCH_MANIFEST.as_posix() == "phase5/manifests/batch_partition_manifest_v2.json"
+    assert DEFAULT_RUN_PLAN.as_posix() == "phase5/validation/kaggle_run_plan_v3.json"
+    assert DEFAULT_BATCH_MANIFEST.as_posix() == "phase5/manifests/batch_partition_manifest_v3.json"
 
 
 def test_m4_reconciled_run_plan_is_active_and_evidence_bound() -> None:
-    plan = json.loads(Path("phase5/validation/kaggle_run_plan_v2.json").read_text(encoding="utf-8"))
+    plan = json.loads(Path("phase5/validation/kaggle_run_plan_v3.json").read_text(encoding="utf-8"))
     recon = json.loads(Path("phase5/validation/m4_loader_status_reconciliation.json").read_text(encoding="utf-8"))
     m4_plan = next(item for item in plan["model_plans"] if item["model_slot"] == "M4")
     m4_status = next(item for item in plan["timing_evidence"]["model_load_status"] if item["model_slot"] == "M4")

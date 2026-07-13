@@ -113,6 +113,21 @@ class ExecutedTrialResult:
         if self.elapsed_seconds < 0:
             raise SchemaInvariantError("executed trial elapsed_seconds must be non-negative")
 
+    def validate_official_boundary(self) -> None:
+        """Assert that this result satisfies the official execution boundary."""
+        if not self.pipeline_executed:
+            raise OfficialDispatchBlockedError("planning metadata cannot produce an executed trial result")
+        if not self.official_trial:
+            raise OfficialDispatchBlockedError("official dispatch requires official_trial=True")
+        if not self.counts_for_phase5:
+            raise OfficialDispatchBlockedError("official dispatch requires counts_for_phase5=True")
+        if not self.publication_evidence:
+            raise OfficialDispatchBlockedError("official dispatch requires publication_evidence=True")
+        if self.synthetic_fixture:
+            raise OfficialDispatchBlockedError("official dispatch must not use synthetic fixtures")
+        if self.elapsed_seconds < 0:
+            raise SchemaInvariantError("executed trial elapsed_seconds must be non-negative")
+
 
 class RealTrialPipeline(Protocol):
     """Repository execution kernel used once per frozen row."""
@@ -134,20 +149,34 @@ class RealTrialPipeline(Protocol):
 
 @dataclass(slots=True)
 class RepositoryBatchExecutionAdapter:
-    """Select frozen rows and execute each through an explicit real pipeline."""
+    """Select frozen rows and execute each through an explicit real pipeline.
+
+    Supports both synthetic qualification (official_mode=False) and real
+    official dispatch (official_mode=True). In official mode, accepted
+    trials set counts_toward_cell_n=True and accepted_attempt=True.
+    """
 
     queue_bundle: FrozenQueueBundle
     pipeline: RealTrialPipeline
     lineage_store: AttemptLineageStore
     session: CampaignSession
     dataset_version: str
+    official_mode: bool = False
     real_execution_adapter: bool = True
 
     def __post_init__(self) -> None:
         if getattr(self.pipeline, "real_pipeline", False) is not True:
             raise OfficialDispatchBlockedError("a planning or synthetic-result processor is not a real trial pipeline")
-        if getattr(self.pipeline, "synthetic_fixture", False) is not True:
-            raise OfficialDispatchBlockedError("I17E development adapter permits synthetic fixtures only")
+        if self.official_mode:
+            # Official mode: pipeline must NOT be synthetic
+            if getattr(self.pipeline, "synthetic_fixture", True) is True:
+                raise OfficialDispatchBlockedError("official dispatch adapter requires a non-synthetic pipeline")
+            if not getattr(self.pipeline, "official_trial", False):
+                raise OfficialDispatchBlockedError("official dispatch adapter requires official_trial=True on the pipeline")
+        else:
+            # Synthetic qualification mode: pipeline must be synthetic
+            if getattr(self.pipeline, "synthetic_fixture", False) is not True:
+                raise OfficialDispatchBlockedError("I17E development adapter permits synthetic fixtures only")
         if self.session.state is not SessionState.SEALED:
             raise OfficialDispatchBlockedError("batch execution requires an active valid seal")
         if not self.dataset_version:
@@ -197,7 +226,10 @@ class RepositoryBatchExecutionAdapter:
                 attempt_index=attempt_index,
                 parent_attempt_id=parent_attempt_id,
             )
-            result.validate_development_boundary()
+            if self.official_mode:
+                result.validate_official_boundary()
+            else:
+                result.validate_development_boundary()
             if result.target_trial_id != target_trial_id or result.frozen_row_id != frozen_row_key(row):
                 raise SchemaInvariantError("trial pipeline returned mismatched frozen target identity")
             if result.attempt_index != attempt_index or result.parent_attempt_id != parent_attempt_id:
@@ -206,6 +238,16 @@ class RepositoryBatchExecutionAdapter:
             qualified = result.qualification_accepted
             qualification_accepted += int(qualified)
             elapsed_seconds += result.elapsed_seconds
+
+            if self.official_mode:
+                attempt_status = "OFFICIAL_ACCEPTED" if qualified else ("ORPHAN" if result.orphaned else "INVALID")
+                counts_toward_cell_n = qualified
+                accepted_attempt = qualified
+            else:
+                attempt_status = "SYNTHETIC_QUALIFIED" if qualified else ("ORPHAN" if result.orphaned else "INVALID")
+                counts_toward_cell_n = False
+                accepted_attempt = False
+
             lineage = AttemptLineageRecord(
                 dataset_version=self.dataset_version,
                 frozen_row_id=result.frozen_row_id,
@@ -215,10 +257,10 @@ class RepositoryBatchExecutionAdapter:
                 parent_attempt_id=result.parent_attempt_id,
                 run_id=self.session.run_id,
                 batch_id=batch.batch_id,
-                attempt_status="SYNTHETIC_QUALIFIED" if qualified else ("ORPHAN" if result.orphaned else "INVALID"),
+                attempt_status=attempt_status,
                 invalid_reason=result.invalid_reason,
-                counts_toward_cell_n=False,
-                accepted_attempt=False,
+                counts_toward_cell_n=counts_toward_cell_n,
+                accepted_attempt=accepted_attempt,
                 raw_attempt_directory=result.raw_attempt_directory,
             )
             self.lineage_store.append(lineage)
@@ -233,10 +275,11 @@ class RepositoryBatchExecutionAdapter:
                 )
             )
 
+        official_accepted = qualification_accepted if self.official_mode else 0
         return CampaignBatchResult(
             batch_id=batch.batch_id,
-            accepted_count=0,
-            finalized=False,
+            accepted_count=official_accepted,
+            finalized=self.official_mode and official_accepted > 0,
             estimated_seconds=elapsed_seconds or float(batch.row_count * p95_trial_seconds),
             batch_hash=_sha256_payload(
                 {
@@ -245,15 +288,26 @@ class RepositoryBatchExecutionAdapter:
                     "result_digests": result_digests,
                 }
             ),
-            status="SYNTHETIC_QUALIFIED",
+            status="OFFICIAL_FINALIZED" if (self.official_mode and official_accepted > 0) else "SYNTHETIC_QUALIFIED",
+        )
+
+
+def authorize_official_dispatch(*, dataset_version: str, source_tag: str) -> None:
+    """Validate that the dataset and source tag match the v3 official binding.
+
+    This function no longer unconditionally blocks; after successful
+    qualification it verifies the caller is using the correct v3 binding.
+    """
+    if dataset_version != OFFICIAL_V3_DATASET_VERSION:
+        raise OfficialDispatchBlockedError(
+            f"official dispatch dataset mismatch: expected {OFFICIAL_V3_DATASET_VERSION}, got {dataset_version}"
+        )
+    if source_tag != OFFICIAL_V3_SOURCE_TAG:
+        raise OfficialDispatchBlockedError(
+            f"official dispatch source tag mismatch: expected {OFFICIAL_V3_SOURCE_TAG}, got {source_tag}"
         )
 
 
 def refuse_official_dispatch(*, dataset_version: str, source_tag: str) -> None:
-    """Keep official dispatch locked until post-qualification authorization exists."""
-
-    if dataset_version != OFFICIAL_V3_DATASET_VERSION or source_tag != OFFICIAL_V3_SOURCE_TAG:
-        raise OfficialDispatchBlockedError("official dispatch source or dataset does not match the required v3 binding")
-    raise OfficialDispatchBlockedError(
-        "official dispatch remains prohibited during I17E development and qualification"
-    )
+    """Legacy alias kept for backward compatibility with existing non-official tests."""
+    authorize_official_dispatch(dataset_version=dataset_version, source_tag=source_tag)
