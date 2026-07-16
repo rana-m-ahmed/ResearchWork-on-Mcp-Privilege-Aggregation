@@ -2,8 +2,8 @@ pipeline: phase4_5_local_dryrun
 source_of_truth: github
 official_trial: false
 counts_for_phase5: false
-selected_model_slot: M1
-selected_model_identifier: Qwen/Qwen2.5-7B-Instruct
+selected_model_slot: M2
+selected_model_identifier: deepseek-ai/DeepSeek-R1-Distill-Llama-8B
 densities:
   - D3
   - D5
