@@ -1,8 +1,8 @@
-model_slot: M2
-exact_model_identifier: deepseek-ai/DeepSeek-R1-Distill-Llama-8B
-model_family: DeepSeek-R1
+model_slot: M3
+exact_model_identifier: mistralai/Mistral-7B-Instruct-v0.3
+model_family: Mistral
 frozen_source: phase4/configs/model_set_freeze.yaml
 selection_purpose: phase5_official_execution
 official_trial: true
 counts_for_phase5: true
-notes: Official Phase 5 execution for M2.
+notes: Official Phase 5 execution for M3.

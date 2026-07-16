@@ -2,8 +2,8 @@ pipeline: phase4_5_local_dryrun
 source_of_truth: github
 official_trial: false
 counts_for_phase5: false
-selected_model_slot: M2
-selected_model_identifier: deepseek-ai/DeepSeek-R1-Distill-Llama-8B
+selected_model_slot: M3
+selected_model_identifier: mistralai/Mistral-7B-Instruct-v0.3
 densities:
   - D3
   - D5
