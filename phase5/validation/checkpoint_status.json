@@ -1,0 +1,21 @@
+{
+  "accepted_finalized_count": 0,
+  "batch_manifest_sha256": "c5af5c10cfbe60e02f8e17cd6d039f3a684db0b56c4ef8d18a70dcff4cd4e71e",
+  "checkpoint_sync_status": "NOT_SYNCED",
+  "dataset_version": "P5-DV-1.0.1-A7C91E42",
+  "finalized_batch_count": 0,
+  "invalid_attempt_count": 0,
+  "local_commit_sha": null,
+  "max_observed_token_count": null,
+  "model_slot": "M2",
+  "next_batch_id": "P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M2-MIX-MIX-BASELINE-3754390E-92EC",
+  "orphan_attempt_count": 0,
+  "pending_batch_count": 51,
+  "remote_commit_sha": null,
+  "run_id": "P5RUN-P5-DV-1.0.0-A7C91E42-M2-20260716-3670D3E4",
+  "run_plan_sha256": "6e0e3a4fc060a7da0f3dc02f1d0009dd606c07fe33c227cb63b6e8f6b263d199",
+  "seal_epoch": 0,
+  "seal_epoch_hashes": [],
+  "state": "PREPARATION",
+  "time_to_safety_horizon_seconds": 27000.0
+}
