@@ -137,6 +137,19 @@ def _install_phi3_dynamic_cache_compatibility_shim() -> None:
         get_seq_length._phase5_optional_layer_idx = True  # type: ignore[attr-defined]
         DynamicCache.get_seq_length = get_seq_length
 
+    if not hasattr(DynamicCache, "get_usable_length"):
+
+        def get_usable_length(self, new_seq_length, layer_idx=0):  # type: ignore[no-untyped-def]
+            previous_seq_length = int(self.get_seq_length(layer_idx))
+            max_length_getter = getattr(self, "get_max_length", None)
+            max_length = max_length_getter() if callable(max_length_getter) else None
+            if max_length is not None and previous_seq_length + int(new_seq_length) > int(max_length):
+                return max(0, int(max_length) - int(new_seq_length))
+            return previous_seq_length
+
+        get_usable_length._phase5_legacy_usable_length = True  # type: ignore[attr-defined]
+        DynamicCache.get_usable_length = get_usable_length
+
 _PLACEHOLDER_DIGEST_MARKERS = (
     "AUTHENTIC_KAGGLE_EXECUTION",
     "TO_VERIFY_ON_KAGGLE",

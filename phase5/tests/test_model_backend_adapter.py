@@ -76,6 +76,9 @@ def test_phi3_dynamic_cache_shim_allows_omitted_layer_index(monkeypatch) -> None
             self.calls.append(layer_idx)
             return 100 + layer_idx
 
+        def get_max_length(self):
+            return 110
+
     cache_utils_module.DynamicCache = FakeDynamicCache
     transformers_module = types.ModuleType("transformers")
     transformers_module.cache_utils = cache_utils_module
@@ -95,6 +98,8 @@ def test_phi3_dynamic_cache_shim_allows_omitted_layer_index(monkeypatch) -> None
     assert cache.calls == []
     assert cache.get_seq_length(3) == 103
     assert cache.calls == [3]
+    assert cache.get_usable_length(5, 3) == 103
+    assert cache.get_usable_length(20, 3) == 90
 
 
 def _copy_text(source: Path, destination: Path, *, replacement: tuple[str, str] | None = None) -> None:
