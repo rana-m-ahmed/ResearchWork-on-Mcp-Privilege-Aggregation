@@ -327,6 +327,20 @@ class FrozenModelBackendAdapter:
         try:
             import torch
             from transformers import AutoModelForCausalLM, AutoTokenizer
+            try:
+                from transformers.cache_utils import DynamicCache
+                if not hasattr(DynamicCache, "from_legacy_cache"):
+                    @classmethod
+                    def from_legacy_cache(cls, past_key_values=None):
+                        cache = cls()
+                        if past_key_values is not None:
+                            for layer_idx in range(len(past_key_values)):
+                                cache.key_cache.append(past_key_values[layer_idx][0])
+                                cache.value_cache.append(past_key_values[layer_idx][1])
+                        return cache
+                    DynamicCache.from_legacy_cache = from_legacy_cache
+            except ImportError:
+                pass
         except Exception as exc:
             raise RuntimeMismatchError("torch and transformers are required for real model execution") from exc
         if not torch.cuda.is_available():
