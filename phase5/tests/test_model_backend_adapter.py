@@ -127,12 +127,12 @@ def _prepare_frozen_model_root(tmp_path: Path, *, mutate: tuple[Path, tuple[str,
 def test_load_frozen_model_backend_identity_matches_frozen_inputs() -> None:
     identity = load_frozen_model_backend_identity()
 
-    assert identity.model_id == "M1"
-    assert identity.exact_model_identifier == "Qwen/Qwen2.5-7B-Instruct"
+    assert identity.model_id == "M3"
+    assert identity.exact_model_identifier == "mistralai/Mistral-7B-Instruct-v0.3"
     assert identity.quantization == "float16"
     assert identity.backend == "transformers"
     assert identity.backend_version == "transformers==5.0.0"
-    assert identity.tokenizer_identity == "Qwen/Qwen2.5-7B-Instruct"
+    assert identity.tokenizer_identity == "mistralai/Mistral-7B-Instruct-v0.3"
     assert identity.model_digest == "UNAVAILABLE_NOT_RECORDED_IN_PHASE3"
     assert identity.model_digest_is_placeholder is True
 
