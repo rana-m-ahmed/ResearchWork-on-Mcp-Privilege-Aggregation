@@ -87,6 +87,22 @@ def test_notebook_requires_detached_source_checkout_and_verification() -> None:
     assert "branch HEAD execution is prohibited" in text
 
 
+def test_official_runner_notebook_avoids_branch_merge_preflight() -> None:
+    notebook_path = Path("phase5/kaggle/official_phase5_runner.ipynb")
+    notebook = json.loads(notebook_path.read_text(encoding="utf-8"))
+    code_cells = ["".join(cell.get("source", [])) for cell in notebook["cells"] if cell.get("cell_type") == "code"]
+    text = "\n".join(code_cells)
+
+    assert 'PHASE5_SOURCE_TAG", "phase5-official-source-v4"' in text
+    assert 'PHASE5_EXPECTED_SOURCE_COMMIT", "4e2e79e6c29f1d2c1dcfe8f487291aca1b224a4b"' in text
+    assert 'PHASE5_MODEL_SLOT", "M4"' in text
+    assert 'PHASE5_MAX_BATCHES", "750"' in text
+    assert '--max-batches",str(MAX_BATCHES)' in text
+    assert 'merge", "--allow-unrelated-histories"' not in text
+    assert 'Pre-flight: Testing git push credentials' not in text
+    assert 'skipping evidence-branch merge preflight' in text
+
+
 def test_handoff_defaults_to_reconciled_v2_run_plan() -> None:
     from phase5.kaggle import DEFAULT_BATCH_MANIFEST, DEFAULT_RUN_PLAN
 
@@ -105,7 +121,7 @@ def test_m4_reconciled_run_plan_is_active_and_evidence_bound() -> None:
     assert recon["official_trials_executed"] == 0
     assert m4_plan["model_load_status"] == "LOAD_SUCCESS"
     assert m4_status["status"] == "LOAD_SUCCESS"
-    assert plan["dataset_version"] == "P5-DV-1.0.1-A7C91E42"
+    assert plan["dataset_version"] == "P5-DV-1.0.2-A7C91E42"
     assert {
         "label": "M4 loader status reconciliation",
         "sha256": "b3893e14ac5203f3021f128ffd4f13f49af19a745eaca74a9a4664d12fefb112",
