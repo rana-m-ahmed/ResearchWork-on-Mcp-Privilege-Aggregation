@@ -12,6 +12,8 @@ Repair the official Phase 5 Kaggle runner for the M4 branch so it boots from the
 - Moved strict Gate 0 execution before the M4 overlay, while the detached source checkout is still clean.
 - Changed the later `strict_gate0` notebook cell into a status-only cell so it cannot fail on the intentional overlay dirtiness.
 - Reworked GitHub evidence sync to clone `phase5-model-4` into a separate clean push repository, copy only changed evidence/validation/checkpoint outputs, and push from that branch clone.
+- Pinned notebook campaign commands to `phase5/manifests/batch_partition_manifest_v3.json` and `phase5/validation/kaggle_run_plan_v3.json` instead of relying on older CLI defaults.
+- Added the required `--until-safety-horizon` flag to the official `run-campaign` invocation.
 - Kept the runner locked to `MODEL_SLOT = M4` and `MAX_BATCHES = 750`.
 - Updated `phase5/tests/test_kaggle_handoff.py` to assert the new source tag/commit and the M4 overlay logic.
 
@@ -25,9 +27,11 @@ Repair the official Phase 5 Kaggle runner for the M4 branch so it boots from the
   - `phase5 gate0 --strict`
   - M4 overlay
   - frozen identity resolved as `M4 microsoft/Phi-3.5-mini-instruct`
+- Static notebook regression now asserts the v3 manifest/run-plan paths and `--until-safety-horizon` are present in the official campaign call.
 
 ## Notes
 - No secrets were added or changed.
 - No frozen Phase 4 or Phase 4.5 files were modified in the repository history.
 - The notebook now fails closed if the overlay lands incorrectly or the source commit does not match the expected v4 commit.
 - The final GitHub push no longer commits from the detached source checkout, avoiding non-fast-forward evidence pushes caused by source-tag ancestry.
+- The notebook no longer lets v2 CLI defaults select a `P5-DV-1.0.1` resume batch during a `P5-DV-1.0.2` M4 run.

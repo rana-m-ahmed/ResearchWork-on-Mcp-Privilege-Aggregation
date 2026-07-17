@@ -100,6 +100,8 @@ def test_official_runner_notebook_avoids_branch_merge_preflight() -> None:
     assert 'PHASE5_EXPECTED_SOURCE_COMMIT", "4e2e79e6c29f1d2c1dcfe8f487291aca1b224a4b"' in text
     assert 'PHASE5_MODEL_SLOT", "M4"' in text
     assert 'PHASE5_MAX_BATCHES", "750"' in text
+    assert "batch_partition_manifest_v3.json" in text
+    assert "kaggle_run_plan_v3.json" in text
     assert "pre_overlay_status" in verify_source_cell
     assert verify_source_cell.index('"gate0"') < verify_source_cell.index("selected_model_path.write_text")
     assert '"gate0"' not in strict_gate0_cell
@@ -112,6 +114,9 @@ def test_official_runner_notebook_avoids_branch_merge_preflight() -> None:
     assert "allowed_output_prefixes" in sync_cell
     assert '"clone", "--branch", EVIDENCE_BRANCH' in sync_cell
     assert '"push", "origin", f"HEAD:{EVIDENCE_BRANCH}"' in sync_cell
+    assert '"--until-safety-horizon"' in text
+    assert '"--batch-manifest",str(BATCH_MANIFEST_PATH)' in text
+    assert '"--run-plan",str(RUN_PLAN_PATH)' in text
     assert '--max-batches",str(MAX_BATCHES)' in text
     assert 'merge", "--allow-unrelated-histories"' not in text
     assert 'Pre-flight: Testing git push credentials' not in text
