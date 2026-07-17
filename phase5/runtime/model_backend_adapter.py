@@ -339,6 +339,10 @@ class FrozenModelBackendAdapter:
                                 cache.value_cache.append(past_key_values[layer_idx][1])
                         return cache
                     DynamicCache.from_legacy_cache = from_legacy_cache
+                if not hasattr(DynamicCache, "get_usable_length") and hasattr(DynamicCache, "get_seq_length"):
+                    def get_usable_length(self, new_seq_length=None, layer_idx=None):
+                        return self.get_seq_length(layer_idx)
+                    DynamicCache.get_usable_length = get_usable_length
             except ImportError:
                 pass
         except Exception as exc:
