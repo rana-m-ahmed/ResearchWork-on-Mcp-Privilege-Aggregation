@@ -9,6 +9,9 @@ Repair the official Phase 5 Kaggle runner for the M4 branch so it boots from the
 - Added an explicit M4 overlay step that rewrites:
   - `phase4_5/configs/phase45_selected_model.yaml`
   - `phase4_5/configs/phase45_local_dryrun.yaml`
+- Moved strict Gate 0 execution before the M4 overlay, while the detached source checkout is still clean.
+- Changed the later `strict_gate0` notebook cell into a status-only cell so it cannot fail on the intentional overlay dirtiness.
+- Reworked GitHub evidence sync to clone `phase5-model-4` into a separate clean push repository, copy only changed evidence/validation/checkpoint outputs, and push from that branch clone.
 - Kept the runner locked to `MODEL_SLOT = M4` and `MAX_BATCHES = 750`.
 - Updated `phase5/tests/test_kaggle_handoff.py` to assert the new source tag/commit and the M4 overlay logic.
 
@@ -16,8 +19,15 @@ Repair the official Phase 5 Kaggle runner for the M4 branch so it boots from the
 - `pytest phase5/tests/test_kaggle_handoff.py`
 - Detached v4 sanity check with the overlay applied:
   - `load_frozen_model_backend_identity(root=temp_clone)` resolved `M4 microsoft/Phi-3.5-mini-instruct`
+- Notebook startup dry-run:
+  - detached `phase5-official-source-v4`
+  - clean-tree precheck
+  - `phase5 gate0 --strict`
+  - M4 overlay
+  - frozen identity resolved as `M4 microsoft/Phi-3.5-mini-instruct`
 
 ## Notes
 - No secrets were added or changed.
 - No frozen Phase 4 or Phase 4.5 files were modified in the repository history.
 - The notebook now fails closed if the overlay lands incorrectly or the source commit does not match the expected v4 commit.
+- The final GitHub push no longer commits from the detached source checkout, avoiding non-fast-forward evidence pushes caused by source-tag ancestry.

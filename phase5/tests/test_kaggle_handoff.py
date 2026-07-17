@@ -92,15 +92,26 @@ def test_official_runner_notebook_avoids_branch_merge_preflight() -> None:
     notebook = json.loads(notebook_path.read_text(encoding="utf-8"))
     code_cells = ["".join(cell.get("source", [])) for cell in notebook["cells"] if cell.get("cell_type") == "code"]
     text = "\n".join(code_cells)
+    verify_source_cell = next(source for source in code_cells if "M4 selection overlay restored" in source)
+    strict_gate0_cell = next(source for source in code_cells if "Strict gate0 already completed" in source)
+    sync_cell = next(source for source in code_cells if "phase5_evidence_push_repo" in source)
 
     assert 'PHASE5_SOURCE_TAG", "phase5-official-source-v4"' in text
     assert 'PHASE5_EXPECTED_SOURCE_COMMIT", "4e2e79e6c29f1d2c1dcfe8f487291aca1b224a4b"' in text
     assert 'PHASE5_MODEL_SLOT", "M4"' in text
     assert 'PHASE5_MAX_BATCHES", "750"' in text
+    assert "pre_overlay_status" in verify_source_cell
+    assert verify_source_cell.index('"gate0"') < verify_source_cell.index("selected_model_path.write_text")
+    assert '"gate0"' not in strict_gate0_cell
     assert "M4 selection overlay restored for frozen identity loading" in text
     assert "phase45_selected_model.yaml" in text
     assert "selected_model_slot: M4" in text
     assert "selected_model_identifier: microsoft/Phi-3.5-mini-instruct" in text
+    assert '"phase5/checkpoints/"' in sync_cell
+    assert "runtime_status" in sync_cell
+    assert "allowed_output_prefixes" in sync_cell
+    assert '"clone", "--branch", EVIDENCE_BRANCH' in sync_cell
+    assert '"push", "origin", f"HEAD:{EVIDENCE_BRANCH}"' in sync_cell
     assert '--max-batches",str(MAX_BATCHES)' in text
     assert 'merge", "--allow-unrelated-histories"' not in text
     assert 'Pre-flight: Testing git push credentials' not in text
