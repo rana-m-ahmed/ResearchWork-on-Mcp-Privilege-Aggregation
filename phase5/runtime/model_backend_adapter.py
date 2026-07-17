@@ -80,6 +80,36 @@ def serialize_frozen_prompt_for_model(tokenizer: Any, prompt_text: str) -> str:
         raise RuntimeMismatchError("the frozen tokenizer returned an invalid chat serialization")
     return serialized
 
+
+def _install_phi3_dynamic_cache_compatibility_shim() -> None:
+    """Make DynamicCache tolerate the frozen Phi-3.5 remote code path.
+
+    The frozen Phi-3.5 modeling code calls ``get_usable_length`` without a
+    layer index during generation. Newer ``transformers`` cache objects expect
+    a layer index there, so we provide a narrow compatibility shim that falls
+    back to the cache-wide token count when the index is omitted.
+    """
+
+    try:
+        from transformers.cache_utils import DynamicCache
+    except Exception as exc:  # pragma: no cover - exercised only when transformers is unavailable
+        raise RuntimeMismatchError("transformers cache utilities are required for Phi-3.5 execution") from exc
+
+    original_get_seq_length = DynamicCache.get_seq_length
+    if getattr(original_get_seq_length, "_phase5_optional_layer_idx", False):
+        return
+
+    def get_seq_length(self, layer_idx=None):  # type: ignore[override]
+        if layer_idx is None:
+            seen_tokens = getattr(self, "seen_tokens", None)
+            if seen_tokens is not None:
+                return int(seen_tokens)
+            layer_idx = 0
+        return original_get_seq_length(self, layer_idx)
+
+    get_seq_length._phase5_optional_layer_idx = True  # type: ignore[attr-defined]
+    DynamicCache.get_seq_length = get_seq_length
+
 _PLACEHOLDER_DIGEST_MARKERS = (
     "AUTHENTIC_KAGGLE_EXECUTION",
     "TO_VERIFY_ON_KAGGLE",
@@ -337,6 +367,8 @@ class FrozenModelBackendAdapter:
                 revision=self.identity.huggingface_commit_sha,
                 trust_remote_code=True,
             )
+        if "phi-3.5" in self.exact_model_identifier.lower():
+            _install_phi3_dynamic_cache_compatibility_shim()
         max_memory, offload_folder = build_model_load_memory_plan(torch)
         self._load_memory_plan = {
             "max_memory_bytes": {str(device): value for device, value in max_memory.items()},
