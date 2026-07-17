@@ -127,12 +127,12 @@ def _prepare_frozen_model_root(tmp_path: Path, *, mutate: tuple[Path, tuple[str,
 def test_load_frozen_model_backend_identity_matches_frozen_inputs() -> None:
     identity = load_frozen_model_backend_identity()
 
-    assert identity.model_id == "M3"
-    assert identity.exact_model_identifier == "mistralai/Mistral-7B-Instruct-v0.3"
+    assert identity.model_id == "M1"
+    assert identity.exact_model_identifier == "Qwen/Qwen2.5-7B-Instruct"
     assert identity.quantization == "float16"
     assert identity.backend == "transformers"
     assert identity.backend_version == "transformers==5.0.0"
-    assert identity.tokenizer_identity == "mistralai/Mistral-7B-Instruct-v0.3"
+    assert identity.tokenizer_identity == "Qwen/Qwen2.5-7B-Instruct"
     assert identity.model_digest == "UNAVAILABLE_NOT_RECORDED_IN_PHASE3"
     assert identity.model_digest_is_placeholder is True
 
@@ -247,7 +247,6 @@ def test_model_freeze_backend_mismatch_fails_closed(tmp_path: Path, monkeypatch:
                     raise FrozenArtifactHashError("model set hash mismatch")
                 return SimpleNamespace(actual_paths=(relative,), sha256=(expected,), status="FOUND_VERIFIED")
             if label == f"Model freeze {identity.model_id}":
-                relative = Path(f"phase4/configs/model_{slot_number}.yaml")
                 relative = Path(f"phase4/configs/model_{slot_number}_freeze.yaml")
                 expected = hashlib.sha256(Path(f"phase4/configs/model_{slot_number}_freeze.yaml").read_bytes()).hexdigest()
                 actual = (root / relative).read_bytes()
@@ -286,10 +285,7 @@ def test_malformed_frozen_model_path_fails_closed(tmp_path: Path) -> None:
     _copy_text(Path("phase5/configs/upstream_artifact_registry.json"), root / "phase5/configs/upstream_artifact_registry.json")
     (root / "phase4/configs").mkdir(parents=True, exist_ok=True)
     (root / "phase4_5/configs").mkdir(parents=True, exist_ok=True)
-    (root / "phase4/configs/model_set_freeze.yaml").write_text(
-        f"{identity.model_id}: {identity.exact_model_identifier}\n",
-        encoding="utf-8",
-    )
+    (root / "phase4/configs/model_set_freeze.yaml").write_text(f"{identity.model_id}: {identity.exact_model_identifier}\n", encoding="utf-8")
     (root / f"phase4/configs/model_{slot_number}_freeze.yaml").write_text("[]\n", encoding="utf-8")
     (root / "phase4_5/configs/phase45_selected_model.yaml").write_text(
         f"model_slot: {identity.model_id}\nexact_model_identifier: {identity.exact_model_identifier}\nfrozen_source: phase4/configs/model_set_freeze.yaml\n",
