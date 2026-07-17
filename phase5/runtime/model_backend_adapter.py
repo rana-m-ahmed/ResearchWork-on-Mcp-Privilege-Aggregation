@@ -25,6 +25,44 @@ _CPU_HEADROOM_BYTES = 4 * _GIB
 _FROZEN_INPUT_TOKEN_LIMIT = 3584
 
 
+def _is_phi35_identifier(model_identifier: str) -> bool:
+    return "phi-3.5" in model_identifier.lower()
+
+
+def _build_model_load_kwargs(
+    *,
+    identity: Any,
+    torch_module: Any,
+    max_memory: Mapping[Any, int],
+    offload_folder: Path,
+) -> dict[str, Any]:
+    kwargs: dict[str, Any] = {
+        "revision": identity.huggingface_commit_sha,
+        "dtype": torch_module.float16,
+        "device_map": "auto",
+        "max_memory": max_memory,
+        "low_cpu_mem_usage": True,
+        "offload_folder": offload_folder,
+        "use_safetensors": True,
+        "trust_remote_code": True,
+    }
+    if _is_phi35_identifier(identity.exact_model_identifier):
+        kwargs["attn_implementation"] = "eager"
+        kwargs["use_cache"] = False
+    return kwargs
+
+
+def _build_generation_kwargs(*, exact_model_identifier: str, tokenizer: Any) -> dict[str, Any]:
+    kwargs = {
+        "max_new_tokens": 512,
+        "do_sample": False,
+        "pad_token_id": tokenizer.eos_token_id,
+    }
+    if _is_phi35_identifier(exact_model_identifier):
+        kwargs["use_cache"] = False
+    return kwargs
+
+
 def _available_cpu_memory_bytes() -> int:
     meminfo = Path("/proc/meminfo")
     if meminfo.is_file():
@@ -407,7 +445,7 @@ class FrozenModelBackendAdapter:
                 revision=self.identity.huggingface_commit_sha,
                 trust_remote_code=True,
             )
-        if "phi-3.5" in self.exact_model_identifier.lower():
+        if _is_phi35_identifier(self.exact_model_identifier):
             _install_phi3_dynamic_cache_compatibility_shim()
         max_memory, offload_folder = build_model_load_memory_plan(torch)
         self._load_memory_plan = {
@@ -417,20 +455,22 @@ class FrozenModelBackendAdapter:
         try:
             self._model = AutoModelForCausalLM.from_pretrained(
                 self.exact_model_identifier,
-                revision=self.identity.huggingface_commit_sha,
-                dtype=torch.float16,
-                device_map="auto",
-                max_memory=max_memory,
-                low_cpu_mem_usage=True,
-                offload_folder=offload_folder,
-                use_safetensors=True,
-                trust_remote_code=True,
+                **_build_model_load_kwargs(
+                    identity=self.identity,
+                    torch_module=torch,
+                    max_memory=max_memory,
+                    offload_folder=offload_folder,
+                ),
             )
             self._model.eval()
+            if _is_phi35_identifier(self.exact_model_identifier):
+                setattr(self._model.config, "use_cache", False)
             self._model.generation_config.do_sample = False
             self._model.generation_config.temperature = None
             self._model.generation_config.top_p = None
             self._model.generation_config.top_k = None
+            if _is_phi35_identifier(self.exact_model_identifier):
+                self._model.generation_config.use_cache = False
             self._load_memory_plan["hf_device_map"] = {
                 str(name): str(device) for name, device in getattr(self._model, "hf_device_map", {}).items()
             }
@@ -477,9 +517,10 @@ class FrozenModelBackendAdapter:
         with torch.inference_mode():
             output = self._model.generate(
                 **encoded,
-                max_new_tokens=512,
-                do_sample=False,
-                pad_token_id=self._tokenizer.eos_token_id,
+                **_build_generation_kwargs(
+                    exact_model_identifier=self.exact_model_identifier,
+                    tokenizer=self._tokenizer,
+                ),
             )
         generated_ids = output[0, encoded["input_ids"].shape[1]:]
         decoded_output = self._tokenizer.decode(generated_ids, skip_special_tokens=True)

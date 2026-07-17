@@ -2,13 +2,19 @@ from __future__ import annotations
 
 import sys
 import types
+from types import SimpleNamespace
 from pathlib import Path
 
 import pytest
 
 from phase5.domain.errors import FrozenArtifactHashError, MissingFrozenSettingError, RuntimeMismatchError, SchemaInvariantError
 from phase5.runtime import build_frozen_model_backend_adapter, load_frozen_model_backend_identity
-from phase5.runtime.model_backend_adapter import build_model_load_memory_plan, serialize_frozen_prompt_for_model
+from phase5.runtime.model_backend_adapter import (
+    _build_generation_kwargs,
+    _build_model_load_kwargs,
+    build_model_load_memory_plan,
+    serialize_frozen_prompt_for_model,
+)
 
 
 class _FakeCuda:
@@ -23,10 +29,13 @@ class _FakeCuda:
 
 
 class _FakeTorch:
+    float16 = "float16"
     cuda = _FakeCuda()
 
 
 class _ChatTokenizer:
+    eos_token_id = 2
+
     def apply_chat_template(self, messages, *, tokenize, add_generation_prompt):
         assert messages == [{"role": "user", "content": "compiled prompt"}]
         assert tokenize is False
@@ -62,6 +71,50 @@ def test_model_load_memory_plan_fails_closed_on_insufficient_gpu(monkeypatch) ->
 
     with pytest.raises(RuntimeMismatchError, match="insufficient free GPU memory"):
         build_model_load_memory_plan(_FakeTorch())
+
+
+def test_phi3_runtime_kwargs_force_eager_attention_and_disable_cache(tmp_path: Path) -> None:
+    identity = SimpleNamespace(
+        exact_model_identifier="microsoft/Phi-3.5-mini-instruct",
+        huggingface_commit_sha="2fe192450127e6a83f7441aef6e3ca586c338b77",
+    )
+
+    load_kwargs = _build_model_load_kwargs(
+        identity=identity,
+        torch_module=_FakeTorch,
+        max_memory={0: 1},
+        offload_folder=tmp_path,
+    )
+    generation_kwargs = _build_generation_kwargs(
+        exact_model_identifier=identity.exact_model_identifier,
+        tokenizer=_ChatTokenizer(),
+    )
+
+    assert load_kwargs["attn_implementation"] == "eager"
+    assert load_kwargs["use_cache"] is False
+    assert generation_kwargs["use_cache"] is False
+
+
+def test_non_phi_runtime_kwargs_preserve_default_cache_path(tmp_path: Path) -> None:
+    identity = SimpleNamespace(
+        exact_model_identifier="mistralai/Mistral-7B-Instruct-v0.3",
+        huggingface_commit_sha="c170c708c41dac9275d15a8fff4eca08d52bab71",
+    )
+
+    load_kwargs = _build_model_load_kwargs(
+        identity=identity,
+        torch_module=_FakeTorch,
+        max_memory={0: 1},
+        offload_folder=tmp_path,
+    )
+    generation_kwargs = _build_generation_kwargs(
+        exact_model_identifier=identity.exact_model_identifier,
+        tokenizer=_ChatTokenizer(),
+    )
+
+    assert "attn_implementation" not in load_kwargs
+    assert "use_cache" not in load_kwargs
+    assert "use_cache" not in generation_kwargs
 
 
 def test_phi3_dynamic_cache_shim_allows_omitted_layer_index(monkeypatch) -> None:

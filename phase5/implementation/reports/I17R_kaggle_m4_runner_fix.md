@@ -18,6 +18,7 @@ Repair the official Phase 5 Kaggle runner for the M4 branch so it boots from the
 - Added the required `--until-safety-horizon` flag to the official `run-campaign` invocation.
 - Extended the Phi-3.5 DynamicCache compatibility shim to provide the legacy `from_legacy_cache` method expected by the frozen remote model code under `transformers==5.0.0`.
 - Extended the same shim to provide the legacy `get_usable_length` method expected by the frozen Phi-3.5 prefill path.
+- Forced the Phi-3.5 runtime path to use eager attention and disable KV cache at model-load and generation time, avoiding flash-attention probing and further `DynamicCache` drift during official execution.
 - Kept the runner locked to `MODEL_SLOT = M4` and `MAX_BATCHES = 750`.
 - Updated `phase5/tests/test_kaggle_handoff.py` to assert the new source tag/commit and the M4 overlay logic.
 
@@ -34,6 +35,7 @@ Repair the official Phase 5 Kaggle runner for the M4 branch so it boots from the
 - Static notebook regression now asserts the v3 manifest/run-plan paths and `--until-safety-horizon` are present in the official campaign call.
 - Runtime adapter regression now verifies the Phi-3.5 DynamicCache shim installs `from_legacy_cache` when the current `transformers` cache class does not provide it.
 - Runtime adapter regression also verifies the shim installs `get_usable_length` with max-length bounding semantics.
+- Runtime adapter regression verifies Phi-specific load/generation kwargs force eager attention and no-cache execution without changing non-Phi model kwargs.
 
 ## Notes
 - No secrets were added or changed.
