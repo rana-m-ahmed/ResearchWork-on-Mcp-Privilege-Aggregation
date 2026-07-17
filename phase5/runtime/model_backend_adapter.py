@@ -324,38 +324,9 @@ class FrozenModelBackendAdapter:
     def _ensure_runtime_loaded(self) -> None:
         if self._model is not None:
             return
-        
-        # expandable_segments causes segfaults in T4 cross-gpu device_map
-        os.environ.pop("PYTORCH_ALLOC_CONF", None)
         try:
             import torch
             from transformers import AutoModelForCausalLM, AutoTokenizer
-            try:
-                from transformers.cache_utils import DynamicCache
-                if not hasattr(DynamicCache, "from_legacy_cache"):
-                    @classmethod
-                    def from_legacy_cache(cls, past_key_values=None):
-                        cache = cls()
-                        if past_key_values is not None:
-                            for layer_idx in range(len(past_key_values)):
-                                cache.key_cache.append(past_key_values[layer_idx][0])
-                                cache.value_cache.append(past_key_values[layer_idx][1])
-                        return cache
-                    DynamicCache.from_legacy_cache = from_legacy_cache
-                if not hasattr(DynamicCache, "get_usable_length") and hasattr(DynamicCache, "get_seq_length"):
-                    def get_usable_length(self, new_seq_length=None, layer_idx=None):
-                        # layer_idx defaults to 0 because get_seq_length does not handle None
-                        return self.get_seq_length(layer_idx if layer_idx is not None else 0)
-                    DynamicCache.get_usable_length = get_usable_length
-                if not hasattr(DynamicCache, "to_legacy_cache"):
-                    def to_legacy_cache(self):
-                        legacy_cache = ()
-                        for layer_idx in range(len(self.key_cache)):
-                            legacy_cache += ((self.key_cache[layer_idx], self.value_cache[layer_idx]),)
-                        return legacy_cache
-                    DynamicCache.to_legacy_cache = to_legacy_cache
-            except ImportError:
-                pass
         except Exception as exc:
             raise RuntimeMismatchError("torch and transformers are required for real model execution") from exc
         if not torch.cuda.is_available():
@@ -375,7 +346,6 @@ class FrozenModelBackendAdapter:
             self._model = AutoModelForCausalLM.from_pretrained(
                 self.exact_model_identifier,
                 revision=self.identity.huggingface_commit_sha,
-                torch_dtype=torch.float16,
                 dtype=torch.float16,
                 device_map="auto",
                 max_memory=max_memory,
@@ -383,7 +353,6 @@ class FrozenModelBackendAdapter:
                 offload_folder=offload_folder,
                 use_safetensors=True,
                 trust_remote_code=True,
-                attn_implementation="eager",
             )
             self._model.eval()
             self._model.generation_config.do_sample = False

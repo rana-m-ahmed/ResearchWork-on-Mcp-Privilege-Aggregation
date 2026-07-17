@@ -1,6 +1,6 @@
-model_slot: M4
-exact_model_identifier: microsoft/Phi-3.5-mini-instruct
-model_family: Phi
+model_slot: M3
+exact_model_identifier: mistralai/Mistral-7B-Instruct-v0.3
+model_family: Mistral
 frozen_source: phase4/configs/model_set_freeze.yaml
 selection_purpose: phase5_official_execution
 official_trial: true
