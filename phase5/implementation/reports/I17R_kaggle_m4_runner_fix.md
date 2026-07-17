@@ -6,6 +6,7 @@ Repair the official Phase 5 Kaggle runner for the M4 branch so it boots from the
 ## What Changed
 - Updated `phase5/kaggle/official_phase5_runner.ipynb` to use `phase5-official-source-v4` and commit `4e2e79e6c29f1d2c1dcfe8f487291aca1b224a4b`.
 - Updated the M4 runner again to use `phase5-official-source-v5` and commit `0274eec1e349d0e0c459fd2a88785332ac0a3c50` after the Phi cache compatibility fix.
+- Updated the M4 runner again to use `phase5-official-source-v6` and commit `9224241688579abbe059aa01cdc636d64d45c2de` after the Phi `get_usable_length` compatibility fix.
 - Removed the brittle clean-worktree preflight after checkout.
 - Added an explicit M4 overlay step that rewrites:
   - `phase4_5/configs/phase45_selected_model.yaml`

@@ -43,7 +43,7 @@ NOTEBOOK = load_notebook(NOTEBOOK_PATH)
 def _parameters() -> KaggleHandoffParameters:
     return KaggleHandoffParameters(
         repository_branch="repo/handoff",
-        source_tag_or_commit="phase5-official-source-v5",
+        source_tag_or_commit="phase5-official-source-v6",
         model_branch="model/handoff",
         evidence_branch="evidence/handoff",
         approved_operational_limits={
@@ -96,8 +96,8 @@ def test_official_runner_notebook_avoids_branch_merge_preflight() -> None:
     strict_gate0_cell = next(source for source in code_cells if "Strict gate0 already completed" in source)
     sync_cell = next(source for source in code_cells if "phase5_evidence_push_repo" in source)
 
-    assert 'PHASE5_SOURCE_TAG", "phase5-official-source-v5"' in text
-    assert 'PHASE5_EXPECTED_SOURCE_COMMIT", "0274eec1e349d0e0c459fd2a88785332ac0a3c50"' in text
+    assert 'PHASE5_SOURCE_TAG", "phase5-official-source-v6"' in text
+    assert 'PHASE5_EXPECTED_SOURCE_COMMIT", "9224241688579abbe059aa01cdc636d64d45c2de"' in text
     assert 'PHASE5_MODEL_SLOT", "M4"' in text
     assert 'PHASE5_MAX_BATCHES", "750"' in text
     assert "batch_partition_manifest_v3.json" in text
