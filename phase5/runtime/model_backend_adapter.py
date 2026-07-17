@@ -347,6 +347,13 @@ class FrozenModelBackendAdapter:
                         # layer_idx defaults to 0 because get_seq_length does not handle None
                         return self.get_seq_length(layer_idx if layer_idx is not None else 0)
                     DynamicCache.get_usable_length = get_usable_length
+                if not hasattr(DynamicCache, "to_legacy_cache"):
+                    def to_legacy_cache(self):
+                        legacy_cache = ()
+                        for layer_idx in range(len(self.key_cache)):
+                            legacy_cache += ((self.key_cache[layer_idx], self.value_cache[layer_idx]),)
+                        return legacy_cache
+                    DynamicCache.to_legacy_cache = to_legacy_cache
             except ImportError:
                 pass
         except Exception as exc:
