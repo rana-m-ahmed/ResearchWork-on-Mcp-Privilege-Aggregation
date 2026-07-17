@@ -367,6 +367,7 @@ class FrozenModelBackendAdapter:
                 offload_folder=offload_folder,
                 use_safetensors=True,
                 trust_remote_code=True,
+                attn_implementation="eager",
             )
             self._model.eval()
             self._model.generation_config.do_sample = False
