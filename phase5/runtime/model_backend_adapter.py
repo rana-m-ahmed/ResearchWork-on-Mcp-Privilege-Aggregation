@@ -376,6 +376,7 @@ class FrozenModelBackendAdapter:
                 self.exact_model_identifier,
                 revision=self.identity.huggingface_commit_sha,
                 torch_dtype=torch.float16,
+                dtype=torch.float16,
                 device_map="auto",
                 max_memory=max_memory,
                 low_cpu_mem_usage=True,
