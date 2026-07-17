@@ -87,7 +87,10 @@ def test_phi3_dynamic_cache_shim_allows_omitted_layer_index(monkeypatch) -> None
     _install_phi3_dynamic_cache_compatibility_shim()
 
     cache = FakeDynamicCache()
+    legacy = FakeDynamicCache.from_legacy_cache(None)
 
+    assert isinstance(legacy, FakeDynamicCache)
+    assert FakeDynamicCache.from_legacy_cache(cache) is cache
     assert cache.get_seq_length() == 7
     assert cache.calls == []
     assert cache.get_seq_length(3) == 103

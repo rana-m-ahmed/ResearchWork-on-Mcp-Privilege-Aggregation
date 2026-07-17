@@ -84,10 +84,10 @@ def serialize_frozen_prompt_for_model(tokenizer: Any, prompt_text: str) -> str:
 def _install_phi3_dynamic_cache_compatibility_shim() -> None:
     """Make DynamicCache tolerate the frozen Phi-3.5 remote code path.
 
-    The frozen Phi-3.5 modeling code calls ``get_usable_length`` without a
-    layer index during generation. Newer ``transformers`` cache objects expect
-    a layer index there, so we provide a narrow compatibility shim that falls
-    back to the cache-wide token count when the index is omitted.
+    The frozen Phi-3.5 modeling code expects older DynamicCache helpers during
+    generation. Newer ``transformers`` cache objects moved or removed some of
+    that surface, so we provide narrow compatibility shims for the exact legacy
+    calls used by the frozen remote code path.
     """
 
     try:
@@ -95,20 +95,47 @@ def _install_phi3_dynamic_cache_compatibility_shim() -> None:
     except Exception as exc:  # pragma: no cover - exercised only when transformers is unavailable
         raise RuntimeMismatchError("transformers cache utilities are required for Phi-3.5 execution") from exc
 
+    if not hasattr(DynamicCache, "from_legacy_cache"):
+
+        @classmethod
+        def from_legacy_cache(cls, past_key_values=None, *args, **kwargs):  # type: ignore[no-untyped-def]
+            if isinstance(past_key_values, cls):
+                return past_key_values
+            cache = cls()
+            if past_key_values is None:
+                return cache
+            if isinstance(past_key_values, tuple):
+                key_cache = []
+                value_cache = []
+                for layer_cache in past_key_values:
+                    if not isinstance(layer_cache, tuple) or len(layer_cache) < 2:
+                        return cache
+                    key_cache.append(layer_cache[0])
+                    value_cache.append(layer_cache[1])
+                setattr(cache, "key_cache", key_cache)
+                setattr(cache, "value_cache", value_cache)
+                if key_cache:
+                    try:
+                        setattr(cache, "_seen_tokens", int(key_cache[0].shape[-2]))
+                    except Exception:
+                        pass
+            return cache
+
+        DynamicCache.from_legacy_cache = from_legacy_cache
+
     original_get_seq_length = DynamicCache.get_seq_length
-    if getattr(original_get_seq_length, "_phase5_optional_layer_idx", False):
-        return
+    if not getattr(original_get_seq_length, "_phase5_optional_layer_idx", False):
 
-    def get_seq_length(self, layer_idx=None):  # type: ignore[override]
-        if layer_idx is None:
-            seen_tokens = getattr(self, "seen_tokens", None)
-            if seen_tokens is not None:
-                return int(seen_tokens)
-            layer_idx = 0
-        return original_get_seq_length(self, layer_idx)
+        def get_seq_length(self, layer_idx=None):  # type: ignore[override]
+            if layer_idx is None:
+                seen_tokens = getattr(self, "seen_tokens", None)
+                if seen_tokens is not None:
+                    return int(seen_tokens)
+                layer_idx = 0
+            return original_get_seq_length(self, layer_idx)
 
-    get_seq_length._phase5_optional_layer_idx = True  # type: ignore[attr-defined]
-    DynamicCache.get_seq_length = get_seq_length
+        get_seq_length._phase5_optional_layer_idx = True  # type: ignore[attr-defined]
+        DynamicCache.get_seq_length = get_seq_length
 
 _PLACEHOLDER_DIGEST_MARKERS = (
     "AUTHENTIC_KAGGLE_EXECUTION",
