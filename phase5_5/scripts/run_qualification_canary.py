@@ -50,6 +50,7 @@ def catalog() -> dict[str, ToolSpecification]:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=Path.cwd())
+    parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     roster = json.loads((args.root / "phase5_5/configs/model_roster.json").read_text(encoding="utf-8"))
     records = []
@@ -99,7 +100,7 @@ def main() -> int:
             for item in records
         ),
     }
-    output = args.root / "phase5_5/qualification/qualification_canary.json"
+    output = args.output or (args.root / "phase5_5/qualification/qualification_canary.json")
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps({"pass": payload["pass"], "model_count": len(records), "output": output.as_posix()}))
