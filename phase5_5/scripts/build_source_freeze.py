@@ -35,6 +35,7 @@ def main() -> int:
         "phase5_5/parser.py",
         "phase5_5/runtime.py",
         "phase5_5/scripts/rebuild_historical_closure.py",
+        "phase5_5/scripts/official_preflight.py",
         "phase5_5/configs/frozen_state_machine_controls.json",
         "phase5_5/configs/branch_mapping.json",
         "phase5_5/configs/model_roster.json",

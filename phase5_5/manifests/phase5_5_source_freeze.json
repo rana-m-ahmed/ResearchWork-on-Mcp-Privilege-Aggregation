@@ -16,6 +16,7 @@
     "phase5_5/configs/model_roster.json": "913ad2c8f120b4252b4a46ce596f03d2821d26df5ed4476871578dd6a4927412",
     "phase5_5/parser.py": "aa58d06ecddd830384a981da4e1bb469ec3b113cbfce9674dadb7bf0123bf65c",
     "phase5_5/runtime.py": "923274e72a61fb225ca219baba5881d9a543f4af730c2fcf9b74353aa1269222",
+    "phase5_5/scripts/official_preflight.py": "db3e3f8c150a75dcc1860d14edfe4cba6a6a3f4a4cc37d6a9223d28680145d18",
     "phase5_5/scripts/rebuild_historical_closure.py": "95534078a91636c98c4a516f84e2a5cc8a1d0bbe861f8e172b8f5694a3ccbe76"
   },
   "extraction_contract": "ordered_non_overlapping_top_level_candidates",
@@ -26,5 +27,5 @@
   "publication_evidence": false,
   "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
   "scientific_inputs_regenerated": false,
-  "source_commit": "2b66b8cf"
+  "source_commit": "b365694f"
 }
