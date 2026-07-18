@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import subprocess
 import sys
@@ -27,8 +27,8 @@ def test_official_campaign_commands_default_to_reconciled_v2_plan() -> None:
             "20260710",
             "--plan-only",
         ])
-        assert args.run_plan == "phase5/validation/kaggle_run_plan_v2.json"
-        assert args.batch_manifest == "phase5/manifests/batch_partition_manifest_v2.json"
+    assert args.run_plan == "phase5/validation/kaggle_run_plan_v3.json"
+    assert args.batch_manifest == "phase5/manifests/batch_partition_manifest_v3.json"
 
 
 def test_module_help_and_not_implemented_command() -> None:
@@ -188,3 +188,4 @@ def test_campaign_cli_smoke_writes_operational_reports(tmp_path: Path) -> None:
     assert campaign_result.returncode == 0
     assert campaign_output.is_file()
     assert campaign_output.with_suffix(".md").is_file()
+

@@ -1,0 +1,12 @@
+{
+  "artifact": "phase5_5_evidence_branch_mapping",
+  "dataset_version": "P5-DV-1.0.2-A7C91E42",
+  "official_dispatch": false,
+  "publication_evidence": false,
+  "branches": {
+    "M1": {"branch": "phase5_5-model-1", "model_id": "Qwen/Qwen2.5-7B-Instruct", "evidence_root": "phase5_5/evidence/"},
+    "M2": {"branch": "phase5_5-model-2", "model_id": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B", "evidence_root": "phase5_5/evidence/"},
+    "M3": {"branch": "phase5_5-model-3", "model_id": "mistralai/Mistral-7B-Instruct-v0.3", "evidence_root": "phase5_5/evidence/"},
+    "M4": {"branch": "phase5_5-model-4", "model_id": "microsoft/Phi-3.5-mini-instruct", "evidence_root": "phase5_5/evidence/"}
+  }
+}

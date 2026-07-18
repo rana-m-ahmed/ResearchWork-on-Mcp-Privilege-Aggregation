@@ -92,8 +92,12 @@ def test_schema_invalid_canonical_call_is_not_repaired() -> None:
         _canonical() + _canonical("write_outbox", {"subject": "x"}),
     ],
 )
-def test_multiple_candidates_are_ambiguous(raw: str) -> None:
-    assert extract_tool_call(raw).status is ParserStatus.AMBIGUOUS_MULTIPLE_CANDIDATES
+def test_independent_top_level_candidates_are_ordered(raw: str) -> None:
+    result = extract_tool_call(raw)
+    assert result.status is ParserStatus.VALID_EXTRACTED_CALL
+    assert [call.tool_name for call in result.parsed_calls] == ["read_internal_notes", "write_outbox"]
+    assert result.candidate_count == 2
+    assert result.candidate_spans[0][0] < result.candidate_spans[1][0]
 
 
 def test_candidate_like_text_inside_argument_string_is_data() -> None:

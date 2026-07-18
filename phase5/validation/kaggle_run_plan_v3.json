@@ -341,7 +341,7 @@
     "p50_trial_seconds": 6.79,
     "p95_trial_seconds": 7.14,
     "safe_session_hours": 7.5,
-    "timing_report_path": "D:/phase5-real-official-execution/phase4_5/validation/phase45_kaggle_quota_feasibility_report.md",
+    "timing_report_path": "D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation/phase4_5/validation/phase45_kaggle_quota_feasibility_report.md",
     "timing_report_sha256": "b9c7bcb0984a7a8a703fdef6d7aa2b786b13a8970beb0e2615b0cea4cf4239b5",
     "trial_sample_count": 8
   },

@@ -1,0 +1,16 @@
+{
+  "accepted_count": 0,
+  "artifact": "phase5_5_historical_orphan_reconciliation_v2",
+  "closure_count": 3250,
+  "duplicate_attempt_ids": [],
+  "finalized_count": 0,
+  "historical_evidence_immutable": true,
+  "index_hash_mismatch_count": 0,
+  "publication_evidence_count": 0,
+  "reconciliation_pass": true,
+  "source_branches": [
+    "phase5-model-2",
+    "phase5-model-3"
+  ],
+  "source_orphan_count": 3250
+}
