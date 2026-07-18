@@ -76,6 +76,7 @@ def main() -> int:
         "counts_for_phase5": True,
         "publication_evidence": True,
         "synthetic_fixture": False,
+        "huggingface_credential_environment_name": "HF_TOKEN",
     }
     for key, value in expected.items():
         if auth.get(key) != value:
