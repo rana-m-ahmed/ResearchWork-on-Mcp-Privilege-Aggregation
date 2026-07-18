@@ -6,8 +6,8 @@ import json
 from pathlib import Path
 
 
-SLOT = "M1"
-BASE_HEAD = "1d253b75e1a5e497d5fcdbcc3464714f10ce6340"
+SLOT = "M4"
+BASE_HEAD = "a6f7343ad15b719cc964c0c45f5e09ffff1bdde5"
 OUTPUT = Path(__file__).resolve().parents[1] / "kaggle/phase5_5_official_runner.ipynb"
 SOURCE = Path(__file__).resolve().parents[1] / "kaggle/phase5_5_runner.ipynb"
 
