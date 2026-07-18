@@ -1,0 +1,9 @@
+{
+  "model_slot": "M1",
+  "exact_model_identifier": "Qwen/Qwen2.5-7B-Instruct",
+  "evidence_branch": "phase5_5-model-1",
+  "common_source_commit": "c6897c7e8b4ccdb71e9c852a3568ce59d8f2ac3c",
+  "evidence_root": "phase5_5/evidence/",
+  "official_dispatch": false,
+  "counts_for_publication": false
+}
