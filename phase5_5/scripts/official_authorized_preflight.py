@@ -14,6 +14,36 @@ def git(root: Path, *args: str) -> str:
     return subprocess.check_output(["git", "-C", str(root), *args], text=True).strip()
 
 
+def ensure_peer_branch_refs(root: Path, current_slot: str) -> list[str]:
+    """Make the frozen checker's expected local branch refs available.
+
+    Kaggle's branch checkout is commonly a single-branch clone, while the
+    frozen preflight intentionally audits the complete M1-M4 roster. Fetching
+    the peer refs is additive and does not modify tracked files or any frozen
+    artifact.
+    """
+    failures: list[str] = []
+    for slot in ("M1", "M2", "M3", "M4"):
+        branch = f"phase5_5-model-{slot.removeprefix('M')}"
+        if slot == current_slot:
+            continue
+        exists = subprocess.run(
+            ["git", "-C", str(root), "show-ref", "--verify", "--quiet", f"refs/heads/{branch}"],
+            check=False,
+        ).returncode == 0
+        if exists:
+            continue
+        result = subprocess.run(
+            ["git", "-C", str(root), "fetch", "--no-tags", "origin", f"refs/heads/{branch}:refs/heads/{branch}"],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode:
+            failures.append(f"{branch}:{result.stderr.strip()}")
+    return failures
+
+
 def load(path: Path) -> dict[str, Any]:
     value = json.loads(path.read_text(encoding="utf-8-sig"))
     if not isinstance(value, dict):
@@ -63,6 +93,8 @@ def main() -> int:
     status = git(root, "status", "--porcelain")
     if status:
         failures.append("checkout-dirty")
+
+    failures.extend(f"peer-ref-fetch:{item}" for item in ensure_peer_branch_refs(root, slot))
 
     preflight_path = args.output.with_name(args.output.stem + "_frozen.json")
     frozen = subprocess.run(
