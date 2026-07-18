@@ -168,10 +168,59 @@ class FrozenModelBackendIdentity:
         }
 
 
-def load_frozen_model_backend_identity(root: Path | None = None) -> FrozenModelBackendIdentity:
+def _load_slot_backend_identity(repository_root: Path, model_slot: str) -> FrozenModelBackendIdentity:
+    """Resolve a branch slot from the frozen Phase 5 model authority."""
+
+    if model_slot not in {"M1", "M2", "M3", "M4"}:
+        raise SchemaInvariantError(f"unsupported frozen model slot: {model_slot!r}")
+    registry = load_upstream_artifact_registry(repository_root / "phase5/configs/upstream_artifact_registry.json")
+    model_set_entry = registry.require("Model freeze set")
+    model_set_path = repository_root / model_set_entry.actual_paths[0]
+    model_set = _yaml_safe_load(model_set_path)
+    exact_identifier = _require_string(model_set.get(model_slot), label="exact_model_identifier", path=model_set_path)
+    model_freeze_path = repository_root / "phase4" / "configs" / f"model_{model_slot.removeprefix('M')}_freeze.yaml"
+    if not model_freeze_path.is_file():
+        raise MissingFrozenSettingError(f"frozen model config is missing: {model_freeze_path.as_posix()}")
+    model_freeze = _yaml_safe_load(model_freeze_path)
+    if _require_string(model_freeze.get("model_slot"), label="model_slot", path=model_freeze_path) != model_slot:
+        raise RuntimeMismatchError(f"frozen model config slot mismatch for {model_slot!r}")
+    if _require_string(model_freeze.get("exact_model_identifier"), label="exact_model_identifier", path=model_freeze_path) != exact_identifier:
+        raise RuntimeMismatchError(f"frozen model identity mismatch for {model_slot!r}")
+    runtime_authority_path = repository_root / _RUNTIME_AUTHORITY_PATH
+    runtime_authority = json.loads(runtime_authority_path.read_text(encoding="utf-8"))
+    runtime_entry = runtime_authority.get(model_slot)
+    if not isinstance(runtime_entry, Mapping) or runtime_entry.get("exact_model_identifier") != exact_identifier:
+        raise RuntimeMismatchError(f"runtime authority identity mismatch for {model_slot!r}")
+    revision = _require_string(runtime_entry.get("huggingface_commit_sha"), label="huggingface_commit_sha", path=runtime_authority_path)
+    if len(revision) != 40 or any(c not in "0123456789abcdef" for c in revision):
+        raise SchemaInvariantError("huggingface_commit_sha must be a lowercase 40-character commit SHA")
+    return FrozenModelBackendIdentity(
+        model_id=model_slot,
+        exact_model_identifier=exact_identifier,
+        model_digest=_require_string(model_freeze.get("model_digest"), label="model_digest", path=model_freeze_path),
+        quantization=_require_string(model_freeze.get("quantization"), label="quantization", path=model_freeze_path),
+        backend=_require_string(model_freeze.get("runtime_backend"), label="runtime_backend", path=model_freeze_path),
+        backend_version=_require_string(model_freeze.get("backend_version"), label="backend_version", path=model_freeze_path),
+        tokenizer_identity=_require_string(model_freeze.get("tokenizer_identity"), label="tokenizer_identity", path=model_freeze_path),
+        ollama_version=_require_optional_string(model_freeze.get("ollama_or_llamacpp_version", model_freeze.get("ollama_version")), label="ollama_version", path=model_freeze_path),
+        selected_model_path=model_freeze_path,
+        local_dryrun_path=repository_root / "phase4_5/configs/phase45_local_dryrun.yaml",
+        model_set_path=model_set_path,
+        model_freeze_path=model_freeze_path,
+        huggingface_commit_sha=revision,
+    )
+
+
+def load_frozen_model_backend_identity(
+    root: Path | None = None,
+    *,
+    model_slot: str | None = None,
+) -> FrozenModelBackendIdentity:
     """Load the frozen model/backend tuple and fail closed on any divergence."""
 
     repository_root = (root or repo_root()).resolve()
+    if model_slot is not None:
+        return _load_slot_backend_identity(repository_root, model_slot)
     selected_model_path = repository_root / _SELECTED_MODEL_PATH
     local_dryrun_path = repository_root / _LOCAL_DRYRUN_PATH
     for path, label in (
@@ -515,7 +564,11 @@ class FrozenModelBackendAdapter:
             )
 
 
-def build_frozen_model_backend_adapter(root: Path | None = None) -> FrozenModelBackendAdapter:
+def build_frozen_model_backend_adapter(
+    root: Path | None = None,
+    *,
+    model_slot: str | None = None,
+) -> FrozenModelBackendAdapter:
     """Convenience builder for the validated frozen model backend adapter."""
 
-    return FrozenModelBackendAdapter(identity=load_frozen_model_backend_identity(root=root))
+    return FrozenModelBackendAdapter(identity=load_frozen_model_backend_identity(root=root, model_slot=model_slot))

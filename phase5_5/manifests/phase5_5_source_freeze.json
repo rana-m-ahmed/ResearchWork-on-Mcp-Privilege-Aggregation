@@ -1,17 +1,29 @@
 {
   "artifact": "phase5_5_source_freeze",
   "bound_files": {
+    "docs/Phase5_Revised_Execution_Plan_v3_2.md": "8bec5d176ccbe3846730fe3f56f7a7c5f9c9e3eff30ab19e950eeb8d476f3a6d",
+    "phase5/attempts/schemas/attempt_workspace_metadata.schema.json": "a27a8a5ffcbc0fbc0303144e37fb5da09c87a99508ecbbef451c46a4dd6eb417",
+    "phase5/grading/frozen_grader.py": "d38823d787c9fca6ed236bf2d076f8ec220547be402d950a15da0b2504d981f8",
+    "phase5/implementation/prompts/task_execution_template.md": "9ad2763134fd5e70f7a17ad0ecf1c0c80cd2f58008452b3e804dd12098c31431",
     "phase5/manifests/batch_partition_manifest_v3.json": "a26d62fc1f0796171285907c9ffd484e1523c01be18365cf918fd99dbef552ed",
     "phase5/manifests/model_runtime_authority_v2.json": "6b0dfe949a5edce8d6d0634940e1904484b23c3efa0bab66bf03b6d67a0801c8",
-    "phase5/validation/official_evidence_branch_mapping.json": "727a95fdd53434ebd8724170babd82c2f899cbb238dbfb3f3caacfbc40a25bc7",
-    "phase5_5/configs/evidence_policy.json": "ccb025436a1e3c253d2930dd9707ea2a31f30a231f5f946279b54ab300a504be",
-    "phase5_5/configs/model_roster.json": "3383a97f1ea57c125f607a0b232417c78881125798aa56b4628be19829c251a4"
+    "phase5/runtime/agent_loop.py": "bee5138d05579fc42eb49b3854a7d17c917f7a47376d2179b8b6147a626b6ff8",
+    "phase5/runtime/engine.py": "6e20a65008d43818d2c6f52ab43ad55d9a0b83f95ac15a2f7f7d11d80209ef05",
+    "phase5_5/configs/branch_mapping.json": "9a20036c666cc07c5ae7e7f9fc163e06fddc386a0b4ad2f689b819694c54754c",
+    "phase5_5/configs/evidence_policy.json": "7adcf3822134af59ee47df61f79f67823231cd123c540caccf7f40b4f4d512c1",
+    "phase5_5/configs/frozen_state_machine_controls.json": "19ba05b0d96f3e01614fbd0041f8fd691a8f2016b91666c1212bc72c667296a9",
+    "phase5_5/configs/model_roster.json": "3383a97f1ea57c125f607a0b232417c78881125798aa56b4628be19829c251a4",
+    "phase5_5/parser.py": "aa58d06ecddd830384a981da4e1bb469ec3b113cbfce9674dadb7bf0123bf65c",
+    "phase5_5/runtime.py": "923274e72a61fb225ca219baba5881d9a543f4af730c2fcf9b74353aa1269222",
+    "phase5_5/scripts/rebuild_historical_closure.py": "95534078a91636c98c4a516f84e2a5cc8a1d0bbe861f8e172b8f5694a3ccbe76"
   },
+  "extraction_contract": "ordered_non_overlapping_top_level_candidates",
   "model_authority": "phase5/manifests/model_runtime_authority_v2.json",
+  "multiple_tool_call_policy": "serial",
   "official_dispatch": false,
-  "parser_version": "phase5.5-parser-v1",
+  "parser_version": "phase5.5-parser-v2",
   "publication_evidence": false,
   "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
   "scientific_inputs_regenerated": false,
-  "source_commit": "a58ec19f"
+  "source_commit": "bce0e5ed"
 }
