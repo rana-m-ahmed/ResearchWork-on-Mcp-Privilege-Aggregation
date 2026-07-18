@@ -131,6 +131,11 @@ else:
         "phase5/manifests/batch_partition_manifest_v3.json",
         "--run-plan",
         "phase5/validation/kaggle_run_plan_v3.json",
+        "--checkpoint-publish",
+        "--checkpoint-interval-trials",
+        "6",
+        "--checkpoint-output-dir",
+        str(OUTPUT_ROOT / "checkpoints"),
         "--output",
         str(campaign_report),
     ]
@@ -248,6 +253,7 @@ print(hardware)
             digest.update(chunk)
     return digest.hexdigest()
 
+actual_branch_head = git("rev-parse", "HEAD")
 evidence_root = REPO_ROOT / "phase5_5/evidence"
 if not evidence_root.is_dir():
     raise RuntimeError("official campaign did not produce phase5_5/evidence")
