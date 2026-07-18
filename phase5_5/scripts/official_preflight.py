@@ -116,10 +116,13 @@ def main() -> int:
         failures.append("cuda-unavailable")
 
     policy = json.loads((root / "phase5_5/configs/evidence_policy.json").read_text(encoding="utf-8"))
+    official_dispatch_enabled = policy.get("official_dispatch_enabled") is True
     checks["evidence_policy"] = {
-        "official_dispatch_enabled": policy.get("official_dispatch_enabled"),
+        "official_dispatch_enabled": official_dispatch_enabled,
         "publication_evidence": policy.get("synthetic_evidence_counts_toward_publication") is False,
     }
+    if not official_dispatch_enabled:
+        failures.append("official-dispatch-disabled")
     checks["ready_for_official_authorization"] = not failures
     report = {
         "artifact": "phase5_5_official_execution_preflight",
