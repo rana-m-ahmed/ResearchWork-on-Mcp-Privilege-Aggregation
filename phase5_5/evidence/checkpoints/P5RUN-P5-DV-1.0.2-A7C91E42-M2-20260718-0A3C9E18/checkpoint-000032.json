@@ -1,0 +1,13 @@
+{
+  "artifact": "phase5_5_trial_checkpoint_v1",
+  "batch_id": "P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M2-MIX-MIX-BASELINE-E54A9921-BD47",
+  "checkpoint_sequence": 32,
+  "completed_lineage_count": 180,
+  "last_attempt_id": "P5ATT-T01415-A000-E54A9921",
+  "last_target_trial_id": "T01415",
+  "lineage_sha256": "f89dae61888a5a9104d59896b6f3bebb6d738d6257aaa6fac76eef0c7b5dc112",
+  "model_slot": "M2",
+  "parent_head": "642ab7f3163230c6eeda95975daecfac3bb89c2a",
+  "run_id": "P5RUN-P5-DV-1.0.2-A7C91E42-M2-20260718-0A3C9E18",
+  "written_utc": "2026-07-18T21:29:12.230258+00:00"
+}
