@@ -81,7 +81,15 @@ def main() -> int:
     env["GIT_CONFIG_KEY_0"] = "http.extraHeader"
     env["GIT_CONFIG_VALUE_0"] = f"AUTHORIZATION: bearer {token}"
     try:
-        remote_before = run_git(root, ["ls-remote", "origin", branch], env=env).split()[0]
+        try:
+            remote_before = run_git(root, ["ls-remote", "origin", branch], env=env).split()[0]
+        except RuntimeError as exc:
+            if "could not read Username" in str(exc) or "Authentication failed" in str(exc):
+                raise RuntimeError(
+                    "GitHub publication authentication failed; refresh PHASE5_GITHUB_TOKEN "
+                    "with repository Contents write permission"
+                ) from exc
+            raise
         if remote_before != args.expected_parent:
             raise RuntimeError(f"remote branch diverged: expected {args.expected_parent}, got {remote_before}")
         run_git(root, ["add", "--", *paths, "phase5_5/evidence/official_publication_manifest.json"], env=env)
