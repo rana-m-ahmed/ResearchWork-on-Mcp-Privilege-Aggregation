@@ -107,6 +107,9 @@ def build_parser() -> argparse.ArgumentParser:
     run_campaign.add_argument("--dataset-version", required=False)
     run_campaign.add_argument("--seal-epoch", required=False, type=int)
     run_campaign.add_argument("--max-batches", required=False, type=int)
+    run_campaign.add_argument("--checkpoint-publish", action="store_true")
+    run_campaign.add_argument("--checkpoint-interval-trials", required=False, type=int, default=0)
+    run_campaign.add_argument("--checkpoint-output-dir", required=False)
 
     run_proof = subparsers.add_parser(
         "run-m1-proof",
@@ -371,6 +374,25 @@ def main(argv: Sequence[str] | None = None) -> int:
                 )
                 
                 run_id = getattr(args, "run_id", None)
+
+                checkpoint_callback = None
+                checkpoint_interval = int(getattr(args, "checkpoint_interval_trials", 0) or 0)
+                if getattr(args, "checkpoint_publish", False):
+                    if not is_official:
+                        raise OfficialDispatchBlockedError("checkpoint publication requires official mode")
+                    if not run_id:
+                        raise MissingFrozenSettingError("checkpoint publication requires an explicit run ID")
+                    if checkpoint_interval <= 0:
+                        raise MissingFrozenSettingError("checkpoint publication requires a positive interval")
+                    from phase5_5.checkpointing import GitEvidenceCheckpointPublisher
+
+                    checkpoint_publisher = GitEvidenceCheckpointPublisher(
+                        root=Path.cwd(),
+                        model_slot=mslot.value,
+                        run_id=run_id,
+                        output_dir=Path(args.checkpoint_output_dir or "phase5_5_checkpoint_receipts"),
+                    )
+                    checkpoint_callback = checkpoint_publisher.on_trial_completed
                 
                 # Open session temporarily to pass to adapter
                 temp_session = CampaignSession.open(model_slot=mslot, batch_id=None, run_id=run_id).seal()
@@ -382,7 +404,9 @@ def main(argv: Sequence[str] | None = None) -> int:
                     session=temp_session,
                     dataset_version=args.dataset_version,
                     official_mode=is_official,
-                    real_execution_adapter=True
+                    real_execution_adapter=True,
+                    checkpoint_callback=checkpoint_callback,
+                    checkpoint_interval_trials=checkpoint_interval,
                 )
 
             session, report = run_campaign(
