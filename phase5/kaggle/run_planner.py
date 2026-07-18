@@ -50,12 +50,9 @@ def _sha256_bytes(data: bytes) -> str:
 
 
 def _sha256_frozen_path(path: Path, *, repository_root: Path) -> str:
-    """Hash frozen Phase 4.5 text using the repository's declared CRLF form."""
+    """Hash frozen textual evidence independently of checkout newline style."""
     data = path.read_bytes()
-    phase45_root = (repository_root / "phase4_5").resolve()
-    try:
-        path.resolve().relative_to(phase45_root)
-    except ValueError:
+    if path.suffix.lower() not in {".md", ".json", ".jsonl", ".yaml", ".yml", ".txt"}:
         return _sha256_bytes(data)
     canonical = data.replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
     return _sha256_bytes(canonical)
@@ -415,7 +412,7 @@ def _apply_m4_reconciliation(repository_root: Path, load_status: dict[str, str])
         raise FrozenArtifactHashError("M4 reconciliation expected the historical loader status to be LOAD_FAILURE")
     reconciled = dict(load_status)
     reconciled["M4"] = "LOAD_SUCCESS"
-    return reconciled, ("M4 loader status reconciliation", _sha256_bytes(path.read_bytes()))
+    return reconciled, ("M4 loader status reconciliation", _sha256_frozen_path(path, repository_root=repository_root))
 
 
 def _load_invalid_rate(invalids_path: Path, failures_path: Path, total_trials: int) -> float:
