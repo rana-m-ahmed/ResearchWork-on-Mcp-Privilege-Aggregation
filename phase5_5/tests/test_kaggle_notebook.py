@@ -34,6 +34,7 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
     assert "MODEL_CACHE_READY" in source
     assert "GITHUB_PUBLICATION_AUTH_READY" in source
     assert '"--dry-run"' in source
+    assert 'AUTHORIZATION: basic' in source
     assert "load_frozen_model_backend_identity(root=REPO_ROOT, model_slot=MODEL_SLOT)" in source
     assert "OFFICIAL_CAMPAIGN_HEARTBEAT" in source
     assert "OFFICIAL_CAMPAIGN_START" in source
