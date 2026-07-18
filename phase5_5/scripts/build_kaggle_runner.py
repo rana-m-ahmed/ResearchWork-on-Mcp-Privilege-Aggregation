@@ -54,10 +54,10 @@ EXECUTE_OFFICIAL = os.environ.get("PHASE5_EXECUTE_OFFICIAL", "0") == "1"
 DATASET_VERSION = "P5-DV-1.0.2-A7C91E42"
 EXPECTED_SOURCE_COMMIT = "b90158e6"
 EXPECTED_BRANCH_HEADS = {
-    "M1": "91929e6d",
-    "M2": "cb79eab4",
-    "M3": "815ecbf8",
-    "M4": "a52fe348",
+    "M1": "5dd7cf57",
+    "M2": "4ad4fc37",
+    "M3": "7e65ccae",
+    "M4": "ef9c2a50",
 }
 BRANCHES = {slot: f"phase5_5-model-{slot.removeprefix('M')}" for slot in ("M1", "M2", "M3", "M4")}
 MODEL_IDS = {
