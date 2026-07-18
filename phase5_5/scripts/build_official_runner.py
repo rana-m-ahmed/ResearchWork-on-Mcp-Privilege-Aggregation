@@ -111,7 +111,7 @@ subprocess.run([sys.executable, "-m", "pip", "install", "--requirement", str(REP
 hardware = run_checked([
     sys.executable,
     "-c",
-    "import torch; assert torch.cuda.is_available(); print({'torch': torch.__version__, 'cuda': torch.version.cuda, 'devices': torch.cuda.device_count()})",
+    f"import torch; assert torch.cuda.is_available(); assert torch.cuda.device_count() >= {2 if MODEL_SLOT == 'M4' else 1}; print({'torch': torch.__version__, 'cuda': torch.version.cuda, 'devices': torch.cuda.device_count()})",
 ])
 print(hardware)
 ''')
@@ -148,24 +148,31 @@ with tarfile.open(archive_path, "w:gz") as archive:
 if not os.environ.get("PHASE5_GITHUB_TOKEN"):
     raise RuntimeError("official publication credential was not retained from authorization preflight")
 publication_receipt = OUTPUT_ROOT / f"{MODEL_SLOT}_publication_receipt.json"
-subprocess.run(
-    [
-        sys.executable,
-        "phase5_5/scripts/publish_official_evidence.py",
-        "--root",
-        str(REPO_ROOT),
-        "--model-slot",
-        MODEL_SLOT,
-        "--run-id",
-        RUN_ID,
-        "--expected-parent",
-        actual_branch_head,
-        "--output",
-        str(publication_receipt),
-    ],
-    cwd=REPO_ROOT,
-    check=True,
-)
+try:
+    subprocess.run(
+        [
+            sys.executable,
+            "phase5_5/scripts/publish_official_evidence.py",
+            "--root",
+            str(REPO_ROOT),
+            "--model-slot",
+            MODEL_SLOT,
+            "--run-id",
+            RUN_ID,
+            "--expected-parent",
+            actual_branch_head,
+            "--output",
+            str(publication_receipt),
+        ],
+        cwd=REPO_ROOT,
+        check=True,
+    )
+finally:
+    os.environ.pop("PHASE5_GITHUB_TOKEN", None)
+    try:
+        del github_token
+    except NameError:
+        pass
 print(json.dumps({"manifest": str(manifest_path), "archive": str(archive_path), "publication_receipt": str(publication_receipt)}, indent=2))
 ''')
     OUTPUT.write_text(json.dumps(notebook, indent=1, ensure_ascii=True) + "\n", encoding="utf-8")
