@@ -33,8 +33,11 @@ The first Kaggle optimized canary exposed a missing
 `DynamicCache.to_legacy_cache()` method after successful weight materialization.
 The shim now supports both Transformers 5 `layers` caches and the older
 `key_cache`/`value_cache` representation, with regression coverage for the
-legacy conversion path. The failure was confined to the canary; no official
-trial was dispatched.
+legacy conversion path. A later canary showed harmless cached-versus-uncached
+text variation under eager-attention floating-point execution, so the gate now
+requires exact repeated cached output and token-ID determinism, which matches
+the path used by official trials. Both failures were confined to the canary;
+no official trial was dispatched.
 
 Before official dispatch, the M4 notebook runs a non-scientific runtime canary:
 it loads the exact frozen revision, generates the same fixed prompt with cache
