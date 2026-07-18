@@ -62,7 +62,7 @@ def main() -> int:
 
     os.environ["PHASE5_M4_ENABLE_KV_CACHE"] = "1"
     started = time.monotonic()
-    adapter.prepare_runtime()
+    load_plan = adapter.prepare_runtime()
     cached_output = adapter.generate(
         prompt_text=prompt,
         conversation_history=(),
@@ -92,7 +92,9 @@ def main() -> int:
         "cached_output_sha256": sha256_text(cached_output),
         "cached_seconds": cached_elapsed,
         "cached_token_count": len(cached_receipt.get("generated_token_ids", [])),
+        "cached_cuda_device_metrics": cached_receipt.get("cuda_device_metrics", {}),
         "exact_model_identifier": identity.exact_model_identifier,
+        "hf_device_map": load_plan.get("hf_device_map", {}),
         "huggingface_commit_sha": identity.huggingface_commit_sha,
         "kv_cache_enabled": True,
         "model_slot": "M4",

@@ -25,6 +25,10 @@ throughput, and per-device allocated/reserved memory. This is diagnostic
 telemetry only, but it makes under-utilization and regressions observable in
 the preserved generation receipt and live Kaggle logs.
 
+The optimized canary additionally records the resolved Hugging Face device map
+and cached-generation memory metrics, so a successful CUDA check cannot be
+mistaken for proof that the required dual-GPU placement was actually used.
+
 Before official dispatch, the M4 notebook runs a non-scientific runtime canary:
 it loads the exact frozen revision, generates the same fixed prompt with cache
 enabled and disabled, and requires exact decoded-output equality plus explicit
