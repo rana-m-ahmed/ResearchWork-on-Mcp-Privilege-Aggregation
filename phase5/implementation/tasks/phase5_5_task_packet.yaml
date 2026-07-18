@@ -1,0 +1,26 @@
+task_id: PHASE5_5-INFRASTRUCTURE-REMEDIATION
+title: Phase 5.5 deterministic parser and historical orphan closure
+scope:
+  - phase5_5 runtime and parser
+  - append-only historical M2/M3 forensic closure
+  - parser, runtime, and forensic tests
+  - source authority and evidence policy scaffolding
+  - phase5_5 implementation reports
+frozen_inputs:
+  - phase4/
+  - phase4_5/
+  - phase5/manifests/batch_partition_manifest_v3.json
+  - phase5/manifests/model_runtime_authority_v2.json
+  - phase5/validation/official_evidence_branch_mapping.json
+forbidden_actions:
+  - modify_phase4_or_phase4_5
+  - rewrite_historical_phase5_evidence
+  - official_dispatch
+  - parser_repair
+  - positional_argument_inference
+acceptance:
+  - phase5_5_tests_pass
+  - historical_orphan_closure_reconciles
+  - raw_historical_evidence_unchanged
+  - no_invalid_attempts_counted_as_accepted
+  - source_and_model_provenance_fail_closed

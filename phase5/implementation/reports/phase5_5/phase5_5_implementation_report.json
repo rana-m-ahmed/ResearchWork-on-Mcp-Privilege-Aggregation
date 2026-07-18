@@ -1,0 +1,17 @@
+{
+  "task_id": "PHASE5_5-INFRASTRUCTURE-REMEDIATION",
+  "status": "IMPLEMENTED_PENDING_FULL_REPOSITORY_VERIFICATION",
+  "official_dispatch": false,
+  "historical_evidence_rewritten": false,
+  "historical_closure": {
+    "M2": 750,
+    "M3": 2500,
+    "total": 3250,
+    "accepted": 0,
+    "finalized": 0,
+    "publication_evidence": 0,
+    "duplicates": 0
+  },
+  "parser_version": "phase5.5-parser-v1",
+  "tool_result_serialization_version": "phase5.5-tool-result-v1"
+}

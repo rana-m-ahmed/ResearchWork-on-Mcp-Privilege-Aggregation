@@ -1,0 +1,18 @@
+{
+  "authority": "phase5/manifests/model_runtime_authority_v2.json",
+  "source_of_truth": "phase5/validation/official_evidence_branch_mapping.json",
+  "models": {
+    "M1": "Qwen/Qwen2.5-7B-Instruct",
+    "M2": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+    "M3": "mistralai/Mistral-7B-Instruct-v0.3",
+    "M4": "microsoft/Phi-3.5-mini-instruct"
+  },
+  "phase5_5_evidence_branches": {
+    "M1": "phase5_5-model-1",
+    "M2": "phase5_5-model-2",
+    "M3": "phase5_5-model-3",
+    "M4": "phase5_5-model-4"
+  },
+  "official_dispatch": false,
+  "publication_evidence": false
+}
