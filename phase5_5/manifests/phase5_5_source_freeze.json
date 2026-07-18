@@ -1,0 +1,17 @@
+{
+  "artifact": "phase5_5_source_freeze",
+  "bound_files": {
+    "phase5/manifests/batch_partition_manifest_v3.json": "a26d62fc1f0796171285907c9ffd484e1523c01be18365cf918fd99dbef552ed",
+    "phase5/manifests/model_runtime_authority_v2.json": "6b0dfe949a5edce8d6d0634940e1904484b23c3efa0bab66bf03b6d67a0801c8",
+    "phase5/validation/official_evidence_branch_mapping.json": "727a95fdd53434ebd8724170babd82c2f899cbb238dbfb3f3caacfbc40a25bc7",
+    "phase5_5/configs/evidence_policy.json": "ccb025436a1e3c253d2930dd9707ea2a31f30a231f5f946279b54ab300a504be",
+    "phase5_5/configs/model_roster.json": "3383a97f1ea57c125f607a0b232417c78881125798aa56b4628be19829c251a4"
+  },
+  "model_authority": "phase5/manifests/model_runtime_authority_v2.json",
+  "official_dispatch": false,
+  "parser_version": "phase5.5-parser-v1",
+  "publication_evidence": false,
+  "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
+  "scientific_inputs_regenerated": false,
+  "source_commit": "a58ec19f"
+}

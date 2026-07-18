@@ -31,3 +31,7 @@ incompleteness, and treats quoted nested candidates as data.
 
 The focused Phase 5.5 suite passes. Official dispatch remains disabled by
 policy; no scientific queue row was executed or counted.
+
+The common implementation source freeze is recorded at
+`phase5_5/manifests/phase5_5_source_freeze.json` and is bound to common source
+commit `a58ec19f` before the manifest-only commit.

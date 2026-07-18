@@ -1,6 +1,8 @@
 {
   "task_id": "PHASE5_5-INFRASTRUCTURE-REMEDIATION",
   "status": "IMPLEMENTED_PENDING_FULL_REPOSITORY_VERIFICATION",
+  "common_source_commit": "a58ec19f",
+  "source_freeze_manifest": "phase5_5/manifests/phase5_5_source_freeze.json",
   "official_dispatch": false,
   "historical_evidence_rewritten": false,
   "historical_closure": {
