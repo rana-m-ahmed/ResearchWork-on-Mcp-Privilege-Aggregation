@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 import tempfile
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Mapping
@@ -33,6 +34,13 @@ def _phi35_kv_cache_enabled() -> bool:
     """Select the M4 fast path only when the official runner explicitly enables it."""
 
     return os.environ.get("PHASE5_M4_ENABLE_KV_CACHE", "0") == "1"
+
+
+def _synchronize_cuda(torch_module: Any) -> None:
+    if not torch_module.cuda.is_available():
+        return
+    for device_index in range(int(torch_module.cuda.device_count())):
+        torch_module.cuda.synchronize(device_index)
 
 
 def _build_model_load_kwargs(
@@ -574,6 +582,8 @@ class FrozenModelBackendAdapter:
             )
         input_device = next(self._model.parameters()).device
         encoded = {name: tensor.to(input_device) for name, tensor in encoded.items()}
+        _synchronize_cuda(torch)
+        generation_started = time.perf_counter()
         with torch.inference_mode():
             output = self._model.generate(
                 **encoded,
@@ -582,8 +592,18 @@ class FrozenModelBackendAdapter:
                     tokenizer=self._tokenizer,
                 ),
             )
+        _synchronize_cuda(torch)
+        generation_elapsed = time.perf_counter() - generation_started
         generated_ids = output[0, encoded["input_ids"].shape[1]:]
         decoded_output = self._tokenizer.decode(generated_ids, skip_special_tokens=True)
+        generated_token_count = int(generated_ids.numel())
+        device_metrics = {}
+        for device_index in range(int(torch.cuda.device_count())):
+            device_metrics[str(device_index)] = {
+                "memory_allocated_bytes": int(torch.cuda.memory_allocated(device_index)),
+                "max_memory_allocated_bytes": int(torch.cuda.max_memory_allocated(device_index)),
+                "memory_reserved_bytes": int(torch.cuda.memory_reserved(device_index)),
+            }
         self._last_generation_receipt = {
             "compiled_prompt_sha256": hashlib.sha256(prompt_text.encode("utf-8")).hexdigest(),
             "model_serialization": "tokenizer_chat_template",
@@ -592,10 +612,24 @@ class FrozenModelBackendAdapter:
             "generated_token_ids": generated_ids.detach().cpu().tolist(),
             "decoded_output": decoded_output,
             "input_device": str(input_device),
+            "generation_elapsed_seconds": generation_elapsed,
+            "generated_token_count": generated_token_count,
+            "generated_tokens_per_second": (
+                generated_token_count / generation_elapsed if generation_elapsed > 0 else None
+            ),
+            "cuda_device_metrics": device_metrics,
             "kv_cache_enabled": _phi35_kv_cache_enabled()
             if _is_phi35_identifier(self.exact_model_identifier)
             else None,
         }
+        if _is_phi35_identifier(self.exact_model_identifier):
+            print(
+                f"M4_GENERATION_METRICS: elapsed_seconds={generation_elapsed:.4f}; "
+                f"generated_tokens={generated_token_count}; "
+                f"tokens_per_second={self._last_generation_receipt['generated_tokens_per_second']}; "
+                f"kv_cache_enabled={self._last_generation_receipt['kv_cache_enabled']}",
+                flush=True,
+            )
         return decoded_output
 
     @property

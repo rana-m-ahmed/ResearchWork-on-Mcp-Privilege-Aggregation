@@ -56,3 +56,5 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
     backend_source = (root / "phase5/runtime/model_backend_adapter.py").read_text(encoding="utf-8")
     assert "MODEL_GPU_LOAD_START" in backend_source
     assert "MODEL_GPU_MODEL_READY" in backend_source
+    assert "M4_GENERATION_METRICS" in backend_source
+    assert "generated_tokens_per_second" in backend_source

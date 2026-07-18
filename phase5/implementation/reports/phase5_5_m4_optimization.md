@@ -20,6 +20,11 @@ The M4 notebook also enables Hugging Face safetensor parallel loading with
 four workers for model startup only. Other model slots retain the previous
 loading controls.
 
+Each M4 generation now records CUDA-synchronized elapsed time, generated-token
+throughput, and per-device allocated/reserved memory. This is diagnostic
+telemetry only, but it makes under-utilization and regressions observable in
+the preserved generation receipt and live Kaggle logs.
+
 Before official dispatch, the M4 notebook runs a non-scientific runtime canary:
 it loads the exact frozen revision, generates the same fixed prompt with cache
 enabled and disabled, and requires exact decoded-output equality plus explicit
