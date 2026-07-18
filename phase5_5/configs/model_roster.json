@@ -1,6 +1,6 @@
 {
   "authority": "phase5/manifests/model_runtime_authority_v2.json",
-  "source_of_truth": "phase5/validation/official_evidence_branch_mapping.json",
+  "source_of_truth": "phase5_5/configs/branch_mapping.json",
   "models": {
     "M1": "Qwen/Qwen2.5-7B-Instruct",
     "M2": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
