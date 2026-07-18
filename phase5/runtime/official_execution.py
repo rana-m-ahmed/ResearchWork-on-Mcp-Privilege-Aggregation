@@ -16,7 +16,6 @@ from ..attempts import AttemptLineageRecord, AttemptLineageStore
 from ..campaign import CampaignBatchPlan, CampaignBatchResult
 from ..domain.enums import SessionState
 from ..domain.errors import (
-    DuplicateAcceptedAttemptError,
     MissingFrozenSettingError,
     OfficialDispatchBlockedError,
     SchemaInvariantError,
@@ -163,6 +162,8 @@ class RepositoryBatchExecutionAdapter:
     dataset_version: str
     official_mode: bool = False
     real_execution_adapter: bool = True
+    checkpoint_callback: Callable[[CampaignBatchPlan, AttemptLineageRecord, int], None] | None = None
+    checkpoint_interval_trials: int = 0
 
     def __post_init__(self) -> None:
         if getattr(self.pipeline, "real_pipeline", False) is not True:
@@ -181,6 +182,8 @@ class RepositoryBatchExecutionAdapter:
             raise OfficialDispatchBlockedError("batch execution requires an active valid seal")
         if not self.dataset_version:
             raise MissingFrozenSettingError("execution adapter requires an explicit dataset version")
+        if self.checkpoint_callback is not None and self.checkpoint_interval_trials <= 0:
+            raise MissingFrozenSettingError("checkpoint interval must be positive when checkpointing is enabled")
 
     def _rows_for_batch(self, batch: CampaignBatchPlan) -> tuple[FrozenQueueRow, ...]:
         queues = {queue.queue_name: queue for queue in self.queue_bundle.queues()}
@@ -206,16 +209,20 @@ class RepositoryBatchExecutionAdapter:
     def __call__(self, batch: CampaignBatchPlan, p95_trial_seconds: float) -> CampaignBatchResult:
         if batch.model_slot != self.session.model_slot.value:
             raise SchemaInvariantError("batch model slot does not match the sealed campaign session")
-        existing = self.lineage_store.load_records()
-        accepted_targets = {record.target_trial_id for record in existing if record.accepted_attempt}
+        existing = list(self.lineage_store.load_records())
+        completed_targets = {
+            record.target_trial_id
+            for record in existing
+            if record.accepted_attempt or record.attempt_status in {"INVALID", "OFFICIAL_ACCEPTED"}
+        }
+        rows = tuple(row for row in self._rows_for_batch(batch) if str(row.trial_id) not in completed_targets)
         qualification_accepted = 0
         elapsed_seconds = 0.0
         result_digests: list[str] = []
+        since_checkpoint = 0
 
-        for row in self._rows_for_batch(batch):
+        for row in rows:
             target_trial_id = str(row.trial_id)
-            if target_trial_id in accepted_targets:
-                raise DuplicateAcceptedAttemptError(f"finalized accepted target must not be rerun: {target_trial_id}")
             histories = [record for record in existing if record.target_trial_id == target_trial_id]
             attempt_index = max((record.attempt_index for record in histories), default=-1) + 1
             parent_attempt_id = max(histories, key=lambda item: item.attempt_index).attempt_id if histories else None
@@ -265,6 +272,10 @@ class RepositoryBatchExecutionAdapter:
             )
             self.lineage_store.append(lineage)
             existing = (*existing, lineage)
+            since_checkpoint += 1
+            if self.checkpoint_callback is not None and since_checkpoint >= self.checkpoint_interval_trials:
+                self.checkpoint_callback(batch, lineage, len(existing))
+                since_checkpoint = 0
             result_digests.append(
                 _sha256_payload(
                     {
@@ -274,6 +285,9 @@ class RepositoryBatchExecutionAdapter:
                     }
                 )
             )
+
+        if self.checkpoint_callback is not None and since_checkpoint:
+            self.checkpoint_callback(batch, existing[-1], len(existing))
 
         official_accepted = qualification_accepted if self.official_mode else 0
         if self.official_mode:
