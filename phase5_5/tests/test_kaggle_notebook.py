@@ -22,6 +22,10 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
             compile("".join(cell["source"]), f"kaggle-cell-{index}", "exec")
     assert "phase5_5-model-" in source
     assert "phase5-model-" not in source
+    assert 'MODEL_SLOT = "M4"' in source
+    assert '"M4": "microsoft/Phi-3.5-mini-instruct"' in source
+    assert 'os.environ["PHASE5_REQUIRE_CUDA_DEVICE_COUNT"] = "2"' in source
+    assert "torch.cuda.device_count() >= {2 if MODEL_SLOT == 'M4' else 1}" in source
     assert "P5-DV-1.0.2-A7C91E42" in source
     assert "PHASE5_GITHUB_TOKEN" in source
     assert 'get_secret("GITHUB_TOKEN")' not in source
