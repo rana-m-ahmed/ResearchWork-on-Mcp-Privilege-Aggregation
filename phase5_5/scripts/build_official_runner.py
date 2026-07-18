@@ -81,6 +81,24 @@ if not hf_token:
     raise RuntimeError("Kaggle secret HF_TOKEN is empty; refusing official dispatch")
 os.environ["PHASE5_GITHUB_TOKEN"] = github_token
 os.environ["HF_TOKEN"] = hf_token
+publication_auth_env = os.environ.copy()
+publication_auth_env["GIT_CONFIG_COUNT"] = "1"
+publication_auth_env["GIT_CONFIG_KEY_0"] = "http.extraHeader"
+publication_auth_env["GIT_CONFIG_VALUE_0"] = f"AUTHORIZATION: bearer {github_token}"
+publication_probe = subprocess.run(
+    ["git", "push", "--dry-run", "origin", f"HEAD:{BRANCH}"],
+    cwd=REPO_ROOT,
+    env=publication_auth_env,
+    capture_output=True,
+    text=True,
+    check=False,
+)
+if publication_probe.returncode != 0:
+    raise RuntimeError(
+        "GitHub publication preflight failed; PHASE5_GITHUB_TOKEN must have "
+        "write access to the selected evidence branch before official trials."
+    )
+print("GITHUB_PUBLICATION_AUTH_READY", flush=True)
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 os.chdir(REPO_ROOT)
