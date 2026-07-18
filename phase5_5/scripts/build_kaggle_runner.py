@@ -152,11 +152,22 @@ subprocess.run(
     cwd=REPO_ROOT,
     check=True,
 )
+canary_path = OUTPUT_ROOT / "qualification_canary.json"
 subprocess.run(
-    [sys.executable, "phase5_5/scripts/run_qualification_canary.py", "--root", str(REPO_ROOT)],
+    [
+        sys.executable,
+        "phase5_5/scripts/run_qualification_canary.py",
+        "--root",
+        str(REPO_ROOT),
+        "--output",
+        str(canary_path),
+    ],
     cwd=REPO_ROOT,
     check=True,
 )
+canary = json.loads(canary_path.read_text(encoding="utf-8"))
+if canary.get("pass") is not True or len(canary.get("records", [])) != 4:
+    raise RuntimeError("live qualification canary failed")
 ''',
     ),
     code(
