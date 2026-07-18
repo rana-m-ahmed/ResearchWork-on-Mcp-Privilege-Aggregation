@@ -276,6 +276,10 @@ class RepositoryBatchExecutionAdapter:
             )
 
         official_accepted = qualification_accepted if self.official_mode else 0
+        if self.official_mode:
+            batch_status = "OFFICIAL_FINALIZED" if official_accepted > 0 else "OFFICIAL_COMPLETED_NO_ACCEPTED"
+        else:
+            batch_status = "SYNTHETIC_QUALIFIED"
         return CampaignBatchResult(
             batch_id=batch.batch_id,
             accepted_count=official_accepted,
@@ -288,7 +292,7 @@ class RepositoryBatchExecutionAdapter:
                     "result_digests": result_digests,
                 }
             ),
-            status="OFFICIAL_FINALIZED" if (self.official_mode and official_accepted > 0) else "SYNTHETIC_QUALIFIED",
+            status=batch_status,
         )
 
 
