@@ -3,7 +3,7 @@
     "branch":  "phase5_5-model-3",
     "model_slot":  "M3",
     "exact_model_identifier":  "mistralai/Mistral-7B-Instruct-v0.3",
-    "common_source_commit":  "b2e14827",
+    "common_source_commit":  "9ec95edd",
     "synthetic_fixture":  true,
     "official_trial":  false,
     "counts_for_publication":  false,
