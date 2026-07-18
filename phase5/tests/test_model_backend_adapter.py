@@ -12,6 +12,7 @@ from phase5.runtime import build_frozen_model_backend_adapter, load_frozen_model
 from phase5.runtime.model_backend_adapter import (
     _build_generation_kwargs,
     _build_model_load_kwargs,
+    _phi35_kv_cache_enabled,
     build_model_load_memory_plan,
     serialize_frozen_prompt_for_model,
 )
@@ -91,6 +92,13 @@ def test_phi3_runtime_kwargs_force_eager_attention_and_disable_cache(tmp_path: P
     assert load_kwargs["attn_implementation"] == "eager"
     assert load_kwargs["use_cache"] is False
     assert generation_kwargs["use_cache"] is False
+
+
+def test_phi3_runtime_cache_is_explicitly_opt_in(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("PHASE5_M4_ENABLE_KV_CACHE", raising=False)
+    assert _phi35_kv_cache_enabled() is False
+    monkeypatch.setenv("PHASE5_M4_ENABLE_KV_CACHE", "1")
+    assert _phi35_kv_cache_enabled() is True
 
 
 def test_non_phi_runtime_kwargs_preserve_default_cache_path(tmp_path: Path) -> None:

@@ -98,6 +98,25 @@ cache_snapshot = snapshot_download(
     cache_dir=os.environ["HF_HUB_CACHE"],
 )
 print(f"MODEL_CACHE_READY: {cache_snapshot}", flush=True)
+if MODEL_SLOT == "M4":
+    os.environ["PHASE5_M4_ENABLE_KV_CACHE"] = "1"
+    m4_canary = OUTPUT_ROOT / "M4_runtime_canary.json"
+    canary_command = [
+        sys.executable,
+        "phase5_5/scripts/run_m4_runtime_canary.py",
+        "--root",
+        str(REPO_ROOT),
+        "--output",
+        str(m4_canary),
+    ]
+    canary_process = subprocess.run(canary_command, cwd=REPO_ROOT, capture_output=True, text=True, check=False)
+    if canary_process.returncode != 0:
+        raise RuntimeError(f"M4 optimized runtime canary failed: {canary_process.stderr}")
+    print(canary_process.stdout, flush=True)
+    canary = json.loads(m4_canary.read_text(encoding="utf-8"))
+    if canary.get("pass") is not True or canary.get("kv_cache_enabled") is not True:
+        raise RuntimeError("M4 optimized runtime canary did not pass")
+    print(f"M4_OPTIMIZED_RUNTIME_READY: {m4_canary}", flush=True)
 print("OFFICIAL_AUTHORIZED_PREFLIGHT_PASS")
 ''')
 
@@ -222,6 +241,8 @@ os.environ["PHASE5_MODEL_OFFLOAD_DIR"] = "/kaggle/working/phase5_5_model_offload
 if MODEL_SLOT == "M4":
     # The repaired Phi execution was validated on Kaggle's dual-T4 profile.
     os.environ["PHASE5_REQUIRE_CUDA_DEVICE_COUNT"] = "2"
+    os.environ["HF_ENABLE_PARALLEL_LOADING"] = "true"
+    os.environ["HF_PARALLEL_LOADING_WORKERS"] = "4"
 Path(os.environ["HF_HOME"]).mkdir(parents=True, exist_ok=True)
 Path(os.environ["PHASE5_MODEL_OFFLOAD_DIR"]).mkdir(parents=True, exist_ok=True)
 

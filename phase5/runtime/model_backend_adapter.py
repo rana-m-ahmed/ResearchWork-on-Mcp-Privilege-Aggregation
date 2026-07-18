@@ -29,6 +29,12 @@ def _is_phi35_identifier(model_identifier: str) -> bool:
     return "phi-3.5" in model_identifier.lower()
 
 
+def _phi35_kv_cache_enabled() -> bool:
+    """Select the M4 fast path only when the official runner explicitly enables it."""
+
+    return os.environ.get("PHASE5_M4_ENABLE_KV_CACHE", "0") == "1"
+
+
 def _build_model_load_kwargs(
     *,
     identity: Any,
@@ -48,7 +54,7 @@ def _build_model_load_kwargs(
     }
     if _is_phi35_identifier(identity.exact_model_identifier):
         kwargs["attn_implementation"] = "eager"
-        kwargs["use_cache"] = False
+        kwargs["use_cache"] = _phi35_kv_cache_enabled()
     return kwargs
 
 
@@ -59,7 +65,7 @@ def _build_generation_kwargs(*, exact_model_identifier: str, tokenizer: Any) -> 
         "pad_token_id": tokenizer.eos_token_id,
     }
     if _is_phi35_identifier(exact_model_identifier):
-        kwargs["use_cache"] = False
+        kwargs["use_cache"] = _phi35_kv_cache_enabled()
     return kwargs
 
 
@@ -498,6 +504,9 @@ class FrozenModelBackendAdapter:
         self._load_memory_plan = {
             "max_memory_bytes": {str(device): value for device, value in max_memory.items()},
             "offload_folder": str(offload_folder),
+            "kv_cache_enabled": _phi35_kv_cache_enabled()
+            if _is_phi35_identifier(self.exact_model_identifier)
+            else None,
         }
         try:
             self._model = AutoModelForCausalLM.from_pretrained(
@@ -511,13 +520,13 @@ class FrozenModelBackendAdapter:
             )
             self._model.eval()
             if _is_phi35_identifier(self.exact_model_identifier):
-                setattr(self._model.config, "use_cache", False)
+                setattr(self._model.config, "use_cache", _phi35_kv_cache_enabled())
             self._model.generation_config.do_sample = False
             self._model.generation_config.temperature = None
             self._model.generation_config.top_p = None
             self._model.generation_config.top_k = None
             if _is_phi35_identifier(self.exact_model_identifier):
-                self._model.generation_config.use_cache = False
+                self._model.generation_config.use_cache = _phi35_kv_cache_enabled()
             self._load_memory_plan["hf_device_map"] = {
                 str(name): str(device) for name, device in getattr(self._model, "hf_device_map", {}).items()
             }
@@ -583,6 +592,9 @@ class FrozenModelBackendAdapter:
             "generated_token_ids": generated_ids.detach().cpu().tolist(),
             "decoded_output": decoded_output,
             "input_device": str(input_device),
+            "kv_cache_enabled": _phi35_kv_cache_enabled()
+            if _is_phi35_identifier(self.exact_model_identifier)
+            else None,
         }
         return decoded_output
 
