@@ -5,7 +5,10 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from phase5.domain.enums import Density, TrialOutcome
 from phase5.runtime.tool_dispatch import ToolDispatchPolicy, ToolSpecification
