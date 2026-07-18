@@ -3,7 +3,7 @@
     "branch":  "phase5_5-model-1",
     "model_slot":  "M1",
     "exact_model_identifier":  "Qwen/Qwen2.5-7B-Instruct",
-    "common_source_commit":  "5f070a97",
+    "common_source_commit":  "b90158e6",
     "synthetic_fixture":  true,
     "official_trial":  false,
     "counts_for_publication":  false,
