@@ -3,7 +3,7 @@
   "infrastructure_decision": "GO_BOUNDED_QUALIFICATION",
   "publication_decision": "BLOCKED_PENDING_OFFICIAL_EXECUTION",
   "clean_gate0_passed": true,
-  "clean_gate0_commit": "7be183f7",
+  "clean_gate0_commit": "0b838784",
   "full_test_count": 274,
   "source_freeze_bound_files": 16,
   "source_freeze_hash_mismatches": 0,
