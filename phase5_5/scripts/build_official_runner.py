@@ -81,6 +81,9 @@ if not hf_token:
     raise RuntimeError("Kaggle secret HF_TOKEN is empty; refusing official dispatch")
 os.environ["PHASE5_GITHUB_TOKEN"] = github_token
 os.environ["HF_TOKEN"] = hf_token
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+os.chdir(REPO_ROOT)
 from huggingface_hub import snapshot_download
 from phase5.runtime.model_backend_adapter import load_frozen_model_backend_identity
 
