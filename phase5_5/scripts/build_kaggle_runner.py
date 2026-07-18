@@ -101,10 +101,10 @@ actual_branch_head = git("rev-parse", "HEAD")
 expected_prefix = EXPECTED_BRANCH_HEADS[MODEL_SLOT]
 if not actual_branch_head.startswith(expected_prefix):
     raise RuntimeError(f"branch head mismatch: expected {expected_prefix}, got {actual_branch_head}")
-freeze = json.loads((REPO_ROOT / "phase5_5/manifests/phase5_5_source_freeze.json").read_text(encoding="utf-8"))
+freeze = json.loads((REPO_ROOT / "phase5_5/manifests/phase5_5_source_freeze.json").read_text(encoding="utf-8-sig"))
 if freeze["source_commit"] != EXPECTED_SOURCE_COMMIT:
     raise RuntimeError(f"source-freeze commit mismatch: {freeze['source_commit']}")
-branch_config = json.loads((REPO_ROOT / "phase5_5/branch_config.json").read_text(encoding="utf-8"))
+branch_config = json.loads((REPO_ROOT / "phase5_5/branch_config.json").read_text(encoding="utf-8-sig"))
 if branch_config["model_slot"] != MODEL_SLOT or branch_config["exact_model_identifier"] != MODEL_IDS[MODEL_SLOT]:
     raise RuntimeError("selected branch does not match its approved model slot")
 print(json.dumps({"branch_head": actual_branch_head, "source_commit": freeze["source_commit"], "model_id": MODEL_IDS[MODEL_SLOT]}, indent=2))
