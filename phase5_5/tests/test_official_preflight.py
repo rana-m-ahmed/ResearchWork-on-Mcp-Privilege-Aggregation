@@ -31,4 +31,6 @@ def test_official_preflight_preserves_synthetic_boundary(tmp_path: Path) -> None
     assert all(item["receipt_official"] is False for item in report["checks"]["branches"])
     assert report["checks"]["historical_closure"]["reconciliation_pass"] is True
     assert report["checks"]["synthetic_canary"]["pass"] is True
-    assert completed.returncode in {0, 1}
+    assert "official-dispatch-disabled" in report["failures"]
+    assert report["official_evidence_created"] is False
+    assert completed.returncode == 1
