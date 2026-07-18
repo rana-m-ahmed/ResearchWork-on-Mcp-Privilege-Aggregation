@@ -39,6 +39,7 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
     assert '"--checkpoint-publish"' in source
     assert "GITHUB_PUBLICATION_AUTH_READY" in source
     assert '"--dry-run"' in source
+    assert 'AUTHORIZATION: basic' in source
     assert '"--checkpoint-interval-trials"' in source
     assert '"6"' in source
     assert "publish_checkpoint.py" in source or "checkpoint-publish" in source
