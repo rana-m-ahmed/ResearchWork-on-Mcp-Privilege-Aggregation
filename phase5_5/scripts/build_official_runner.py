@@ -161,12 +161,16 @@ else:
                     del output_tail[:-200:]
             elif process.poll() is None:
                 elapsed = int(time.monotonic() - started)
-                gpu = subprocess.run(
-                    ["nvidia-smi", "--query-gpu=memory.used,utilization.gpu", "--format=csv,noheader,nounits"],
-                    check=False,
-                    capture_output=True,
-                    text=True,
-                ).stdout.strip().replace("\\n", "; ")
+                nvidia_smi = shutil.which("nvidia-smi")
+                if nvidia_smi:
+                    gpu = subprocess.run(
+                        [nvidia_smi, "--query-gpu=memory.used,utilization.gpu", "--format=csv,noheader,nounits"],
+                        check=False,
+                        capture_output=True,
+                        text=True,
+                    ).stdout.strip().replace("\\n", "; ")
+                else:
+                    gpu = "unavailable:nvidia-smi"
                 print(f"OFFICIAL_CAMPAIGN_HEARTBEAT: elapsed_seconds={elapsed}; gpu={gpu or 'unavailable'}", flush=True)
                 last_heartbeat = time.monotonic()
             if process.poll() is not None:
@@ -222,8 +226,11 @@ def run_checked(command: list[str], *, cwd: Path | None = None) -> str:
         raise RuntimeError(f"command failed ({completed.returncode}): {' '.join(command)}\\n{completed.stderr}")
     return completed.stdout
 
-nvidia = run_checked(["nvidia-smi"])
-print(nvidia)
+nvidia_smi = shutil.which("nvidia-smi")
+if nvidia_smi:
+    print(run_checked([nvidia_smi]))
+else:
+    print("NVIDIA_SMI_UNAVAILABLE: continuing with torch CUDA verification")
 subprocess.run([sys.executable, "-m", "pip", "install", "--requirement", str(REPO_ROOT / "phase4_5/kaggle/requirements.lock.txt")], check=True)
 hardware = run_checked([
     sys.executable,
