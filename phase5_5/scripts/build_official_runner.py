@@ -26,6 +26,12 @@ def main() -> None:
     source = "".join(config["source"])
     source = source.replace('MODEL_SLOT = os.environ.get("PHASE5_MODEL_SLOT", "M1").upper()', f'MODEL_SLOT = "{SLOT}"')
     source = source.replace('EXECUTE_OFFICIAL = os.environ.get("PHASE5_EXECUTE_OFFICIAL", "0") == "1"', "EXECUTE_OFFICIAL = True")
+    head_start = source.find("EXPECTED_BRANCH_HEADS = {")
+    if head_start >= 0:
+        head_end = source.find("BRANCHES =", head_start)
+        if head_end < 0:
+            raise RuntimeError("official runner configuration lost BRANCHES declaration")
+        source = source[:head_start] + source[head_end:]
     set_source(config, source)
 
     provenance = cell(notebook, "source_and_branch_provenance")
@@ -64,6 +70,42 @@ preflight = json.loads(authorized_preflight_path.read_text(encoding="utf-8"))
 if preflight.get("pass") is not True:
     raise RuntimeError(f"authorized official preflight failed: {preflight.get('failures')}")
 print("OFFICIAL_AUTHORIZED_PREFLIGHT_PASS")
+''')
+
+    hardware = cell(notebook, "hardware_and_dependencies")
+    set_source(hardware, '''# Carry forward the Kaggle stability controls proven during the repaired Phase 5 runs.
+os.environ["NCCL_P2P_DISABLE"] = "1"
+os.environ["NCCL_IB_DISABLE"] = "1"
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+os.environ["PYTORCH_ALLOC_CONF"] = "expandable_segments:True"
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+os.environ["HF_ENABLE_PARALLEL_LOADING"] = "false"
+os.environ["HF_PARALLEL_LOADING_WORKERS"] = "1"
+os.environ["HF_HOME"] = "/kaggle/working/huggingface_cache"
+os.environ["HF_HUB_CACHE"] = "/kaggle/working/huggingface_cache"
+os.environ["TRANSFORMERS_CACHE"] = "/kaggle/working/huggingface_cache"
+os.environ["PHASE5_MODEL_OFFLOAD_DIR"] = "/kaggle/working/phase5_5_model_offload"
+if MODEL_SLOT == "M4":
+    # The repaired Phi execution was validated on Kaggle's dual-T4 profile.
+    os.environ["PHASE5_REQUIRE_CUDA_DEVICE_COUNT"] = "2"
+Path(os.environ["HF_HOME"]).mkdir(parents=True, exist_ok=True)
+Path(os.environ["PHASE5_MODEL_OFFLOAD_DIR"]).mkdir(parents=True, exist_ok=True)
+
+def run_checked(command: list[str], *, cwd: Path | None = None) -> str:
+    completed = subprocess.run(command, cwd=cwd, check=False, capture_output=True, text=True)
+    if completed.returncode != 0:
+        raise RuntimeError(f"command failed ({completed.returncode}): {' '.join(command)}\\n{completed.stderr}")
+    return completed.stdout
+
+nvidia = run_checked(["nvidia-smi"])
+print(nvidia)
+subprocess.run([sys.executable, "-m", "pip", "install", "--requirement", str(REPO_ROOT / "phase4_5/kaggle/requirements.lock.txt")], check=True)
+hardware = run_checked([
+    sys.executable,
+    "-c",
+    "import torch; assert torch.cuda.is_available(); print({'torch': torch.__version__, 'cuda': torch.version.cuda, 'devices': torch.cuda.device_count()})",
+])
+print(hardware)
 ''')
 
     evidence = cell(notebook, "evidence_package")
