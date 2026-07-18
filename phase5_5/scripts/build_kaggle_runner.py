@@ -54,10 +54,10 @@ EXECUTE_OFFICIAL = os.environ.get("PHASE5_EXECUTE_OFFICIAL", "0") == "1"
 DATASET_VERSION = "P5-DV-1.0.2-A7C91E42"
 EXPECTED_SOURCE_COMMIT = "b90158e6"
 EXPECTED_BRANCH_HEADS = {
-    "M1": "5dd7cf57",
-    "M2": "4ad4fc37",
-    "M3": "7e65ccae",
-    "M4": "ef9c2a50",
+    "M1": "79742bbb",
+    "M2": "2ece7032",
+    "M3": "45f0dcf1",
+    "M4": "c5660c12",
 }
 BRANCHES = {slot: f"phase5_5-model-{slot.removeprefix('M')}" for slot in ("M1", "M2", "M3", "M4")}
 MODEL_IDS = {
@@ -133,19 +133,41 @@ print(hardware)
         "fixtures_and_gate0",
         '''test_environment = os.environ.copy()
 test_environment["PYTHONDONTWRITEBYTECODE"] = "1"
-subprocess.run(
-    [sys.executable, "-m", "pytest", "-q", "phase5/tests", "phase5_5/tests", "-p", "no:cacheprovider"],
-    cwd=REPO_ROOT,
-    env=test_environment,
-    check=True,
-)
+pytest_command = [
+    sys.executable,
+    "-m",
+    "pytest",
+    "-q",
+    "phase5/tests",
+    "phase5_5/tests",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    str(OUTPUT_ROOT / "pytest-temp"),
+]
+subprocess.run(pytest_command, cwd=REPO_ROOT, env=test_environment, check=True)
 gate_report = OUTPUT_ROOT / "gate0_authorization_report"
 subprocess.run(
     [sys.executable, "-m", "phase5", "gate0", "--strict", "--root", str(REPO_ROOT), "--report-dir", str(gate_report)],
     cwd=REPO_ROOT,
     check=True,
 )
-subprocess.run([sys.executable, "phase5_5/scripts/run_qualification_canary.py", "--root", str(REPO_ROOT)], check=True)
+canary_path = OUTPUT_ROOT / "qualification_canary.json"
+subprocess.run(
+    [
+        sys.executable,
+        "phase5_5/scripts/run_qualification_canary.py",
+        "--root",
+        str(REPO_ROOT),
+        "--output",
+        str(canary_path),
+    ],
+    cwd=REPO_ROOT,
+    check=True,
+)
+canary = json.loads(canary_path.read_text(encoding="utf-8"))
+if canary.get("pass") is not True or len(canary.get("records", [])) != 4:
+    raise RuntimeError("live qualification canary failed")
 ''',
     ),
     code(
