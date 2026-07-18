@@ -37,3 +37,7 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
     assert "subprocess.Popen" in source
     campaign_source = source[source.index("campaign_error"):source.index("def sha256")]
     assert "subprocess.run(campaign_command" not in campaign_source
+
+    engine_source = (root / "phase5/runtime/engine.py").read_text(encoding="utf-8")
+    assert "MODEL_GPU_LOAD_START" in engine_source
+    assert "MODEL_GPU_MODEL_READY" in engine_source

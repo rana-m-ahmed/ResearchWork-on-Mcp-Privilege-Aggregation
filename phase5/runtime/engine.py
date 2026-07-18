@@ -90,6 +90,10 @@ class SharedExecutionEngine(RealTrialPipeline):
 
     def _ensure_loaded(self) -> None:
         if self.backend is None:
+            print(
+                f"MODEL_GPU_LOAD_START: slot={self.model_slot}; model={self.model_identity.exact_model_identifier}",
+                flush=True,
+            )
             self.backend = build_frozen_model_backend_adapter(root=self.root, model_slot=self.model_slot)
             self.tokenizer = build_exact_tokenizer(
                 root=self.root,
@@ -100,6 +104,10 @@ class SharedExecutionEngine(RealTrialPipeline):
         prepare_runtime = getattr(self.backend, "prepare_runtime", None)
         if callable(prepare_runtime):
             prepare_runtime()
+        print(
+            f"MODEL_GPU_MODEL_READY: slot={self.model_slot}; model={self.model_identity.exact_model_identifier}; trials_may_start=true",
+            flush=True,
+        )
 
     def _load_task_content(self, row: FrozenQueueRow) -> dict[str, Any]:
         if self.synthetic_fixture and row.task_id.startswith("P5SYN-"):
