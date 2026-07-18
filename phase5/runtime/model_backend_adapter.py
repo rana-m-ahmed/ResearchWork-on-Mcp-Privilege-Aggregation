@@ -380,6 +380,10 @@ class FrozenModelBackendAdapter:
             raise RuntimeMismatchError("torch and transformers are required for real model execution") from exc
         if not torch.cuda.is_available():
             raise RuntimeMismatchError("the frozen M1 float16 backend requires a CUDA GPU")
+        print(
+            f"MODEL_GPU_LOAD_START: slot={self.identity.model_id}; model={self.exact_model_identifier}",
+            flush=True,
+        )
         if self._tokenizer is None:
             self._tokenizer = AutoTokenizer.from_pretrained(
                 self.tokenizer_identity,
@@ -422,6 +426,10 @@ class FrozenModelBackendAdapter:
                 raise RuntimeMismatchError(
                     f"frozen model placement did not use required CUDA devices: {sorted(missing_devices)}"
                 )
+            print(
+                f"MODEL_GPU_MODEL_READY: slot={self.identity.model_id}; model={self.exact_model_identifier}; trials_may_start=true",
+                flush=True,
+            )
         except Exception as exc:
             raise RuntimeMismatchError(
                 f"failed to load frozen model {self.exact_model_identifier!r} at "
