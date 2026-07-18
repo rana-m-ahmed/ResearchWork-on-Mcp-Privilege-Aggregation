@@ -37,6 +37,8 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
     assert "MODEL_CACHE_PREP_START" in source
     assert "MODEL_CACHE_READY" in source
     assert "M4_OPTIMIZED_RUNTIME_READY" in source
+    assert "GITHUB_PUBLICATION_AUTH_READY" in source
+    assert '"--dry-run"' in source
     assert 'os.environ["HF_ENABLE_PARALLEL_LOADING"] = "true"' in source
     assert 'os.environ["HF_PARALLEL_LOADING_WORKERS"] = "4"' in source
     assert "load_frozen_model_backend_identity(root=REPO_ROOT, model_slot=MODEL_SLOT)" in source

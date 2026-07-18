@@ -39,6 +39,12 @@ requires exact repeated cached output and token-ID determinism, which matches
 the path used by official trials. Both failures were confined to the canary;
 no official trial was dispatched.
 
+The first completed M4 run also exposed a publication-gate weakness: GitHub
+authentication was discovered only after the campaign. The runner now performs
+an authenticated `git push --dry-run` before official dispatch and emits
+`GITHUB_PUBLICATION_AUTH_READY`; invalid, expired, or read-only credentials now
+stop before any trial is started.
+
 Before official dispatch, the M4 notebook runs a non-scientific runtime canary:
 it loads the exact frozen revision, generates the same fixed prompt with cache
 enabled and disabled, and requires exact decoded-output equality plus explicit
