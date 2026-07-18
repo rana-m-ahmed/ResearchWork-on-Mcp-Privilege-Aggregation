@@ -6,7 +6,7 @@ The Phase 5.5 infrastructure remediation is **GO for bounded qualification and c
 
 ## Verified Results
 
-- Strict Gate 0: passed in a clean detached worktree at committed source `7be183f7`.
+- Strict Gate 0: passed in a clean detached worktree at committed source `0b838784`.
 - Full Phase 5 and Phase 5.5 tests: `274 passed`.
 - Source freeze: `16/16` bound-file hashes verified.
 - Historical closure v2: `3,250/3,250` orphan records reconciled; `0` duplicate IDs; `0` index hash mismatches; accepted/finalized/publication counts all `0`.
