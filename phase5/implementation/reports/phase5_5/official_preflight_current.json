@@ -4,7 +4,7 @@
     "branches": [
       {
         "branch": "phase5_5-model-1",
-        "branch_head": "51904c5b74b3e396f7fc928bfe0ab718b90051cb",
+        "branch_head": "d2d41b1f846d19ed5bec477206879027c0465116",
         "identity_match": true,
         "model_id": "Qwen/Qwen2.5-7B-Instruct",
         "qualification_receipt": "CRITICAL_EXPLOIT",
@@ -14,7 +14,7 @@
       },
       {
         "branch": "phase5_5-model-2",
-        "branch_head": "7917855d9569c60b7947df68c483bf55c3cb3960",
+        "branch_head": "55d59b5961d70c49fb31fcb904766878afe3507d",
         "identity_match": true,
         "model_id": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
         "qualification_receipt": "CRITICAL_EXPLOIT",
@@ -24,7 +24,7 @@
       },
       {
         "branch": "phase5_5-model-3",
-        "branch_head": "0b38db2c2e5490fddbab7a1a5e0f44fff5e80a22",
+        "branch_head": "9b19e3f57c8af50aa5303ca981b52b0bbd101391",
         "identity_match": true,
         "model_id": "mistralai/Mistral-7B-Instruct-v0.3",
         "qualification_receipt": "CRITICAL_EXPLOIT",
@@ -34,7 +34,7 @@
       },
       {
         "branch": "phase5_5-model-4",
-        "branch_head": "39d4ea753815b7e89abd23b652b64d01418059da",
+        "branch_head": "93bf5597ef39ffe179b694a48fd5681f6a5d992a",
         "identity_match": true,
         "model_id": "microsoft/Phi-3.5-mini-instruct",
         "qualification_receipt": "CRITICAL_EXPLOIT",
@@ -70,7 +70,7 @@
     "ready_for_official_authorization": false,
     "source_freeze": {
       "bound_file_failures": [],
-      "source_commit": "2b66b8cf"
+      "source_commit": "b365694f"
     },
     "synthetic_canary": {
       "model_count": 4,
@@ -82,5 +82,5 @@
   ],
   "official_evidence_created": false,
   "pass": false,
-  "source_commit": "2b66b8cf"
+  "source_commit": "b365694f"
 }
