@@ -14,6 +14,10 @@ from typing import Iterable, Mapping
 ORPHANED_INVALID = "ORPHANED_INVALID"
 
 
+class EvidenceHashMismatchError(ValueError):
+    """Historical evidence cannot be closed against an invalid hash index."""
+
+
 def _sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -85,12 +89,18 @@ def _artifact_hashes(attempt_dir: Path) -> dict[str, str]:
             digest = item.get("sha256")
             if isinstance(path, str) and isinstance(digest, str):
                 indexed[path] = digest
-        indexed["evidence_hash_index.jsonl"] = _sha256(index_path)
-        for critical in ("model_outputs.jsonl", "parser_events.jsonl", "attempt_manifest.json"):
-            path = attempt_dir / critical
-            if path.exists():
-                indexed[critical] = _sha256(path)
-        return indexed
+        actual = {
+            path.name: _sha256(path)
+            for path in sorted(attempt_dir.iterdir())
+            if path.is_file() and path.name != "evidence_hash_index.jsonl"
+        }
+        for name, expected in indexed.items():
+            if name not in actual or actual[name] != expected:
+                raise EvidenceHashMismatchError(
+                    f"historical evidence hash mismatch for {attempt_dir / name}"
+                )
+        actual["evidence_hash_index.jsonl"] = _sha256(index_path)
+        return actual
     return {
         path.name: _sha256(path)
         for path in sorted(attempt_dir.iterdir())
@@ -126,7 +136,7 @@ def discover_orphan_closures(
                 attempt_id = row.get("attempt_id", "")
                 attempt_dir = evidence_root / "attempts" / attempt_id
             if not attempt_dir.exists():
-                continue
+                raise FileNotFoundError(f"historical orphan attempt directory is missing: {attempt_dir}")
             artifact_hashes = _artifact_hashes(attempt_dir)
             records.append(
                 ClosureRecord(
@@ -168,17 +178,33 @@ def write_append_only_closure(records: Iterable[ClosureRecord], output: Path) ->
     output.write_text(encoded, encoding="utf-8")
 
 
-def reconcile_closures(records: Iterable[ClosureRecord]) -> dict[str, object]:
+def reconcile_closures(
+    records: Iterable[ClosureRecord],
+    *,
+    expected_attempt_ids: Iterable[str] | None = None,
+) -> dict[str, object]:
     rows = tuple(records)
     ids = [row.attempt_id for row in rows]
     duplicates = sorted({item for item in ids if ids.count(item) > 1})
+    expected = set(expected_attempt_ids or ())
+    actual = set(ids)
+    missing = sorted(expected - actual)
+    extra = sorted(actual - expected) if expected else []
     return {
         "closure_count": len(rows),
         "duplicate_attempt_ids": duplicates,
+        "missing_expected_attempt_ids": missing,
+        "unexpected_attempt_ids": extra,
         "all_orphaned_invalid": all(row.forensic_status == ORPHANED_INVALID for row in rows),
         "all_originally_invalid": all(row.original_status == "INVALID" for row in rows),
         "accepted_count": 0,
         "finalized_count": 0,
         "publication_evidence_count": 0,
-        "reconciliation_pass": not duplicates and all(row.forensic_status == ORPHANED_INVALID for row in rows),
+        "reconciliation_pass": (
+            not duplicates
+            and not missing
+            and not extra
+            and all(row.forensic_status == ORPHANED_INVALID for row in rows)
+            and all(row.original_status == "INVALID" for row in rows)
+        ),
     }
