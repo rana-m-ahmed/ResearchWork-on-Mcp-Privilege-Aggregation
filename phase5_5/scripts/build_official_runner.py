@@ -69,6 +69,14 @@ subprocess.run(
 preflight = json.loads(authorized_preflight_path.read_text(encoding="utf-8"))
 if preflight.get("pass") is not True:
     raise RuntimeError(f"authorized official preflight failed: {preflight.get('failures')}")
+try:
+    from kaggle_secrets import UserSecretsClient
+    github_token = (UserSecretsClient().get_secret("PHASE5_GITHUB_TOKEN") or "").strip()
+except Exception as exc:
+    raise RuntimeError("Kaggle secret PHASE5_GITHUB_TOKEN is unavailable; refusing official dispatch") from exc
+if not github_token:
+    raise RuntimeError("Kaggle secret PHASE5_GITHUB_TOKEN is empty; refusing official dispatch")
+os.environ["PHASE5_GITHUB_TOKEN"] = github_token
 print("OFFICIAL_AUTHORIZED_PREFLIGHT_PASS")
 ''')
 
@@ -137,8 +145,8 @@ with tarfile.open(archive_path, "w:gz") as archive:
     archive.add(evidence_root, arcname="phase5_5/evidence")
     archive.add(manifest_path, arcname=f"phase5_5/{{manifest_path.name}}")
 
-from kaggle_secrets import UserSecretsClient
-os.environ["PHASE5_GITHUB_TOKEN"] = UserSecretsClient().get_secret("PHASE5_GITHUB_TOKEN")
+if not os.environ.get("PHASE5_GITHUB_TOKEN"):
+    raise RuntimeError("official publication credential was not retained from authorization preflight")
 publication_receipt = OUTPUT_ROOT / f"{MODEL_SLOT}_publication_receipt.json"
 subprocess.run(
     [
