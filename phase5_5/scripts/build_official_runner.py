@@ -84,6 +84,58 @@ os.environ["HF_TOKEN"] = hf_token
 print("OFFICIAL_AUTHORIZED_PREFLIGHT_PASS")
 ''')
 
+    campaign = cell(notebook, "official_campaign")
+    set_source(campaign, '''campaign_error: dict[str, object] | None = None
+if not EXECUTE_OFFICIAL:
+    print("No official rows dispatched.")
+elif preflight.get("pass") is not True:
+    raise RuntimeError(f"official execution blocked by preflight failures: {preflight.get('failures')}")
+else:
+    campaign_report = OUTPUT_ROOT / f"{MODEL_SLOT}_campaign.json"
+    campaign_command = [
+        sys.executable,
+        "-m",
+        "phase5",
+        "run-campaign",
+        "--official",
+        "--model-slot",
+        MODEL_SLOT,
+        "--dataset-version",
+        DATASET_VERSION,
+        "--run-id",
+        RUN_ID,
+        "--seal-epoch",
+        "1",
+        "--until-safety-horizon",
+        "--batch-manifest",
+        "phase5/manifests/batch_partition_manifest_v3.json",
+        "--run-plan",
+        "phase5/validation/kaggle_run_plan_v3.json",
+        "--output",
+        str(campaign_report),
+    ]
+    try:
+        completed = subprocess.run(campaign_command, cwd=REPO_ROOT, check=False, capture_output=True, text=True)
+        if completed.returncode != 0:
+            campaign_error = {
+                "artifact": "phase5_5_official_campaign_failure",
+                "returncode": completed.returncode,
+                "stderr_tail": completed.stderr[-10000:],
+            }
+            (OUTPUT_ROOT / f"{MODEL_SLOT}_campaign_error.json").write_text(
+                json.dumps(campaign_error, indent=2, sort_keys=True) + "\\n", encoding="utf-8"
+            )
+            print(f"OFFICIAL_CAMPAIGN_FAILED; preserved evidence will still be published: {completed.returncode}")
+        else:
+            print(f"OFFICIAL_CAMPAIGN_COMPLETE: {campaign_report}")
+    except Exception as exc:
+        campaign_error = {"artifact": "phase5_5_official_campaign_failure", "error": str(exc)}
+        (OUTPUT_ROOT / f"{MODEL_SLOT}_campaign_error.json").write_text(
+            json.dumps(campaign_error, indent=2, sort_keys=True) + "\\n", encoding="utf-8"
+        )
+        print("OFFICIAL_CAMPAIGN_FAILED; preserved evidence will still be published")
+''')
+
     hardware = cell(notebook, "hardware_and_dependencies")
     set_source(hardware, '''# Carry forward the Kaggle stability controls proven during the repaired Phase 5 runs.
 os.environ["NCCL_P2P_DISABLE"] = "1"
@@ -183,6 +235,8 @@ finally:
     except NameError:
         pass
 print(json.dumps({"manifest": str(manifest_path), "archive": str(archive_path), "publication_receipt": str(publication_receipt)}, indent=2))
+if campaign_error is not None:
+    raise RuntimeError(f"official campaign failed after evidence publication: {campaign_error}")
 ''')
     OUTPUT.write_text(json.dumps(notebook, indent=1, ensure_ascii=True) + "\n", encoding="utf-8")
 
