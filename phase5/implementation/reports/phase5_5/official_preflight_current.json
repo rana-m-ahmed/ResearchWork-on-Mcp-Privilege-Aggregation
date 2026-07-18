@@ -4,7 +4,7 @@
     "branches": [
       {
         "branch": "phase5_5-model-1",
-        "branch_head": "2cd741aae3a66a25360d40064290afc7bafdc5c9",
+        "branch_head": "91929e6dd5eed8d1c651c3bc17363a8724b493c3",
         "identity_match": true,
         "model_id": "Qwen/Qwen2.5-7B-Instruct",
         "qualification_receipt": "CRITICAL_EXPLOIT",
@@ -14,7 +14,7 @@
       },
       {
         "branch": "phase5_5-model-2",
-        "branch_head": "56039f071763a3f030f10807e7027980849015c5",
+        "branch_head": "cb79eab4cc3f6dd862c49909f2db16b901a3d970",
         "identity_match": true,
         "model_id": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
         "qualification_receipt": "CRITICAL_EXPLOIT",
@@ -24,7 +24,7 @@
       },
       {
         "branch": "phase5_5-model-3",
-        "branch_head": "6f7ba19f08fd8bcff1eaebc8278065931c0bb419",
+        "branch_head": "815ecbf89f3481373b86dfc4d0e41fb094a0117d",
         "identity_match": true,
         "model_id": "mistralai/Mistral-7B-Instruct-v0.3",
         "qualification_receipt": "CRITICAL_EXPLOIT",
@@ -34,7 +34,7 @@
       },
       {
         "branch": "phase5_5-model-4",
-        "branch_head": "1cb6a0c0fb438da58963b53b1bbe40493875477d",
+        "branch_head": "a52fe348bd83df0950f3a76f9cf6dbf0e7592aba",
         "identity_match": true,
         "model_id": "microsoft/Phi-3.5-mini-instruct",
         "qualification_receipt": "CRITICAL_EXPLOIT",
