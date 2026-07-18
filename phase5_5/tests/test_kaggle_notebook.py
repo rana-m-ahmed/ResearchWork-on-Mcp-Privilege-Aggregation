@@ -43,6 +43,8 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
     assert '"--checkpoint-interval-trials"' in source
     assert '"6"' in source
     assert "publish_checkpoint.py" in source or "checkpoint-publish" in source
+    checkpoint_source = (root / "phase5_5/scripts/publish_checkpoint.py").read_text(encoding="utf-8")
+    assert 'AUTHORIZATION: basic' in checkpoint_source
     assert 'actual_branch_head = git("rev-parse", "HEAD")' in source
     campaign_source = source[source.index("campaign_error"):source.index("def sha256")]
     assert "subprocess.run(campaign_command" not in campaign_source
