@@ -72,11 +72,15 @@ if preflight.get("pass") is not True:
 try:
     from kaggle_secrets import UserSecretsClient
     github_token = (UserSecretsClient().get_secret("PHASE5_GITHUB_TOKEN") or "").strip()
+    hf_token = (UserSecretsClient().get_secret("HF_TOKEN") or "").strip()
 except Exception as exc:
-    raise RuntimeError("Kaggle secret PHASE5_GITHUB_TOKEN is unavailable; refusing official dispatch") from exc
+    raise RuntimeError("Kaggle secrets PHASE5_GITHUB_TOKEN and HF_TOKEN are required; refusing official dispatch") from exc
 if not github_token:
     raise RuntimeError("Kaggle secret PHASE5_GITHUB_TOKEN is empty; refusing official dispatch")
+if not hf_token:
+    raise RuntimeError("Kaggle secret HF_TOKEN is empty; refusing official dispatch")
 os.environ["PHASE5_GITHUB_TOKEN"] = github_token
+os.environ["HF_TOKEN"] = hf_token
 print("OFFICIAL_AUTHORIZED_PREFLIGHT_PASS")
 ''')
 
@@ -169,8 +173,13 @@ try:
     )
 finally:
     os.environ.pop("PHASE5_GITHUB_TOKEN", None)
+    os.environ.pop("HF_TOKEN", None)
     try:
         del github_token
+    except NameError:
+        pass
+    try:
+        del hf_token
     except NameError:
         pass
 print(json.dumps({"manifest": str(manifest_path), "archive": str(archive_path), "publication_receipt": str(publication_receipt)}, indent=2))
