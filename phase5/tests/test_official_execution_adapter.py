@@ -78,9 +78,10 @@ class OfficialRealPipeline:
     synthetic_fixture = False
     official_trial = True
 
-    def __init__(self, root: Path, *, orphan_first: bool = False) -> None:
+    def __init__(self, root: Path, *, orphan_first: bool = False, invalid_reason: str | None = None) -> None:
         self.root = root
         self.orphan_first = orphan_first
+        self.invalid_reason = invalid_reason
         self.calls: list[tuple[str, int, str | None]] = []
 
     def execute_row(self, *, row, batch, run_id, attempt_index, parent_attempt_id):
@@ -103,7 +104,7 @@ class OfficialRealPipeline:
             counts_for_phase5=True,
             publication_evidence=True,
             acceptance_proof=None if orphaned else _proof(),
-            invalid_reason="official interruption" if orphaned else None,
+            invalid_reason=self.invalid_reason or ("official interruption" if orphaned else None),
             orphaned=orphaned,
         )
 
@@ -215,6 +216,27 @@ def test_repository_adapter_in_official_mode_creates_accepted_counts(tmp_path: P
     records = store.load_records()
     assert len(records) == plan.batches[0].row_count
     assert all(record.accepted_attempt and record.counts_toward_cell_n for record in records)
+
+
+def test_official_invalid_batch_is_not_labeled_synthetic(tmp_path: Path) -> None:
+    plan = load_campaign_plan(model_slot="M1")
+    pipeline = OfficialRealPipeline(tmp_path / "attempts", invalid_reason="parser failure")
+    store = AttemptLineageStore(tmp_path / "lineage.csv")
+    adapter = RepositoryBatchExecutionAdapter(
+        queue_bundle=load_frozen_queue_bundle(),
+        pipeline=pipeline,
+        lineage_store=store,
+        session=_sealed_session(),
+        dataset_version=plan.dataset_version,
+        official_mode=True,
+    )
+
+    result = adapter(plan.batches[0], plan.p95_trial_seconds)
+
+    assert result.status == "OFFICIAL_COMPLETED_NO_ACCEPTED"
+    assert result.accepted_count == 0
+    assert result.finalized is False
+    assert all(record.attempt_status == "INVALID" for record in store.load_records())
 
 
 def test_orphan_replacement_uses_new_attempt_and_parent_lineage(tmp_path: Path) -> None:
