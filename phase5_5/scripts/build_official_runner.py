@@ -111,7 +111,7 @@ subprocess.run([sys.executable, "-m", "pip", "install", "--requirement", str(REP
 hardware = run_checked([
     sys.executable,
     "-c",
-    f"import torch; assert torch.cuda.is_available(); assert torch.cuda.device_count() >= {2 if MODEL_SLOT == 'M4' else 1}; print({'torch': torch.__version__, 'cuda': torch.version.cuda, 'devices': torch.cuda.device_count()})",
+    f"import torch; assert torch.cuda.is_available(); assert torch.cuda.device_count() >= {2 if MODEL_SLOT == 'M4' else 1}; print({{'torch': torch.__version__, 'cuda': torch.version.cuda, 'devices': torch.cuda.device_count()}})",
 ])
 print(hardware)
 ''')
