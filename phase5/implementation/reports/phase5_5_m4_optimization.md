@@ -29,6 +29,13 @@ The optimized canary additionally records the resolved Hugging Face device map
 and cached-generation memory metrics, so a successful CUDA check cannot be
 mistaken for proof that the required dual-GPU placement was actually used.
 
+The first Kaggle optimized canary exposed a missing
+`DynamicCache.to_legacy_cache()` method after successful weight materialization.
+The shim now supports both Transformers 5 `layers` caches and the older
+`key_cache`/`value_cache` representation, with regression coverage for the
+legacy conversion path. The failure was confined to the canary; no official
+trial was dispatched.
+
 Before official dispatch, the M4 notebook runs a non-scientific runtime canary:
 it loads the exact frozen revision, generates the same fixed prompt with cache
 enabled and disabled, and requires exact decoded-output equality plus explicit

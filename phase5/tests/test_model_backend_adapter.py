@@ -128,6 +128,8 @@ def test_phi3_dynamic_cache_shim_allows_omitted_layer_index(monkeypatch) -> None
         def __init__(self) -> None:
             self.seen_tokens = 7
             self.calls: list[int] = []
+            self.key_cache = ["key"]
+            self.value_cache = ["value"]
 
         def get_seq_length(self, layer_idx):
             self.calls.append(layer_idx)
@@ -155,6 +157,7 @@ def test_phi3_dynamic_cache_shim_allows_omitted_layer_index(monkeypatch) -> None
     assert cache.calls == [3]
     assert cache.get_usable_length(5, 3) == 103
     assert cache.get_usable_length(20, 3) == 90
+    assert cache.to_legacy_cache() == (("key", "value"),)
 
 
 def _copy_text(source: Path, destination: Path, *, replacement: tuple[str, str] | None = None) -> None:

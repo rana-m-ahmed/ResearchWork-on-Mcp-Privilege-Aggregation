@@ -91,9 +91,14 @@ def _install_phi3_dynamic_cache_compatibility_shim() -> None:
         def from_legacy_cache(cls, past_key_values=None, *args, **kwargs):  # type: ignore[no-untyped-def]
             if isinstance(past_key_values, cls):
                 return past_key_values
-            cache = cls()
             if past_key_values is None:
-                return cache
+                return cls()
+            if isinstance(past_key_values, tuple):
+                try:
+                    return cls(ddp_cache_data=past_key_values)
+                except TypeError:
+                    pass
+            cache = cls()
             if isinstance(past_key_values, tuple):
                 key_cache = []
                 value_cache = []
@@ -112,6 +117,18 @@ def _install_phi3_dynamic_cache_compatibility_shim() -> None:
             return cache
 
         DynamicCache.from_legacy_cache = from_legacy_cache
+
+    if not hasattr(DynamicCache, "to_legacy_cache"):
+
+        def to_legacy_cache(self):  # type: ignore[no-untyped-def]
+            layers = getattr(self, "layers", None)
+            if layers is not None:
+                return tuple((layer.keys, layer.values) for layer in layers)
+            key_cache = getattr(self, "key_cache", ())
+            value_cache = getattr(self, "value_cache", ())
+            return tuple(zip(key_cache, value_cache))
+
+        DynamicCache.to_legacy_cache = to_legacy_cache
 
     original_get_seq_length = DynamicCache.get_seq_length
     if not getattr(original_get_seq_length, "_phase5_optional_layer_idx", False):
