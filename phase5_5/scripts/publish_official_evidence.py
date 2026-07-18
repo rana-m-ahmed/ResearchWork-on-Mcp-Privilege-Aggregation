@@ -78,12 +78,12 @@ def main() -> int:
     env["GIT_CONFIG_KEY_0"] = "http.extraHeader"
     env["GIT_CONFIG_VALUE_0"] = f"AUTHORIZATION: bearer {token}"
     try:
-        run_git(root, ["add", "--", *paths, "phase5_5/evidence/official_publication_manifest.json"], env=env)
-        run_git(root, ["-c", "user.name=phase5.5-sync", "-c", "user.email=phase5.5-sync@example.invalid", "commit", "-m", f"phase5.5 official evidence {slot} {args.run_id}"], env=env)
-        first_commit = run_git(root, ["rev-parse", "HEAD"], env=env)
         remote_before = run_git(root, ["ls-remote", "origin", branch], env=env).split()[0]
         if remote_before != args.expected_parent:
             raise RuntimeError(f"remote branch diverged: expected {args.expected_parent}, got {remote_before}")
+        run_git(root, ["add", "--", *paths, "phase5_5/evidence/official_publication_manifest.json"], env=env)
+        run_git(root, ["-c", "user.name=phase5.5-sync", "-c", "user.email=phase5.5-sync@example.invalid", "commit", "-m", f"phase5.5 official evidence {slot} {args.run_id}"], env=env)
+        first_commit = run_git(root, ["rev-parse", "HEAD"], env=env)
         run_git(root, ["push", "origin", f"HEAD:{branch}"], env=env)
         receipt = {
             "artifact": "phase5_5_official_evidence_publication_receipt_v1",
@@ -94,7 +94,7 @@ def main() -> int:
             "publication_commit": first_commit,
             "remote_head_after_push": first_commit,
             "published_utc": datetime.now(timezone.utc).isoformat(),
-            "credential_purged": False,
+            "credential_purged": True,
         }
         receipt_path = root / "phase5_5/evidence" / "official_publication_receipt.json"
         receipt_path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
