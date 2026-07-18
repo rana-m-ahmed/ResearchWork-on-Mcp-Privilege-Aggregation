@@ -28,3 +28,14 @@ def test_phase45_hash_is_stable_across_newline_checkouts(tmp_path: Path) -> None
     assert _sha256_frozen_path(phase45_file, repository_root=root) == hashlib.sha256(
         b"one\r\ntwo\r\n"
     ).hexdigest()
+
+
+def test_frozen_json_evidence_hash_is_stable_across_newline_checkouts(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    evidence = root / "phase5" / "validation" / "m4_loader_status_reconciliation.json"
+    evidence.parent.mkdir(parents=True)
+    evidence.write_bytes(b'{"status":"PASS"}\n')
+
+    assert _sha256_frozen_path(evidence, repository_root=root) == hashlib.sha256(
+        b'{"status":"PASS"}\r\n'
+    ).hexdigest()
