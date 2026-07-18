@@ -78,8 +78,8 @@ def _load_yaml(path: Path) -> Mapping[str, object]:
 def _write_if_unchanged(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
-        existing = path.read_text(encoding="utf-8")
-        if existing != content:
+        existing = path.read_text(encoding="utf-8-sig")
+        if existing.lstrip("\ufeff") != content.lstrip("\ufeff"):
             raise FrozenArtifactHashError(f"immutable report refusal for {path.as_posix()}")
         return
     path.write_text(content, encoding="utf-8")

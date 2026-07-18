@@ -9,7 +9,7 @@ from pathlib import Path
 def test_source_freeze_is_reproducible_from_authoritative_builder(tmp_path: Path) -> None:
     root = Path(__file__).resolve().parents[2]
     freeze_path = root / "phase5_5/manifests/phase5_5_source_freeze.json"
-    freeze = json.loads(freeze_path.read_text(encoding="utf-8"))
+    freeze = json.loads(freeze_path.read_text(encoding="utf-8-sig"))
     regenerated = tmp_path / "source_freeze.json"
 
     completed = subprocess.run(

@@ -5,15 +5,20 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 
-def sha256(path: Path) -> str:
+def sha256(data: bytes) -> str:
     digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
+    digest.update(data)
     return digest.hexdigest()
+
+
+def committed_bytes(root: Path, source_commit: str, relative: str) -> bytes:
+    return subprocess.check_output(
+        ["git", "-C", str(root), "show", f"{source_commit}:{relative}"],
+    )
 
 
 def main() -> int:
@@ -46,7 +51,10 @@ def main() -> int:
         path = args.root / relative
         if not path.is_file():
             raise SystemExit(f"missing source-freeze input: {relative}")
-        files[relative] = sha256(path)
+        try:
+            files[relative] = sha256(committed_bytes(args.root, args.source_commit, relative))
+        except subprocess.CalledProcessError as exc:
+            raise SystemExit(f"source-freeze commit is missing bound file: {args.source_commit}:{relative}") from exc
     payload = {
         "artifact": "phase5_5_source_freeze",
         "official_dispatch": False,

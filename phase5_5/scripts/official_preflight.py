@@ -20,8 +20,10 @@ SLOTS = ("M1", "M2", "M3", "M4")
 BRANCHES = {slot: f"phase5_5-model-{slot.removeprefix('M')}" for slot in SLOTS}
 
 
-def digest(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+def digest(path: Path, *, root: Path, source_commit: str) -> str:
+    relative = path.relative_to(root).as_posix()
+    committed = subprocess.check_output(["git", "-C", str(root), "show", f"{source_commit}:{relative}"])
+    return hashlib.sha256(committed).hexdigest()
 
 
 def git_output(root: Path, *args: str) -> str:
@@ -49,13 +51,20 @@ def main() -> int:
     freeze_path = root / "phase5_5/manifests/phase5_5_source_freeze.json"
     freeze = json.loads(freeze_path.read_text(encoding="utf-8"))
     freeze_failures = []
+    source_commit = freeze.get("source_commit")
     for relative, expected in freeze["bound_files"].items():
         path = root / relative
         if not path.is_file():
             freeze_failures.append(f"missing:{relative}")
-        elif digest(path) != expected:
-            freeze_failures.append(f"hash:{relative}")
-    checks["source_freeze"] = {"source_commit": freeze.get("source_commit"), "bound_file_failures": freeze_failures}
+        else:
+            try:
+                actual = digest(path, root=root, source_commit=source_commit)
+            except subprocess.CalledProcessError:
+                freeze_failures.append(f"missing-commit-file:{relative}")
+            else:
+                if actual != expected:
+                    freeze_failures.append(f"hash:{relative}")
+    checks["source_freeze"] = {"source_commit": source_commit, "bound_file_failures": freeze_failures}
     failures.extend(f"source-freeze:{item}" for item in freeze_failures)
 
     status = git_output(root, "status", "--porcelain")
