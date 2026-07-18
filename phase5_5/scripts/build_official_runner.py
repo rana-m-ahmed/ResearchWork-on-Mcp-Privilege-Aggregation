@@ -81,6 +81,20 @@ if not hf_token:
     raise RuntimeError("Kaggle secret HF_TOKEN is empty; refusing official dispatch")
 os.environ["PHASE5_GITHUB_TOKEN"] = github_token
 os.environ["HF_TOKEN"] = hf_token
+from huggingface_hub import snapshot_download
+from phase5.runtime.model_backend_adapter import load_frozen_model_backend_identity
+
+backend_identity = load_frozen_model_backend_identity(root=REPO_ROOT)
+if backend_identity.model_id != MODEL_SLOT:
+    raise RuntimeError("frozen model slot does not match the selected official slot")
+print(f"MODEL_CACHE_PREP_START: {backend_identity.exact_model_identifier}", flush=True)
+cache_snapshot = snapshot_download(
+    repo_id=backend_identity.exact_model_identifier,
+    revision=backend_identity.huggingface_commit_sha,
+    token=hf_token,
+    cache_dir=os.environ["HF_HUB_CACHE"],
+)
+print(f"MODEL_CACHE_READY: {cache_snapshot}", flush=True)
 print("OFFICIAL_AUTHORIZED_PREFLIGHT_PASS")
 ''')
 
@@ -91,6 +105,9 @@ if not EXECUTE_OFFICIAL:
 elif preflight.get("pass") is not True:
     raise RuntimeError(f"official execution blocked by preflight failures: {preflight.get('failures')}")
 else:
+    import selectors
+    import time
+
     campaign_report = OUTPUT_ROOT / f"{MODEL_SLOT}_campaign.json"
     campaign_command = [
         sys.executable,
@@ -115,19 +132,60 @@ else:
         str(campaign_report),
     ]
     try:
-        completed = subprocess.run(campaign_command, cwd=REPO_ROOT, check=False, capture_output=True, text=True)
-        if completed.returncode != 0:
+        print("OFFICIAL_CAMPAIGN_START: model load and trial dispatch pending", flush=True)
+        started = time.monotonic()
+        process = subprocess.Popen(
+            campaign_command,
+            cwd=REPO_ROOT,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            bufsize=1,
+        )
+        selector = selectors.DefaultSelector()
+        assert process.stdout is not None
+        selector.register(process.stdout, selectors.EVENT_READ)
+        output_tail: list[str] = []
+        last_heartbeat = started
+        while True:
+            events = selector.select(timeout=30.0)
+            if events:
+                line = process.stdout.readline()
+                if line:
+                    line = line.rstrip("\\n")
+                    print(line, flush=True)
+                    output_tail.append(line)
+                    del output_tail[:-200:]
+            elif process.poll() is None:
+                elapsed = int(time.monotonic() - started)
+                gpu = subprocess.run(
+                    ["nvidia-smi", "--query-gpu=memory.used,utilization.gpu", "--format=csv,noheader,nounits"],
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                ).stdout.strip().replace("\\n", "; ")
+                print(f"OFFICIAL_CAMPAIGN_HEARTBEAT: elapsed_seconds={elapsed}; gpu={gpu or 'unavailable'}", flush=True)
+                last_heartbeat = time.monotonic()
+            if process.poll() is not None:
+                for remaining in process.stdout:
+                    line = remaining.rstrip("\\n")
+                    print(line, flush=True)
+                    output_tail.append(line)
+                    del output_tail[:-200:]
+                break
+        returncode = process.wait()
+        if returncode != 0:
             campaign_error = {
                 "artifact": "phase5_5_official_campaign_failure",
-                "returncode": completed.returncode,
-                "stderr_tail": completed.stderr[-10000:],
+                "returncode": returncode,
+                "output_tail": output_tail,
             }
             (OUTPUT_ROOT / f"{MODEL_SLOT}_campaign_error.json").write_text(
                 json.dumps(campaign_error, indent=2, sort_keys=True) + "\\n", encoding="utf-8"
             )
-            print(f"OFFICIAL_CAMPAIGN_FAILED; preserved evidence will still be published: {completed.returncode}")
+            print(f"OFFICIAL_CAMPAIGN_FAILED; preserved evidence will still be published: {returncode}", flush=True)
         else:
-            print(f"OFFICIAL_CAMPAIGN_COMPLETE: {campaign_report}")
+            print(f"OFFICIAL_CAMPAIGN_COMPLETE: {campaign_report}", flush=True)
     except Exception as exc:
         campaign_error = {"artifact": "phase5_5_official_campaign_failure", "error": str(exc)}
         (OUTPUT_ROOT / f"{MODEL_SLOT}_campaign_error.json").write_text(
