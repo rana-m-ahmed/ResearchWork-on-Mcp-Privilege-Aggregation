@@ -578,6 +578,7 @@ def run_campaign(
     max_batches: int | None = None,
     batch_processor: Callable[[CampaignBatchPlan, float], CampaignBatchResult] | None = None,
     plan_only: bool = False,
+    target_batch_id: str | None = None,
 ) -> tuple[CampaignSession, CampaignRunReport]:
     if max_batches is not None and max_batches <= 0:
         raise SchemaInvariantError("max_batches must be positive when provided")
@@ -627,6 +628,10 @@ def run_campaign(
     stop_reason = "complete"
     interrupted = False
     remaining_batches = list(plan.batches)
+    if target_batch_id is not None:
+        if target_batch_id not in {batch.batch_id for batch in remaining_batches}:
+            raise MissingFrozenSettingError(f"requested frozen batch is not present in the active plan: {target_batch_id}")
+        remaining_batches = [batch for batch in remaining_batches if batch.batch_id == target_batch_id]
     if operational_session.processed_batch_ids:
         remaining_batches = [batch for batch in remaining_batches if batch.batch_id not in operational_session.processed_batch_ids]
 

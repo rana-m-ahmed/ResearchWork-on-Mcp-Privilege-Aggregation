@@ -188,7 +188,7 @@ def test_null_payload_compile_matches_golden_fixture() -> None:
 
     expected_prompt = (FIXTURE_ROOT / "compiled_prompt_null_payload.txt").read_bytes()
     expected_metadata = json.loads((FIXTURE_ROOT / "compiled_prompt_null_payload_metadata.json").read_text(encoding="utf-8"))
-    expected_metadata["tokenizer_identity"] = "Qwen/Qwen2.5-7B-Instruct"
+    expected_metadata["tokenizer_identity"] = load_frozen_tokenizer_identity()
     expected_turn_counts = json.loads((FIXTURE_ROOT / "token_counts_per_turn_null_payload.json").read_text(encoding="utf-8"))
 
     assert artifact.prompt_bytes == expected_prompt
@@ -370,7 +370,7 @@ def test_history_and_tool_results_are_serialized_verbatim() -> None:
 
 
 def test_frozen_tokenizer_identity_is_loaded_from_registry() -> None:
-    assert load_frozen_tokenizer_identity() == "Qwen/Qwen2.5-7B-Instruct"
+    assert load_frozen_tokenizer_identity() == "mistralai/Mistral-7B-Instruct-v0.3"
 
 
 def test_backend_identity_failure_fails_closed(monkeypatch: pytest.MonkeyPatch) -> None:

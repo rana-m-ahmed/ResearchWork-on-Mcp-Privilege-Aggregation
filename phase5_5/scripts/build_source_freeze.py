@@ -25,7 +25,17 @@ def main() -> int:
     paths = (
         "phase5/manifests/batch_partition_manifest_v3.json",
         "phase5/manifests/model_runtime_authority_v2.json",
-        "phase5/validation/official_evidence_branch_mapping.json",
+        "phase5/implementation/prompts/task_execution_template.md",
+        "phase5/attempts/schemas/attempt_workspace_metadata.schema.json",
+        "docs/Phase5_Revised_Execution_Plan_v3_2.md",
+        "phase5/grading/frozen_grader.py",
+        "phase5/runtime/agent_loop.py",
+        "phase5/runtime/engine.py",
+        "phase5_5/parser.py",
+        "phase5_5/runtime.py",
+        "phase5_5/scripts/rebuild_historical_closure.py",
+        "phase5_5/configs/frozen_state_machine_controls.json",
+        "phase5_5/configs/branch_mapping.json",
         "phase5_5/configs/model_roster.json",
         "phase5_5/configs/evidence_policy.json",
     )
@@ -44,7 +54,9 @@ def main() -> int:
         "bound_files": files,
         "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
         "model_authority": "phase5/manifests/model_runtime_authority_v2.json",
-        "parser_version": "phase5.5-parser-v1",
+        "parser_version": "phase5.5-parser-v2",
+        "multiple_tool_call_policy": "serial",
+        "extraction_contract": "ordered_non_overlapping_top_level_candidates",
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")

@@ -132,10 +132,12 @@ def _sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def load_frozen_tokenizer_identity(root: Path | None = None) -> str:
+def load_frozen_tokenizer_identity(root: Path | None = None, *, model_slot: str | None = None) -> str:
     """Resolve the tokenizer from the same selected-model authority as the backend."""
 
-    return load_frozen_model_backend_identity(root).tokenizer_identity
+    if model_slot is None:
+        return load_frozen_model_backend_identity(root).tokenizer_identity
+    return load_frozen_model_backend_identity(root, model_slot=model_slot).tokenizer_identity
 
 
 def _tokenizer_name(tokenizer: Any) -> str | None:
@@ -157,10 +159,15 @@ def build_exact_tokenizer(
     tokenizer_loader: Callable[..., Any] | None = None,
     local_files_only: bool = False,
     revision: str | None = None,
+    model_slot: str | None = None,
 ) -> Any:
     """Load the exact frozen tokenizer or fail closed."""
 
-    tokenizer_identity = load_frozen_tokenizer_identity(root)
+    tokenizer_identity = (
+        load_frozen_tokenizer_identity(root)
+        if model_slot is None
+        else load_frozen_tokenizer_identity(root, model_slot=model_slot)
+    )
     try:
         if tokenizer_loader is None:
             try:

@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Sequence
 
 from . import __version__
-from .campaign import build_dashboard, build_resume_plan, run_campaign
+from .campaign import build_dashboard, build_resume_plan, load_campaign_plan, run_campaign
 from .gate0 import run_gate0
 from .kaggle import plan_kaggle_runs
 from .domain.errors import (
@@ -98,8 +98,8 @@ def build_parser() -> argparse.ArgumentParser:
     run_campaign.add_argument("--run-id", required=False)
     run_campaign.add_argument("--utcdate", required=False)
     run_campaign.add_argument("--until-safety-horizon", action="store_true")
-    run_campaign.add_argument("--batch-manifest", required=False, default="phase5/manifests/batch_partition_manifest_v2.json")
-    run_campaign.add_argument("--run-plan", required=False, default="phase5/validation/kaggle_run_plan_v2.json")
+    run_campaign.add_argument("--batch-manifest", required=False, default="phase5/manifests/batch_partition_manifest_v3.json")
+    run_campaign.add_argument("--run-plan", required=False, default="phase5/validation/kaggle_run_plan_v3.json")
     run_campaign.add_argument("--output", required=False)
     campaign_mode = run_campaign.add_mutually_exclusive_group(required=False)
     campaign_mode.add_argument("--official", action="store_true")
@@ -130,6 +130,9 @@ def build_parser() -> argparse.ArgumentParser:
     run_batch.add_argument("--model-slot", required=True)
     run_batch.add_argument("--run-id", required=True)
     run_batch.add_argument("--seal-epoch", required=True, type=int)
+    run_batch.add_argument("--batch-manifest", required=False, default="phase5/manifests/batch_partition_manifest_v3.json")
+    run_batch.add_argument("--run-plan", required=False, default="phase5/validation/kaggle_run_plan_v3.json")
+    run_batch.add_argument("--output", required=False)
 
     validate_batch = add_planned_command("validate-batch", "Validate a frozen batch contract.")
     validate_batch.add_argument("--batch-id", required=False)
@@ -356,16 +359,17 @@ def main(argv: Sequence[str] | None = None) -> int:
                 from phase5.attempts import AttemptLineageStore
                 
                 is_official = getattr(args, "official", False)
+                mslot = _parse_model_slot(args.model_slot)
                 pipeline = SharedExecutionEngine(
                     official_trial=is_official,
                     counts_for_phase5=is_official,
                     publication_evidence=is_official,
                     synthetic_fixture=not is_official,
                     dataset_version=args.dataset_version,
+                    model_slot=mslot.value,
                     root=Path.cwd(),
                 )
                 
-                mslot = _parse_model_slot(args.model_slot)
                 run_id = getattr(args, "run_id", None)
                 
                 # Open session temporarily to pass to adapter
@@ -403,7 +407,60 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if args.command == "run-batch":
         try:
-            pass
+            from phase5.runtime.engine import SharedExecutionEngine
+            from phase5.runtime.official_execution import RepositoryBatchExecutionAdapter
+            from phase5.queues.frozen_queue_loader import load_frozen_queue_bundle
+            from phase5.attempts import AttemptLineageStore
+
+            pipeline = SharedExecutionEngine(
+                official_trial=True,
+                counts_for_phase5=True,
+                publication_evidence=True,
+                synthetic_fixture=False,
+                dataset_version=args.dataset_version,
+                model_slot=_parse_model_slot(args.model_slot).value,
+                root=Path.cwd(),
+            )
+            plan = load_campaign_plan(
+                model_slot=_parse_model_slot(args.model_slot),
+                run_plan_path=Path(args.run_plan),
+                batch_manifest_path=Path(args.batch_manifest),
+                root=Path.cwd(),
+            )
+            batch = next((item for item in plan.batches if item.batch_id == args.batch_id), None)
+            if batch is None:
+                raise MissingFrozenSettingError(f"requested frozen batch is not present: {args.batch_id}")
+            session = CampaignSession.open(
+                model_slot=_parse_model_slot(args.model_slot),
+                batch_id=args.batch_id,
+                run_id=args.run_id,
+                phase5_session=Phase5Session.initial(),
+                batch_manifest_sha256=plan.batch_manifest_sha256,
+                run_plan_sha256=plan.run_plan_sha256,
+            ).seal()
+            adapter = RepositoryBatchExecutionAdapter(
+                queue_bundle=load_frozen_queue_bundle(),
+                pipeline=pipeline,
+                lineage_store=AttemptLineageStore(Path("phase5_5/evidence/lineage.csv")),
+                session=session,
+                dataset_version=args.dataset_version,
+                official_mode=True,
+                real_execution_adapter=True,
+            )
+            _, report = run_campaign(
+                model_slot=_parse_model_slot(args.model_slot),
+                run_id=args.run_id,
+                until_safety_horizon=True,
+                batch_manifest_path=Path(args.batch_manifest),
+                run_plan_path=Path(args.run_plan),
+                root=Path.cwd(),
+                session=session,
+                batch_processor=adapter,
+                max_batches=1,
+                target_batch_id=args.batch_id,
+            )
+            _write_json_md_report(report, getattr(args, "output", None), Path("phase5_5/reports/last_batch_report.json"))
+            return int(ExitCode.SUCCESS)
         except Phase5Error as exc:
             print(f"BATCH_FAILURE: {exc}", file=sys.stderr)
             return int(exc.exit_code)
