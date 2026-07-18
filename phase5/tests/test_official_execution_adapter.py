@@ -239,6 +239,57 @@ def test_official_invalid_batch_is_not_labeled_synthetic(tmp_path: Path) -> None
     assert all(record.attempt_status == "INVALID" for record in store.load_records())
 
 
+def test_resume_skips_already_completed_invalid_targets(tmp_path: Path) -> None:
+    plan = load_campaign_plan(model_slot="M1")
+    store = AttemptLineageStore(tmp_path / "lineage.csv")
+    first_pipeline = OfficialRealPipeline(tmp_path / "first", invalid_reason="parser failure")
+    first_adapter = RepositoryBatchExecutionAdapter(
+        queue_bundle=load_frozen_queue_bundle(),
+        pipeline=first_pipeline,
+        lineage_store=store,
+        session=_sealed_session(),
+        dataset_version=plan.dataset_version,
+        official_mode=True,
+    )
+    first_adapter(plan.batches[0], plan.p95_trial_seconds)
+
+    resumed_pipeline = OfficialRealPipeline(tmp_path / "resumed", invalid_reason="parser failure")
+    resumed_adapter = RepositoryBatchExecutionAdapter(
+        queue_bundle=load_frozen_queue_bundle(),
+        pipeline=resumed_pipeline,
+        lineage_store=store,
+        session=_sealed_session(),
+        dataset_version=plan.dataset_version,
+        official_mode=True,
+    )
+    result = resumed_adapter(plan.batches[0], plan.p95_trial_seconds)
+
+    assert resumed_pipeline.calls == []
+    assert result.accepted_count == 0
+    assert len(store.load_records()) == plan.batches[0].row_count
+
+
+def test_checkpoint_callback_is_trial_bounded_and_flushes_batch_tail(tmp_path: Path) -> None:
+    plan = load_campaign_plan(model_slot="M1")
+    pipeline = SyntheticRealPipeline(tmp_path / "attempts")
+    store = AttemptLineageStore(tmp_path / "lineage.csv")
+    callbacks: list[tuple[str, int]] = []
+    adapter = RepositoryBatchExecutionAdapter(
+        queue_bundle=load_frozen_queue_bundle(),
+        pipeline=pipeline,
+        lineage_store=store,
+        session=_sealed_session(),
+        dataset_version=plan.dataset_version,
+        checkpoint_callback=lambda batch, record, count: callbacks.append((record.target_trial_id, count)),
+        checkpoint_interval_trials=6,
+    )
+
+    adapter(plan.batches[0], plan.p95_trial_seconds)
+
+    assert len(callbacks) == 9
+    assert callbacks[-1][1] == plan.batches[0].row_count
+
+
 def test_orphan_replacement_uses_new_attempt_and_parent_lineage(tmp_path: Path) -> None:
     plan = load_campaign_plan(model_slot="M1")
     pipeline = SyntheticRealPipeline(tmp_path / "attempts", orphan_first=True)
