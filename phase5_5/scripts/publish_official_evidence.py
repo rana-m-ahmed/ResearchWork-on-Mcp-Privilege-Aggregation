@@ -23,7 +23,10 @@ def sha256(path: Path) -> str:
 
 
 def status_paths(root: Path) -> list[str]:
-    status = subprocess.check_output(["git", "-C", str(root), "status", "--porcelain"], text=True)
+    status = subprocess.check_output(
+        ["git", "-C", str(root), "status", "--porcelain", "--untracked-files=all"],
+        text=True,
+    )
     paths = []
     for line in status.splitlines():
         if line.strip():
