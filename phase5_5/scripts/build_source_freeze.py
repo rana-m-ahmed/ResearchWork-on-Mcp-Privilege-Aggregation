@@ -25,6 +25,7 @@ def main() -> int:
     paths = (
         "phase5/manifests/batch_partition_manifest_v3.json",
         "phase5/manifests/model_runtime_authority_v2.json",
+        "phase5/configs/upstream_artifact_registry.json",
         "phase5/implementation/prompts/task_execution_template.md",
         "phase5/attempts/schemas/attempt_workspace_metadata.schema.json",
         "docs/Phase5_Revised_Execution_Plan_v3_2.md",

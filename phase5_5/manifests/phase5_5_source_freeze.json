@@ -3,6 +3,7 @@
   "bound_files": {
     "docs/Phase5_Revised_Execution_Plan_v3_2.md": "8bec5d176ccbe3846730fe3f56f7a7c5f9c9e3eff30ab19e950eeb8d476f3a6d",
     "phase5/attempts/schemas/attempt_workspace_metadata.schema.json": "a27a8a5ffcbc0fbc0303144e37fb5da09c87a99508ecbbef451c46a4dd6eb417",
+    "phase5/configs/upstream_artifact_registry.json": "bad093b1aaedfb3abd1daf016df82028585d3703ba55c4c34240967a9b2949ec",
     "phase5/grading/frozen_grader.py": "d38823d787c9fca6ed236bf2d076f8ec220547be402d950a15da0b2504d981f8",
     "phase5/implementation/prompts/task_execution_template.md": "9ad2763134fd5e70f7a17ad0ecf1c0c80cd2f58008452b3e804dd12098c31431",
     "phase5/manifests/batch_partition_manifest_v3.json": "a26d62fc1f0796171285907c9ffd484e1523c01be18365cf918fd99dbef552ed",
@@ -25,5 +26,5 @@
   "publication_evidence": false,
   "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
   "scientific_inputs_regenerated": false,
-  "source_commit": "b2e14827"
+  "source_commit": "9ec95edd"
 }
