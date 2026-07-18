@@ -80,13 +80,15 @@ class ExtractionResult:
     native_format: str
     canonical_json_compliant: bool
     parsed_call: ParsedToolCall | None = None
+    parsed_calls: tuple[ParsedToolCall, ...] = ()
+    candidate_spans: tuple[tuple[int, int], ...] = ()
     diagnostic: str | None = None
     candidate_count: int = 0
     metadata: Mapping[str, Any] = field(default_factory=dict)
 
     @property
     def valid(self) -> bool:
-        return self.status is ParserStatus.VALID_EXTRACTED_CALL and self.parsed_call is not None
+        return self.status is ParserStatus.VALID_EXTRACTED_CALL and bool(self.parsed_calls)
 
     def to_mapping(self) -> dict[str, Any]:
         return {
@@ -96,6 +98,8 @@ class ExtractionResult:
             "metadata": dict(self.metadata),
             "native_format": self.native_format,
             "parsed_call": self.parsed_call.to_mapping() if self.parsed_call else None,
+            "parsed_calls": [item.to_mapping() for item in self.parsed_calls],
+            "candidate_spans": [list(item) for item in self.candidate_spans],
             "parser_version": self.parser_version,
             "raw_text": self.raw_text,
             "status": self.status.value,
@@ -193,8 +197,8 @@ def _candidate_objects(text: str) -> list[tuple[int, int, Mapping[str, Any]]]:
     return candidates
 
 
-def _text_candidates(text: str) -> tuple[list[tuple[str, Mapping[str, Any]]], bool]:
-    candidates: list[tuple[str, Mapping[str, Any]]] = []
+def _text_candidates(text: str) -> tuple[list[tuple[int, int, str, Mapping[str, Any]]], bool]:
+    candidates: list[tuple[int, int, str, Mapping[str, Any]]] = []
     nested = False
     for match in _TOOL_CALL_START.finditer(text):
         if _is_inside_string(text, match.start()):
@@ -231,7 +235,7 @@ def _text_candidates(text: str) -> tuple[list[tuple[str, Mapping[str, Any]]], bo
             close += 1
         if close >= len(text) or text[close] != ")":
             continue
-        candidates.append((tool_name, arguments))
+        candidates.append((match.start(), close + 1, tool_name, arguments))
     return candidates, nested
 
 
@@ -244,6 +248,9 @@ def _result(
     parser_version: str,
     diagnostic: str,
     count: int,
+    parsed_calls: tuple[ParsedToolCall, ...] = (),
+    candidate_spans: tuple[tuple[int, int], ...] = (),
+    metadata: Mapping[str, Any] = {},
 ) -> ExtractionResult:
     return ExtractionResult(
         raw_text=raw_text,
@@ -253,16 +260,20 @@ def _result(
         canonical_json_compliant=canonical,
         diagnostic=diagnostic,
         candidate_count=count,
+        parsed_calls=parsed_calls,
+        parsed_call=parsed_calls[0] if parsed_calls else None,
+        candidate_spans=candidate_spans,
+        metadata=metadata,
     )
 
 
 def extract_tool_call(
     raw_text: str,
     *,
-    parser_version: str = "phase5.5-parser-v1",
+    parser_version: str = "phase5.5-parser-v2",
     generation_evidence: Mapping[str, Any] | GenerationEvidence | None = None,
 ) -> ExtractionResult:
-    """Extract one explicit tool call without rewriting the source text."""
+    """Extract ordered, explicit, non-overlapping tool calls without repair."""
 
     if not isinstance(raw_text, str) or not raw_text:
         return _result(
@@ -299,25 +310,17 @@ def extract_tool_call(
                 diagnostic=str(exc),
                 count=1,
             )
-        if len(parsed.tool_calls) == 1:
+        if len(parsed.tool_calls) >= 1:
+            calls = tuple(parsed.tool_calls)
             return ExtractionResult(
                 raw_text=raw_text,
                 parser_version=parser_version,
                 status=ParserStatus.VALID_EXTRACTED_CALL,
                 native_format="canonical_json",
                 canonical_json_compliant=True,
-                parsed_call=parsed.tool_calls[0],
-                candidate_count=1,
-            )
-        if len(parsed.tool_calls) > 1:
-            return _result(
-                raw_text,
-                status=ParserStatus.AMBIGUOUS_MULTIPLE_CANDIDATES,
-                native_format="canonical_json",
-                canonical=True,
-                parser_version=parser_version,
-                diagnostic="canonical envelope contains multiple tool calls",
-                count=len(parsed.tool_calls),
+                parsed_call=calls[0],
+                parsed_calls=calls,
+                candidate_count=len(calls),
             )
         return _result(
             raw_text,
@@ -327,6 +330,8 @@ def extract_tool_call(
             parser_version=parser_version,
             diagnostic="canonical envelope contains no tool invocation",
             count=0,
+            parsed_calls=(),
+            metadata={"terminal_response": parsed.terminal_response},
         )
 
     text_calls, nested = _text_candidates(raw_text)
@@ -342,62 +347,92 @@ def extract_tool_call(
             diagnostic="structurally nested tool invocation detected",
             count=max(2, candidate_count),
         )
-    if len(text_calls) > 1 or len(object_candidates) > 1 or (text_calls and object_candidates):
+    if text_calls and object_candidates:
         return _result(
             raw_text,
             status=ParserStatus.AMBIGUOUS_MULTIPLE_CANDIDATES,
             native_format="mixed_text",
             canonical=False,
             parser_version=parser_version,
-            diagnostic="more than one explicit tool invocation candidate found",
+            diagnostic="textual and JSON invocation candidates overlap in the same output",
             count=candidate_count,
         )
-    if len(text_calls) == 1:
-        tool_name, arguments = text_calls[0]
+    if len(text_calls) > 0:
+        calls = tuple(
+            ParsedToolCall(call_index=index, tool_name=tool_name, arguments=arguments)
+            for index, (_, _, tool_name, arguments) in enumerate(text_calls)
+        )
         return ExtractionResult(
             raw_text=raw_text,
             parser_version=parser_version,
             status=ParserStatus.VALID_EXTRACTED_CALL,
             native_format="textual_invocation",
             canonical_json_compliant=False,
-            parsed_call=ParsedToolCall(call_index=0, tool_name=tool_name, arguments=arguments),
-            candidate_count=1,
+            parsed_call=calls[0],
+            parsed_calls=calls,
+            candidate_count=len(calls),
+            candidate_spans=tuple((start, end) for start, end, _, _ in text_calls),
         )
-    if len(object_candidates) == 1:
-        _, _, payload = object_candidates[0]
-        try:
-            parsed = parse_model_output(payload, parser_version=parser_version)
-        except ModelOutputFailure as exc:
-            return _result(
-                raw_text,
-                status=ParserStatus.SCHEMA_INVALID_CALL,
-                native_format="embedded_json",
-                canonical=False,
-                parser_version=parser_version,
-                diagnostic=str(exc),
-                count=1,
-            )
-        if len(parsed.tool_calls) == 1:
-            return ExtractionResult(
-                raw_text=raw_text,
-                parser_version=parser_version,
-                status=ParserStatus.VALID_EXTRACTED_CALL,
-                native_format="embedded_json",
-                canonical_json_compliant=False,
-                parsed_call=parsed.tool_calls[0],
-                candidate_count=1,
-            )
-        if len(parsed.tool_calls) > 1:
-            return _result(
-                raw_text,
-                status=ParserStatus.AMBIGUOUS_MULTIPLE_CANDIDATES,
-                native_format="embedded_json",
-                canonical=False,
-                parser_version=parser_version,
-                diagnostic="embedded JSON contains multiple tool calls",
-                count=len(parsed.tool_calls),
-            )
-
+    if object_candidates:
+        spans = tuple((start, end) for start, end, _ in object_candidates)
+        for index, (start, end, _) in enumerate(object_candidates):
+            if any(
+                other_start <= start and end <= other_end and (other_start, other_end) != (start, end)
+                for other_start, other_end, _ in object_candidates
+            ):
+                return _result(
+                    raw_text,
+                    status=ParserStatus.AMBIGUOUS_NESTED_CANDIDATE,
+                    native_format="embedded_json",
+                    canonical=False,
+                    parser_version=parser_version,
+                    diagnostic="a JSON invocation candidate is structurally nested in another candidate",
+                    count=len(object_candidates),
+                    candidate_spans=spans,
+                )
+        parsed_calls: list[ParsedToolCall] = []
+        for start, end, payload in object_candidates:
+            try:
+                parsed = parse_model_output(payload, parser_version=parser_version)
+            except ModelOutputFailure as exc:
+                return _result(
+                    raw_text,
+                    status=ParserStatus.SCHEMA_INVALID_CALL,
+                    native_format="embedded_json",
+                    canonical=False,
+                    parser_version=parser_version,
+                    diagnostic=str(exc),
+                    count=len(object_candidates),
+                    candidate_spans=spans,
+                )
+            if not parsed.tool_calls:
+                return _result(
+                    raw_text,
+                    status=ParserStatus.NO_INVOCATION_FOUND,
+                    native_format="embedded_json",
+                    canonical=False,
+                    parser_version=parser_version,
+                    diagnostic="embedded JSON contains no tool invocation",
+                    count=0,
+                    candidate_spans=spans,
+                )
+            parsed_calls.extend(parsed.tool_calls)
+        calls = tuple(
+            ParsedToolCall(call_index=index, tool_name=call.tool_name, arguments=call.arguments,
+                           tool_call_id=call.tool_call_id, metadata=call.metadata)
+            for index, call in enumerate(parsed_calls)
+        )
+        return ExtractionResult(
+            raw_text=raw_text,
+            parser_version=parser_version,
+            status=ParserStatus.VALID_EXTRACTED_CALL,
+            native_format="embedded_json",
+            canonical_json_compliant=False,
+            parsed_call=calls[0],
+            parsed_calls=calls,
+            candidate_count=len(calls),
+            candidate_spans=spans,
+        )
     if evidence.budget_exhausted and ("{" in raw_text or "tool_call" in raw_text):
         status = ParserStatus.MODEL_OUTPUT_TRUNCATED_BY_BUDGET
         diagnostic = "authoritative generation evidence reports budget or turn-limit exhaustion"

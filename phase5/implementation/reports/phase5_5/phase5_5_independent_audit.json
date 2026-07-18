@@ -1,0 +1,40 @@
+{
+  "audit_date": "2026-07-18",
+  "verdict": "NO-GO / BLOCKED",
+  "focused_phase5_5_tests": "23 passed",
+  "historical_closure_records": 3250,
+  "historical_lineage_ids_reconciled": true,
+  "historical_closure_artifact_hashes_checked": 68250,
+  "historical_closure_artifact_hash_mismatches": 13000,
+  "historical_closure_hash_mismatch_files": [
+    "attempt_manifest.json",
+    "evidence_hash_index.jsonl",
+    "model_outputs.jsonl",
+    "parser_events.jsonl"
+  ],
+  "historical_branch_attempts": {
+    "phase5-model-2": 750,
+    "phase5-model-3": 2500,
+    "phase5-model-1": 0,
+    "phase5-model-4": 0
+  },
+  "dataset_versions": {
+    "batch_partition_manifest_v3": "P5-DV-1.0.2-A7C91E42",
+    "official_evidence_branch_mapping": "P5-DV-1.0.1-A7C91E42"
+  },
+  "production_parser_wired": false,
+  "privilege_aggregation_grader_wired": false,
+  "phase5_5_qualification_evidence_present": false,
+  "gate0_current_checkout": "FAIL_DIRTY_WORKTREE",
+  "gates": {
+    "A": "FAIL",
+    "B": "CONDITIONAL",
+    "C": "NOT_PROVEN",
+    "D": "FAIL",
+    "E": "FAIL",
+    "F": "FAIL",
+    "G": "FAIL",
+    "H": "FAIL",
+    "I": "BLOCKED"
+  }
+}

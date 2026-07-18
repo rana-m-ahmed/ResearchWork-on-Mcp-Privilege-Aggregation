@@ -16,7 +16,7 @@ from ..evidence import AttemptEvent, AttemptEventLogWriter, AttemptEventType
 from ..evidence.io import append_jsonl_record
 from ..evidence.workspace import AttemptWorkspaceMetadata
 from ..guards import repo_root
-from .parser_adapter import ModelOutputFailure, ParsedModelOutput, ParsedToolCall, parse_model_output, serialize_parsed_output
+from .parser_adapter import ParsedModelOutput, ParsedToolCall, serialize_parsed_output
 from .prompt_compiler import CompiledPromptArtifact, compile_frozen_prompt
 from .prompt_serialization import ConversationTurn
 from .tool_dispatch import (
@@ -268,11 +268,15 @@ def _load_string(value: Any, label: str) -> str:
     return value
 
 
-def load_frozen_state_machine_controls(root: Path | None = None) -> FrozenStateMachineControls:
+def load_frozen_state_machine_controls(
+    root: Path | None = None,
+    *,
+    registry_path: Path | None = None,
+) -> FrozenStateMachineControls:
     """Load the frozen controls from the registry and fail closed on missing values."""
 
     repository_root = (root or repo_root()).resolve()
-    registry_path = repository_root / "phase5" / "configs" / "frozen_state_machine_controls_v2.json"
+    registry_path = registry_path or repository_root / "phase5" / "configs" / "frozen_state_machine_controls_v2.json"
     if not registry_path.is_file():
         raise MissingFrozenSettingError(f"frozen state machine controls registry is missing: {registry_path.as_posix()}")
     
@@ -418,6 +422,8 @@ def run_frozen_agent_loop(
     lineage_callable: Callable[[], Any] | None = None,
 ) -> AgentLoopExecutionRecord:
     """Run the frozen multi-turn loop until evidence-ready termination."""
+
+    from phase5_5.parser import extract_tool_call
 
     if getattr(reset_executor, "workspace", None) is not None and reset_executor.workspace != workspace:
         raise SchemaInvariantError("reset executor workspace does not match the attempt workspace")
@@ -664,22 +670,50 @@ def run_frozen_agent_loop(
             description="PARSE_MODEL_OUTPUT",
             details={"turn_index": turn_count},
         )
-        try:
-            parsed_output = parse_model_output(raw_model_output, parser_version=controls.parser_version)
-        except ModelOutputFailure as exc:
+        parser_result = extract_tool_call(
+            raw_output_text,
+            parser_version=controls.parser_version or "phase5.5-parser-v1",
+            generation_evidence=generation_receipt,
+        )
+        terminal_from_parser = parser_result.metadata.get("terminal_response")
+        if not parser_result.valid and isinstance(terminal_from_parser, str):
+            parsed_output = ParsedModelOutput(
+                raw_text=raw_output_text,
+                parser_version=controls.parser_version,
+                terminal_response=terminal_from_parser,
+                tool_calls=(),
+                metadata={"phase5_5_parser_status": parser_result.status.value},
+                payload={},
+            )
+        elif not parser_result.valid:
+            exc = parser_result.diagnostic or parser_result.status.value
             termination_reason = controls.malformed_output_policy
             termination_state = "S12"
-            notes.append(str(exc))
+            notes.append(f"{parser_result.status.value}: {exc}")
             append_jsonl_record(
                 parser_events_path,
                 {
                     "event_type": "PARSE_FAILURE",
-                    "reason": controls.malformed_output_policy,
-                    "details": str(exc),
+                    "reason": parser_result.status.value,
+                    "details": exc,
                     "turn_index": turn_count,
+                    "candidate_count": parser_result.candidate_count,
                 },
             )
             break
+        else:
+            parsed_output = ParsedModelOutput(
+                raw_text=raw_output_text,
+                parser_version=controls.parser_version,
+                terminal_response=None,
+                tool_calls=parser_result.parsed_calls,
+                metadata={
+                    "phase5_5_parser_status": parser_result.status.value,
+                    "canonical_json_compliant": parser_result.canonical_json_compliant,
+                    "candidate_spans": [list(span) for span in parser_result.candidate_spans],
+                },
+                payload={},
+            )
         parsed_outputs.append(parsed_output)
         history.append(
             ConversationTurn(
@@ -687,7 +721,10 @@ def run_frozen_agent_loop(
                 role="assistant",
                 content=parsed_output.raw_text,
                 turn_kind="model_output",
-                metadata={"parser_version": controls.parser_version},
+                metadata={
+                    "parser_version": controls.parser_version,
+                    "phase5_5_parser_status": parser_result.status.value,
+                },
             )
         )
         append_jsonl_record(

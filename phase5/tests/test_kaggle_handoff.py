@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 import subprocess
@@ -105,7 +105,7 @@ def test_m4_reconciled_run_plan_is_active_and_evidence_bound() -> None:
     assert recon["official_trials_executed"] == 0
     assert m4_plan["model_load_status"] == "LOAD_SUCCESS"
     assert m4_status["status"] == "LOAD_SUCCESS"
-    assert plan["dataset_version"] == "P5-DV-1.0.1-A7C91E42"
+    assert plan["dataset_version"] == "P5-DV-1.0.2-A7C91E42"
     assert {
         "label": "M4 loader status reconciliation",
         "sha256": "b3893e14ac5203f3021f128ffd4f13f49af19a745eaca74a9a4664d12fefb112",
@@ -251,3 +251,4 @@ def test_final_closure_plan_requires_reverify_before_reseal() -> None:
         "session-reverify",
         "session-seal",
     ]
+

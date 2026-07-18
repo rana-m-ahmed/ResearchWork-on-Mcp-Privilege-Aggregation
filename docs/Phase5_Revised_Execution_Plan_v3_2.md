@@ -1144,6 +1144,8 @@ primary_outcome_class
 
 Aliases such as `tool_density`, `metadata_surface`, `defense_state`, or `taxonomy_state` are prohibited in authoritative raw rows.
 
+`ORPHANED_INVALID` is a lineage/forensic-status value only; it is not a ninth class in the frozen eight-class `primary_outcome_class` taxonomy.
+
 ## 12.4 Derived Views
 
 A compact analytics table may be generated after Phase 5 completion, but it must:

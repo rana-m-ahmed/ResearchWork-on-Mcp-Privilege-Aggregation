@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from pathlib import Path
 
@@ -77,7 +77,7 @@ def _prepare_frozen_model_root(tmp_path: Path, *, mutate: tuple[Path, tuple[str,
         "phase5/configs/upstream_artifact_registry.json",
         "phase5/manifests/model_runtime_authority_v2.json",
         "phase4/configs/model_set_freeze.yaml",
-        "phase4/configs/model_1_freeze.yaml",
+        "phase4/configs/model_3_freeze.yaml",
         "phase4_5/configs/phase45_selected_model.yaml",
         "phase4_5/configs/phase45_local_dryrun.yaml",
     ):
@@ -93,12 +93,12 @@ def _prepare_frozen_model_root(tmp_path: Path, *, mutate: tuple[Path, tuple[str,
 def test_load_frozen_model_backend_identity_matches_frozen_inputs() -> None:
     identity = load_frozen_model_backend_identity()
 
-    assert identity.model_id == "M1"
-    assert identity.exact_model_identifier == "Qwen/Qwen2.5-7B-Instruct"
+    assert identity.model_id == "M3"
+    assert identity.exact_model_identifier == "mistralai/Mistral-7B-Instruct-v0.3"
     assert identity.quantization == "float16"
     assert identity.backend == "transformers"
     assert identity.backend_version == "transformers==5.0.0"
-    assert identity.tokenizer_identity == "Qwen/Qwen2.5-7B-Instruct"
+    assert identity.tokenizer_identity == "mistralai/Mistral-7B-Instruct-v0.3"
     assert identity.model_digest == "UNAVAILABLE_NOT_RECORDED_IN_PHASE3"
     assert identity.model_digest_is_placeholder is True
 
@@ -108,13 +108,13 @@ def test_adapter_accepts_exact_runtime_snapshot() -> None:
 
     adapter.validate_runtime_snapshot(
         {
-            "model_id": "M1",
-            "exact_model_identifier": "Qwen/Qwen2.5-7B-Instruct",
+            "model_id": "M3",
+            "exact_model_identifier": "mistralai/Mistral-7B-Instruct-v0.3",
             "model_digest": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
             "quantization": "float16",
             "backend": "transformers",
             "backend_version": "transformers==5.0.0",
-            "tokenizer_identity": "Qwen/Qwen2.5-7B-Instruct",
+            "tokenizer_identity": "mistralai/Mistral-7B-Instruct-v0.3",
             "ollama_version": None,
         }
     )
@@ -126,13 +126,13 @@ def test_adapter_rejects_placeholder_runtime_digest() -> None:
     with pytest.raises(RuntimeMismatchError):
         adapter.validate_runtime_snapshot(
             {
-                "model_id": "M1",
-                "exact_model_identifier": "Qwen/Qwen2.5-7B-Instruct",
+                "model_id": "M3",
+                "exact_model_identifier": "mistralai/Mistral-7B-Instruct-v0.3",
                 "model_digest": "UNAVAILABLE_NOT_RECORDED_IN_PHASE3",
                 "quantization": "float16",
                 "backend": "transformers",
                 "backend_version": "transformers==5.0.0",
-                "tokenizer_identity": "Qwen/Qwen2.5-7B-Instruct",
+                "tokenizer_identity": "mistralai/Mistral-7B-Instruct-v0.3",
                 "ollama_version": None,
             }
         )
@@ -144,13 +144,13 @@ def test_adapter_rejects_backend_version_mismatch() -> None:
     with pytest.raises(RuntimeMismatchError):
         adapter.validate_runtime_snapshot(
             {
-                "model_id": "M1",
-                "exact_model_identifier": "Qwen/Qwen2.5-7B-Instruct",
+                "model_id": "M3",
+                "exact_model_identifier": "mistralai/Mistral-7B-Instruct-v0.3",
                 "model_digest": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
                 "quantization": "float16",
                 "backend": "transformers",
                 "backend_version": "transformers==9.9.9",
-                "tokenizer_identity": "Qwen/Qwen2.5-7B-Instruct",
+                "tokenizer_identity": "mistralai/Mistral-7B-Instruct-v0.3",
                 "ollama_version": None,
             }
         )
@@ -160,7 +160,7 @@ def test_missing_selected_model_file_fails_closed(tmp_path: Path) -> None:
     root = tmp_path
     _copy_text(Path("phase5/configs/upstream_artifact_registry.json"), root / "phase5/configs/upstream_artifact_registry.json")
     _copy_text(Path("phase4/configs/model_set_freeze.yaml"), root / "phase4/configs/model_set_freeze.yaml")
-    _copy_text(Path("phase4/configs/model_1_freeze.yaml"), root / "phase4/configs/model_1_freeze.yaml")
+    _copy_text(Path("phase4/configs/model_3_freeze.yaml"), root / "phase4/configs/model_3_freeze.yaml")
     _copy_text(
         Path("phase4_5/configs/phase45_local_dryrun.yaml"),
         root / "phase4_5/configs/phase45_local_dryrun.yaml",
@@ -175,7 +175,7 @@ def test_selected_model_divergence_fails_closed(tmp_path: Path) -> None:
         tmp_path,
         mutate=(
             Path("phase4_5/configs/phase45_local_dryrun.yaml"),
-            ("selected_model_identifier: Qwen/Qwen2.5-7B-Instruct", "selected_model_identifier: broken/model"),
+            ("selected_model_identifier: mistralai/Mistral-7B-Instruct-v0.3", "selected_model_identifier: broken/model"),
         ),
     )
 
@@ -187,7 +187,7 @@ def test_model_freeze_backend_mismatch_fails_closed(tmp_path: Path, monkeypatch:
     root = _prepare_frozen_model_root(
         tmp_path,
         mutate=(
-            Path("phase4/configs/model_1_freeze.yaml"),
+            Path("phase4/configs/model_3_freeze.yaml"),
             ("backend_version: transformers==5.0.0", "backend_version: transformers==9.9.9"),
         ),
     )
@@ -204,9 +204,9 @@ def test_model_freeze_backend_mismatch_fails_closed(tmp_path: Path, monkeypatch:
                 if hashlib.sha256(actual).hexdigest() != expected:
                     raise FrozenArtifactHashError("model set hash mismatch")
                 return SimpleNamespace(actual_paths=(relative,), sha256=(expected,), status="FOUND_VERIFIED")
-            if label == "Model freeze M1":
-                relative = Path("phase4/configs/model_1_freeze.yaml")
-                expected = hashlib.sha256(Path("phase4/configs/model_1_freeze.yaml").read_bytes()).hexdigest()
+            if label == "Model freeze M3":
+                relative = Path("phase4/configs/model_3_freeze.yaml")
+                expected = hashlib.sha256(Path("phase4/configs/model_3_freeze.yaml").read_bytes()).hexdigest()
                 actual = (root / relative).read_bytes()
                 if hashlib.sha256(actual).hexdigest() != expected:
                     raise FrozenArtifactHashError("model freeze hash mismatch")
@@ -224,12 +224,12 @@ def test_missing_runtime_snapshot_field_fails_closed() -> None:
     with pytest.raises(MissingFrozenSettingError):
         adapter.validate_runtime_snapshot(
             {
-                "model_id": "M1",
-                "exact_model_identifier": "Qwen/Qwen2.5-7B-Instruct",
+                "model_id": "M3",
+                "exact_model_identifier": "mistralai/Mistral-7B-Instruct-v0.3",
                 "model_digest": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
                 "quantization": "float16",
                 "backend": "transformers",
-                "tokenizer_identity": "Qwen/Qwen2.5-7B-Instruct",
+                "tokenizer_identity": "mistralai/Mistral-7B-Instruct-v0.3",
                 "ollama_version": None,
             }
         )
@@ -240,16 +240,17 @@ def test_malformed_frozen_model_path_fails_closed(tmp_path: Path) -> None:
     _copy_text(Path("phase5/configs/upstream_artifact_registry.json"), root / "phase5/configs/upstream_artifact_registry.json")
     (root / "phase4/configs").mkdir(parents=True, exist_ok=True)
     (root / "phase4_5/configs").mkdir(parents=True, exist_ok=True)
-    (root / "phase4/configs/model_set_freeze.yaml").write_text("M1: Qwen/Qwen2.5-7B-Instruct\n", encoding="utf-8")
-    (root / "phase4/configs/model_1_freeze.yaml").write_text("[]\n", encoding="utf-8")
+    (root / "phase4/configs/model_set_freeze.yaml").write_text("M1: mistralai/Mistral-7B-Instruct-v0.3\n", encoding="utf-8")
+    (root / "phase4/configs/model_3_freeze.yaml").write_text("[]\n", encoding="utf-8")
     (root / "phase4_5/configs/phase45_selected_model.yaml").write_text(
-        "model_slot: M1\nexact_model_identifier: Qwen/Qwen2.5-7B-Instruct\nfrozen_source: phase4/configs/model_set_freeze.yaml\n",
+        "model_slot: M1\nexact_model_identifier: mistralai/Mistral-7B-Instruct-v0.3\nfrozen_source: phase4/configs/model_set_freeze.yaml\n",
         encoding="utf-8",
     )
     (root / "phase4_5/configs/phase45_local_dryrun.yaml").write_text(
-        "selected_model_slot: M1\nselected_model_identifier: Qwen/Qwen2.5-7B-Instruct\n",
+        "selected_model_slot: M1\nselected_model_identifier: mistralai/Mistral-7B-Instruct-v0.3\n",
         encoding="utf-8",
     )
 
     with pytest.raises(SchemaInvariantError):
         load_frozen_model_backend_identity(root=root)
+
