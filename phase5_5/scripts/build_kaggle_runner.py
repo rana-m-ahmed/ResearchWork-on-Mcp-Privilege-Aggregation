@@ -152,7 +152,11 @@ subprocess.run(
     cwd=REPO_ROOT,
     check=True,
 )
-subprocess.run([sys.executable, "phase5_5/scripts/run_qualification_canary.py", "--root", str(REPO_ROOT)], check=True)
+subprocess.run(
+    [sys.executable, "phase5_5/scripts/run_qualification_canary.py", "--root", str(REPO_ROOT)],
+    cwd=REPO_ROOT,
+    check=True,
+)
 ''',
     ),
     code(
