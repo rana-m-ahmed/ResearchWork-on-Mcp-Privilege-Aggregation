@@ -87,7 +87,7 @@ os.chdir(REPO_ROOT)
 from huggingface_hub import snapshot_download
 from phase5.runtime.model_backend_adapter import load_frozen_model_backend_identity
 
-backend_identity = load_frozen_model_backend_identity(root=REPO_ROOT)
+backend_identity = load_frozen_model_backend_identity(root=REPO_ROOT, model_slot=MODEL_SLOT)
 if backend_identity.model_id != MODEL_SLOT:
     raise RuntimeError("frozen model slot does not match the selected official slot")
 print(f"MODEL_CACHE_PREP_START: {backend_identity.exact_model_identifier}", flush=True)
