@@ -25,3 +25,5 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
     assert "P5-DV-1.0.2-A7C91E42" in source
     assert "GITHUB_TOKEN" not in source
     assert "phase5_5/evidence" in source
+    assert '"--basetemp"' in source
+    assert 'str(OUTPUT_ROOT / "pytest-temp")' in source

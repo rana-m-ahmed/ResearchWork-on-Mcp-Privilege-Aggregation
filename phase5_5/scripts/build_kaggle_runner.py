@@ -133,12 +133,19 @@ print(hardware)
         "fixtures_and_gate0",
         '''test_environment = os.environ.copy()
 test_environment["PYTHONDONTWRITEBYTECODE"] = "1"
-subprocess.run(
-    [sys.executable, "-m", "pytest", "-q", "phase5/tests", "phase5_5/tests", "-p", "no:cacheprovider"],
-    cwd=REPO_ROOT,
-    env=test_environment,
-    check=True,
-)
+pytest_command = [
+    sys.executable,
+    "-m",
+    "pytest",
+    "-q",
+    "phase5/tests",
+    "phase5_5/tests",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    str(OUTPUT_ROOT / "pytest-temp"),
+]
+subprocess.run(pytest_command, cwd=REPO_ROOT, env=test_environment, check=True)
 gate_report = OUTPUT_ROOT / "gate0_authorization_report"
 subprocess.run(
     [sys.executable, "-m", "phase5", "gate0", "--strict", "--root", str(REPO_ROOT), "--report-dir", str(gate_report)],
