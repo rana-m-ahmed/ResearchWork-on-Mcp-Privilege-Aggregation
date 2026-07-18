@@ -49,6 +49,18 @@ def _sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def _sha256_frozen_path(path: Path, *, repository_root: Path) -> str:
+    """Hash frozen Phase 4.5 text using the repository's declared CRLF form."""
+    data = path.read_bytes()
+    phase45_root = (repository_root / "phase4_5").resolve()
+    try:
+        path.resolve().relative_to(phase45_root)
+    except ValueError:
+        return _sha256_bytes(data)
+    canonical = data.replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
+    return _sha256_bytes(canonical)
+
+
 def _load_jsonl(path: Path) -> list[dict[str, object]]:
     if not path.is_file():
         raise MissingFrozenSettingError(f"required frozen JSONL file is missing: {path.as_posix()}")
@@ -467,19 +479,19 @@ def load_timing_evidence(
     _require_positive(float(safe_session_hours), "safe_session_hours")
 
     evidence_inputs = (
-        ("Timing report", _sha256_bytes(timing_report.read_bytes())),
-        ("Kaggle smoke metrics", _sha256_bytes(smoke_metrics.read_bytes())),
-        ("Model-loader outputs", _sha256_bytes(model_loader_outputs.read_bytes())),
-        ("Model-loader trials", _sha256_bytes(model_loader_trials.read_bytes())),
-        ("Invalid trials", _sha256_bytes(invalid_trials.read_bytes())),
-        ("Failures", _sha256_bytes(failures.read_bytes())),
-        ("Checkpoint/resume config", _sha256_bytes(checkpoint_resume.read_bytes())),
+        ("Timing report", _sha256_frozen_path(timing_report, repository_root=repository_root)),
+        ("Kaggle smoke metrics", _sha256_frozen_path(smoke_metrics, repository_root=repository_root)),
+        ("Model-loader outputs", _sha256_frozen_path(model_loader_outputs, repository_root=repository_root)),
+        ("Model-loader trials", _sha256_frozen_path(model_loader_trials, repository_root=repository_root)),
+        ("Invalid trials", _sha256_frozen_path(invalid_trials, repository_root=repository_root)),
+        ("Failures", _sha256_frozen_path(failures, repository_root=repository_root)),
+        ("Checkpoint/resume config", _sha256_frozen_path(checkpoint_resume, repository_root=repository_root)),
     )
     if reconciliation_evidence is not None:
         evidence_inputs = (*evidence_inputs, reconciliation_evidence)
     return TimingEvidence(
         timing_report_path=timing_report,
-        timing_report_sha256=_sha256_bytes(timing_report.read_bytes()),
+        timing_report_sha256=_sha256_frozen_path(timing_report, repository_root=repository_root),
         evidence_generated_utc=FROZEN_TIMING_EVIDENCE_GENERATED_UTC,
         mean_trial_seconds=_rounded(computed_mean),
         p50_trial_seconds=_rounded(computed_p50),
