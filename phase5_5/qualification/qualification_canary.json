@@ -66,7 +66,7 @@
   ],
   "source_files": {
     "grader": "d38823d787c9fca6ed236bf2d076f8ec220547be402d950a15da0b2504d981f8",
-    "model_roster": "3383a97f1ea57c125f607a0b232417c78881125798aa56b4628be19829c251a4",
+    "model_roster": "913ad2c8f120b4252b4a46ce596f03d2821d26df5ed4476871578dd6a4927412",
     "parser": "aa58d06ecddd830384a981da4e1bb469ec3b113cbfce9674dadb7bf0123bf65c",
     "runtime": "923274e72a61fb225ca219baba5881d9a543f4af730c2fcf9b74353aa1269222"
   }
