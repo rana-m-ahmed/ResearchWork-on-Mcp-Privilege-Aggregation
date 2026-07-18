@@ -2,14 +2,14 @@
 
 ## Verdict
 
-- Status: `FAIL`
+- Status: `PASS`
 - Task: `P03`
 - Strict: `true`
-- Generated UTC: `2026-07-11T10:16:40.038808Z`
+- Generated UTC: `2026-07-17T16:17:14.170168Z`
 
 ## Summary
 
-Gate 0 failed because one or more frozen artifacts, verdicts, runtime controls, or checkout checks did not match.
+Gate 0 passed with strict, hash-bound verification of the registry, frozen artifacts, queue files, model/runtime evidence, and checkout cleanliness.
 
 ## Checks
 - registry-status: PASS
@@ -222,13 +222,13 @@ Gate 0 failed because one or more frozen artifacts, verdicts, runtime controls, 
   - expected={'M1': 'Qwen/Qwen2.5-7B-Instruct', 'M2': 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B', 'M3': 'mistralai/Mistral-7B-Instruct-v0.3', 'M4': 'microsoft/Phi-3.5-mini-instruct'}
   - got={'M1': 'Qwen/Qwen2.5-7B-Instruct', 'M2': 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B', 'M3': 'mistralai/Mistral-7B-Instruct-v0.3', 'M4': 'microsoft/Phi-3.5-mini-instruct'}
 - model-freeze:M1: PASS
-  - D:/phase5-real-official-execution/phase4/configs/model_1_freeze.yaml
+  - /kaggle/working/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_1_freeze.yaml
 - model-freeze:M2: PASS
-  - D:/phase5-real-official-execution/phase4/configs/model_2_freeze.yaml
+  - /kaggle/working/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_2_freeze.yaml
 - model-freeze:M3: PASS
-  - D:/phase5-real-official-execution/phase4/configs/model_3_freeze.yaml
+  - /kaggle/working/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_3_freeze.yaml
 - model-freeze:M4: PASS
-  - D:/phase5-real-official-execution/phase4/configs/model_4_freeze.yaml
+  - /kaggle/working/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_4_freeze.yaml
 - runtime-env-lock: PASS
   - environment lock verified
 - runtime-setup: PASS
@@ -241,11 +241,11 @@ Gate 0 failed because one or more frozen artifacts, verdicts, runtime controls, 
 - runtime-metrics-count: PASS
   - kaggle_smoke_rows=8
   - model_loader_rows=4
-- checkout-clean: FAIL
-  - working tree is dirty
+- checkout-clean: PASS
+  - working tree clean
 
 ## Findings
-- checkout-clean: working tree is dirty
+- none
 
 ## Verified Artifacts
 - Phase 4 GO report: `phase4/reports/remediation_v2/phase4_corrected_go_no_go_decision.md` `5008cc2d1e02a230c65e6e08b62fc9892a4f3b5000a78d448ab405ac5e22801d`

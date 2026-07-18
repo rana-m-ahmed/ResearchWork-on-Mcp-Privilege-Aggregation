@@ -1,0 +1,9 @@
+{
+  "command": "session-seal",
+  "phase5_session": {
+    "seal_epoch": 1,
+    "state": "SEALED",
+    "sync_epoch": 0
+  },
+  "run_id": "P5RUN-P5-DV-1.0.2-A7C91E42-M4-20260717-949B7465"
+}
