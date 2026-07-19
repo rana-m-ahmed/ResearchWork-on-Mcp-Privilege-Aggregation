@@ -15,7 +15,7 @@
     "phase5/manifests/batch_partition_manifest_v3_treatment.json": "cff3c4b412de69347fc455efc6a5df3a9410e064783f5143e4d48e71283aa1d9",
     "phase5/manifests/model_runtime_authority_v2.json": "48d4cfa54b664b1abc30a4e36f879a50601c17d46135622ae8cc7d91b2af8734",
     "phase5/runtime/agent_loop.py": "6fc2110f3358ed28d56c9eefe17bebe63d945e787aebe1d6e6e5ff0cdfe0c0c2",
-    "phase5/runtime/engine.py": "64c3006247c1dd93e423f14a1c682bada3530332063af0679a6e52a2b42e3b51",
+    "phase5/runtime/engine.py": "4a6e08a60f32b998378526817751878626ba601a0fd8372456e18edf64b3f087",
     "phase5/runtime/mcp_server_launcher.py": "799e90cd6082c5494751dd98ed0bf686e079f10fd268c35c2f784a2305e5604f",
     "phase5/runtime/model_backend_adapter.py": "8c98808e3e3a6b5843af92f282a1ff3f1e2dd025059f9db602e2e2fa5d9f6b14",
     "phase5/runtime/official_execution.py": "ed9c84f2f5a30078441343d404265d34efc20177f3ca6aeead85092c39242623",
@@ -59,5 +59,5 @@
   "publication_evidence": false,
   "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
   "scientific_inputs_regenerated": false,
-  "source_commit": "bba3ad05c0a639688475b4ac69b870d44298223a"
+  "source_commit": "8e90b28f2adaec8cb285e22701c7cda33709380a"
 }
