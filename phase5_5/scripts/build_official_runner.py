@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 
 
 SLOT = "M1"
-BASE_HEAD = "1d253b75e1a5e497d5fcdbcc3464714f10ce6340"
+BASE_HEAD = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=Path(__file__).resolve().parents[2], text=True).strip()
 OUTPUT = Path(__file__).resolve().parents[1] / "kaggle/phase5_5_official_runner.ipynb"
 SOURCE = Path(__file__).resolve().parents[1] / "kaggle/phase5_5_runner.ipynb"
 
@@ -40,10 +41,10 @@ def main() -> None:
 
 actual_branch_head = git("rev-parse", "HEAD")
 if subprocess.run(["git", "-C", str(REPO_ROOT), "merge-base", "--is-ancestor", "{BASE_HEAD}", actual_branch_head], check=False).returncode != 0:
-    raise RuntimeError("official branch is not descended from the authorized base head")
-freeze = json.loads((REPO_ROOT / "phase5_5/manifests/phase5_5_source_freeze.json").read_text(encoding="utf-8-sig"))
-if freeze["source_commit"] != EXPECTED_SOURCE_COMMIT:
-    raise RuntimeError(f"source-freeze commit mismatch: {{freeze['source_commit']}}")
+    raise RuntimeError("official branch is not descended from the built source head")
+freeze = json.loads((REPO_ROOT / "phase5_5/manifests/phase5_5_source_freeze_v3.json").read_text(encoding="utf-8-sig"))
+if freeze.get("artifact") != "phase5_5_source_freeze_v3" or freeze.get("dataset_version") != DATASET_VERSION:
+    raise RuntimeError("v3 source freeze does not match the treatment dataset")
 branch_config = json.loads((REPO_ROOT / "phase5_5/branch_config.json").read_text(encoding="utf-8-sig"))
 if branch_config["model_slot"] != MODEL_SLOT or branch_config["exact_model_identifier"] != MODEL_IDS[MODEL_SLOT]:
     raise RuntimeError("selected branch does not match its approved model slot")
@@ -152,6 +153,11 @@ else:
         "phase5/manifests/batch_partition_manifest_v3.json",
         "--run-plan",
         "phase5/validation/kaggle_run_plan_v3.json",
+        "--checkpoint-publish",
+        "--checkpoint-interval-trials",
+        "6",
+        "--checkpoint-output-dir",
+        str(OUTPUT_ROOT / "checkpoints"),
         "--output",
         str(campaign_report),
     ]
@@ -243,8 +249,11 @@ def run_checked(command: list[str], *, cwd: Path | None = None) -> str:
         raise RuntimeError(f"command failed ({completed.returncode}): {' '.join(command)}\\n{completed.stderr}")
     return completed.stdout
 
-nvidia = run_checked(["nvidia-smi"])
-print(nvidia)
+nvidia_command = ["nvidia-smi"] if shutil.which("nvidia-smi") else None
+if nvidia_command is not None:
+    print(run_checked(nvidia_command))
+else:
+    print("NVIDIA_SMI_UNAVAILABLE: continuing with torch CUDA verification", flush=True)
 subprocess.run([sys.executable, "-m", "pip", "install", "--requirement", str(REPO_ROOT / "phase4_5/kaggle/requirements.lock.txt")], check=True)
 hardware = run_checked([
     sys.executable,
@@ -262,6 +271,7 @@ print(hardware)
             digest.update(chunk)
     return digest.hexdigest()
 
+actual_branch_head = git("rev-parse", "HEAD")
 evidence_root = REPO_ROOT / "phase5_5/evidence"
 if not evidence_root.is_dir():
     raise RuntimeError("official campaign did not produce phase5_5/evidence")

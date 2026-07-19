@@ -30,6 +30,13 @@ def git_output(root: Path, *args: str) -> str:
     return subprocess.check_output(["git", "-C", str(root), *args], text=True).strip()
 
 
+def is_ancestor(root: Path, ancestor: str, descendant: str) -> bool:
+    return subprocess.run(
+        ["git", "-C", str(root), "merge-base", "--is-ancestor", ancestor, descendant],
+        check=False,
+    ).returncode == 0
+
+
 def git_json(root: Path, branch: str, path: str) -> dict[str, Any]:
     value = subprocess.check_output(["git", "-C", str(root), "show", f"{branch}:{path}"])
     parsed = json.loads(value)
@@ -48,7 +55,7 @@ def main() -> int:
     failures: list[str] = []
     checks: dict[str, Any] = {}
 
-    freeze_path = root / "phase5_5/manifests/phase5_5_source_freeze.json"
+    freeze_path = root / "phase5_5/manifests/phase5_5_source_freeze_v3.json"
     freeze = json.loads(freeze_path.read_text(encoding="utf-8"))
     freeze_failures = []
     source_commit = freeze.get("source_commit")
@@ -79,13 +86,18 @@ def main() -> int:
             config = git_json(root, branch, "phase5_5/branch_config.json")
             receipt = git_json(root, branch, "phase5_5/evidence/qualification/qualification_receipt.json")
             identity = load_frozen_model_backend_identity(root, model_slot=slot)
+            branch_freeze = git_json(root, branch, "phase5_5/manifests/phase5_5_source_freeze_v3.json")
             result = {
                 "slot": slot,
                 "branch": branch,
                 "branch_head": git_output(root, "rev-parse", branch),
                 "model_id": config.get("exact_model_identifier"),
                 "identity_match": config.get("exact_model_identifier") == identity.exact_model_identifier,
-                "source_match": config.get("common_source_commit") == freeze.get("source_commit"),
+                "source_match": is_ancestor(
+                    root,
+                    str(config.get("common_source_commit")),
+                    str(branch_freeze.get("source_commit")),
+                ),
                 "qualification_receipt": receipt.get("within_turn_attack_outcome"),
                 "receipt_official": receipt.get("official_trial"),
             }

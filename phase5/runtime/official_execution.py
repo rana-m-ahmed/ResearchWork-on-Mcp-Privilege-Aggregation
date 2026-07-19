@@ -214,8 +214,9 @@ class RepositoryBatchExecutionAdapter:
         analysis_eligible_count = 0
         elapsed_seconds = 0.0
         result_digests: list[str] = []
+        rows = self._rows_for_batch(batch)
 
-        for row in self._rows_for_batch(batch):
+        for row in rows:
             target_trial_id = str(row.trial_id)
             if target_trial_id in accepted_targets:
                 raise DuplicateAcceptedAttemptError(f"finalized accepted target must not be rerun: {target_trial_id}")
@@ -240,7 +241,10 @@ class RepositoryBatchExecutionAdapter:
 
             qualified = result.qualification_accepted
             qualification_accepted += int(qualified)
-            analysis_eligible_count += int(result.analysis_eligible)
+            # An accepted result necessarily passed the evidence boundary;
+            # invalid model behavior may also be eligible when its evidence is
+            # complete. Count either form toward scientific eligibility.
+            analysis_eligible_count += int(result.analysis_eligible or qualified)
             elapsed_seconds += result.elapsed_seconds
 
             if self.official_mode:
@@ -281,14 +285,23 @@ class RepositoryBatchExecutionAdapter:
             )
 
         official_accepted = qualification_accepted if self.official_mode else 0
+        # Evidence finalization is independent of model behavior. A complete,
+        # hash-valid batch with zero accepted calls is a valid scientific result.
+        all_rows_analysis_eligible = bool(rows) and analysis_eligible_count == len(rows)
         if self.official_mode:
-            batch_status = "OFFICIAL_FINALIZED" if official_accepted > 0 else "OFFICIAL_COMPLETED_NO_ACCEPTED"
+            batch_status = (
+                "OFFICIAL_FINALIZED"
+                if official_accepted and all_rows_analysis_eligible
+                else "OFFICIAL_FINALIZED_NO_ACCEPTED"
+                if all_rows_analysis_eligible
+                else "OFFICIAL_COMPLETED_NO_ACCEPTED"
+            )
         else:
             batch_status = "SYNTHETIC_QUALIFIED"
         return CampaignBatchResult(
             batch_id=batch.batch_id,
             accepted_count=official_accepted,
-            finalized=self.official_mode and official_accepted > 0,
+            finalized=self.official_mode and all_rows_analysis_eligible,
             estimated_seconds=elapsed_seconds or float(batch.row_count * p95_trial_seconds),
             batch_hash=_sha256_payload(
                 {

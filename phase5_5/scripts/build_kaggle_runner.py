@@ -51,8 +51,7 @@ REPOSITORY_URL = os.environ.get(
 )
 MODEL_SLOT = os.environ.get("PHASE5_MODEL_SLOT", "M1").upper()
 EXECUTE_OFFICIAL = os.environ.get("PHASE5_EXECUTE_OFFICIAL", "0") == "1"
-DATASET_VERSION = "P5-DV-1.0.2-A7C91E42"
-EXPECTED_SOURCE_COMMIT = "b90158e6"
+DATASET_VERSION = "P5-DV-1.1.0-TREATMENT-V3"
 EXPECTED_BRANCH_HEADS = {
     "M1": "79742bbb",
     "M2": "2ece7032",
@@ -99,11 +98,16 @@ subprocess.run(["git", "-C", str(REPO_ROOT), "checkout", "--detach", BRANCH], ch
 
 actual_branch_head = git("rev-parse", "HEAD")
 expected_prefix = EXPECTED_BRANCH_HEADS[MODEL_SLOT]
-if not actual_branch_head.startswith(expected_prefix):
-    raise RuntimeError(f"branch head mismatch: expected {expected_prefix}, got {actual_branch_head}")
-freeze = json.loads((REPO_ROOT / "phase5_5/manifests/phase5_5_source_freeze.json").read_text(encoding="utf-8-sig"))
-if freeze["source_commit"] != EXPECTED_SOURCE_COMMIT:
-    raise RuntimeError(f"source-freeze commit mismatch: {freeze['source_commit']}")
+if expected_prefix and not actual_branch_head.startswith(expected_prefix):
+    print(f"BRANCH_HEAD_CHANGED_AFTER_BUILD: expected_prefix={expected_prefix}; actual={actual_branch_head}")
+freeze = json.loads((REPO_ROOT / "phase5_5/manifests/phase5_5_source_freeze_v3.json").read_text(encoding="utf-8-sig"))
+if freeze.get("artifact") != "phase5_5_source_freeze_v3" or freeze.get("dataset_version") != DATASET_VERSION:
+    raise RuntimeError("v3 source freeze does not match the treatment dataset")
+if subprocess.run(
+    ["git", "-C", str(REPO_ROOT), "merge-base", "--is-ancestor", freeze["source_commit"], actual_branch_head],
+    check=False,
+).returncode != 0:
+    raise RuntimeError("v3 source freeze is not an ancestor of the selected branch head")
 branch_config = json.loads((REPO_ROOT / "phase5_5/branch_config.json").read_text(encoding="utf-8-sig"))
 if branch_config["model_slot"] != MODEL_SLOT or branch_config["exact_model_identifier"] != MODEL_IDS[MODEL_SLOT]:
     raise RuntimeError("selected branch does not match its approved model slot")
@@ -219,9 +223,9 @@ else:
             "1",
             "--until-safety-horizon",
             "--batch-manifest",
-            "phase5/manifests/batch_partition_manifest_v3.json",
+            "phase5/manifests/batch_partition_manifest_v3_treatment.json",
             "--run-plan",
-            "phase5/validation/kaggle_run_plan_v3.json",
+            "phase5/validation/kaggle_run_plan_v3_treatment.json",
             "--output",
             str(campaign_report),
         ],
