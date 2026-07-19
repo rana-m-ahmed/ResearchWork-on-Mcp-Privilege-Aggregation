@@ -14,7 +14,7 @@
     "phase5/runtime/engine.py": "3859b7984232c7a55caad68020211283b62a89138cf3a9fdc9ce0295350c484a",
     "phase5/runtime/mcp_server_launcher.py": "ba5aab822024b95bf31c023cf65db78db0b447e7ecd4f6905a191d6e8e362e3b",
     "phase5/runtime/model_backend_adapter.py": "8c98808e3e3a6b5843af92f282a1ff3f1e2dd025059f9db602e2e2fa5d9f6b14",
-    "phase5/runtime/official_execution.py": "e26f599636696f4c591990a4aee4be06a4d84194b9c3de4283ebc8dbea68e249",
+    "phase5/runtime/official_execution.py": "cb8ecdfc13269fc8780385657a5ee406f017404fecb549229167e65a2373a4e2",
     "phase5/runtime/prompt_compiler.py": "514b34a7d0093dd4f9af4742b280244ec3760feea32b9e5384e1c242443cda84",
     "phase5/runtime/tool_dispatch.py": "b19f4da601c44dac4d3be6d46feef280195977312c62d3d2cd5fa82c82cde425",
     "phase5_5/configs/branch_mapping.json": "9a20036c666cc07c5ae7e7f9fc163e06fddc386a0b4ad2f689b819694c54754c",
@@ -26,7 +26,7 @@
     "phase5_5/configs/treatment_and_analysis_contract_v3.json": "caaafdb8b2607cfa325d7e1aabc6703582dc9cadb030563d752d970bdee9ad87",
     "phase5_5/parser.py": "fa0401f64df7a7a4309834ee90143881fa887c8f92775917a53ef8ccf280b525",
     "phase5_5/runtime.py": "923274e72a61fb225ca219baba5881d9a543f4af730c2fcf9b74353aa1269222",
-    "phase5_5/scripts/build_source_freeze.py": "2989ed2d3b1fff8bfa824d70a0533518bb21a70d1c759f7fc14fe429898fb9b9",
+    "phase5_5/scripts/build_source_freeze.py": "948b5eb04d6ea67bd70c92cf629ddf108b827cdbda68004c618dca7cac282bda",
     "phase5_5/scripts/official_preflight.py": "20a7cc7bde3b668a400a3af010ee528b2534ce289022e76b11a6636c612f0616",
     "phase5_5/scripts/rebuild_historical_closure.py": "95534078a91636c98c4a516f84e2a5cc8a1d0bbe861f8e172b8f5694a3ccbe76"
   },
@@ -39,5 +39,5 @@
   "publication_evidence": false,
   "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
   "scientific_inputs_regenerated": false,
-  "source_commit": "67b8762a0"
+  "source_commit": "317898ebd39a7ab38cfc985c829e481f3734642b"
 }
