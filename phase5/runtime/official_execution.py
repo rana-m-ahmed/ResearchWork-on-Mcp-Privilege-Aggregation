@@ -16,7 +16,6 @@ from ..attempts import AttemptLineageRecord, AttemptLineageStore
 from ..campaign import CampaignBatchPlan, CampaignBatchResult
 from ..domain.enums import SessionState
 from ..domain.errors import (
-    DuplicateAcceptedAttemptError,
     MissingFrozenSettingError,
     OfficialDispatchBlockedError,
     SchemaInvariantError,
@@ -165,6 +164,10 @@ class RepositoryBatchExecutionAdapter:
     dataset_version: str
     official_mode: bool = False
     real_execution_adapter: bool = True
+    pretrial_mode: bool = False
+    checkpoint_callback: Callable[[CampaignBatchPlan, AttemptLineageRecord, int], None] | None = None
+    checkpoint_interval_trials: int = 0
+    pretrial_trial_limit: int | None = None
 
     def __post_init__(self) -> None:
         if getattr(self.pipeline, "real_pipeline", False) is not True:
@@ -177,12 +180,21 @@ class RepositoryBatchExecutionAdapter:
                 raise OfficialDispatchBlockedError("official dispatch adapter requires official_trial=True on the pipeline")
         else:
             # Synthetic qualification mode: pipeline must be synthetic
-            if getattr(self.pipeline, "synthetic_fixture", False) is not True:
+            if not self.pretrial_mode and getattr(self.pipeline, "synthetic_fixture", False) is not True:
                 raise OfficialDispatchBlockedError("I17E development adapter permits synthetic fixtures only")
+            if self.pretrial_mode and getattr(self.pipeline, "synthetic_fixture", True) is True:
+                raise OfficialDispatchBlockedError("pretrial adapter requires the real non-synthetic pipeline")
         if self.session.state is not SessionState.SEALED:
             raise OfficialDispatchBlockedError("batch execution requires an active valid seal")
         if not self.dataset_version:
             raise MissingFrozenSettingError("execution adapter requires an explicit dataset version")
+        if self.checkpoint_callback is not None and self.checkpoint_interval_trials <= 0:
+            raise MissingFrozenSettingError("checkpoint interval must be positive when checkpointing is enabled")
+        if self.pretrial_trial_limit is not None:
+            if not self.pretrial_mode:
+                raise OfficialDispatchBlockedError("pretrial trial limit is valid only in pretrial mode")
+            if self.pretrial_trial_limit <= 0:
+                raise MissingFrozenSettingError("pretrial trial limit must be positive")
 
     def _rows_for_batch(self, batch: CampaignBatchPlan) -> tuple[FrozenQueueRow, ...]:
         queues = {queue.queue_name: queue for queue in self.queue_bundle.queues()}
@@ -208,8 +220,22 @@ class RepositoryBatchExecutionAdapter:
     def __call__(self, batch: CampaignBatchPlan, p95_trial_seconds: float) -> CampaignBatchResult:
         if batch.model_slot != self.session.model_slot.value:
             raise SchemaInvariantError("batch model slot does not match the sealed campaign session")
-        existing = self.lineage_store.load_records()
-        accepted_targets = {record.target_trial_id for record in existing if record.accepted_attempt}
+        existing = list(self.lineage_store.load_records())
+        completed_targets = {
+            record.target_trial_id
+            for record in existing
+            if record.accepted_attempt
+            or record.attempt_status in {
+                "INVALID",
+                "OFFICIAL_ACCEPTED",
+                "PRETRIAL_COMPLETED",
+                "PRETRIAL_INVALID",
+                "PRETRIAL_ORPHAN",
+            }
+        }
+        rows = tuple(row for row in self._rows_for_batch(batch) if str(row.trial_id) not in completed_targets)
+        if self.pretrial_trial_limit is not None:
+            rows = rows[: self.pretrial_trial_limit]
         qualification_accepted = 0
         analysis_eligible_count = 0
         elapsed_seconds = 0.0
@@ -218,8 +244,6 @@ class RepositoryBatchExecutionAdapter:
 
         for row in rows:
             target_trial_id = str(row.trial_id)
-            if target_trial_id in accepted_targets:
-                raise DuplicateAcceptedAttemptError(f"finalized accepted target must not be rerun: {target_trial_id}")
             histories = [record for record in existing if record.target_trial_id == target_trial_id]
             attempt_index = max((record.attempt_index for record in histories), default=-1) + 1
             parent_attempt_id = max(histories, key=lambda item: item.attempt_index).attempt_id if histories else None
@@ -253,6 +277,8 @@ class RepositoryBatchExecutionAdapter:
                 accepted_attempt = qualified
             else:
                 attempt_status = "SYNTHETIC_QUALIFIED" if qualified else ("ORPHAN" if result.orphaned else "INVALID")
+                if self.pretrial_mode:
+                    attempt_status = "PRETRIAL_COMPLETED" if qualified else ("PRETRIAL_ORPHAN" if result.orphaned else "PRETRIAL_INVALID")
                 counts_toward_cell_n = False
                 accepted_attempt = False
 
@@ -273,6 +299,10 @@ class RepositoryBatchExecutionAdapter:
             )
             self.lineage_store.append(lineage)
             existing = (*existing, lineage)
+            since_checkpoint += 1
+            if self.checkpoint_callback is not None and since_checkpoint >= self.checkpoint_interval_trials:
+                self.checkpoint_callback(batch, lineage, len(existing))
+                since_checkpoint = 0
             result_digests.append(
                 _sha256_payload(
                     {
@@ -283,6 +313,9 @@ class RepositoryBatchExecutionAdapter:
                     }
                 )
             )
+
+        if self.checkpoint_callback is not None and since_checkpoint:
+            self.checkpoint_callback(batch, existing[-1], len(existing))
 
         official_accepted = qualification_accepted if self.official_mode else 0
         # Evidence finalization is independent of model behavior. A complete,
@@ -297,7 +330,7 @@ class RepositoryBatchExecutionAdapter:
                 else "OFFICIAL_COMPLETED_NO_ACCEPTED"
             )
         else:
-            batch_status = "SYNTHETIC_QUALIFIED"
+            batch_status = "PRETRIAL_COMPLETED" if self.pretrial_mode else "SYNTHETIC_QUALIFIED"
         return CampaignBatchResult(
             batch_id=batch.batch_id,
             accepted_count=official_accepted,

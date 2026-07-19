@@ -103,10 +103,17 @@ def build_parser() -> argparse.ArgumentParser:
     run_campaign.add_argument("--output", required=False)
     campaign_mode = run_campaign.add_mutually_exclusive_group(required=False)
     campaign_mode.add_argument("--official", action="store_true")
+    campaign_mode.add_argument("--pretrial", action="store_true")
     campaign_mode.add_argument("--plan-only", action="store_true")
     run_campaign.add_argument("--dataset-version", required=False)
     run_campaign.add_argument("--seal-epoch", required=False, type=int)
     run_campaign.add_argument("--max-batches", required=False, type=int)
+    run_campaign.add_argument("--checkpoint-publish", action="store_true")
+    run_campaign.add_argument("--checkpoint-interval-trials", required=False, type=int, default=0)
+    run_campaign.add_argument("--checkpoint-output-dir", required=False)
+    run_campaign.add_argument("--attempts-root", required=False)
+    run_campaign.add_argument("--evidence-root", required=False)
+    run_campaign.add_argument("--pretrial-trials", required=False, type=int)
 
     run_proof = subparsers.add_parser(
         "run-m1-proof",
@@ -342,7 +349,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 required = {
                     "dataset-version": args.dataset_version,
                 }
-                if args.official:
+                if args.official or getattr(args, "pretrial", False):
                     required.update({"run-id": args.run_id, "seal-epoch": args.seal_epoch})
                 missing = [name for name, value in required.items() if value in {None, ""}]
                 if missing:
@@ -359,18 +366,43 @@ def main(argv: Sequence[str] | None = None) -> int:
                 from phase5.attempts import AttemptLineageStore
                 
                 is_official = getattr(args, "official", False)
+                is_pretrial = getattr(args, "pretrial", False)
+                if is_official and is_pretrial:
+                    raise OfficialDispatchBlockedError("official and pretrial modes are mutually exclusive")
                 mslot = _parse_model_slot(args.model_slot)
                 pipeline = SharedExecutionEngine(
                     official_trial=is_official,
                     counts_for_phase5=is_official,
                     publication_evidence=is_official,
-                    synthetic_fixture=not is_official,
+                    synthetic_fixture=not is_official and not is_pretrial,
+                    pretrial_mode=is_pretrial,
                     dataset_version=args.dataset_version,
                     model_slot=mslot.value,
                     root=Path.cwd(),
+                    attempts_root=Path(args.attempts_root) if args.attempts_root else None,
+                    evidence_root=Path(args.evidence_root) if args.evidence_root else None,
                 )
                 
                 run_id = getattr(args, "run_id", None)
+
+                checkpoint_callback = None
+                checkpoint_interval = int(getattr(args, "checkpoint_interval_trials", 0) or 0)
+                if getattr(args, "checkpoint_publish", False):
+                    if not is_official:
+                        raise OfficialDispatchBlockedError("checkpoint publication requires official mode")
+                    if not run_id:
+                        raise MissingFrozenSettingError("checkpoint publication requires an explicit run ID")
+                    if checkpoint_interval <= 0:
+                        raise MissingFrozenSettingError("checkpoint publication requires a positive interval")
+                    from phase5_5.checkpointing import GitEvidenceCheckpointPublisher
+
+                    checkpoint_publisher = GitEvidenceCheckpointPublisher(
+                        root=Path.cwd(),
+                        model_slot=mslot.value,
+                        run_id=run_id,
+                        output_dir=Path(args.checkpoint_output_dir or "phase5_5_checkpoint_receipts"),
+                    )
+                    checkpoint_callback = checkpoint_publisher.on_trial_completed
                 
                 # Open session temporarily to pass to adapter
                 temp_session = CampaignSession.open(model_slot=mslot, batch_id=None, run_id=run_id).seal()
@@ -378,11 +410,17 @@ def main(argv: Sequence[str] | None = None) -> int:
                 batch_processor = RepositoryBatchExecutionAdapter(
                     queue_bundle=load_frozen_queue_bundle(),
                     pipeline=pipeline,
-                    lineage_store=AttemptLineageStore(Path("phase5_5/evidence/lineage.csv")),
+                    lineage_store=AttemptLineageStore(
+                        (Path(args.evidence_root) if args.evidence_root else Path("phase5_5/evidence")) / "lineage.csv"
+                    ),
                     session=temp_session,
                     dataset_version=args.dataset_version,
                     official_mode=is_official,
-                    real_execution_adapter=True
+                    pretrial_mode=is_pretrial,
+                    real_execution_adapter=True,
+                    checkpoint_callback=checkpoint_callback,
+                    checkpoint_interval_trials=checkpoint_interval,
+                    pretrial_trial_limit=getattr(args, "pretrial_trials", None),
                 )
 
             session, report = run_campaign(
