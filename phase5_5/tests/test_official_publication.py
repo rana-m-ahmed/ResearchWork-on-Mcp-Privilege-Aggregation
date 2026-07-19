@@ -37,9 +37,15 @@ def test_official_publication_hashes_evidence_and_records_purge(tmp_path: Path) 
     git_run(root, "push", "--set-upstream", "origin", "phase5_5-model-1")
     parent = git(root, "rev-parse", "HEAD")
 
-    evidence = root / "phase5_5/evidence/raw/output.txt"
+    evidence = root / "phase5_5/evidence/attempts/A1/output.txt"
     evidence.parent.mkdir(parents=True)
     evidence.write_text("raw-preserved-evidence\n", encoding="utf-8")
+    lineage = root / "phase5_5/evidence/lineage.csv"
+    lineage.write_text(
+        "run_id,raw_attempt_directory\n"
+        f"TEST-RUN,{evidence.parent.as_posix()}\n",
+        encoding="utf-8",
+    )
     output = tmp_path / "receipt.json"
     environment = os.environ.copy()
     environment["PHASE5_GITHUB_TOKEN"] = "test-only-token"
@@ -70,6 +76,9 @@ def test_official_publication_hashes_evidence_and_records_purge(tmp_path: Path) 
         (root / "phase5_5/evidence/official_publication_manifest.json").read_text(encoding="utf-8")
     )
     assert receipt["credential_purged"] is True
-    assert {item["path"] for item in manifest["files"]} == {"phase5_5/evidence/raw/output.txt"}
+    assert {item["path"] for item in manifest["files"]} == {
+        "phase5_5/evidence/attempts/A1/output.txt",
+        "phase5_5/evidence/lineage.csv",
+    }
     assert git(root, "rev-parse", "HEAD") == receipt["receipt_commit"]
     assert git(remote, "rev-parse", "refs/heads/phase5_5-model-1") == receipt["receipt_commit"]
