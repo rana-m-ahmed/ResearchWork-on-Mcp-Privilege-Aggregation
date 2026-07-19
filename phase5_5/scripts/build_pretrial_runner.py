@@ -103,7 +103,7 @@ while process.poll() is None:
     if events:
         line = process.stdout.readline()
         if line:
-            line = line.rstrip("\n")
+            line = line.rstrip("\\n")
             print(line, flush=True)
             tail.append(line)
             del tail[:-100:]
@@ -111,13 +111,13 @@ while process.poll() is None:
         elapsed = int(time.monotonic() - started)
         print(f"PRETRIAL_HEARTBEAT: elapsed_seconds={elapsed}", flush=True)
 for line in process.stdout:
-    line = line.rstrip("\n")
+    line = line.rstrip("\\n")
     print(line, flush=True)
     tail.append(line)
 returncode = process.wait()
 if returncode != 0:
     (OUTPUT_ROOT / f"{MODEL_SLOT}_pretrial_error.json").write_text(
-        json.dumps({"returncode": returncode, "output_tail": tail}, indent=2, sort_keys=True) + "\n",
+        json.dumps({"returncode": returncode, "output_tail": tail}, indent=2, sort_keys=True) + "\\n",
         encoding="utf-8",
     )
     raise RuntimeError(f"real-backend pretrial failed with exit code {returncode}")
@@ -157,7 +157,7 @@ manifest = {
     "files": [{"path": str(path.relative_to(evidence_root)), "sha256": sha256(path)} for path in files],
 }
 manifest_path = OUTPUT_ROOT / f"{MODEL_SLOT}_pretrial_manifest.json"
-manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\\n", encoding="utf-8")
 archive_path = OUTPUT_ROOT / f"{MODEL_SLOT}_pretrial_evidence.tar.gz"
 with tarfile.open(archive_path, "w:gz") as archive:
     archive.add(evidence_root, arcname="phase5_5_pretrial_evidence")
