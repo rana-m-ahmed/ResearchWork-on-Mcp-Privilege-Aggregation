@@ -128,6 +128,52 @@ if (
     or report.get("resume_required") is not True
 ):
     raise RuntimeError("pretrial report does not reconcile to one bounded completed sample")
+batch_results = report.get("batch_results", [])
+if len(batch_results) != 1:
+    raise RuntimeError("pretrial report must contain exactly one batch result")
+batch_result = batch_results[0]
+analysis_eligible_count = int(batch_result.get("analysis_eligible_count", 0))
+accepted_count = int(batch_result.get("accepted_count", 0))
+if analysis_eligible_count != 3:
+    raise RuntimeError(
+        f"pretrial evidence is not analysis-eligible for all three attempts: {analysis_eligible_count}/3"
+    )
+if accepted_count < 0 or accepted_count > analysis_eligible_count:
+    raise RuntimeError("pretrial accepted/eligible accounting is inconsistent")
+parser_status_counts = {}
+parser_versions = set()
+for parser_path in pretrial_evidence_root.rglob("parser_events.jsonl"):
+    for line in parser_path.read_text(encoding="utf-8").splitlines():
+        if not line:
+            continue
+        event = json.loads(line)
+        if event.get("event_type") in {"PARSE_FAILURE", "PARSE_COMPLETED"}:
+            status = str(event.get("reason") or event.get("status") or "UNKNOWN")
+            parser_status_counts[status] = parser_status_counts.get(status, 0) + 1
+            if event.get("parser_version") is not None:
+                parser_versions.add(str(event["parser_version"]))
+if parser_versions and parser_versions != {"phase5.5-parser-v3-mcp-schema"}:
+    raise RuntimeError(f"pretrial parser-version drift: {sorted(parser_versions)}")
+pretrial_summary = {
+    "artifact": "phase5_5_real_backend_pretrial_behavior_summary_v1",
+    "model_slot": MODEL_SLOT,
+    "run_id": RUN_ID,
+    "dataset_version": DATASET_VERSION,
+    "analysis_eligible_count": analysis_eligible_count,
+    "accepted_count": accepted_count,
+    "accepted_count_is_not_a_pass_gate": True,
+    "parser_status_counts": parser_status_counts,
+    "parser_versions": sorted(parser_versions),
+}
+(OUTPUT_ROOT / f"{MODEL_SLOT}_pretrial_behavior_summary.json").write_text(
+    json.dumps(pretrial_summary, indent=2, sort_keys=True) + "\n",
+    encoding="utf-8",
+)
+print(
+    f"PRETRIAL_RECONCILED: eligible={analysis_eligible_count}/3; "
+    f"accepted={accepted_count}; parser_statuses={parser_status_counts}",
+    flush=True,
+)
 print(f"PRETRIAL_COMPLETE: {pretrial_report}", flush=True)
 ''')
 
