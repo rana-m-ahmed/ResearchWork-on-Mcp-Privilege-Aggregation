@@ -49,6 +49,10 @@ hf_token = (UserSecretsClient().get_secret("HF_TOKEN") or "").strip()
 if not hf_token:
     raise RuntimeError("HF_TOKEN is required for the real-backend pretrial")
 os.environ["HF_TOKEN"] = hf_token
+pretrial_attempts_root = Path("/kaggle/working/phase5_5_pretrial_attempts")
+pretrial_evidence_root = Path("/kaggle/working/phase5_5_pretrial_evidence")
+if pretrial_attempts_root.exists() or pretrial_evidence_root.exists():
+    raise RuntimeError("pretrial output roots already exist; use a fresh Kaggle session")
 pretrial_report = OUTPUT_ROOT / f"{MODEL_SLOT}_pretrial_report.json"
 pretrial_command = [
     sys.executable,
@@ -67,6 +71,10 @@ pretrial_command = [
     "--until-safety-horizon",
     "--max-batches",
     "1",
+    "--attempts-root",
+    str(pretrial_attempts_root),
+    "--evidence-root",
+    str(pretrial_evidence_root),
     "--batch-manifest",
     "phase5/manifests/batch_partition_manifest_v3.json",
     "--run-plan",
@@ -126,7 +134,7 @@ def sha256(path: Path) -> str:
             digest.update(chunk)
     return digest.hexdigest()
 
-evidence_root = REPO_ROOT / "phase5_5/evidence"
+evidence_root = Path("/kaggle/working/phase5_5_pretrial_evidence")
 if not evidence_root.is_dir():
     raise RuntimeError("pretrial produced no evidence directory")
 files = sorted(path for path in evidence_root.rglob("*") if path.is_file())
@@ -139,13 +147,13 @@ manifest = {
     "counts_for_phase5": False,
     "publication_evidence": False,
     "pretrial_batch_limit": 1,
-    "files": [{"path": str(path.relative_to(REPO_ROOT)), "sha256": sha256(path)} for path in files],
+    "files": [{"path": str(path.relative_to(evidence_root)), "sha256": sha256(path)} for path in files],
 }
 manifest_path = OUTPUT_ROOT / f"{MODEL_SLOT}_pretrial_manifest.json"
 manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 archive_path = OUTPUT_ROOT / f"{MODEL_SLOT}_pretrial_evidence.tar.gz"
 with tarfile.open(archive_path, "w:gz") as archive:
-    archive.add(evidence_root, arcname="phase5_5/evidence")
+    archive.add(evidence_root, arcname="phase5_5_pretrial_evidence")
     archive.add(manifest_path, arcname=f"phase5_5/{manifest_path.name}")
 print(json.dumps({"manifest": str(manifest_path), "archive": str(archive_path), "archive_sha256": sha256(archive_path)}, indent=2))
 ''')
