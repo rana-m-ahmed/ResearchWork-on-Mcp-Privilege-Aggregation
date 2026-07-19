@@ -122,8 +122,12 @@ if returncode != 0:
     )
     raise RuntimeError(f"real-backend pretrial failed with exit code {returncode}")
 report = json.loads(pretrial_report.read_text(encoding="utf-8"))
-if report.get("model_slot") != MODEL_SLOT or report.get("resume_required") is not False:
-    raise RuntimeError("pretrial report does not reconcile to one completed slot run")
+if (
+    report.get("model_slot") != MODEL_SLOT
+    or len(report.get("processed_batch_ids", [])) != 1
+    or report.get("resume_required") is not True
+):
+    raise RuntimeError("pretrial report does not reconcile to one bounded completed sample")
 print(f"PRETRIAL_COMPLETE: {pretrial_report}", flush=True)
 ''')
 
