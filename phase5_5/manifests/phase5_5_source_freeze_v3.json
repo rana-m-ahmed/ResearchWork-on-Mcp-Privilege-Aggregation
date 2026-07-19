@@ -12,11 +12,11 @@
     "phase5/manifests/batch_partition_manifest_v3.json": "e7bf12dc9a2706f0ed23f29aaedfdfd1e3db34d3db1f34525d649bd46b7d3e5c",
     "phase5/manifests/batch_partition_manifest_v3_treatment.json": "cff3c4b412de69347fc455efc6a5df3a9410e064783f5143e4d48e71283aa1d9",
     "phase5/manifests/model_runtime_authority_v2.json": "48d4cfa54b664b1abc30a4e36f879a50601c17d46135622ae8cc7d91b2af8734",
-    "phase5/runtime/agent_loop.py": "7ce6f4f0339149ef63a5edbfd82a88d51c59b7cc1efd0f7e9d10e7643f3576e4",
-    "phase5/runtime/engine.py": "3859b7984232c7a55caad68020211283b62a89138cf3a9fdc9ce0295350c484a",
+    "phase5/runtime/agent_loop.py": "6fc2110f3358ed28d56c9eefe17bebe63d945e787aebe1d6e6e5ff0cdfe0c0c2",
+    "phase5/runtime/engine.py": "64c3006247c1dd93e423f14a1c682bada3530332063af0679a6e52a2b42e3b51",
     "phase5/runtime/mcp_server_launcher.py": "ba5aab822024b95bf31c023cf65db78db0b447e7ecd4f6905a191d6e8e362e3b",
     "phase5/runtime/model_backend_adapter.py": "577a410313c4635d9ee90ab6a12fdb403b101119a2c01851fc5efd3ddbaaf9e9",
-    "phase5/runtime/official_execution.py": "bfe9e6cb03914af655fe75048387f260855751661640f938214a003b60963fda",
+    "phase5/runtime/official_execution.py": "f057e2509311943e94e13f1b7e47bd6c1a89425a1c46d7ad2e607f6fe1a1ff19",
     "phase5/runtime/prompt_compiler.py": "514b34a7d0093dd4f9af4742b280244ec3760feea32b9e5384e1c242443cda84",
     "phase5/runtime/tool_dispatch.py": "b19f4da601c44dac4d3be6d46feef280195977312c62d3d2cd5fa82c82cde425",
     "phase5/validation/kaggle_run_plan_v3_treatment.json": "d596c1048488c12f27ff1d30b50e410ee67c9723e7b8dfde714c44e0c4f29c2d",
@@ -51,5 +51,5 @@
   "publication_evidence": false,
   "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
   "scientific_inputs_regenerated": false,
-  "source_commit": "57f46112710be83237019757a665f7baa3bfb491"
+  "source_commit": "cc5e09273bf1817e7090f30461230463027b307c"
 }
