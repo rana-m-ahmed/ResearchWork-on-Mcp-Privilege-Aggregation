@@ -33,13 +33,13 @@
     "phase5_5/configs/task_argument_bindings_v1.json": "5645e6cf46f513f970a71aab44727cdd7398d8753cec8f3a4f9a77638808f02e",
     "phase5_5/configs/treatment_and_analysis_contract_v3.json": "caaafdb8b2607cfa325d7e1aabc6703582dc9cadb030563d752d970bdee9ad87",
     "phase5_5/kaggle/phase5_5_official_runner.ipynb": "67c65aa01e6c98c97033ea14a012046493bc7c2dccd1c0b7abb4f6d8130ef0ed",
-    "phase5_5/kaggle/phase5_5_pretrial_runner.ipynb": "cc62bf3f32d8d942a83eccbed41a9952e6bea85c1f9f3e5f12d5bf0b8ee3a2f4",
+    "phase5_5/kaggle/phase5_5_pretrial_runner.ipynb": "f8b96d15b90b3278a4118c6c8dd9ce73b18bf17263eff9a30c70dc0f1223ffbc",
     "phase5_5/kaggle/phase5_5_runner.ipynb": "dddedd47fabe03ca4a3d14ac2a5fdbd90c3c9e4dc20c2c60331f988751367ec0",
     "phase5_5/parser.py": "fa0401f64df7a7a4309834ee90143881fa887c8f92775917a53ef8ccf280b525",
     "phase5_5/runtime.py": "923274e72a61fb225ca219baba5881d9a543f4af730c2fcf9b74353aa1269222",
     "phase5_5/scripts/build_kaggle_runner.py": "fab17c67488b683541b9b524e1cbac4deeb8d711fe321e716378bd027ca6ffdb",
     "phase5_5/scripts/build_official_runner.py": "3c7a74e235c5cf99ca456ba74fe573a0ed39bd13a094dfd5dcb88f5f249d82b8",
-    "phase5_5/scripts/build_pretrial_runner.py": "2def0a370d670631d5befde51f8c5358dc673297c8c683205fb0dbbbbbec41fd",
+    "phase5_5/scripts/build_pretrial_runner.py": "d168b106162a893c329fa3a0297afc0d24b98d7328000f167f994c6bcff02ac1",
     "phase5_5/scripts/build_source_freeze.py": "7c85b29e397cd1a444246fbab833acae05589ddf8bbdd48ee051e88a24236583",
     "phase5_5/scripts/build_treatment_manifests.py": "02a194eef2d64dcc0ae2bdc54a43bc4c41ba58b75b7646b70cfece31104e7e00",
     "phase5_5/scripts/official_authorized_preflight.py": "e79417f4db4fb976b49a5ff9f2d1a1dc4b9b8fe69bf6ad445310001bd2fdd407",
@@ -58,5 +58,5 @@
   "publication_evidence": false,
   "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
   "scientific_inputs_regenerated": false,
-  "source_commit": "c04a710ad03a1cd6ed5e6aa8732700f1e633eb05"
+  "source_commit": "ff8af945700b95b720a8730ededf817af0c88b3f"
 }
