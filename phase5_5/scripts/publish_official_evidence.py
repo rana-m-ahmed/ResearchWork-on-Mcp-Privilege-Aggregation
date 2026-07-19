@@ -56,6 +56,32 @@ def _relative_under(root: Path, path: Path) -> str:
     return f"phase5_5/evidence/attempts/{relative.as_posix()}"
 
 
+def _resolve_lineage_attempt(root: Path, raw: str) -> Path:
+    """Relocate an absolute path from a prior checkout without widening scope."""
+    evidence_attempts = (root / "phase5_5/evidence/attempts").resolve()
+    candidate = Path(raw)
+    if not candidate.is_absolute() and not raw.startswith("/"):
+        return (root / candidate).resolve()
+    try:
+        candidate.resolve().relative_to(evidence_attempts)
+        return candidate.resolve()
+    except ValueError:
+        pass
+
+    parts = candidate.as_posix().split("/")
+    marker = ("phase5_5", "evidence", "attempts")
+    marker_start = next(
+        (index for index in range(len(parts) - len(marker) + 1) if tuple(parts[index:index + len(marker)]) == marker),
+        None,
+    )
+    if marker_start is None:
+        raise RuntimeError("lineage raw_attempt_directory is outside phase5_5 evidence")
+    suffix = parts[marker_start + len(marker):]
+    if not suffix or any(part in {"", ".", ".."} for part in suffix):
+        raise RuntimeError("lineage raw_attempt_directory is not canonical")
+    return (evidence_attempts.joinpath(*suffix)).resolve()
+
+
 def run_evidence_files(root: Path, run_id: str) -> list[str]:
     """Reconcile evidence for a run even when checkpoint commits made the tree clean."""
     lineage = root / "phase5_5/evidence/lineage.csv"
@@ -72,10 +98,7 @@ def run_evidence_files(root: Path, run_id: str) -> list[str]:
         raw = row.get("raw_attempt_directory", "")
         if not raw:
             raise RuntimeError("lineage row is missing raw_attempt_directory")
-        attempt_dir = Path(raw)
-        if not attempt_dir.is_absolute():
-            attempt_dir = root / attempt_dir
-        attempt_dir = attempt_dir.resolve()
+        attempt_dir = _resolve_lineage_attempt(root, raw)
         try:
             attempt_dir.relative_to(evidence_attempts)
         except ValueError as exc:
