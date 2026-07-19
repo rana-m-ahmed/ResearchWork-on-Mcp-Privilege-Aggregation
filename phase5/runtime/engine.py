@@ -6,6 +6,7 @@ import json
 import logging
 import hashlib
 import platform
+import shutil
 import subprocess
 from dataclasses import asdict
 from datetime import datetime, timezone
@@ -28,6 +29,19 @@ from ..grading.frozen_grader import (
 )
 from ..grading.tid import TidResult, compute_logical_tid
 from ..queues.frozen_queue_loader import FrozenQueueRow
+
+
+def _capture_nvidia_smi(*, cuda_available: bool) -> str:
+    """Collect optional GPU diagnostics without making them a trial dependency."""
+
+    if not cuda_available or shutil.which("nvidia-smi") is None:
+        return ""
+    try:
+        return subprocess.run(
+            ["nvidia-smi"], text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False
+        ).stdout
+    except OSError:
+        return ""
 from .agent_loop import run_frozen_agent_loop, load_frozen_state_machine_controls
 from .model_backend_adapter import build_frozen_model_backend_adapter, load_frozen_model_backend_identity
 from .official_execution import ExecutedTrialResult, RealTrialPipeline, TrialAcceptanceProof, frozen_row_key
@@ -260,9 +274,9 @@ class SharedExecutionEngine(RealTrialPipeline):
         except Exception as exc:
             hardware_snapshot["cuda_available"] = False
             hardware_snapshot["cuda_probe_error"] = f"{type(exc).__name__}: {exc}"
-        hardware_snapshot["nvidia_smi"] = subprocess.run(
-            ["nvidia-smi"], text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False
-        ).stdout if hardware_snapshot.get("cuda_available") else ""
+        hardware_snapshot["nvidia_smi"] = _capture_nvidia_smi(
+            cuda_available=bool(hardware_snapshot.get("cuda_available"))
+        )
         workspace.write_json_snapshot("hardware_snapshot.json", hardware_snapshot)
 
         mcp_verification = build_validated_server(
