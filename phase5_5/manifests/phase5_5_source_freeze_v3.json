@@ -4,6 +4,7 @@
     "docs/Phase5_Revised_Execution_Plan_v3_2.md": "8bec5d176ccbe3846730fe3f56f7a7c5f9c9e3eff30ab19e950eeb8d476f3a6d",
     "phase5/attempts/schemas/attempt_workspace_metadata.schema.json": "177b142c7df76ed9cfdd18bdb9edaceeebad728b49854f514bccdf2b82a8cd69",
     "phase5/campaign.py": "15be331e558fe59d692cf77613c12d8a9c643ac319547cd8fdfb0b1f6b9110dd",
+    "phase5/cli.py": "7545fe8a54225bc60d6faa9622041c751c47ed8d5f5b9d5725a1dd58aede3f04",
     "phase5/configs/upstream_artifact_registry.json": "a50760c49ae93e41f73b2b1580c7dead1fbc2a3de04e7e58a94cc8348bf9b6dd",
     "phase5/grading/frozen_grader.py": "2a33e1a57e52b90c2f3606d08e4bde061443c7caad124398df26c5deb751ca6e",
     "phase5/implementation/prompts/task_execution_template.md": "fb3b6db6fc8880b0132f1df434279087f6a15ca3f0fcc86ca2f1a0417c193a9f",
@@ -22,6 +23,7 @@
     "phase5/validation/kaggle_run_plan_v3_treatment.json": "d596c1048488c12f27ff1d30b50e410ee67c9723e7b8dfde714c44e0c4f29c2d",
     "phase5_5/authorization/official_execution_authorization.json": "19601d7b4e18f07b5c5c870ae9f30924f503fdf71c060b489e833a5e4068fce0",
     "phase5_5/branch_config.json": "a4b89a3688382e4b8bad8a8d6275a86ad9d8bf2611077c472552ad35c4220428",
+    "phase5_5/checkpointing.py": "01d9012e9d9828b6c008cfdbd13e710445c9181cd659f293a740dca70184f326",
     "phase5_5/configs/branch_mapping.json": "9a20036c666cc07c5ae7e7f9fc163e06fddc386a0b4ad2f689b819694c54754c",
     "phase5_5/configs/evidence_policy.json": "813cc890ea22ba4bf6f791efb175a32ae4602f96291474ffd4ba6efc954b72e8",
     "phase5_5/configs/frozen_state_machine_controls.json": "eb9932cf7022dbb56922dc7fbce037e3d06ac442a664935c32c37aa61b3397a4",
@@ -30,15 +32,19 @@
     "phase5_5/configs/task_argument_bindings_v1.json": "5645e6cf46f513f970a71aab44727cdd7398d8753cec8f3a4f9a77638808f02e",
     "phase5_5/configs/treatment_and_analysis_contract_v3.json": "caaafdb8b2607cfa325d7e1aabc6703582dc9cadb030563d752d970bdee9ad87",
     "phase5_5/kaggle/phase5_5_official_runner.ipynb": "436a7d03a32223ec892456c4631c73e7d0e4920311848023ec0d4b6f3dee513d",
+    "phase5_5/kaggle/phase5_5_pretrial_runner.ipynb": "e3776e5d2a630fa032d1784dcc32abbbfde0ae6c66a6a091351b1ff9e791fcc6",
     "phase5_5/kaggle/phase5_5_runner.ipynb": "dddedd47fabe03ca4a3d14ac2a5fdbd90c3c9e4dc20c2c60331f988751367ec0",
     "phase5_5/parser.py": "fa0401f64df7a7a4309834ee90143881fa887c8f92775917a53ef8ccf280b525",
     "phase5_5/runtime.py": "923274e72a61fb225ca219baba5881d9a543f4af730c2fcf9b74353aa1269222",
     "phase5_5/scripts/build_kaggle_runner.py": "fab17c67488b683541b9b524e1cbac4deeb8d711fe321e716378bd027ca6ffdb",
     "phase5_5/scripts/build_official_runner.py": "3c7a74e235c5cf99ca456ba74fe573a0ed39bd13a094dfd5dcb88f5f249d82b8",
-    "phase5_5/scripts/build_source_freeze.py": "6f81704d13eac9b6a9fad830f37256d82218925986e57629e7bb4f3f8537cda1",
+    "phase5_5/scripts/build_pretrial_runner.py": "13504f67d9ce7581010dde78552db9ce796e2ae4c74dca8a932c014875ba7d80",
+    "phase5_5/scripts/build_source_freeze.py": "dff1d200355311ba00afb06055cfca5729c972e37a0b330f5e663578320394e1",
     "phase5_5/scripts/build_treatment_manifests.py": "02a194eef2d64dcc0ae2bdc54a43bc4c41ba58b75b7646b70cfece31104e7e00",
     "phase5_5/scripts/official_authorized_preflight.py": "e79417f4db4fb976b49a5ff9f2d1a1dc4b9b8fe69bf6ad445310001bd2fdd407",
     "phase5_5/scripts/official_preflight.py": "68b437fb39ecd875db12aa0146344e022dbf56e7b87db1116d1de2d1ef8d9828",
+    "phase5_5/scripts/publish_checkpoint.py": "df2bd4384900f2295b7cc059557cd94202f75d04f394573a8049f9fa144d7a96",
+    "phase5_5/scripts/publish_official_evidence.py": "18d72cae1c6142982b5945a7aecbb1c2526f9cfc1e3583ddb734bb7015c348c3",
     "phase5_5/scripts/rebuild_historical_closure.py": "95534078a91636c98c4a516f84e2a5cc8a1d0bbe861f8e172b8f5694a3ccbe76",
     "phase5_5/scripts/run_qualification_canary.py": "9ece92fd8a0cfac926535682150962f3eced3b9184a4225a71166830820fcb88"
   },
@@ -51,5 +57,5 @@
   "publication_evidence": false,
   "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
   "scientific_inputs_regenerated": false,
-  "source_commit": "ccdf064fc0fded80f3cd3460243fd15ca312ca71"
+  "source_commit": "ba1fa936a1d337755e7377d5cde20bd038cd2531"
 }
