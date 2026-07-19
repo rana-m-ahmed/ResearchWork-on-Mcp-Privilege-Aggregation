@@ -37,7 +37,9 @@ def main() -> int:
         "docs/Phase5_Revised_Execution_Plan_v3_2.md",
         "phase5/grading/frozen_grader.py",
         "phase5/runtime/agent_loop.py",
-        "phase5/runtime/engine.py",
+            "phase5/runtime/engine.py",
+            "phase5/runtime/official_execution.py",
+            "phase5/campaign.py",
         "phase5_5/parser.py",
         "phase5_5/runtime.py",
         "phase5_5/scripts/rebuild_historical_closure.py",
@@ -56,6 +58,7 @@ def main() -> int:
             "phase5_5/configs/schema_variant_manifest_v3.json",
             "phase5_5/configs/task_argument_bindings_v1.json",
             "phase5_5/configs/treatment_and_analysis_contract_v3.json",
+            "phase5_5/scripts/build_source_freeze.py",
             "phase5/implementation/reports/phase5_5/phase5_5_zero_acceptance_root_cause_audit.md",
         )
     files = {}
