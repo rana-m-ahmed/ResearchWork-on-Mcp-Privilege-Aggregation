@@ -11,6 +11,7 @@ import json
 import re
 from dataclasses import dataclass, field
 from enum import Enum
+from collections.abc import Sequence
 from typing import Any, Mapping
 
 from phase5.runtime.parser_adapter import ModelOutputFailure, ParsedToolCall, parse_model_output
@@ -176,6 +177,64 @@ def _outside_string_tool_call(text: str) -> bool:
     return False
 
 
+def _parse_text_tool_name(text: str, cursor: int) -> tuple[str, int] | None:
+    """Parse an explicit textual tool name, bare or as a JSON string."""
+
+    bare_match = _TOOL_NAME.match(text, cursor)
+    if bare_match:
+        return bare_match.group(0), bare_match.end()
+    if cursor >= len(text) or text[cursor] != '"':
+        return None
+    try:
+        decoded, consumed = json.JSONDecoder().raw_decode(text[cursor:])
+    except json.JSONDecodeError:
+        return None
+    if not isinstance(decoded, str) or not _TOOL_NAME.fullmatch(decoded):
+        return None
+    return decoded, cursor + consumed
+
+
+def _normalise_explicit_alias_payload(payload: Mapping[str, Any]) -> Mapping[str, Any]:
+    """Map explicit Phase 5.5 alias envelopes onto the frozen adapter shape.
+
+    This is intentionally narrow: singular ``tool_call`` is accepted only as a
+    complete ordered sequence of call mappings and only when the canonical
+    ``tool``/``tool_calls`` fields are absent.
+    """
+
+    if "tool_call" not in payload:
+        return payload
+    if "tool" in payload or "tool_calls" in payload:
+        raise ModelOutputFailure("tool_call alias cannot be mixed with canonical tool or tool_calls envelopes")
+    tool_call_value = payload.get("tool_call")
+    if not isinstance(tool_call_value, Sequence) or isinstance(tool_call_value, (str, bytes, bytearray)):
+        raise ModelOutputFailure("tool_call alias must be an ordered sequence of tool-call mappings")
+    normalised: dict[str, Any] = dict(payload)
+    normalised["tool_calls"] = tool_call_value
+    del normalised["tool_call"]
+    return normalised
+
+
+def _duplicate_call_keys(calls: tuple[ParsedToolCall, ...]) -> set[str]:
+    seen: set[str] = set()
+    duplicates: set[str] = set()
+    for call in calls:
+        key = json.dumps(
+            {
+                "arguments": call.arguments,
+                "tool_call_id": call.tool_call_id,
+                "tool_name": call.tool_name,
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        if key in seen:
+            duplicates.add(key)
+        seen.add(key)
+    return duplicates
+
+
 def _candidate_objects(text: str) -> list[tuple[int, int, Mapping[str, Any]]]:
     candidates: list[tuple[int, int, Mapping[str, Any]]] = []
     for index, char in enumerate(text):
@@ -192,7 +251,7 @@ def _candidate_objects(text: str) -> list[tuple[int, int, Mapping[str, Any]]]:
         if not isinstance(payload, Mapping):
             continue
         keys = set(payload)
-        if keys.intersection({"tool", "tool_calls"}):
+        if keys.intersection({"tool", "tool_calls", "tool_call"}):
             candidates.append((index, end, payload))
     return candidates
 
@@ -204,11 +263,10 @@ def _text_candidates(text: str) -> tuple[list[tuple[int, int, str, Mapping[str, 
         if _is_inside_string(text, match.start()):
             continue
         cursor = match.end()
-        name_match = _TOOL_NAME.match(text, cursor)
-        if not name_match:
+        parsed_name = _parse_text_tool_name(text, cursor)
+        if not parsed_name:
             continue
-        tool_name = name_match.group(0)
-        cursor = name_match.end()
+        tool_name, cursor = parsed_name
         while cursor < len(text) and text[cursor].isspace():
             cursor += 1
         if cursor >= len(text) or text[cursor] != ",":
@@ -267,7 +325,7 @@ def _result(
     )
 
 
-def _extract_syntax_tool_call(
+def extract_tool_call(
     raw_text: str,
     *,
     parser_version: str = "phase5.5-parser-v2",
@@ -297,7 +355,24 @@ def _extract_syntax_tool_call(
     else:
         canonical_json = isinstance(payload, Mapping)
 
-    if canonical_json:
+    alias_only_json = (
+        isinstance(payload, Mapping)
+        and "tool_call" in payload
+        and "tool" not in payload
+        and "tool_calls" not in payload
+    )
+    if canonical_json and "tool_call" in payload and not alias_only_json:
+        return _result(
+            raw_text,
+            status=ParserStatus.SCHEMA_INVALID_CALL,
+            native_format="canonical_json",
+            canonical=False,
+            parser_version=parser_version,
+            diagnostic="tool_call alias cannot be mixed with canonical tool or tool_calls envelopes",
+            count=1,
+        )
+
+    if canonical_json and not alias_only_json:
         try:
             parsed = parse_model_output(stripped, parser_version=parser_version)
         except ModelOutputFailure as exc:
@@ -312,6 +387,16 @@ def _extract_syntax_tool_call(
             )
         if len(parsed.tool_calls) >= 1:
             calls = tuple(parsed.tool_calls)
+            if _duplicate_call_keys(calls):
+                return _result(
+                    raw_text,
+                    status=ParserStatus.AMBIGUOUS_MULTIPLE_CANDIDATES,
+                    native_format="canonical_json",
+                    canonical=True,
+                    parser_version=parser_version,
+                    diagnostic="duplicate tool invocation candidates detected",
+                    count=len(calls),
+                )
             return ExtractionResult(
                 raw_text=raw_text,
                 parser_version=parser_version,
@@ -362,6 +447,17 @@ def _extract_syntax_tool_call(
             ParsedToolCall(call_index=index, tool_name=tool_name, arguments=arguments)
             for index, (_, _, tool_name, arguments) in enumerate(text_calls)
         )
+        if _duplicate_call_keys(calls):
+            return _result(
+                raw_text,
+                status=ParserStatus.AMBIGUOUS_MULTIPLE_CANDIDATES,
+                native_format="textual_invocation",
+                canonical=False,
+                parser_version=parser_version,
+                diagnostic="duplicate tool invocation candidates detected",
+                count=len(calls),
+                candidate_spans=tuple((start, end) for start, end, _, _ in text_calls),
+            )
         return ExtractionResult(
             raw_text=raw_text,
             parser_version=parser_version,
@@ -393,7 +489,7 @@ def _extract_syntax_tool_call(
         parsed_calls: list[ParsedToolCall] = []
         for start, end, payload in object_candidates:
             try:
-                parsed = parse_model_output(payload, parser_version=parser_version)
+                parsed = parse_model_output(_normalise_explicit_alias_payload(payload), parser_version=parser_version)
             except ModelOutputFailure as exc:
                 return _result(
                     raw_text,
@@ -422,6 +518,17 @@ def _extract_syntax_tool_call(
                            tool_call_id=call.tool_call_id, metadata=call.metadata)
             for index, call in enumerate(parsed_calls)
         )
+        if _duplicate_call_keys(calls):
+            return _result(
+                raw_text,
+                status=ParserStatus.AMBIGUOUS_MULTIPLE_CANDIDATES,
+                native_format="embedded_json",
+                canonical=False,
+                parser_version=parser_version,
+                diagnostic="duplicate tool invocation candidates detected",
+                count=len(calls),
+                candidate_spans=spans,
+            )
         return ExtractionResult(
             raw_text=raw_text,
             parser_version=parser_version,
@@ -453,90 +560,4 @@ def _extract_syntax_tool_call(
         parser_version=parser_version,
         diagnostic=diagnostic,
         count=0,
-    )
-
-
-def _json_value_matches_schema(value: Any, schema: Mapping[str, Any]) -> bool:
-    schema_type = schema.get("type")
-    if schema_type == "string":
-        return isinstance(value, str)
-    if schema_type == "integer":
-        return isinstance(value, int) and not isinstance(value, bool)
-    if schema_type == "number":
-        return isinstance(value, (int, float)) and not isinstance(value, bool)
-    if schema_type == "boolean":
-        return isinstance(value, bool)
-    if schema_type == "object":
-        return isinstance(value, Mapping)
-    if schema_type == "array":
-        return isinstance(value, list)
-    return True
-
-
-def _validate_tool_schema(
-    result: ExtractionResult,
-    *,
-    tool_schemas: Mapping[str, Any],
-    forbidden_tool_names: tuple[str, ...],
-) -> str | None:
-    for call in result.parsed_calls:
-        if call.tool_name in forbidden_tool_names:
-            return f"forbidden tool requested: {call.tool_name!r}"
-        specification = tool_schemas.get(call.tool_name)
-        if specification is None:
-            return f"unknown tool requested: {call.tool_name!r}"
-        schema = getattr(specification, "parameter_schema", specification)
-        if not isinstance(schema, Mapping):
-            return f"tool schema is invalid for {call.tool_name!r}"
-        required = schema.get("required", ())
-        properties = schema.get("properties", {})
-        if not isinstance(required, (list, tuple)) or not isinstance(properties, Mapping):
-            return f"tool schema is invalid for {call.tool_name!r}"
-        missing = [name for name in required if name not in call.arguments]
-        if missing:
-            return f"tool {call.tool_name!r} is missing required argument {missing[0]!r}"
-        if schema.get("additionalProperties") is False:
-            unknown = [name for name in call.arguments if name not in properties]
-            if unknown:
-                return f"tool {call.tool_name!r} has unknown argument {unknown[0]!r}"
-        for name, value in call.arguments.items():
-            property_schema = properties.get(name)
-            if isinstance(property_schema, Mapping) and not _json_value_matches_schema(value, property_schema):
-                return f"tool {call.tool_name!r} argument {name!r} has the wrong type"
-    return None
-
-
-def extract_tool_call(
-    raw_text: str,
-    *,
-    parser_version: str = "phase5.5-parser-v2",
-    generation_evidence: Mapping[str, Any] | GenerationEvidence | None = None,
-    tool_schemas: Mapping[str, Any] | None = None,
-    forbidden_tool_names: tuple[str, ...] = (),
-) -> ExtractionResult:
-    """Extract and, when supplied, validate calls against the discovered MCP contract."""
-
-    result = _extract_syntax_tool_call(
-        raw_text,
-        parser_version=parser_version,
-        generation_evidence=generation_evidence,
-    )
-    if result.status is not ParserStatus.VALID_EXTRACTED_CALL or tool_schemas is None:
-        return result
-    diagnostic = _validate_tool_schema(
-        result,
-        tool_schemas=tool_schemas,
-        forbidden_tool_names=tuple(forbidden_tool_names),
-    )
-    if diagnostic is None:
-        return result
-    return _result(
-        raw_text,
-        status=ParserStatus.SCHEMA_INVALID_CALL,
-        native_format=result.native_format,
-        canonical=result.canonical_json_compliant,
-        parser_version=parser_version,
-        diagnostic=diagnostic,
-        count=result.candidate_count,
-        candidate_spans=result.candidate_spans,
     )
