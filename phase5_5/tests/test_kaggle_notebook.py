@@ -72,3 +72,25 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
     backend_source = (root / "phase5/runtime/model_backend_adapter.py").read_text(encoding="utf-8")
     assert "MODEL_GPU_LOAD_START" in backend_source
     assert "MODEL_GPU_MODEL_READY" in backend_source
+
+
+def test_pretrial_notebook_targets_v3_treatment_artifacts() -> None:
+    root = Path(__file__).resolve().parents[2]
+    notebook = json.loads(
+        (root / "phase5_5/kaggle/phase5_5_pretrial_runner.ipynb").read_text(
+            encoding="utf-8"
+        )
+    )
+    source = "\n".join(
+        "".join(cell.get("source", []))
+        for cell in notebook["cells"]
+        if cell.get("cell_type") == "code"
+    )
+    for index, cell in enumerate(notebook["cells"]):
+        if cell.get("cell_type") == "code":
+            compile("".join(cell["source"]), f"pretrial-cell-{index}", "exec")
+    assert "P5-DV-1.1.0-TREATMENT-V3" in source
+    assert "phase5/manifests/batch_partition_manifest_v3_treatment.json" in source
+    assert "phase5/validation/kaggle_run_plan_v3_treatment.json" in source
+    assert "phase5/validation/kaggle_run_plan_v3.json" not in source
+    assert "--pretrial-trials" in source
