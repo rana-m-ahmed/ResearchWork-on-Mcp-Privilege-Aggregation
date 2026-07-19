@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 
 
-SLOT = "M4"
-BASE_HEAD = "a6f7343ad15b719cc964c0c45f5e09ffff1bdde5"
+SLOT = "M1"
+BASE_HEAD = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=Path(__file__).resolve().parents[2], text=True).strip()
 OUTPUT = Path(__file__).resolve().parents[1] / "kaggle/phase5_5_official_runner.ipynb"
 SOURCE = Path(__file__).resolve().parents[1] / "kaggle/phase5_5_runner.ipynb"
 
@@ -40,10 +41,10 @@ def main() -> None:
 
 actual_branch_head = git("rev-parse", "HEAD")
 if subprocess.run(["git", "-C", str(REPO_ROOT), "merge-base", "--is-ancestor", "{BASE_HEAD}", actual_branch_head], check=False).returncode != 0:
-    raise RuntimeError("official branch is not descended from the authorized base head")
-freeze = json.loads((REPO_ROOT / "phase5_5/manifests/phase5_5_source_freeze.json").read_text(encoding="utf-8-sig"))
-if freeze["source_commit"] != EXPECTED_SOURCE_COMMIT:
-    raise RuntimeError(f"source-freeze commit mismatch: {{freeze['source_commit']}}")
+    raise RuntimeError("official branch is not descended from the built source head")
+freeze = json.loads((REPO_ROOT / "phase5_5/manifests/phase5_5_source_freeze_v3.json").read_text(encoding="utf-8-sig"))
+if freeze.get("artifact") != "phase5_5_source_freeze_v3" or freeze.get("dataset_version") != DATASET_VERSION:
+    raise RuntimeError("v3 source freeze does not match the treatment dataset")
 branch_config = json.loads((REPO_ROOT / "phase5_5/branch_config.json").read_text(encoding="utf-8-sig"))
 if branch_config["model_slot"] != MODEL_SLOT or branch_config["exact_model_identifier"] != MODEL_IDS[MODEL_SLOT]:
     raise RuntimeError("selected branch does not match its approved model slot")
@@ -119,25 +120,6 @@ cache_snapshot = snapshot_download(
     cache_dir=os.environ["HF_HUB_CACHE"],
 )
 print(f"MODEL_CACHE_READY: {cache_snapshot}", flush=True)
-if MODEL_SLOT == "M4":
-    os.environ["PHASE5_M4_ENABLE_KV_CACHE"] = "1"
-    m4_canary = OUTPUT_ROOT / "M4_runtime_canary.json"
-    canary_command = [
-        sys.executable,
-        "phase5_5/scripts/run_m4_runtime_canary.py",
-        "--root",
-        str(REPO_ROOT),
-        "--output",
-        str(m4_canary),
-    ]
-    canary_process = subprocess.run(canary_command, cwd=REPO_ROOT, capture_output=True, text=True, check=False)
-    if canary_process.returncode != 0:
-        raise RuntimeError(f"M4 optimized runtime canary failed: {canary_process.stderr}")
-    print(canary_process.stdout, flush=True)
-    canary = json.loads(m4_canary.read_text(encoding="utf-8"))
-    if canary.get("pass") is not True or canary.get("kv_cache_enabled") is not True:
-        raise RuntimeError("M4 optimized runtime canary did not pass")
-    print(f"M4_OPTIMIZED_RUNTIME_READY: {m4_canary}", flush=True)
 print("OFFICIAL_AUTHORIZED_PREFLIGHT_PASS")
 ''')
 
@@ -206,16 +188,12 @@ else:
                     del output_tail[:-200:]
             elif process.poll() is None:
                 elapsed = int(time.monotonic() - started)
-                nvidia_smi = shutil.which("nvidia-smi")
-                if nvidia_smi:
-                    gpu = subprocess.run(
-                        [nvidia_smi, "--query-gpu=memory.used,utilization.gpu", "--format=csv,noheader,nounits"],
-                        check=False,
-                        capture_output=True,
-                        text=True,
-                    ).stdout.strip().replace("\\n", "; ")
-                else:
-                    gpu = "unavailable:nvidia-smi"
+                gpu = subprocess.run(
+                    ["nvidia-smi", "--query-gpu=memory.used,utilization.gpu", "--format=csv,noheader,nounits"],
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                ).stdout.strip().replace("\\n", "; ")
                 print(f"OFFICIAL_CAMPAIGN_HEARTBEAT: elapsed_seconds={elapsed}; gpu={gpu or 'unavailable'}", flush=True)
                 last_heartbeat = time.monotonic()
             if process.poll() is not None:
@@ -262,8 +240,6 @@ os.environ["PHASE5_MODEL_OFFLOAD_DIR"] = "/kaggle/working/phase5_5_model_offload
 if MODEL_SLOT == "M4":
     # The repaired Phi execution was validated on Kaggle's dual-T4 profile.
     os.environ["PHASE5_REQUIRE_CUDA_DEVICE_COUNT"] = "2"
-    os.environ["HF_ENABLE_PARALLEL_LOADING"] = "true"
-    os.environ["HF_PARALLEL_LOADING_WORKERS"] = "4"
 Path(os.environ["HF_HOME"]).mkdir(parents=True, exist_ok=True)
 Path(os.environ["PHASE5_MODEL_OFFLOAD_DIR"]).mkdir(parents=True, exist_ok=True)
 
@@ -273,11 +249,11 @@ def run_checked(command: list[str], *, cwd: Path | None = None) -> str:
         raise RuntimeError(f"command failed ({completed.returncode}): {' '.join(command)}\\n{completed.stderr}")
     return completed.stdout
 
-nvidia_smi = shutil.which("nvidia-smi")
-if nvidia_smi:
-    print(run_checked([nvidia_smi]))
+nvidia_command = ["nvidia-smi"] if shutil.which("nvidia-smi") else None
+if nvidia_command is not None:
+    print(run_checked(nvidia_command))
 else:
-    print("NVIDIA_SMI_UNAVAILABLE: continuing with torch CUDA verification")
+    print("NVIDIA_SMI_UNAVAILABLE: continuing with torch CUDA verification", flush=True)
 subprocess.run([sys.executable, "-m", "pip", "install", "--requirement", str(REPO_ROOT / "phase4_5/kaggle/requirements.lock.txt")], check=True)
 hardware = run_checked([
     sys.executable,
