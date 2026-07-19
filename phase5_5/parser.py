@@ -192,7 +192,7 @@ def _candidate_objects(text: str) -> list[tuple[int, int, Mapping[str, Any]]]:
         if not isinstance(payload, Mapping):
             continue
         keys = set(payload)
-        if keys.intersection({"tool", "tool_calls", "terminal_response"}):
+        if keys.intersection({"tool", "tool_calls"}):
             candidates.append((index, end, payload))
     return candidates
 
