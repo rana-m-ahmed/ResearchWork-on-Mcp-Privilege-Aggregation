@@ -33,10 +33,8 @@ def main() -> None:
         'EXECUTE_OFFICIAL = os.environ.get("PHASE5_EXECUTE_OFFICIAL", "0") == "1"',
         "EXECUTE_OFFICIAL = False",
     )
-    source = source.replace(
-        'RUN_ID = f"P5RUN-{DATASET_VERSION}-{MODEL_SLOT}-{UTC_DATE}-{RUN_TOKEN}"',
-        'RUN_ID = f"P5PRE-{DATASET_VERSION}-{MODEL_SLOT}-{UTC_DATE}-{RUN_TOKEN}"',
-    )
+    if 'RUN_ID = f"P5RUN-{DATASET_VERSION}-{MODEL_SLOT}-{UTC_DATE}-{RUN_TOKEN}"' not in source:
+        raise RuntimeError("base runner lost frozen P5RUN run-id grammar")
     set_source(config, source)
 
     campaign = find_cell(notebook, "official_campaign")
