@@ -409,6 +409,8 @@ def run_frozen_agent_loop(
     tokenizer: Any,
     budget_policy: TokenBudgetPolicy,
     tool_catalog: Mapping[str, ToolSpecification],
+    mcp_discovery: Mapping[str, Any] | None = None,
+    task_execution_plan: Sequence[Mapping[str, Any]] | None = None,
     reset_executor: ResetExecutor,
     retrieved_content: str | None = None,
     root: Path | None = None,
@@ -527,6 +529,8 @@ def run_frozen_agent_loop(
         root=root,
         tokenizer=tokenizer,
         budget_policy=budget_policy,
+        mcp_discovery=mcp_discovery,
+        task_execution_plan=task_execution_plan,
     )
     prompt_paths = prompt_artifact.write(workspace.workspace_root)
     _state_transition(
@@ -674,6 +678,8 @@ def run_frozen_agent_loop(
             raw_output_text,
             parser_version=controls.parser_version or "phase5.5-parser-v1",
             generation_evidence=generation_receipt,
+            tool_schemas=tool_catalog,
+            forbidden_tool_names=controls.forbidden_tool_names,
         )
         terminal_from_parser = parser_result.metadata.get("terminal_response")
         if not parser_result.valid and isinstance(terminal_from_parser, str):
@@ -687,7 +693,11 @@ def run_frozen_agent_loop(
             )
         elif not parser_result.valid:
             exc = parser_result.diagnostic or parser_result.status.value
-            termination_reason = controls.malformed_output_policy
+            termination_reason = (
+                "semantic failure"
+                if parser_result.status.value == "SCHEMA_INVALID_CALL"
+                else controls.malformed_output_policy
+            )
             termination_state = "S12"
             notes.append(f"{parser_result.status.value}: {exc}")
             append_jsonl_record(
@@ -901,6 +911,8 @@ def run_frozen_agent_loop(
                 root=root,
                 tokenizer=tokenizer,
                 budget_policy=budget_policy,
+                mcp_discovery=mcp_discovery,
+                task_execution_plan=task_execution_plan,
             )
         except TokenBudgetExceededError:
             termination_reason = OverflowClassification.MODEL_CREATED_LOOP_OVERFLOW.value
