@@ -142,17 +142,25 @@ if accepted_count < 0 or accepted_count > analysis_eligible_count:
     raise RuntimeError("pretrial accepted/eligible accounting is inconsistent")
 parser_status_counts = {}
 parser_versions = set()
+parser_event_count = 0
+parser_attempt_paths = set()
 for parser_path in pretrial_evidence_root.rglob("parser_events.jsonl"):
+    parser_attempt_paths.add(parser_path.parent)
     for line in parser_path.read_text(encoding="utf-8").splitlines():
         if not line:
             continue
         event = json.loads(line)
         if event.get("event_type") in {"PARSE_FAILURE", "PARSE_COMPLETED"}:
+            parser_event_count += 1
             status = str(event.get("reason") or event.get("status") or "UNKNOWN")
             parser_status_counts[status] = parser_status_counts.get(status, 0) + 1
             if event.get("parser_version") is not None:
                 parser_versions.add(str(event["parser_version"]))
-if parser_versions and parser_versions != {"phase5.5-parser-v3-mcp-schema"}:
+if len(parser_attempt_paths) != 3 or parser_event_count < 3:
+    raise RuntimeError(
+        f"pretrial parser evidence is incomplete: attempts={len(parser_attempt_paths)}, events={parser_event_count}"
+    )
+if parser_versions != {"phase5.5-parser-v3-mcp-schema"}:
     raise RuntimeError(f"pretrial parser-version drift: {sorted(parser_versions)}")
 pretrial_summary = {
     "artifact": "phase5_5_real_backend_pretrial_behavior_summary_v1",
@@ -162,6 +170,8 @@ pretrial_summary = {
     "analysis_eligible_count": analysis_eligible_count,
     "accepted_count": accepted_count,
     "accepted_count_is_not_a_pass_gate": True,
+    "parser_attempt_count": len(parser_attempt_paths),
+    "parser_event_count": parser_event_count,
     "parser_status_counts": parser_status_counts,
     "parser_versions": sorted(parser_versions),
 }
