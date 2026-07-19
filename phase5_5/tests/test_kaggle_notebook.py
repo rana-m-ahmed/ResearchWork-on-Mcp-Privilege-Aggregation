@@ -100,3 +100,8 @@ def test_pretrial_notebook_targets_v3_treatment_artifacts() -> None:
     assert "phase5/validation/kaggle_run_plan_v3_treatment.json" in source
     assert "phase5/validation/kaggle_run_plan_v3.json" not in source
     assert "--pretrial-trials" in source
+    assert "analysis_eligible_count != 3" in source
+    assert "accepted_count_is_not_a_pass_gate" in source
+    assert "parser_attempt_count" in source
+    assert "parser_event_count < 3" in source
+    assert 'parser_versions != {"phase5.5-parser-v3-mcp-schema"}' in source
