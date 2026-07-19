@@ -1,0 +1,11 @@
+{
+  "artifact": "phase5_5_official_evidence_publication_receipt_v1",
+  "branch": "phase5_5-model-2",
+  "credential_purged": false,
+  "expected_parent": "7bb0346ded23bd8f9fe8f84c6e3769b59e57d6e7",
+  "model_slot": "M2",
+  "publication_commit": "4092034834ba37472ec5e990b3860b2f7207df7a",
+  "published_utc": "2026-07-19T05:50:51.742111+00:00",
+  "remote_head_after_push": "4092034834ba37472ec5e990b3860b2f7207df7a",
+  "run_id": "P5RUN-P5-DV-1.0.2-A7C91E42-M2-20260718-0A3C9E18"
+}
