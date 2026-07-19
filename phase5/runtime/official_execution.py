@@ -94,6 +94,7 @@ class ExecutedTrialResult:
     acceptance_proof: TrialAcceptanceProof | None = None
     invalid_reason: str | None = None
     orphaned: bool = False
+    pretrial_mode: bool = False
 
     @property
     def qualification_accepted(self) -> bool:
@@ -107,7 +108,7 @@ class ExecutedTrialResult:
             raise OfficialDispatchBlockedError("planning metadata cannot produce an executed trial result")
         if self.official_trial or self.counts_for_phase5 or self.publication_evidence:
             raise OfficialDispatchBlockedError("I17E qualification output must remain non-official and non-publication")
-        if not self.synthetic_fixture:
+        if not self.synthetic_fixture and not self.pretrial_mode:
             raise OfficialDispatchBlockedError("I17E local qualification requires an explicit synthetic fixture")
         if self.elapsed_seconds < 0:
             raise SchemaInvariantError("executed trial elapsed_seconds must be non-negative")
@@ -162,6 +163,7 @@ class RepositoryBatchExecutionAdapter:
     dataset_version: str
     official_mode: bool = False
     real_execution_adapter: bool = True
+    pretrial_mode: bool = False
     checkpoint_callback: Callable[[CampaignBatchPlan, AttemptLineageRecord, int], None] | None = None
     checkpoint_interval_trials: int = 0
 
@@ -176,8 +178,10 @@ class RepositoryBatchExecutionAdapter:
                 raise OfficialDispatchBlockedError("official dispatch adapter requires official_trial=True on the pipeline")
         else:
             # Synthetic qualification mode: pipeline must be synthetic
-            if getattr(self.pipeline, "synthetic_fixture", False) is not True:
+            if not self.pretrial_mode and getattr(self.pipeline, "synthetic_fixture", False) is not True:
                 raise OfficialDispatchBlockedError("I17E development adapter permits synthetic fixtures only")
+            if self.pretrial_mode and getattr(self.pipeline, "synthetic_fixture", True) is True:
+                raise OfficialDispatchBlockedError("pretrial adapter requires the real non-synthetic pipeline")
         if self.session.state is not SessionState.SEALED:
             raise OfficialDispatchBlockedError("batch execution requires an active valid seal")
         if not self.dataset_version:
@@ -252,6 +256,8 @@ class RepositoryBatchExecutionAdapter:
                 accepted_attempt = qualified
             else:
                 attempt_status = "SYNTHETIC_QUALIFIED" if qualified else ("ORPHAN" if result.orphaned else "INVALID")
+                if self.pretrial_mode:
+                    attempt_status = "PRETRIAL_COMPLETED" if qualified else ("PRETRIAL_ORPHAN" if result.orphaned else "PRETRIAL_INVALID")
                 counts_toward_cell_n = False
                 accepted_attempt = False
 

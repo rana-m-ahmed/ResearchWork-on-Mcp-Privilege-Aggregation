@@ -48,6 +48,7 @@ class SharedExecutionEngine(RealTrialPipeline):
         counts_for_phase5: bool,
         publication_evidence: bool,
         synthetic_fixture: bool,
+        pretrial_mode: bool = False,
         dataset_version: str,
         model_slot: str | None = None,
         root: Path | None = None,
@@ -59,6 +60,7 @@ class SharedExecutionEngine(RealTrialPipeline):
         self.counts_for_phase5 = counts_for_phase5
         self.publication_evidence = publication_evidence
         self.synthetic_fixture = synthetic_fixture
+        self.pretrial_mode = pretrial_mode
         self.dataset_version = dataset_version
         self.model_slot = model_slot
         self.root = root or Path.cwd()
@@ -74,7 +76,8 @@ class SharedExecutionEngine(RealTrialPipeline):
             assert self.official_trial is False
             assert self.counts_for_phase5 is False
             assert self.publication_evidence is False
-            assert self.synthetic_fixture is True
+            assert self.synthetic_fixture is (not self.pretrial_mode)
+            assert self.pretrial_mode is (not self.synthetic_fixture)
 
         phase5_5_controls = self.root / "phase5_5" / "configs" / "frozen_state_machine_controls.json"
         self.controls = load_frozen_state_machine_controls(
@@ -442,6 +445,7 @@ class SharedExecutionEngine(RealTrialPipeline):
             official_trial=self.official_trial,
             counts_for_phase5=self.counts_for_phase5,
             publication_evidence=self.publication_evidence,
+            pretrial_mode=getattr(self, "pretrial_mode", False),
             acceptance_proof=proof,
             invalid_reason=invalid_reason,
             orphaned=False,
