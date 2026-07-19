@@ -78,9 +78,9 @@ pretrial_command = [
     "--evidence-root",
     str(pretrial_evidence_root),
     "--batch-manifest",
-    "phase5/manifests/batch_partition_manifest_v3.json",
+    "phase5/manifests/batch_partition_manifest_v3_treatment.json",
     "--run-plan",
-    "phase5/validation/kaggle_run_plan_v3.json",
+    "phase5/validation/kaggle_run_plan_v3_treatment.json",
     "--output",
     str(pretrial_report),
 ]

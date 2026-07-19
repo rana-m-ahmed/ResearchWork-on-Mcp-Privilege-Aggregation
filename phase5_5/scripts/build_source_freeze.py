@@ -54,6 +54,7 @@ def main() -> int:
             "phase5/runtime/prompt_compiler.py",
             "phase5/runtime/tool_dispatch.py",
             "phase5/runtime/official_execution.py",
+            "phase5/cli.py",
             "phase5/campaign.py",
             "phase5_5/configs/schema_variant_manifest_v3.json",
             "phase5_5/configs/task_argument_bindings_v1.json",
@@ -67,6 +68,11 @@ def main() -> int:
             "phase5_5/scripts/official_preflight.py",
             "phase5_5/scripts/official_authorized_preflight.py",
             "phase5_5/scripts/run_qualification_canary.py",
+            "phase5_5/scripts/build_pretrial_runner.py",
+            "phase5_5/scripts/publish_checkpoint.py",
+            "phase5_5/scripts/publish_official_evidence.py",
+            "phase5_5/scripts/run_m4_runtime_canary.py",
+            "phase5_5/checkpointing.py",
             "phase5_5/authorization/official_execution_authorization.json",
             "phase5_5/branch_config.json",
             "phase5_5/configs/evidence_policy.json",
@@ -74,6 +80,7 @@ def main() -> int:
             "phase5/validation/kaggle_run_plan_v3_treatment.json",
             "phase5_5/kaggle/phase5_5_runner.ipynb",
             "phase5_5/kaggle/phase5_5_official_runner.ipynb",
+            "phase5_5/kaggle/phase5_5_pretrial_runner.ipynb",
         )
     files = {}
     for relative in paths:
