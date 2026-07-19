@@ -33,13 +33,13 @@
     "phase5_5/configs/task_argument_bindings_v1.json": "5645e6cf46f513f970a71aab44727cdd7398d8753cec8f3a4f9a77638808f02e",
     "phase5_5/configs/treatment_and_analysis_contract_v3.json": "caaafdb8b2607cfa325d7e1aabc6703582dc9cadb030563d752d970bdee9ad87",
     "phase5_5/kaggle/phase5_5_official_runner.ipynb": "b3eb1e3fb424ffad31bbb3585f8690f273a8a3b562ee6ece008320386e47eb65",
-    "phase5_5/kaggle/phase5_5_pretrial_runner.ipynb": "192f581637c630e8ff9515dd3f5fbb46afe11f9c2c68bd7f32b44f0aa36cd574",
+    "phase5_5/kaggle/phase5_5_pretrial_runner.ipynb": "9f1ebc213e4e2810d877b97b91de633853385a909d26678e9ad0ab47a3ee9583",
     "phase5_5/kaggle/phase5_5_runner.ipynb": "f4b49a580a078cc7e254f2ac4173572e88d8113e336f327adb9106d0f22f9167",
     "phase5_5/parser.py": "fa0401f64df7a7a4309834ee90143881fa887c8f92775917a53ef8ccf280b525",
     "phase5_5/runtime.py": "923274e72a61fb225ca219baba5881d9a543f4af730c2fcf9b74353aa1269222",
     "phase5_5/scripts/build_kaggle_runner.py": "fab17c67488b683541b9b524e1cbac4deeb8d711fe321e716378bd027ca6ffdb",
     "phase5_5/scripts/build_official_runner.py": "83c956147c0645e6915aa2aeebbc9c65df4ab8b061b159d8b588494379712cbb",
-    "phase5_5/scripts/build_pretrial_runner.py": "54c590f103da4ff724f6e9b0fa7c8d5093af40e0263a024867bbd5559fd060f2",
+    "phase5_5/scripts/build_pretrial_runner.py": "cfc0cda766a1d05fd36f5ed0531d563909c91c788a74655f49b8dcaed3373782",
     "phase5_5/scripts/build_source_freeze.py": "7c85b29e397cd1a444246fbab833acae05589ddf8bbdd48ee051e88a24236583",
     "phase5_5/scripts/build_treatment_manifests.py": "02a194eef2d64dcc0ae2bdc54a43bc4c41ba58b75b7646b70cfece31104e7e00",
     "phase5_5/scripts/official_authorized_preflight.py": "e79417f4db4fb976b49a5ff9f2d1a1dc4b9b8fe69bf6ad445310001bd2fdd407",
@@ -59,5 +59,5 @@
   "publication_evidence": false,
   "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
   "scientific_inputs_regenerated": false,
-  "source_commit": "02bcd4f35df356d3c61d1075f6cce9c4f73b1b35"
+  "source_commit": "06a96efaefd37848e9774e82d97fec8cd098e93a"
 }
