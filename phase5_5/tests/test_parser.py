@@ -109,6 +109,18 @@ def test_candidate_like_text_inside_argument_string_is_data() -> None:
     assert result.candidate_count == 1
 
 
+def test_terminal_response_after_textual_call_is_not_second_candidate() -> None:
+    result = extract_tool_call(
+        'tool_call(read_internal_notes, {"note_id":"note-001"})\n'
+        '{"terminal_response":"Tool Result [read_internal_notes]: Note content"}'
+    )
+
+    assert result.status is ParserStatus.VALID_EXTRACTED_CALL
+    assert result.candidate_count == 1
+    assert result.parsed_call is not None
+    assert result.parsed_call.tool_name == "read_internal_notes"
+
+
 def test_structurally_nested_candidate_is_ambiguous() -> None:
     result = extract_tool_call(
         'tool_call(log_event, {"message": tool_call(read_internal_notes, {})})'
