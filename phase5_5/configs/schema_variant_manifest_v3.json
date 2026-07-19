@@ -2,14 +2,14 @@
   "artifact": "phase5_5_schema_variant_manifest",
   "schema_version": "1.0.0",
   "variants": {
-    "D1-CLEAN": {"path": "schemas/clean/density1.json", "sha256": "dc6bf317750a3c6e6adb7a437eaf4d23e97cd5b7bac89ba7fc058880f3f1d4c3"},
-    "D3-CLEAN": {"path": "schemas/clean/density3.json", "sha256": "77ff655026f5c84c174c102f70208d5850a89ff785a6bc0647d3bfb6cfda44d5"},
-    "D5-CLEAN": {"path": "schemas/clean/density5.json", "sha256": "43d23c861f52eef22c656719e2c2bfbf5ed5a9819bbb3993dec9a34bc4f619ee"},
-    "D1-POISON-TD": {"path": "schemas/poisoned_tool_description/density1.json", "sha256": "8586326c841895fe21eca9e096dd462236c36a407d7889cdc2c4c4b53d6c992e"},
-    "D3-POISON-TD": {"path": "schemas/poisoned_tool_description/density3.json", "sha256": "94a3f8051bf129c8c75145121eebcc757c14cddc9d77a02f2ab13103f5331b15"},
-    "D5-POISON-TD": {"path": "schemas/poisoned_tool_description/density5.json", "sha256": "e0a5fd1cb20d5025dbe97a75cf299c20e7cc26fec93ccb8de7c79046fc213d34"},
-    "D1-POISON-CA": {"path": "schemas/poisoned_capability_advertisement/density1.json", "sha256": "7450cc623925c60b6b27cd547b8514bea2095a5f841ba0a1d86095db6ec8de5c"},
-    "D3-POISON-CA": {"path": "schemas/poisoned_capability_advertisement/density3.json", "sha256": "139877cb35d8394d0d28a27469166cff2346805136cae18dc045ec65c046a906"},
-    "D5-POISON-CA": {"path": "schemas/poisoned_capability_advertisement/density5.json", "sha256": "5635038551882f12a97d7db9807a1077c68db10385b209ff196ace976384cb14"}
+    "D1-CLEAN": {"path": "schemas/clean/density1.json", "sha256": "5c5b9a3618104857d220378527f8c3e9276dc7ac902ce0674d946b39608ab00e"},
+    "D3-CLEAN": {"path": "schemas/clean/density3.json", "sha256": "88b7210f09a97ed2c97cbb3d93f1ee64320adca2fdcb785ea1815f717d23e53e"},
+    "D5-CLEAN": {"path": "schemas/clean/density5.json", "sha256": "670bc0658eb6b52bb2830bb18d91d4c880f3944c11615c83bd04f3e53bb9e8ee"},
+    "D1-POISON-TD": {"path": "schemas/poisoned_tool_description/density1.json", "sha256": "ebc3c82078658a4109c426827c4838d500e24399743b997da7eeecb66b4a2b81"},
+    "D3-POISON-TD": {"path": "schemas/poisoned_tool_description/density3.json", "sha256": "3949df7ba9816ae547bad4b864e9aa202e55acfb5c844b68e4c5653c044a9e7d"},
+    "D5-POISON-TD": {"path": "schemas/poisoned_tool_description/density5.json", "sha256": "564598addabe2998f8ba5c58f2fe9b2d8ffae3232ba007e32c4537503080749c"},
+    "D1-POISON-CA": {"path": "schemas/poisoned_capability_advertisement/density1.json", "sha256": "a4be319d061cfafdfb8f8cbfb93b046a136fdff86523780d4ccc16ef8448ea9c"},
+    "D3-POISON-CA": {"path": "schemas/poisoned_capability_advertisement/density3.json", "sha256": "72c0d98435be6c9fd05e9acc14f1e5da305891006ccf4d7f44dde089f6139746"},
+    "D5-POISON-CA": {"path": "schemas/poisoned_capability_advertisement/density5.json", "sha256": "598f97b14cee8fe58d51c6297ddbd94237ac27f50dd74067091e5b464814bda8"}
   }
 }
