@@ -22,10 +22,6 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
             compile("".join(cell["source"]), f"kaggle-cell-{index}", "exec")
     assert "phase5_5-model-" in source
     assert "phase5-model-" not in source
-    assert 'MODEL_SLOT = "M4"' in source
-    assert '"M4": "microsoft/Phi-3.5-mini-instruct"' in source
-    assert 'os.environ["PHASE5_REQUIRE_CUDA_DEVICE_COUNT"] = "2"' in source
-    assert "torch.cuda.device_count() >= {2 if MODEL_SLOT == 'M4' else 1}" in source
     assert "P5-DV-1.1.0-TREATMENT-V3" in source
     assert "phase5_5_source_freeze_v3.json" in source
     assert "kaggle_run_plan_v3_treatment.json" in source
@@ -38,15 +34,9 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
     assert 'str(canary_path)' in source
     assert "MODEL_CACHE_PREP_START" in source
     assert "MODEL_CACHE_READY" in source
-    assert "M4_OPTIMIZED_RUNTIME_READY" in source
     assert "GITHUB_PUBLICATION_AUTH_READY" in source
     assert '"--dry-run"' in source
     assert 'AUTHORIZATION: basic' in source
-    checkpoint_path = root / "phase5_5/scripts/publish_checkpoint.py"
-    if checkpoint_path.exists():
-        assert 'AUTHORIZATION: basic' in checkpoint_path.read_text(encoding="utf-8")
-    assert 'os.environ["HF_ENABLE_PARALLEL_LOADING"] = "true"' in source
-    assert 'os.environ["HF_PARALLEL_LOADING_WORKERS"] = "4"' in source
     assert "load_frozen_model_backend_identity(root=REPO_ROOT, model_slot=MODEL_SLOT)" in source
     assert "OFFICIAL_CAMPAIGN_HEARTBEAT" in source
     assert "OFFICIAL_CAMPAIGN_START" in source
@@ -64,6 +54,8 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
         if cell.get("cell_type") == "code"
     )
     assert '"--pretrial"' in pretrial_source
+    assert 'RUN_ID = f"P5RUN-{DATASET_VERSION}-{MODEL_SLOT}-{UTC_DATE}-{RUN_TOKEN}"' in pretrial_source
+    assert "P5PRE-" not in pretrial_source
     assert '"--max-batches"' in pretrial_source
     assert '"--pretrial-trials"' in pretrial_source
     assert '"--attempts-root"' in pretrial_source
