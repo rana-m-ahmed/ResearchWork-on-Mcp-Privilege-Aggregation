@@ -5,7 +5,11 @@ from pathlib import Path
 
 import pytest
 
-from phase5_5.scripts.publish_official_evidence import parse_porcelain_paths, run_evidence_files
+from phase5_5.scripts.publish_official_evidence import (
+    _resolve_lineage_attempt,
+    parse_porcelain_paths,
+    run_evidence_files,
+)
 
 
 def test_porcelain_parser_handles_renames() -> None:
@@ -32,3 +36,11 @@ def test_run_evidence_files_fails_closed_for_missing_run(tmp_path: Path) -> None
     lineage.write_text("run_id,raw_attempt_directory\nRUN-OTHER,/tmp/other\n", encoding="utf-8")
     with pytest.raises(RuntimeError, match="no lineage rows"):
         run_evidence_files(tmp_path, "RUN-1")
+
+
+def test_absolute_lineage_path_from_prior_checkout_is_relocated(tmp_path: Path) -> None:
+    relocated = _resolve_lineage_attempt(
+        tmp_path,
+        "/kaggle/working/old-checkout/phase5_5/evidence/attempts/A1",
+    )
+    assert relocated == (tmp_path / "phase5_5/evidence/attempts/A1").resolve()
