@@ -60,6 +60,8 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
     assert '"--evidence-root"' in pretrial_source
     assert "/kaggle/working/phase5_5_pretrial_evidence" in pretrial_source
     assert '"official_trial": False' in pretrial_source
+    assert "processed_batch_ids" in pretrial_source
+    assert "resume_required") is not True" in pretrial_source
     assert 'AUTHORIZATION: basic' in (root / "phase5_5/scripts/publish_checkpoint.py").read_text(encoding="utf-8")
     assert 'actual_branch_head = git("rev-parse", "HEAD")' in source
     campaign_source = source[source.index("campaign_error"):source.index("def sha256")]
