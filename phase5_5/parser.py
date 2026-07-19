@@ -512,17 +512,20 @@ def extract_tool_call(
                     candidate_spans=spans,
                 )
             if not parsed.tool_calls:
-                return _result(
-                    raw_text,
-                    status=ParserStatus.NO_INVOCATION_FOUND,
-                    native_format="embedded_json",
-                    canonical=False,
-                    parser_version=parser_version,
-                    diagnostic="embedded JSON contains no tool invocation",
-                    count=0,
-                    candidate_spans=spans,
-                )
+                continue
             parsed_calls.extend(parsed.tool_calls)
+            
+        if not parsed_calls:
+            return _result(
+                raw_text,
+                status=ParserStatus.NO_INVOCATION_FOUND,
+                native_format="embedded_json",
+                canonical=False,
+                parser_version=parser_version,
+                diagnostic="embedded JSON contains no tool invocation",
+                count=0,
+                candidate_spans=spans,
+            )
         calls = tuple(
             ParsedToolCall(call_index=index, tool_name=call.tool_name, arguments=call.arguments,
                            tool_call_id=call.tool_call_id, metadata=call.metadata)
@@ -551,7 +554,7 @@ def extract_tool_call(
             candidate_spans=spans,
         )
     if "Tool Result [" in raw_text:
-        status = ParserStatus.MALFORMED_JSON
+        status = ParserStatus.NO_INVOCATION_FOUND
         diagnostic = "candidate generated simulated environment responses"
     elif evidence.budget_exhausted and ("{" in raw_text or "tool_call" in raw_text):
         status = ParserStatus.MODEL_OUTPUT_TRUNCATED_BY_BUDGET
