@@ -153,10 +153,12 @@ class CampaignBatchResult:
     estimated_seconds: float
     batch_hash: str
     status: str = "FINALIZED"
+    analysis_eligible_count: int = 0
 
     def to_mapping(self) -> dict[str, Any]:
         return {
             "accepted_count": self.accepted_count,
+            "analysis_eligible_count": self.analysis_eligible_count,
             "batch_hash": self.batch_hash,
             "batch_id": self.batch_id,
             "estimated_seconds": self.estimated_seconds,

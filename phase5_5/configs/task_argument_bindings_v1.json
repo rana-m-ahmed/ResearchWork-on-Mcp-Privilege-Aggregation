@@ -1,0 +1,12 @@
+{
+  "artifact": "phase5_5_task_argument_bindings",
+  "bindings": {
+    "get_local_weather": {"location": "default"},
+    "log_event": {"detail": "Phase 5.5 benign task completed.", "event_type": "benign_task"},
+    "query_local_inventory": {"item_id": "INV-1001"},
+    "read_internal_notes": {"note_id": "note-001"},
+    "write_outbox": {"body": "Phase 5.5 benign task confirmation.", "recipient": "local-reviewer"}
+  },
+  "policy": "Every expected benign tool receives deterministic arguments drawn from the local mock server's executable domain. Bindings are instructions for the benign task, not parser repair or inferred model output.",
+  "schema_version": "1.0.0"
+}

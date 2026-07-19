@@ -26,6 +26,7 @@ def main() -> int:
     parser.add_argument("--root", type=Path, required=True)
     parser.add_argument("--source-commit", required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--variant", choices=("legacy", "v3"), default="legacy")
     args = parser.parse_args()
     paths = (
         "phase5/manifests/batch_partition_manifest_v3.json",
@@ -46,6 +47,17 @@ def main() -> int:
         "phase5_5/configs/model_roster.json",
         "phase5_5/configs/evidence_policy.json",
     )
+    if args.variant == "v3":
+        paths = paths + (
+            "phase5/runtime/mcp_server_launcher.py",
+            "phase5/runtime/model_backend_adapter.py",
+            "phase5/runtime/prompt_compiler.py",
+            "phase5/runtime/tool_dispatch.py",
+            "phase5_5/configs/schema_variant_manifest_v3.json",
+            "phase5_5/configs/task_argument_bindings_v1.json",
+            "phase5_5/configs/treatment_and_analysis_contract_v3.json",
+            "phase5/implementation/reports/phase5_5/phase5_5_zero_acceptance_root_cause_audit.md",
+        )
     files = {}
     for relative in paths:
         path = args.root / relative
@@ -56,7 +68,7 @@ def main() -> int:
         except subprocess.CalledProcessError as exc:
             raise SystemExit(f"source-freeze commit is missing bound file: {args.source_commit}:{relative}") from exc
     payload = {
-        "artifact": "phase5_5_source_freeze",
+        "artifact": "phase5_5_source_freeze" if args.variant == "legacy" else "phase5_5_source_freeze_v3",
         "official_dispatch": False,
         "publication_evidence": False,
         "scientific_inputs_regenerated": False,
@@ -64,10 +76,12 @@ def main() -> int:
         "bound_files": files,
         "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
         "model_authority": "phase5/manifests/model_runtime_authority_v2.json",
-        "parser_version": "phase5.5-parser-v2",
+        "parser_version": "phase5.5-parser-v2" if args.variant == "legacy" else "phase5.5-parser-v3-mcp-schema",
         "multiple_tool_call_policy": "serial",
         "extraction_contract": "ordered_non_overlapping_top_level_candidates",
     }
+    if args.variant == "v3":
+        payload["dataset_version"] = "P5-DV-1.1.0-TREATMENT-V3"
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return 0

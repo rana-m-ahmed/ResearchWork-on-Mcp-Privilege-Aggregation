@@ -267,7 +267,7 @@ def _result(
     )
 
 
-def extract_tool_call(
+def _extract_syntax_tool_call(
     raw_text: str,
     *,
     parser_version: str = "phase5.5-parser-v2",
@@ -453,4 +453,90 @@ def extract_tool_call(
         parser_version=parser_version,
         diagnostic=diagnostic,
         count=0,
+    )
+
+
+def _json_value_matches_schema(value: Any, schema: Mapping[str, Any]) -> bool:
+    schema_type = schema.get("type")
+    if schema_type == "string":
+        return isinstance(value, str)
+    if schema_type == "integer":
+        return isinstance(value, int) and not isinstance(value, bool)
+    if schema_type == "number":
+        return isinstance(value, (int, float)) and not isinstance(value, bool)
+    if schema_type == "boolean":
+        return isinstance(value, bool)
+    if schema_type == "object":
+        return isinstance(value, Mapping)
+    if schema_type == "array":
+        return isinstance(value, list)
+    return True
+
+
+def _validate_tool_schema(
+    result: ExtractionResult,
+    *,
+    tool_schemas: Mapping[str, Any],
+    forbidden_tool_names: tuple[str, ...],
+) -> str | None:
+    for call in result.parsed_calls:
+        if call.tool_name in forbidden_tool_names:
+            return f"forbidden tool requested: {call.tool_name!r}"
+        specification = tool_schemas.get(call.tool_name)
+        if specification is None:
+            return f"unknown tool requested: {call.tool_name!r}"
+        schema = getattr(specification, "parameter_schema", specification)
+        if not isinstance(schema, Mapping):
+            return f"tool schema is invalid for {call.tool_name!r}"
+        required = schema.get("required", ())
+        properties = schema.get("properties", {})
+        if not isinstance(required, (list, tuple)) or not isinstance(properties, Mapping):
+            return f"tool schema is invalid for {call.tool_name!r}"
+        missing = [name for name in required if name not in call.arguments]
+        if missing:
+            return f"tool {call.tool_name!r} is missing required argument {missing[0]!r}"
+        if schema.get("additionalProperties") is False:
+            unknown = [name for name in call.arguments if name not in properties]
+            if unknown:
+                return f"tool {call.tool_name!r} has unknown argument {unknown[0]!r}"
+        for name, value in call.arguments.items():
+            property_schema = properties.get(name)
+            if isinstance(property_schema, Mapping) and not _json_value_matches_schema(value, property_schema):
+                return f"tool {call.tool_name!r} argument {name!r} has the wrong type"
+    return None
+
+
+def extract_tool_call(
+    raw_text: str,
+    *,
+    parser_version: str = "phase5.5-parser-v2",
+    generation_evidence: Mapping[str, Any] | GenerationEvidence | None = None,
+    tool_schemas: Mapping[str, Any] | None = None,
+    forbidden_tool_names: tuple[str, ...] = (),
+) -> ExtractionResult:
+    """Extract and, when supplied, validate calls against the discovered MCP contract."""
+
+    result = _extract_syntax_tool_call(
+        raw_text,
+        parser_version=parser_version,
+        generation_evidence=generation_evidence,
+    )
+    if result.status is not ParserStatus.VALID_EXTRACTED_CALL or tool_schemas is None:
+        return result
+    diagnostic = _validate_tool_schema(
+        result,
+        tool_schemas=tool_schemas,
+        forbidden_tool_names=tuple(forbidden_tool_names),
+    )
+    if diagnostic is None:
+        return result
+    return _result(
+        raw_text,
+        status=ParserStatus.SCHEMA_INVALID_CALL,
+        native_format=result.native_format,
+        canonical=result.canonical_json_compliant,
+        parser_version=parser_version,
+        diagnostic=diagnostic,
+        count=result.candidate_count,
+        candidate_spans=result.candidate_spans,
     )

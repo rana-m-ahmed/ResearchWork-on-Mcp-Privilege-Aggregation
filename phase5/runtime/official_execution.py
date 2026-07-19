@@ -92,6 +92,7 @@ class ExecutedTrialResult:
     official_trial: bool
     counts_for_phase5: bool
     publication_evidence: bool
+    analysis_eligible: bool = False
     acceptance_proof: TrialAcceptanceProof | None = None
     invalid_reason: str | None = None
     orphaned: bool = False
@@ -209,6 +210,7 @@ class RepositoryBatchExecutionAdapter:
         existing = self.lineage_store.load_records()
         accepted_targets = {record.target_trial_id for record in existing if record.accepted_attempt}
         qualification_accepted = 0
+        analysis_eligible_count = 0
         elapsed_seconds = 0.0
         result_digests: list[str] = []
 
@@ -237,6 +239,7 @@ class RepositoryBatchExecutionAdapter:
 
             qualified = result.qualification_accepted
             qualification_accepted += int(qualified)
+            analysis_eligible_count += int(result.analysis_eligible)
             elapsed_seconds += result.elapsed_seconds
 
             if self.official_mode:
@@ -270,6 +273,7 @@ class RepositoryBatchExecutionAdapter:
                     {
                         "attempt_id": result.attempt_id,
                         "qualification_accepted": qualified,
+                        "analysis_eligible": result.analysis_eligible,
                         "target_trial_id": result.target_trial_id,
                     }
                 )
@@ -289,10 +293,12 @@ class RepositoryBatchExecutionAdapter:
                 {
                     "batch_id": batch.batch_id,
                     "qualification_accepted_count": qualification_accepted,
+                    "analysis_eligible_count": analysis_eligible_count,
                     "result_digests": result_digests,
                 }
             ),
             status=batch_status,
+            analysis_eligible_count=analysis_eligible_count,
         )
 
 
