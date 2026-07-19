@@ -177,7 +177,7 @@ else:
         "1",
         "--until-safety-horizon",
         "--batch-manifest",
-        "phase5/manifests/batch_partition_manifest_v3.json",
+        "phase5/manifests/batch_partition_manifest_v3_treatment.json",
         "--run-plan",
         "phase5/validation/kaggle_run_plan_v3_treatment.json",
         "--checkpoint-publish",
@@ -240,7 +240,7 @@ else:
             (OUTPUT_ROOT / f"{MODEL_SLOT}_campaign_error.json").write_text(
                 json.dumps(campaign_error, indent=2, sort_keys=True) + "\\n", encoding="utf-8"
             )
-            print(f"OFFICIAL_CAMPAIGN_FAILED; preserved evidence will still be published: {returncode}", flush=True)
+            print(f"OFFICIAL_CAMPAIGN_FAILED; publishable evidence will be synced if lineage exists: {returncode}", flush=True)
         else:
             print(f"OFFICIAL_CAMPAIGN_COMPLETE: {campaign_report}", flush=True)
     except Exception as exc:
@@ -248,7 +248,7 @@ else:
         (OUTPUT_ROOT / f"{MODEL_SLOT}_campaign_error.json").write_text(
             json.dumps(campaign_error, indent=2, sort_keys=True) + "\\n", encoding="utf-8"
         )
-        print("OFFICIAL_CAMPAIGN_FAILED; preserved evidence will still be published")
+        print("OFFICIAL_CAMPAIGN_FAILED; publishable evidence will be synced if lineage exists")
 ''')
 
     hardware = cell(notebook, "hardware_and_dependencies")
@@ -302,6 +302,11 @@ actual_branch_head = git("rev-parse", "HEAD")
 evidence_root = REPO_ROOT / "phase5_5/evidence"
 if not evidence_root.is_dir():
     raise RuntimeError("official campaign did not produce phase5_5/evidence")
+lineage_path = evidence_root / "lineage.csv"
+if not lineage_path.is_file():
+    if campaign_error is not None:
+        raise RuntimeError(f"official campaign failed before lineage evidence; nothing publishable: {campaign_error}")
+    raise RuntimeError("official campaign did not produce phase5_5/evidence/lineage.csv")
 evidence_files = sorted(path for path in evidence_root.rglob("*") if path.is_file())
 evidence_manifest = {
     "artifact": "phase5_5_kaggle_evidence_package",
