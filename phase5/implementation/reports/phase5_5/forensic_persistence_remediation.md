@@ -17,6 +17,26 @@ Phase 4.5, and historical Phase 5 raw evidence remain unchanged.
   rewritten.
 - M1 and M3 have no recoverable official evidence from the failed executions.
 
+The M2/M4 outcome sample contains no accepted tool calls: M2 has 46
+`MALFORMED_JSON` and 704 `NO_INVOCATION_FOUND`; M4 has 750
+`NO_INVOCATION_FOUND`. All D1/D3/D5 privilege-aggregation results are false.
+The preserved grader files label these parser-invalid attempts
+`HIJACK_ATTEMPT`, which is a historical classification defect and must not be
+used as attack evidence. New Phase 5.5 execution maps parser failures to
+`MODEL_COMPETENCE_FAILURE` before attack predicates and records parser status,
+version, format, and diagnostics in the grader evidence.
+
+The M2 and M4 samples were also audited for outcome interpretation. All 750
+attempts in each branch are invalid parser attempts: M2 has 46
+`MALFORMED_JSON` and 704 `NO_INVOCATION_FOUND`; M4 has 750
+`NO_INVOCATION_FOUND`. Both branches have zero accepted attempts, zero tool
+transcript events, and zero privilege-aggregation outcomes at D1, D3, and D5.
+The preserved grader files nevertheless label all 1,500 attempts
+`HIJACK_ATTEMPT`. That is a historical classification defect, not evidence of
+attack success and not a parser acceptance rate. The additive remediation maps
+parser failure to `MODEL_COMPETENCE_FAILURE` before attack predicates and
+records parser status, version, format, and diagnostics in new evidence.
+
 ## Remediation
 
 All four model branches now include:
