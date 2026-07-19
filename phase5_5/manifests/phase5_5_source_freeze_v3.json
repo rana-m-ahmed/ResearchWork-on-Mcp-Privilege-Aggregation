@@ -8,6 +8,7 @@
     "phase5/configs/upstream_artifact_registry.json": "a50760c49ae93e41f73b2b1580c7dead1fbc2a3de04e7e58a94cc8348bf9b6dd",
     "phase5/grading/frozen_grader.py": "2a33e1a57e52b90c2f3606d08e4bde061443c7caad124398df26c5deb751ca6e",
     "phase5/implementation/prompts/task_execution_template.md": "fb3b6db6fc8880b0132f1df434279087f6a15ca3f0fcc86ca2f1a0417c193a9f",
+    "phase5/implementation/reports/phase5_5/phase5_5_pretrial_binding_audit.md": "f7d858d3ca049366c7a9d1e0d20471ba878f6ab492821bd6d1e6b43eb49f2b6c",
     "phase5/implementation/reports/phase5_5/phase5_5_treatment_accounting_amendment.md": "3228a7138cb7f96ee7a12bf09cee7d8bf8f8793f9d66e3b70aef974047775344",
     "phase5/implementation/reports/phase5_5/phase5_5_zero_acceptance_root_cause_audit.md": "4a73d7105997da511b82a0198e4e76576b794088a386b6fe4e04e06bdd46f073",
     "phase5/manifests/batch_partition_manifest_v3.json": "e7bf12dc9a2706f0ed23f29aaedfdfd1e3db34d3db1f34525d649bd46b7d3e5c",
@@ -39,7 +40,7 @@
     "phase5_5/scripts/build_kaggle_runner.py": "fab17c67488b683541b9b524e1cbac4deeb8d711fe321e716378bd027ca6ffdb",
     "phase5_5/scripts/build_official_runner.py": "3c7a74e235c5cf99ca456ba74fe573a0ed39bd13a094dfd5dcb88f5f249d82b8",
     "phase5_5/scripts/build_pretrial_runner.py": "2def0a370d670631d5befde51f8c5358dc673297c8c683205fb0dbbbbbec41fd",
-    "phase5_5/scripts/build_source_freeze.py": "dff1d200355311ba00afb06055cfca5729c972e37a0b330f5e663578320394e1",
+    "phase5_5/scripts/build_source_freeze.py": "7c85b29e397cd1a444246fbab833acae05589ddf8bbdd48ee051e88a24236583",
     "phase5_5/scripts/build_treatment_manifests.py": "02a194eef2d64dcc0ae2bdc54a43bc4c41ba58b75b7646b70cfece31104e7e00",
     "phase5_5/scripts/official_authorized_preflight.py": "e79417f4db4fb976b49a5ff9f2d1a1dc4b9b8fe69bf6ad445310001bd2fdd407",
     "phase5_5/scripts/official_preflight.py": "68b437fb39ecd875db12aa0146344e022dbf56e7b87db1116d1de2d1ef8d9828",
@@ -57,5 +58,5 @@
   "publication_evidence": false,
   "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
   "scientific_inputs_regenerated": false,
-  "source_commit": "8f5bee17812b5daf57cac2a5704b9a1454f69e71"
+  "source_commit": "df8fa550a6ede823f7b36f766d5503f35448a326"
 }
