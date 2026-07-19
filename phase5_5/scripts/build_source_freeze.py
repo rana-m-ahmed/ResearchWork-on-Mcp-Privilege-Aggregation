@@ -82,6 +82,12 @@ def main() -> int:
             "phase5_5/kaggle/phase5_5_official_runner.ipynb",
             "phase5_5/kaggle/phase5_5_pretrial_runner.ipynb",
         )
+        # The optimized Phi canary is branch-specific; M1-M3 do not carry it.
+        if not (args.root / "phase5_5/scripts/run_m4_runtime_canary.py").is_file():
+            paths = tuple(
+                path for path in paths
+                if path != "phase5_5/scripts/run_m4_runtime_canary.py"
+            )
     files = {}
     for relative in paths:
         path = args.root / relative
