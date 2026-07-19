@@ -7,9 +7,15 @@ import pytest
 
 from phase5_5.scripts.publish_official_evidence import (
     _resolve_lineage_attempt,
+    git_auth_environment,
     parse_porcelain_paths,
     run_evidence_files,
 )
+
+
+def test_git_auth_uses_basic_github_header() -> None:
+    env = git_auth_environment("test-token", {"PATH": "fixture"})
+    assert env["GIT_CONFIG_VALUE_0"].startswith("AUTHORIZATION: basic ")
 
 
 def test_porcelain_parser_handles_renames() -> None:
