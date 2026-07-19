@@ -55,6 +55,9 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
     )
     assert '"--pretrial"' in pretrial_source
     assert '"--max-batches"' in pretrial_source
+    assert '"--attempts-root"' in pretrial_source
+    assert '"--evidence-root"' in pretrial_source
+    assert "/kaggle/working/phase5_5_pretrial_evidence" in pretrial_source
     assert '"official_trial": False' in pretrial_source
     assert 'AUTHORIZATION: basic' in (root / "phase5_5/scripts/publish_checkpoint.py").read_text(encoding="utf-8")
     assert 'actual_branch_head = git("rev-parse", "HEAD")' in source

@@ -217,7 +217,14 @@ class RepositoryBatchExecutionAdapter:
         completed_targets = {
             record.target_trial_id
             for record in existing
-            if record.accepted_attempt or record.attempt_status in {"INVALID", "OFFICIAL_ACCEPTED"}
+            if record.accepted_attempt
+            or record.attempt_status in {
+                "INVALID",
+                "OFFICIAL_ACCEPTED",
+                "PRETRIAL_COMPLETED",
+                "PRETRIAL_INVALID",
+                "PRETRIAL_ORPHAN",
+            }
         }
         rows = tuple(row for row in self._rows_for_batch(batch) if str(row.trial_id) not in completed_targets)
         qualification_accepted = 0
@@ -299,7 +306,7 @@ class RepositoryBatchExecutionAdapter:
         if self.official_mode:
             batch_status = "OFFICIAL_FINALIZED" if official_accepted > 0 else "OFFICIAL_COMPLETED_NO_ACCEPTED"
         else:
-            batch_status = "SYNTHETIC_QUALIFIED"
+            batch_status = "PRETRIAL_COMPLETED" if self.pretrial_mode else "SYNTHETIC_QUALIFIED"
         return CampaignBatchResult(
             batch_id=batch.batch_id,
             accepted_count=official_accepted,
