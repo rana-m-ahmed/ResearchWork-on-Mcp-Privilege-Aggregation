@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import csv
 import hashlib
 import json
@@ -28,6 +29,15 @@ def sha256(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def git_auth_environment(token: str, base: dict[str, str] | None = None) -> dict[str, str]:
+    env = dict(base or os.environ)
+    env["GIT_CONFIG_COUNT"] = "1"
+    env["GIT_CONFIG_KEY_0"] = "http.extraHeader"
+    credentials = base64.b64encode(f"x-access-token:{token}".encode("utf-8")).decode("ascii")
+    env["GIT_CONFIG_VALUE_0"] = f"AUTHORIZATION: basic {credentials}"
+    return env
 
 
 def parse_porcelain_paths(raw: str) -> list[str]:
@@ -147,9 +157,7 @@ def main() -> int:
     manifest_path = root / "phase5_5/evidence/official_publication_manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
-    env["GIT_CONFIG_COUNT"] = "1"
-    env["GIT_CONFIG_KEY_0"] = "http.extraHeader"
-    env["GIT_CONFIG_VALUE_0"] = f"AUTHORIZATION: bearer {token}"
+    env = git_auth_environment(token, env)
     try:
         # NUL-delimited pathspec input keeps argv bounded and prevents unrelated
         # evidence from being staged when checkpointed runs share a checkout.
