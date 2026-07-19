@@ -64,6 +64,9 @@ def test_pretrial_cli_accepts_isolated_attempt_and_evidence_roots() -> None:
         "/tmp/pretrial-attempts",
         "--evidence-root",
         "/tmp/pretrial-evidence",
+        "--pretrial-trials",
+        "3",
     ])
     assert args.attempts_root == "/tmp/pretrial-attempts"
     assert args.evidence_root == "/tmp/pretrial-evidence"
+    assert args.pretrial_trials == 3

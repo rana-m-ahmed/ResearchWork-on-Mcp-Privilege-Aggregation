@@ -71,6 +71,8 @@ pretrial_command = [
     "--until-safety-horizon",
     "--max-batches",
     "1",
+    "--pretrial-trials",
+    "3",
     "--attempts-root",
     str(pretrial_attempts_root),
     "--evidence-root",
@@ -147,6 +149,7 @@ manifest = {
     "counts_for_phase5": False,
     "publication_evidence": False,
     "pretrial_batch_limit": 1,
+    "pretrial_trial_limit": 3,
     "files": [{"path": str(path.relative_to(evidence_root)), "sha256": sha256(path)} for path in files],
 }
 manifest_path = OUTPUT_ROOT / f"{MODEL_SLOT}_pretrial_manifest.json"

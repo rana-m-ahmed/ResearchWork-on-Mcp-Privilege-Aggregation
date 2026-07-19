@@ -113,6 +113,7 @@ def build_parser() -> argparse.ArgumentParser:
     run_campaign.add_argument("--checkpoint-output-dir", required=False)
     run_campaign.add_argument("--attempts-root", required=False)
     run_campaign.add_argument("--evidence-root", required=False)
+    run_campaign.add_argument("--pretrial-trials", required=False, type=int)
 
     run_proof = subparsers.add_parser(
         "run-m1-proof",
@@ -419,6 +420,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     real_execution_adapter=True,
                     checkpoint_callback=checkpoint_callback,
                     checkpoint_interval_trials=checkpoint_interval,
+                    pretrial_trial_limit=getattr(args, "pretrial_trials", None),
                 )
 
             session, report = run_campaign(

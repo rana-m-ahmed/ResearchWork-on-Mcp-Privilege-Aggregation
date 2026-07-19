@@ -166,6 +166,7 @@ class RepositoryBatchExecutionAdapter:
     pretrial_mode: bool = False
     checkpoint_callback: Callable[[CampaignBatchPlan, AttemptLineageRecord, int], None] | None = None
     checkpoint_interval_trials: int = 0
+    pretrial_trial_limit: int | None = None
 
     def __post_init__(self) -> None:
         if getattr(self.pipeline, "real_pipeline", False) is not True:
@@ -188,6 +189,11 @@ class RepositoryBatchExecutionAdapter:
             raise MissingFrozenSettingError("execution adapter requires an explicit dataset version")
         if self.checkpoint_callback is not None and self.checkpoint_interval_trials <= 0:
             raise MissingFrozenSettingError("checkpoint interval must be positive when checkpointing is enabled")
+        if self.pretrial_trial_limit is not None:
+            if not self.pretrial_mode:
+                raise OfficialDispatchBlockedError("pretrial trial limit is valid only in pretrial mode")
+            if self.pretrial_trial_limit <= 0:
+                raise MissingFrozenSettingError("pretrial trial limit must be positive")
 
     def _rows_for_batch(self, batch: CampaignBatchPlan) -> tuple[FrozenQueueRow, ...]:
         queues = {queue.queue_name: queue for queue in self.queue_bundle.queues()}
@@ -227,6 +233,8 @@ class RepositoryBatchExecutionAdapter:
             }
         }
         rows = tuple(row for row in self._rows_for_batch(batch) if str(row.trial_id) not in completed_targets)
+        if self.pretrial_trial_limit is not None:
+            rows = rows[: self.pretrial_trial_limit]
         qualification_accepted = 0
         elapsed_seconds = 0.0
         result_digests: list[str] = []
