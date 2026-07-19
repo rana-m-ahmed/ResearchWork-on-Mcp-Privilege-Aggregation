@@ -62,6 +62,7 @@ def main() -> int:
             "phase5_5/scripts/build_source_freeze.py",
             "phase5/implementation/reports/phase5_5/phase5_5_zero_acceptance_root_cause_audit.md",
             "phase5/implementation/reports/phase5_5/phase5_5_treatment_accounting_amendment.md",
+            "phase5/implementation/reports/phase5_5/phase5_5_pretrial_binding_audit.md",
             "phase5_5/scripts/build_treatment_manifests.py",
             "phase5_5/scripts/build_kaggle_runner.py",
             "phase5_5/scripts/build_official_runner.py",
