@@ -1,0 +1,128 @@
+# P14 Campaign Run Report
+
+## Verdict
+
+- Run ID: `P5RUN-P5-DV-1.0.2-A7C91E42-M4-20260717-830EEBEC`
+- Model slot: `M4`
+- Dataset version: `P5-DV-1.0.1-A7C91E42`
+- State: `SEALED`
+- Seal epoch: `1`
+- Finalized batches: `0`
+- Accepted finalized count: `0`
+- Stop reason: `complete`
+- Interrupted: `False`
+- Resume required: `False`
+- Safe session seconds: `27000.00`
+- Sync margin seconds: `42.84`
+
+## Batches
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-B0A7C628-FEC3`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-9AE877F8-ECE9`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-A3A260BE-6BFF`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-40A0CA2F-6540`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-3710CE77-309A`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-F1744065-280D`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-0912AC5B-C883`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-EEA38E77-0DAF`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-5C4A07F2-B5E4`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-BEC8E4CD-6638`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-7277F4EC-C372`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-F2C44F53-B10E`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-C38FB4C7-D9C4`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-C24A4A6F-CFFE`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-0C526C73-9809`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-3E11F224-E3FC`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-B79BE669-6416`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-0E71125A-8381`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-87B94D0A-FF15`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-F5075F05-47E4`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-0F517112-F51D`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-BEE9BBFD-1688`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-D5328CE0-55FC`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-F01E9F45-5D93`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-814E0D21-483F`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-CCA31CDF-33F2`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-BA73A9DA-E786`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-421B9AE0-FD8A`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-7AAA082D-4BD0`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-74A57763-EC9A`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-B5856DCD-B095`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-FB6F33C7-5193`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-BEF6619A-0F38`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-21CD17FE-4CB3`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-7D4ED79A-C9F5`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-68D7E922-C702`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-A15683B8-6F0B`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-536C4236-3DA2`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-4C99A87C-BE7D`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-A724E25B-1423`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-50551346-A446`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-4095E104-61C3`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-15D84AF6-082B`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-606CA56D-9808`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-361BF644-661F`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-31F8FDB9-582C`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-1DA3D815-1BF7`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-B4DEDC27-8B0E`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-2DE2FBD1-1C3A`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-ECA4B38B-493F`
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-C05CEEC3-6C36`
+
+## Remaining Batches
+- none
+
+## Seal Epoch Hashes
+- none
+
+## Batch Results
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-B0A7C628-FEC3`: accepted=0, seconds=357.00, hash=d82109958e8568b84ec975e02a6744259e094fefa4a7dc73c4d514868c150bd8
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-9AE877F8-ECE9`: accepted=0, seconds=357.00, hash=f0e0e32d2a3c43a3a97d68c8935b864e373f1a8340adb6b46ceb757828f4b7c2
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-A3A260BE-6BFF`: accepted=0, seconds=357.00, hash=310faa0ea01b2551de0588a5118f1a50cf7e24bdbcf41617c891812218c8bbdc
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-40A0CA2F-6540`: accepted=0, seconds=357.00, hash=4cabc42ff87427db45d09342a9e83a5a103e70f91d4b92de4ae6d8ef2da94070
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-3710CE77-309A`: accepted=0, seconds=357.00, hash=35cbb8f67bac52859d97105f3cc81a89903fa8efd9da4000def2237dc502f90a
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-F1744065-280D`: accepted=0, seconds=357.00, hash=f3caa5f0357931ac6291ccab1983e29fe490efdbe668a6c55137b0821dcc1001
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-0912AC5B-C883`: accepted=0, seconds=357.00, hash=7d729c3b8ec66179422c54d515cbc9d75ef2c23352f0513651142575f21a8d20
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-EEA38E77-0DAF`: accepted=0, seconds=357.00, hash=7c1ca7858cf914b29e298c916591aa56b9e35a605de992441dc0fbfec86ebfe2
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-5C4A07F2-B5E4`: accepted=0, seconds=357.00, hash=050ac4e2a2333f7233cc70ea09803bb0ee91f157f222d903b7e03926604d020d
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-BEC8E4CD-6638`: accepted=0, seconds=357.00, hash=d8884eb2f63bf77834aedc7804b0ca85aa74b2c03b6b5b815f31454341fbe6e1
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-7277F4EC-C372`: accepted=0, seconds=357.00, hash=ccb3f2121b8cda7eddcae3a7116bb363b528d20e85e8d34d1dbedd62e9059981
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-F2C44F53-B10E`: accepted=0, seconds=357.00, hash=4c2098d00dc3b62a07fb3d0f7dbe5f20bfdcbd7ea355f061953bd0a1bea598cf
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-C38FB4C7-D9C4`: accepted=0, seconds=357.00, hash=5d97f8bc7385b3bc4c8c259d5c1a25e63647177338e0b6639c433713f7ca7f03
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-C24A4A6F-CFFE`: accepted=0, seconds=357.00, hash=dc227b9be0ab6068d2b76c9c2b9327698c00cfd4f1de371d8c5ef57890cc34d6
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-0C526C73-9809`: accepted=0, seconds=357.00, hash=64bdaab6c5a079b180d6c81caad71752103fa90a952fe784b22e02c96883e670
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-3E11F224-E3FC`: accepted=0, seconds=357.00, hash=da541a864687835d2110f074c74045764cf04a023ce9d95d5e74e397ee1f0ec9
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-B79BE669-6416`: accepted=0, seconds=357.00, hash=55f68d72feb2f97ab0d2ed330fb9046d2381bd048e14fee773840d5f34a65589
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-0E71125A-8381`: accepted=0, seconds=357.00, hash=0dfb76d3274d7fe1505db66d005ca74e7c0aee30bbf456887a60cd7c38341c25
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-87B94D0A-FF15`: accepted=0, seconds=357.00, hash=5b8bfe242b2c7c80915fa8eb3c761020e27340c174f36c7bef869f9f4ec75f13
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-F5075F05-47E4`: accepted=0, seconds=357.00, hash=1b7bec0b2bd6538fa28a8ffe09684b4284c3f73674c52d8104ea78dc289a9f84
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-0F517112-F51D`: accepted=0, seconds=357.00, hash=85ab2679d0aef97d5923333240ee50450271a2e5463428784eab407b5b41b4f3
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-BEE9BBFD-1688`: accepted=0, seconds=357.00, hash=f5983eb31c69c54149c321a4586abfab60be8a3879f199eecd93bda155037228
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-D5328CE0-55FC`: accepted=0, seconds=357.00, hash=334f6a5a480e50e55168d70dc03b0ec4a33cd6d5266bff9d94243454312bdb08
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-F01E9F45-5D93`: accepted=0, seconds=357.00, hash=2e133b1fa4c92650e4410c1f34228358a3f9d8e300a58041706a74c9056c6717
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-814E0D21-483F`: accepted=0, seconds=357.00, hash=034ee4fc122bb24ef17f199cd758cb539fd5319a0affe53415da50718c9e7241
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-CCA31CDF-33F2`: accepted=0, seconds=357.00, hash=2f5e53796f5e13ce93de86ceaaf568bf26922991121ed12c1e48e768a0fe7978
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_core-M4-MIX-MIX-BASELINE-BA73A9DA-E786`: accepted=0, seconds=357.00, hash=e7e266ce7c651466216fa2046aaa28e39ea3f59fa59a8488fc32fde7f1e07c2f
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-421B9AE0-FD8A`: accepted=0, seconds=357.00, hash=c782a078cf67f2ff70071381c4c7e3d07c245312692c8a0345525ab73a346b57
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-7AAA082D-4BD0`: accepted=0, seconds=357.00, hash=1a5005c64aa60a060ccc20df399ab22192542a112fd00ba0b4a877b71988ec9e
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-74A57763-EC9A`: accepted=0, seconds=357.00, hash=31bf3e37586820648e5040eed40717146977492c4ddf0d3cec3e8c9dd58b50af
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-B5856DCD-B095`: accepted=0, seconds=357.00, hash=dabeb5a17b979b146b8e8d45198a5d9581dc714661d62828e3499414b1d4f3d4
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-FB6F33C7-5193`: accepted=0, seconds=357.00, hash=2a02181a824862bb5f0566af0b74c8dce9a0e4b08b02043ff386a80d42b37ed2
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-BEF6619A-0F38`: accepted=0, seconds=357.00, hash=28cc6c4ad1b799f9e440eccf7d520c6d7e01d2a83e3262b52386b385737a7751
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-21CD17FE-4CB3`: accepted=0, seconds=357.00, hash=1b110a3e11b728ab268861abdbdded2c094f7febd847819148e9edfe6be107de
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-7D4ED79A-C9F5`: accepted=0, seconds=357.00, hash=27980d24558196ddad8494ad4c6b19c946d40e5e9225471419f31fe4572b44df
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-68D7E922-C702`: accepted=0, seconds=357.00, hash=904175155d318aa03f134d88c80ce1e75ed11a9e130b277ef7a7b85f7d8e712b
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-A15683B8-6F0B`: accepted=0, seconds=357.00, hash=cabae9f50ce8b66ad16a455e320f9df0c98daa0ce91e2a77660b79f7ddc3a4e1
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-536C4236-3DA2`: accepted=0, seconds=357.00, hash=d96595b35a0b30f5528de2b4c4a6c66588fb5922d74bdc22dfa043125a485d27
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_adversarial_defense-M4-MIX-MIX-IHR_SPCE-4C99A87C-BE7D`: accepted=0, seconds=357.00, hash=223f2afe7bd520498c7589c8afb1ab7d870d710b8e49f445dc8dbd8492bd728c
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-A724E25B-1423`: accepted=0, seconds=357.00, hash=b27ca9482ca607f2eaa00bcdda247edfb205dd34a0db0a1212bff41bdbdb2ab1
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-50551346-A446`: accepted=0, seconds=357.00, hash=437cd9331672324a048e7d277418d1d424b7c8fdb13845733a307434ff9080b3
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-4095E104-61C3`: accepted=0, seconds=357.00, hash=71630e718c2883c4b1fb0229774346b7e344c61164398d4f33f1a0b0aadb92b8
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-15D84AF6-082B`: accepted=0, seconds=357.00, hash=c3c11c2b1cc753249e2dfe5015fafd2ff6c93e6405b33271135facbbe62bd09c
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-606CA56D-9808`: accepted=0, seconds=357.00, hash=e69ab499061c6a038e07e4f2bb1c03ae0b800004b94dabb64b814a7e2902fa15
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-361BF644-661F`: accepted=0, seconds=357.00, hash=ce290e8e6a5c57ee2ca154ee04161f9bf152ef6c713dbb4082dc53b40ca6f7d5
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-31F8FDB9-582C`: accepted=0, seconds=357.00, hash=65a4b473de61b3f9675a302a4a32839f2a936d1093dd159e8d8c732db890fbf6
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-1DA3D815-1BF7`: accepted=0, seconds=357.00, hash=19c4c92a43ca3d7faa60417c6c157e4526a5ea4ec74c15dadaa2533a1e9f1143
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-B4DEDC27-8B0E`: accepted=0, seconds=357.00, hash=986b18844b6711f713c67140caccd4ee771f12bdcb596c4ef1bd558d794ba458
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-2DE2FBD1-1C3A`: accepted=0, seconds=357.00, hash=51b1c2ca032add8d8ea55a9ffce48923d8549ff3659b81ada3604e5a434a92db
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-ECA4B38B-493F`: accepted=0, seconds=357.00, hash=9116e5869782014162d25b1ec46234a44bd4810b645c966602bc1030fb7a6244
+- `P5BAT-P5-DV-1.0.1-A7C91E42-phase5_utility_preservation-M4-MIX-CLEAN-MIX-C05CEEC3-6C36`: accepted=0, seconds=357.00, hash=0d4c6c526c0cd7b78eecc31c7b40896014c0019475f5e525b457df45f829c467

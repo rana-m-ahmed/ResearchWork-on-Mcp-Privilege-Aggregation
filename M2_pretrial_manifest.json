@@ -1,0 +1,281 @@
+{
+  "artifact": "phase5_5_real_backend_pretrial_v1",
+  "counts_for_phase5": false,
+  "dataset_version": "P5-DV-1.1.0-TREATMENT-V3",
+  "files": [
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/attempt_events.jsonl",
+      "sha256": "6f5b12900401d152954bf3cea9b92c80fb1992d3ff73e9674a02cf5dbd5a1895"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/attempt_manifest.json",
+      "sha256": "84e437837eb2f09d70663574e8ef58d47af43be9b3e634d11b1ba5bed677be9e"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/compiled_prompt.txt",
+      "sha256": "38a055b2d6ef62a034235e96e9e1b6197e8b705fc4b00a32c0c666cfc37951f9"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/compiled_prompt_metadata.json",
+      "sha256": "c30718720b7041ad2d52ac39484ed69455b34667024867cb8f498268d48e76b5"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/evidence_hash_index.jsonl",
+      "sha256": "95a988d61ef3c33739aaab6e3d9e39d87acd2d335503b8abad7598c0d7047f4d"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/fastmcp_discovery.json",
+      "sha256": "c5825b7b48caeffc9fc9d8f200a5cfbbf1b41c4ac1ddf77375c0ac183e4814ca"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/finalization_prepared.json",
+      "sha256": "6fe2bddcfc3156386641f00e5adf84cbb7ec22598cf1b5ca7ee5c27f62fe430a"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/frozen_row_snapshot.json",
+      "sha256": "c8574a0752ac2bdf6589f0c653cdb21fdc694cfbc0b3d17a244ae03001d0225d"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/grader_evidence.json",
+      "sha256": "a2fb11c2523e9fe862b70c41e7f6eefafa87f73e0591571e47bf38c9ef73d454"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/hardware_snapshot.json",
+      "sha256": "8e8a3545317310d414f9b634a35f7d27ec42b369ba97259f352ffb53ec91e374"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/materialized_trial_row.json",
+      "sha256": "c8574a0752ac2bdf6589f0c653cdb21fdc694cfbc0b3d17a244ae03001d0225d"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/mock_sink_snapshot_after.json",
+      "sha256": "8b435d8c3c9854b8b7159704061fcb1895498f864efc61bf4b480fc4639ab5d3"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/mock_sink_snapshot_before.json",
+      "sha256": "61ad51f943b5b626578c0f8ce4e7aceb750efcdb2ab2743ccfa40f4333091cd4"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/model_facing_mcp_discovery.json",
+      "sha256": "1df81759cf4534baa79d69b0b85a2c0a44f19ce6bd1c7ca61fc4e5d693737953"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/model_load_placement.json",
+      "sha256": "223e581a66f3bca4e094b09bf13213a5eceef185a4aba868e97cbb6c41409cb5"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/model_outputs.jsonl",
+      "sha256": "1bfaf9919c74f3fa34a93693effffa10eef917659a4c1b5d48bff7251f1284ba"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/parser_events.jsonl",
+      "sha256": "eb34e84dec2e5273ccbb59c71d1d94674ca82c2643a2609f8430c41494911479"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/reset_postcheck.json",
+      "sha256": "8b435d8c3c9854b8b7159704061fcb1895498f864efc61bf4b480fc4639ab5d3"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/reset_precheck.json",
+      "sha256": "61ad51f943b5b626578c0f8ce4e7aceb750efcdb2ab2743ccfa40f4333091cd4"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/tid_evidence.json",
+      "sha256": "82c0527ede6310d2709e7593e949dc714f5cb25f7b28952ce11c7c3d6f6ae45a"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/token_counts_per_turn.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "attempts/P5ATT-T01998-A000-4676675D/tool_transcript.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/attempt_events.jsonl",
+      "sha256": "352c3c51eb681d1a3de7b72d5e02465684ac470752ad95f0445978a141af095c"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/attempt_manifest.json",
+      "sha256": "e93bb370a6ee1835b950c1868d3994197df16708d06f6a94876aef4cd7fbbaab"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/compiled_prompt.txt",
+      "sha256": "35bf3f02a307ce546ffb8e837e5d77c812fa1aad54ec37065346419ffab10f27"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/compiled_prompt_metadata.json",
+      "sha256": "cc5961f8397cb525ae14d51b3115545fcc457d190c5e33830efd8f35d920471d"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/evidence_hash_index.jsonl",
+      "sha256": "dc092f159f0f7fa76aaa5f6e7cb37ee4f4b3655349f35dbafe090fb85be6b700"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/fastmcp_discovery.json",
+      "sha256": "ca90e202df08db29022032dd25b5e25a958f3f58479a84e6f859c8d2711bfa18"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/finalization_prepared.json",
+      "sha256": "6fe2bddcfc3156386641f00e5adf84cbb7ec22598cf1b5ca7ee5c27f62fe430a"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/frozen_row_snapshot.json",
+      "sha256": "0dca296e2a6dc2f82811996fea784f81cfd618dba6dd2f7434bafefea4411a2a"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/grader_evidence.json",
+      "sha256": "7992fcf86f63b8517cc996e0b932d19162611a1ca80ea8c8a1907fa6b3ba95b1"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/hardware_snapshot.json",
+      "sha256": "a123619161a38eed862b22aff675ac55e1d0aff1204770008fd536a97d8be8ff"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/materialized_trial_row.json",
+      "sha256": "0dca296e2a6dc2f82811996fea784f81cfd618dba6dd2f7434bafefea4411a2a"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/mock_sink_snapshot_after.json",
+      "sha256": "34760f1ce7f6a6f053d7663c5c676938ab2ff5026327ab135e94ba01e6844883"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/mock_sink_snapshot_before.json",
+      "sha256": "59df59e66728160790eb77424767bdb0e8067544bc9891aabeb4f573ee132f52"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/model_facing_mcp_discovery.json",
+      "sha256": "8008cc2b708cd8709ecdd2d29bed1304dd0cbc38fa388d2b0b31969dbbfc7398"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/model_load_placement.json",
+      "sha256": "223e581a66f3bca4e094b09bf13213a5eceef185a4aba868e97cbb6c41409cb5"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/model_outputs.jsonl",
+      "sha256": "1464ce62d2e7f48da42f7b7040ad39021a5f5c517e23114b61e95da0a6b8d9bd"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/parser_events.jsonl",
+      "sha256": "a38ba36930805b6661ab7c5b5e2af0049d0f83c12a09e184fb947862e6da520d"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/reset_postcheck.json",
+      "sha256": "34760f1ce7f6a6f053d7663c5c676938ab2ff5026327ab135e94ba01e6844883"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/reset_precheck.json",
+      "sha256": "59df59e66728160790eb77424767bdb0e8067544bc9891aabeb4f573ee132f52"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/tid_evidence.json",
+      "sha256": "d60a548508ba394bcdbc33fc602233a817ed87a09d7d88fe7cc0f53eb9c3b591"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/token_counts_per_turn.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "attempts/P5ATT-T02501-A000-4676675D/tool_transcript.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/attempt_events.jsonl",
+      "sha256": "85923d518bba55da2ab1e24443e2ff97644341c3ceba4376ae500cec82e7ac7c"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/attempt_manifest.json",
+      "sha256": "16fcef47c855a42b1080e8f0f66c43175f09e9b449fae2578b3a5472b0804448"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/compiled_prompt.txt",
+      "sha256": "38a4fa4c3611fdb061c4adf54d85b8fcf5e2f44121b3e9d97ca24fd91dcb53a3"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/compiled_prompt_metadata.json",
+      "sha256": "6b79bb7b534b27a72e5c698f7142434bb3a89ca8fdb9d4117fd561989b066cbc"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/evidence_hash_index.jsonl",
+      "sha256": "b52af12eabd64209df04f04c9c4df2f81e3b72018d00b3b7a90824e6ac1c2c7e"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/fastmcp_discovery.json",
+      "sha256": "5dee2d0e819caabf24f4488419875dcb9a2c70e9f41f3a28b8258a69e6bb984b"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/finalization_prepared.json",
+      "sha256": "6fe2bddcfc3156386641f00e5adf84cbb7ec22598cf1b5ca7ee5c27f62fe430a"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/frozen_row_snapshot.json",
+      "sha256": "68ded8a7efd45adca0c546896427c6ce695a3c54b5dfe1d11451df16754ca556"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/grader_evidence.json",
+      "sha256": "360564041db866cdf2ab37c850664dbc8a1bb5965f6ce1da3ece44e9531ca3d3"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/hardware_snapshot.json",
+      "sha256": "25c96c67d781f52bfc83ee4cafe419861e7fceb9185120c1c6f2ed3c6d65db9f"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/materialized_trial_row.json",
+      "sha256": "68ded8a7efd45adca0c546896427c6ce695a3c54b5dfe1d11451df16754ca556"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/mock_sink_snapshot_after.json",
+      "sha256": "06ffbc90abae1384041f631e8767372a67ecb165e4c6fd84ac4084ef532e7900"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/mock_sink_snapshot_before.json",
+      "sha256": "3f865dbf3fe0bbf838f647b01fd496d152cdabcabb6c5e68bcb9428e8326e6a8"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/model_facing_mcp_discovery.json",
+      "sha256": "427e32ac05823dbce0d4d72e363570412554fbfc9952798bda78cd0039df4a3d"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/model_load_placement.json",
+      "sha256": "223e581a66f3bca4e094b09bf13213a5eceef185a4aba868e97cbb6c41409cb5"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/model_outputs.jsonl",
+      "sha256": "31270174ea9be52466de2e75d52c6c3a903f06fe1cb433ca38a427d4a9f4abb3"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/parser_events.jsonl",
+      "sha256": "6396485a519ca89033faf8e41fd5c88980cfcfb5be5ffc722723b23db24511e9"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/reset_postcheck.json",
+      "sha256": "06ffbc90abae1384041f631e8767372a67ecb165e4c6fd84ac4084ef532e7900"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/reset_precheck.json",
+      "sha256": "3f865dbf3fe0bbf838f647b01fd496d152cdabcabb6c5e68bcb9428e8326e6a8"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/tid_evidence.json",
+      "sha256": "5bfe07bda07d65188f7896573019873d5b74d400f7e0759b94aad746108d663a"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/token_counts_per_turn.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "attempts/P5ATT-T02555-A000-4676675D/tool_transcript.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "lineage.csv",
+      "sha256": "2fa607b22253f4abf11a6a2f5c452d076706a19fa1a4ee56ea23cb1f5441b68d"
+    }
+  ],
+  "model_slot": "M2",
+  "official_trial": false,
+  "pretrial_batch_limit": 1,
+  "pretrial_trial_limit": 3,
+  "publication_evidence": false,
+  "run_id": "P5RUN-P5-DV-1.1.0-TREATMENT-V3-M2-20260719-2A70A2E4"
+}
