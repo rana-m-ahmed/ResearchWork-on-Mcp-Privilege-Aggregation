@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import hashlib
 import json
 import os
@@ -92,7 +93,8 @@ def main() -> int:
     env = os.environ.copy()
     env["GIT_CONFIG_COUNT"] = "1"
     env["GIT_CONFIG_KEY_0"] = "http.extraHeader"
-    env["GIT_CONFIG_VALUE_0"] = f"AUTHORIZATION: bearer {token}"
+    basic_credentials = base64.b64encode(f"x-access-token:{token}".encode("utf-8")).decode("ascii")
+    env["GIT_CONFIG_VALUE_0"] = f"AUTHORIZATION: basic {basic_credentials}"
     remote_before = run_git(root, ["ls-remote", "origin", branch], env=env).split()[0]
     if remote_before != expected_parent:
         raise RuntimeError(f"remote branch diverged: expected {expected_parent}, got {remote_before}")
