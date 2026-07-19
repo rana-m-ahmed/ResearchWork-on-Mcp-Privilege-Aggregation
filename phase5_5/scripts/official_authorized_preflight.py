@@ -68,9 +68,8 @@ def main() -> int:
         "authorization_status": "AUTHORIZED_FOR_BOUNDED_EXECUTION",
         "model_slot": slot,
         "branch": branch,
-        "dataset_version": "P5-DV-1.0.2-A7C91E42",
-        "common_source_commit": "b90158e6",
-        "parser_version": "phase5.5-parser-v2",
+        "dataset_version": "P5-DV-1.1.0-TREATMENT-V3",
+        "parser_version": "phase5.5-parser-v3-mcp-schema",
         "multiple_tool_call_policy": "serial",
         "official_trial": True,
         "counts_for_phase5": True,
@@ -83,6 +82,14 @@ def main() -> int:
             failures.append(f"authorization:{key}")
     if auth.get("exact_model_identifier") != config.get("exact_model_identifier"):
         failures.append("model-identity-mismatch")
+    branch_freeze = load_from_git(root, branch, "phase5_5/manifests/phase5_5_source_freeze_v3.json")
+    auth_source = str(auth.get("common_source_commit", ""))
+    branch_source = str(branch_freeze.get("source_commit", ""))
+    if not auth_source or not branch_source or subprocess.run(
+        ["git", "-C", str(root), "merge-base", "--is-ancestor", auth_source, branch_source],
+        check=False,
+    ).returncode != 0:
+        failures.append("authorization:common_source_commit")
     current_head = git(root, "rev-parse", "HEAD")
     base_head = auth.get("base_branch_head")
     ancestor = subprocess.run(

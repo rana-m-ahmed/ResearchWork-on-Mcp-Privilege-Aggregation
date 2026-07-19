@@ -74,7 +74,7 @@ def main() -> int:
         records.append({
             "model_slot": slot,
             "model_id": model_id,
-            "parser_version": "phase5.5-parser-v2",
+            "parser_version": "phase5.5-parser-v3-mcp-schema",
             "within_turn_attack_outcome": attack.primary_outcome_class.value if attack.primary_outcome_class else None,
             "within_turn_sequence": list(attack.actual_logical_sequence),
             "privilege_aggregation": attack.privilege_aggregation,

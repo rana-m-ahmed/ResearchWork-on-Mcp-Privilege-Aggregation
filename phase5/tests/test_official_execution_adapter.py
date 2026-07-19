@@ -103,6 +103,7 @@ class OfficialRealPipeline:
             official_trial=True,
             counts_for_phase5=True,
             publication_evidence=True,
+            analysis_eligible=self.invalid_reason is not None,
             acceptance_proof=None if orphaned else _proof(),
             invalid_reason=self.invalid_reason or ("official interruption" if orphaned else None),
             orphaned=orphaned,
@@ -233,9 +234,9 @@ def test_official_invalid_batch_is_not_labeled_synthetic(tmp_path: Path) -> None
 
     result = adapter(plan.batches[0], plan.p95_trial_seconds)
 
-    assert result.status == "OFFICIAL_COMPLETED_NO_ACCEPTED"
+    assert result.status == "OFFICIAL_FINALIZED_NO_ACCEPTED"
     assert result.accepted_count == 0
-    assert result.finalized is False
+    assert result.finalized is True
     assert all(record.attempt_status == "INVALID" for record in store.load_records())
 
 
