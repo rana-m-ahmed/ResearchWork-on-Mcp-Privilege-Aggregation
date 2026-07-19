@@ -678,8 +678,6 @@ def run_frozen_agent_loop(
             raw_output_text,
             parser_version=controls.parser_version or "phase5.5-parser-v1",
             generation_evidence=generation_receipt,
-            tool_schemas=tool_catalog,
-            forbidden_tool_names=controls.forbidden_tool_names,
         )
         terminal_from_parser = parser_result.metadata.get("terminal_response")
         parser_is_terminal = not parser_result.valid and isinstance(terminal_from_parser, str)
