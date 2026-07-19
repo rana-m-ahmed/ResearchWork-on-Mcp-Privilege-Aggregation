@@ -145,7 +145,8 @@ class McpServerLauncher:
         relative_schema_path = schema_source_path.relative_to(repository_root).as_posix()
         if manifest_entry.get("path") != relative_schema_path:
             raise SchemaInvariantError("schema variant manifest path mismatch")
-        actual_schema_sha256 = hashlib.sha256(schema_source_path.read_bytes()).hexdigest()
+        canonical_schema_bytes = schema_source_path.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+        actual_schema_sha256 = hashlib.sha256(canonical_schema_bytes).hexdigest()
         if manifest_entry.get("sha256") != actual_schema_sha256:
             raise SchemaInvariantError("schema variant manifest hash mismatch")
         return LaunchVerification(
