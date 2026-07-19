@@ -25,6 +25,7 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
     assert "P5-DV-1.1.0-TREATMENT-V3" in source
     assert "phase5_5_source_freeze_v3.json" in source
     assert "kaggle_run_plan_v3_treatment.json" in source
+    assert "phase5/manifests/batch_partition_manifest_v3_treatment.json" in source
     assert "PHASE5_GITHUB_TOKEN" in source
     assert 'get_secret("GITHUB_TOKEN")' not in source
     assert "phase5_5/evidence" in source
@@ -40,6 +41,7 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
     assert "load_frozen_model_backend_identity(root=REPO_ROOT, model_slot=MODEL_SLOT)" in source
     assert "OFFICIAL_CAMPAIGN_HEARTBEAT" in source
     assert "OFFICIAL_CAMPAIGN_START" in source
+    assert "official campaign failed before lineage evidence; nothing publishable" in source
     assert "subprocess.Popen" in source
     assert '"--checkpoint-publish"' in source
     assert '"--checkpoint-interval-trials"' in source
