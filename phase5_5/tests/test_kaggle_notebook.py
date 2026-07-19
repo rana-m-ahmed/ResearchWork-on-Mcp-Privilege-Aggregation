@@ -45,7 +45,12 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
     assert "publish_checkpoint.py" in source or "checkpoint-publish" in source
     pretrial_path = root / "phase5_5/kaggle/phase5_5_pretrial_runner.ipynb"
     assert pretrial_path.is_file()
-    pretrial_source = pretrial_path.read_text(encoding="utf-8")
+    pretrial_notebook = json.loads(pretrial_path.read_text(encoding="utf-8"))
+    pretrial_source = "\n".join(
+        "".join(cell.get("source", []))
+        for cell in pretrial_notebook["cells"]
+        if cell.get("cell_type") == "code"
+    )
     assert '"--pretrial"' in pretrial_source
     assert '"--max-batches"' in pretrial_source
     assert '"official_trial": False' in pretrial_source
