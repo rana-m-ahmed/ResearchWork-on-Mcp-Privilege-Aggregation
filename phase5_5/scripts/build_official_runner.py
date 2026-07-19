@@ -3,12 +3,16 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 from pathlib import Path
 
 
-SLOT = "M1"
-BASE_HEAD = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=Path(__file__).resolve().parents[2], text=True).strip()
+ROOT = Path(__file__).resolve().parents[2]
+SLOT = os.environ.get("PHASE5_MODEL_SLOT", "").upper()
+if not SLOT:
+    SLOT = json.loads((ROOT / "phase5_5/branch_config.json").read_text(encoding="utf-8-sig"))["model_slot"]
+BASE_HEAD = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
 OUTPUT = Path(__file__).resolve().parents[1] / "kaggle/phase5_5_official_runner.ipynb"
 SOURCE = Path(__file__).resolve().parents[1] / "kaggle/phase5_5_runner.ipynb"
 
@@ -152,7 +156,7 @@ else:
         "--batch-manifest",
         "phase5/manifests/batch_partition_manifest_v3.json",
         "--run-plan",
-        "phase5/validation/kaggle_run_plan_v3.json",
+        "phase5/validation/kaggle_run_plan_v3_treatment.json",
         "--checkpoint-publish",
         "--checkpoint-interval-trials",
         "6",
