@@ -1,0 +1,1 @@
+{"host":"127.0.0.1","port":8000,"reset_dispatch_rejected":true,"reset_hidden":true,"tool_names":["get_local_weather","read_internal_notes","write_outbox"]}
