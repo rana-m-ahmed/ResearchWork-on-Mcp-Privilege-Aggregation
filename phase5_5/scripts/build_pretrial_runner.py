@@ -166,7 +166,7 @@ pretrial_summary = {
     "parser_versions": sorted(parser_versions),
 }
 (OUTPUT_ROOT / f"{MODEL_SLOT}_pretrial_behavior_summary.json").write_text(
-    json.dumps(pretrial_summary, indent=2, sort_keys=True) + "\n",
+    json.dumps(pretrial_summary, indent=2, sort_keys=True) + "\\n",
     encoding="utf-8",
 )
 print(
