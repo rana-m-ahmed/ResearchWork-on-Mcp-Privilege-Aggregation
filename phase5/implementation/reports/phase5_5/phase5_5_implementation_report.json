@@ -14,6 +14,20 @@
     "publication_evidence": 0,
     "duplicates": 0
   },
-  "parser_version": "phase5.5-parser-v1",
+  "parser_version": "phase5.5-parser-v2",
+  "parser_contract_amendment": {
+    "accepted_aliases": [
+      "{\"tool_call\": [...] } embedded JSON alias",
+      "tool_call(\"name\", {JSON object}) quoted textual tool name"
+    ],
+    "fail_closed_preserved": [
+      "mixed alias and canonical envelopes",
+      "non-sequence tool_call alias",
+      "invalid quoted names",
+      "single-quoted textual names",
+      "duplicate independent candidates",
+      "structurally nested candidates"
+    ]
+  },
   "tool_result_serialization_version": "phase5.5-tool-result-v1"
 }
