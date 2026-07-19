@@ -8,15 +8,15 @@
     "phase5/implementation/prompts/task_execution_template.md": "fb3b6db6fc8880b0132f1df434279087f6a15ca3f0fcc86ca2f1a0417c193a9f",
     "phase5/manifests/batch_partition_manifest_v3.json": "e7bf12dc9a2706f0ed23f29aaedfdfd1e3db34d3db1f34525d649bd46b7d3e5c",
     "phase5/manifests/model_runtime_authority_v2.json": "48d4cfa54b664b1abc30a4e36f879a50601c17d46135622ae8cc7d91b2af8734",
-    "phase5/runtime/agent_loop.py": "9a3f633a4d5f3e35c27d6facd97b8deaa7e88941c467451b9487fe13c9c65f5d",
-    "phase5/runtime/engine.py": "63f77257439f8080b42b7069549d806b1c3a73541e907f5e1fd06e1ce8429ac8",
+    "phase5/runtime/agent_loop.py": "6fc2110f3358ed28d56c9eefe17bebe63d945e787aebe1d6e6e5ff0cdfe0c0c2",
+    "phase5/runtime/engine.py": "4a6e08a60f32b998378526817751878626ba601a0fd8372456e18edf64b3f087",
     "phase5_5/configs/branch_mapping.json": "9a20036c666cc07c5ae7e7f9fc163e06fddc386a0b4ad2f689b819694c54754c",
-    "phase5_5/configs/evidence_policy.json": "7adcf3822134af59ee47df61f79f67823231cd123c540caccf7f40b4f4d512c1",
-    "phase5_5/configs/frozen_state_machine_controls.json": "19ba05b0d96f3e01614fbd0041f8fd691a8f2016b91666c1212bc72c667296a9",
+    "phase5_5/configs/evidence_policy.json": "813cc890ea22ba4bf6f791efb175a32ae4602f96291474ffd4ba6efc954b72e8",
+    "phase5_5/configs/frozen_state_machine_controls.json": "eb9932cf7022dbb56922dc7fbce037e3d06ac442a664935c32c37aa61b3397a4",
     "phase5_5/configs/model_roster.json": "913ad2c8f120b4252b4a46ce596f03d2821d26df5ed4476871578dd6a4927412",
-    "phase5_5/parser.py": "aa58d06ecddd830384a981da4e1bb469ec3b113cbfce9674dadb7bf0123bf65c",
+    "phase5_5/parser.py": "4fd08d5419a58d779d29a537efdbe72a9e0d7f466e54901aa01ca6dc1dd5ac63",
     "phase5_5/runtime.py": "923274e72a61fb225ca219baba5881d9a543f4af730c2fcf9b74353aa1269222",
-    "phase5_5/scripts/official_preflight.py": "2f943bec0ba9406cf46c326db269efd0c2790fed759dab32efafb7ad498946a4",
+    "phase5_5/scripts/official_preflight.py": "68b437fb39ecd875db12aa0146344e022dbf56e7b87db1116d1de2d1ef8d9828",
     "phase5_5/scripts/rebuild_historical_closure.py": "95534078a91636c98c4a516f84e2a5cc8a1d0bbe861f8e172b8f5694a3ccbe76"
   },
   "extraction_contract": "ordered_non_overlapping_top_level_candidates",
@@ -27,5 +27,5 @@
   "publication_evidence": false,
   "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
   "scientific_inputs_regenerated": false,
-  "source_commit": "b90158e6"
+  "source_commit": "9524780c1b20bffb558c0b0c4599d815f13b38b2"
 }
