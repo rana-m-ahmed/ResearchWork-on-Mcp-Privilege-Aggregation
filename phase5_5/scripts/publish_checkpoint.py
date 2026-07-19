@@ -11,8 +11,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-def run_git(root: Path, args: list[str], *, env: dict[str, str]) -> str:
-    result = subprocess.run(["git", *args], cwd=root, env=env, capture_output=True, text=True, check=False)
+def run_git(root: Path, args: list[str], *, env: dict[str, str], input_text: str | None = None) -> str:
+    result = subprocess.run(["git", *args], cwd=root, env=env, input=input_text, capture_output=True, text=True, check=False)
     if result.returncode:
         raise RuntimeError(f"git {' '.join(args)} failed: {result.stderr.strip()}")
     return result.stdout.strip()
@@ -20,9 +20,30 @@ def run_git(root: Path, args: list[str], *, env: dict[str, str]) -> str:
 
 def status_paths(root: Path) -> list[str]:
     status = subprocess.check_output(
-        ["git", "-C", str(root), "status", "--porcelain", "--untracked-files=all"], text=True
+        ["git", "-C", str(root), "status", "--porcelain=v1", "-z", "--untracked-files=all"], text=True
     )
-    return [line[3:].strip().replace("\\", "/") for line in status.splitlines() if line.strip()]
+    paths: list[str] = []
+    for record in status.split("\0"):
+        if not record:
+            continue
+        if len(record) < 4:
+            raise RuntimeError(f"invalid git status record: {record!r}")
+        paths.extend(part.replace("\\", "/") for part in record[3:].split("\t"))
+    return paths
+
+
+def validate_evidence_path(root: Path, relative: str) -> str:
+    """Reject absolute, traversal, and symlink-escaping evidence paths."""
+    normalized = Path(relative).as_posix()
+    if Path(relative).is_absolute() or ".." in Path(relative).parts:
+        raise RuntimeError(f"checkpoint path is not canonical: {relative}")
+    evidence_root = (root / "phase5_5/evidence").resolve()
+    candidate = (root / normalized).resolve()
+    try:
+        candidate.relative_to(evidence_root)
+    except ValueError as exc:
+        raise RuntimeError(f"checkpoint path escapes phase5_5/evidence: {relative}") from exc
+    return normalized
 
 
 def sha256(path: Path) -> str:
@@ -53,7 +74,7 @@ def main() -> int:
     if run_git(root, ["rev-parse", "HEAD"], env=os.environ.copy()) != expected_parent:
         raise RuntimeError("local checkpoint parent does not match the expected branch head")
 
-    checkpoint_relative = Path(args.checkpoint).as_posix()
+    checkpoint_relative = validate_evidence_path(root, args.checkpoint)
     checkpoint_path = root / checkpoint_relative
     if not checkpoint_path.is_file() or not checkpoint_relative.startswith("phase5_5/evidence/"):
         raise RuntimeError("checkpoint must be an existing Phase 5.5 evidence file")
@@ -76,7 +97,13 @@ def main() -> int:
     if remote_before != expected_parent:
         raise RuntimeError(f"remote branch diverged: expected {expected_parent}, got {remote_before}")
 
-    run_git(root, ["add", "--", *paths], env=env)
+    # Feed pathspecs over stdin so checkpoint size cannot hit the OS argv limit.
+    run_git(
+        root,
+        ["add", "--pathspec-from-file=-", "--pathspec-file-nul"],
+        env=env,
+        input_text="\0".join(paths) + "\0",
+    )
     run_git(
         root,
         [
