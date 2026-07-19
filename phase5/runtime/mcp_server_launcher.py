@@ -3,14 +3,17 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import json
 from dataclasses import dataclass
 from ipaddress import ip_address
-from typing import Any, Callable, Sequence
+from pathlib import Path
+from typing import Any, Callable, Mapping, Sequence
 
 from ..domain.errors import RuntimeMismatchError, SchemaInvariantError
 from .workspace_isolation import AttemptWorkspaceIsolation
 from .tool_dispatch import ToolSpecification
+from server.schema_variant_loader import resolve_schema_path
 
 try:  # pragma: no cover - validated by runtime tests
     from server.mock_server import build_server as default_server_factory
@@ -71,6 +74,9 @@ class LaunchVerification:
     tool_names: tuple[str, ...]
     reset_hidden: bool
     reset_dispatch: ResetDispatchProbe
+    schema_variant: Mapping[str, Any]
+    schema_source_path: Path
+    schema_source_sha256: str
 
 
 def _probe_reset_dispatch(server: Any) -> ResetDispatchProbe:
@@ -119,6 +125,29 @@ class McpServerLauncher:
         if RESET_TOOL_NAME in tool_names:
             raise SchemaInvariantError("reset must remain absent from MCP discovery")
         reset_dispatch = probe_reset_dispatch(server)
+        schema_variant = getattr(server, "_phase2_schema", None)
+        if not isinstance(schema_variant, Mapping):
+            raise SchemaInvariantError("validated FastMCP object does not expose its schema variant")
+        schema_source_path, _ = resolve_schema_path(self.variant_id)
+        if not schema_source_path.is_file():
+            raise SchemaInvariantError(f"schema variant source is missing: {schema_source_path.as_posix()}")
+        source_document = json.loads(schema_source_path.read_text(encoding="utf-8"))
+        if source_document != dict(schema_variant):
+            raise SchemaInvariantError("runtime MCP schema differs from its source artifact")
+        manifest_path = Path(__file__).resolve().parents[2] / "phase5_5/configs/schema_variant_manifest_v3.json"
+        if not manifest_path.is_file():
+            raise SchemaInvariantError("Phase 5.5 schema variant manifest is missing")
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest_entry = manifest.get("variants", {}).get(self.variant_id)
+        if not isinstance(manifest_entry, Mapping):
+            raise SchemaInvariantError(f"schema variant is absent from the Phase 5.5 manifest: {self.variant_id!r}")
+        repository_root = Path(__file__).resolve().parents[2]
+        relative_schema_path = schema_source_path.relative_to(repository_root).as_posix()
+        if manifest_entry.get("path") != relative_schema_path:
+            raise SchemaInvariantError("schema variant manifest path mismatch")
+        actual_schema_sha256 = hashlib.sha256(schema_source_path.read_bytes()).hexdigest()
+        if manifest_entry.get("sha256") != actual_schema_sha256:
+            raise SchemaInvariantError("schema variant manifest hash mismatch")
         return LaunchVerification(
             server=server,
             host=self.host,
@@ -126,6 +155,9 @@ class McpServerLauncher:
             tool_names=tool_names,
             reset_hidden=True,
             reset_dispatch=reset_dispatch,
+            schema_variant=dict(schema_variant),
+            schema_source_path=schema_source_path,
+            schema_source_sha256=actual_schema_sha256,
         )
 
     def restart(self) -> LaunchVerification:
@@ -161,6 +193,20 @@ def build_fastmcp_tool_catalog(verification: LaunchVerification) -> dict[str, To
     if not isinstance(registered, dict):
         raise SchemaInvariantError("validated FastMCP object does not expose registered tool contracts")
 
+    schema_entries = verification.schema_variant.get("tools")
+    if not isinstance(schema_entries, list):
+        raise SchemaInvariantError("MCP schema variant must contain a tool list")
+    entries_by_name: dict[str, Mapping[str, Any]] = {}
+    for entry in schema_entries:
+        if not isinstance(entry, Mapping):
+            raise SchemaInvariantError("MCP schema tool entry must be an object")
+        exposed_name = entry.get("exposed_tool_name")
+        if not isinstance(exposed_name, str) or not exposed_name:
+            raise SchemaInvariantError("MCP schema tool entry is missing exposed_tool_name")
+        if exposed_name in entries_by_name:
+            raise SchemaInvariantError(f"duplicate MCP schema tool entry: {exposed_name!r}")
+        entries_by_name[exposed_name] = entry
+
     catalog: dict[str, ToolSpecification] = {}
     for tool_name in verification.tool_names:
         tool = registered.get(tool_name)
@@ -170,6 +216,20 @@ def build_fastmcp_tool_catalog(verification: LaunchVerification) -> dict[str, To
         required = parameters.get("required", ())
         if not isinstance(required, (list, tuple)) or not all(isinstance(item, str) for item in required):
             raise SchemaInvariantError(f"FastMCP tool {tool_name!r} has an invalid required-argument schema")
+        schema_entry = entries_by_name.get(tool_name)
+        if schema_entry is None:
+            raise SchemaInvariantError(f"discovered tool {tool_name!r} is absent from the source schema")
+        parameter_schema = schema_entry.get("parameters")
+        description = schema_entry.get("description")
+        logical_name = schema_entry.get("logical_tool_id")
+        if not isinstance(parameter_schema, Mapping):
+            raise SchemaInvariantError(f"source schema for {tool_name!r} is missing parameters")
+        if not isinstance(description, str) or not description:
+            raise SchemaInvariantError(f"source schema for {tool_name!r} is missing its description")
+        if not isinstance(logical_name, str) or not logical_name:
+            raise SchemaInvariantError(f"source schema for {tool_name!r} is missing logical_tool_id")
+        if tuple(parameter_schema.get("required", ())) != tuple(required):
+            raise SchemaInvariantError(f"FastMCP/source required-argument mismatch for {tool_name!r}")
 
         def handler(arguments: dict[str, Any], *, current_name: str = tool_name) -> str:
             async def invoke() -> Any:
@@ -187,8 +247,42 @@ def build_fastmcp_tool_catalog(verification: LaunchVerification) -> dict[str, To
 
         catalog[tool_name] = ToolSpecification(
             exposed_tool_name=tool_name,
-            logical_tool_name=tool_name,
+            logical_tool_name=logical_name,
             required_arguments=tuple(required),
+            description=description,
+            parameter_schema=dict(parameter_schema),
             handler=handler,
         )
     return catalog
+
+
+def build_model_facing_discovery(
+    verification: LaunchVerification,
+    tool_catalog: Mapping[str, ToolSpecification],
+) -> dict[str, Any]:
+    """Return the exact, hash-bound MCP metadata delivered to the model."""
+
+    capability = verification.schema_variant.get("capability_advertisement")
+    variant_id = verification.schema_variant.get("schema_variant_id")
+    if not isinstance(capability, str) or not capability:
+        raise SchemaInvariantError("MCP schema variant is missing capability_advertisement")
+    if not isinstance(variant_id, str) or not variant_id:
+        raise SchemaInvariantError("MCP schema variant is missing schema_variant_id")
+    tools = []
+    for name in verification.tool_names:
+        specification = tool_catalog[name]
+        if specification.description is None or not specification.parameter_schema:
+            raise SchemaInvariantError(f"tool {name!r} lacks model-facing metadata")
+        tools.append({
+            "description": specification.description,
+            "exposed_tool_name": specification.exposed_tool_name,
+            "logical_tool_name": specification.logical_name,
+            "parameters": dict(specification.parameter_schema),
+        })
+    return {
+        "capability_advertisement": capability,
+        "schema_source_path": verification.schema_source_path.as_posix(),
+        "schema_source_sha256": verification.schema_source_sha256,
+        "schema_variant_id": variant_id,
+        "tools": tools,
+    }

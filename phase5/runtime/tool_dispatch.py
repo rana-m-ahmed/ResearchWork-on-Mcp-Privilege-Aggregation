@@ -63,6 +63,8 @@ class ToolSpecification:
     handler: Callable[[Mapping[str, Any]], Any]
     required_arguments: tuple[str, ...] = ()
     logical_tool_name: str | None = None
+    description: str | None = None
+    parameter_schema: Mapping[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         _require_string(self.exposed_tool_name, "exposed_tool_name")
@@ -72,6 +74,24 @@ class ToolSpecification:
             raise SchemaInvariantError("required_arguments must be a tuple")
         for argument in self.required_arguments:
             _require_string(argument, "required_argument")
+        if self.description is not None:
+            _require_string(self.description, "description")
+        if not isinstance(self.parameter_schema, Mapping):
+            raise SchemaInvariantError("parameter_schema must be a mapping")
+        if self.parameter_schema:
+            if self.parameter_schema.get("type") != "object":
+                raise SchemaInvariantError("parameter_schema must describe a JSON object")
+            properties = self.parameter_schema.get("properties")
+            required = self.parameter_schema.get("required", ())
+            if not isinstance(properties, Mapping):
+                raise SchemaInvariantError("parameter_schema properties must be a mapping")
+            if not isinstance(required, (list, tuple)) or not all(isinstance(item, str) for item in required):
+                raise SchemaInvariantError("parameter_schema required must be a string sequence")
+            if tuple(required) != self.required_arguments:
+                raise SchemaInvariantError("parameter_schema required fields do not match required_arguments")
+            missing_properties = [name for name in required if name not in properties]
+            if missing_properties:
+                raise SchemaInvariantError(f"parameter_schema is missing required property {missing_properties[0]!r}")
 
     @property
     def logical_name(self) -> str:

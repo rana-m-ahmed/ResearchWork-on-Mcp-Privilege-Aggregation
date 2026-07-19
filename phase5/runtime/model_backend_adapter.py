@@ -65,14 +65,51 @@ def build_model_load_memory_plan(torch_module: Any) -> tuple[dict[Any, int], Pat
     return max_memory, offload_root
 
 
+_SEMANTIC_PROMPT_MARKERS = (
+    "<|system|>", "<|tools|>", "<|mcp_discovery_untrusted|>",
+    "<|tool_result_template|>", "<|retrieved_content|>", "<|user|>",
+    "<|authorized_benign_arguments|>", "<|history|>", "<|tool_results|>", "<|assistant|>",
+)
+
+
+def semantic_prompt_messages(prompt_text: str) -> tuple[dict[str, str], ...]:
+    """Convert the deterministic semantic envelope into native chat roles once."""
+
+    if not isinstance(prompt_text, str) or not prompt_text:
+        raise RuntimeMismatchError("semantic prompt must be non-empty text")
+    if "<|mcp_discovery_untrusted|>" not in prompt_text:
+        return ({"role": "user", "content": prompt_text},)
+    positions = []
+    for marker in _SEMANTIC_PROMPT_MARKERS:
+        if prompt_text.count(marker) != 1:
+            raise RuntimeMismatchError(f"semantic prompt must contain exactly one {marker!r} marker")
+        positions.append(prompt_text.index(marker))
+    if positions != sorted(positions):
+        raise RuntimeMismatchError("semantic prompt markers are out of order")
+    sections = {}
+    for index, marker in enumerate(_SEMANTIC_PROMPT_MARKERS):
+        start = positions[index] + len(marker)
+        end = positions[index + 1] if index + 1 < len(positions) else len(prompt_text)
+        sections[marker] = prompt_text[start:end].strip()
+    if sections["<|assistant|>"]:
+        raise RuntimeMismatchError("semantic prompt assistant boundary must be empty")
+    user_parts = [f"{marker}\n{sections[marker]}" for marker in _SEMANTIC_PROMPT_MARKERS[1:-1] if sections[marker]]
+    if not sections["<|system|>"] or not user_parts:
+        raise RuntimeMismatchError("semantic prompt must contain system and user content")
+    return (
+        {"role": "system", "content": sections["<|system|>"]},
+        {"role": "user", "content": "\n".join(user_parts)},
+    )
+
+
 def serialize_frozen_prompt_for_model(tokenizer: Any, prompt_text: str) -> str:
-    """Apply the immutable tokenizer's native generation boundary."""
+    """Apply the immutable tokenizer's native generation boundary exactly once."""
 
     apply_chat_template = getattr(tokenizer, "apply_chat_template", None)
     if not callable(apply_chat_template):
         raise RuntimeMismatchError("the frozen tokenizer does not expose its required chat template")
     serialized = apply_chat_template(
-        [{"role": "user", "content": prompt_text}],
+        list(semantic_prompt_messages(prompt_text)),
         tokenize=False,
         add_generation_prompt=True,
     )
@@ -468,12 +505,30 @@ class FrozenModelBackendAdapter:
             )
         generated_ids = output[0, encoded["input_ids"].shape[1]:]
         decoded_output = self._tokenizer.decode(generated_ids, skip_special_tokens=True)
+        generated_token_ids = generated_ids.detach().cpu().tolist()
+        eos_token_id = self._tokenizer.eos_token_id
+        eos_observed = bool(generated_token_ids and generated_token_ids[-1] == eos_token_id)
+        max_new_tokens = 512
+        max_new_tokens_reached = len(generated_token_ids) >= max_new_tokens and not eos_observed
+        finish_reason = "length" if max_new_tokens_reached else ("eos_token" if eos_observed else "generation_stopped")
+        messages = semantic_prompt_messages(prompt_text)
         self._last_generation_receipt = {
             "compiled_prompt_sha256": hashlib.sha256(prompt_text.encode("utf-8")).hexdigest(),
             "model_serialization": "tokenizer_chat_template",
+            "semantic_messages_sha256": hashlib.sha256(
+                json.dumps(messages, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+            ).hexdigest(),
             "serialized_prompt_sha256": hashlib.sha256(serialized_prompt.encode("utf-8")).hexdigest(),
+            "tokenizer_identity": self.tokenizer_identity,
+            "tokenizer_revision": self.identity.huggingface_commit_sha,
             "input_token_ids": encoded["input_ids"][0].detach().cpu().tolist(),
-            "generated_token_ids": generated_ids.detach().cpu().tolist(),
+            "generated_token_ids": generated_token_ids,
+            "generated_token_count": len(generated_token_ids),
+            "max_new_tokens": max_new_tokens,
+            "max_new_tokens_reached": max_new_tokens_reached,
+            "eos_token_id": eos_token_id,
+            "eos_observed": eos_observed,
+            "finish_reason": finish_reason,
             "decoded_output": decoded_output,
             "input_device": str(input_device),
         }
