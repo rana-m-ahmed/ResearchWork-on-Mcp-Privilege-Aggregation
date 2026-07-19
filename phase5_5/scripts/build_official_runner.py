@@ -248,8 +248,11 @@ def run_checked(command: list[str], *, cwd: Path | None = None) -> str:
         raise RuntimeError(f"command failed ({completed.returncode}): {' '.join(command)}\\n{completed.stderr}")
     return completed.stdout
 
-nvidia = run_checked(["nvidia-smi"])
-print(nvidia)
+nvidia_command = ["nvidia-smi"] if shutil.which("nvidia-smi") else None
+if nvidia_command is not None:
+    print(run_checked(nvidia_command))
+else:
+    print("NVIDIA_SMI_UNAVAILABLE: continuing with torch CUDA verification", flush=True)
 subprocess.run([sys.executable, "-m", "pip", "install", "--requirement", str(REPO_ROOT / "phase4_5/kaggle/requirements.lock.txt")], check=True)
 hardware = run_checked([
     sys.executable,
