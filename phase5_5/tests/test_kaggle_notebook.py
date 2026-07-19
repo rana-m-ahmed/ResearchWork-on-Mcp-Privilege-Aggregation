@@ -54,6 +54,8 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
         if cell.get("cell_type") == "code"
     )
     assert '"--pretrial"' in pretrial_source
+    assert 'RUN_ID = f"P5RUN-{DATASET_VERSION}-{MODEL_SLOT}-{UTC_DATE}-{RUN_TOKEN}"' in pretrial_source
+    assert "P5PRE-" not in pretrial_source
     assert '"--max-batches"' in pretrial_source
     assert '"--pretrial-trials"' in pretrial_source
     assert '"--attempts-root"' in pretrial_source
