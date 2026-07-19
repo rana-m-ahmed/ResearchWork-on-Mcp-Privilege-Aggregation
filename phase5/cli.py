@@ -111,6 +111,8 @@ def build_parser() -> argparse.ArgumentParser:
     run_campaign.add_argument("--checkpoint-publish", action="store_true")
     run_campaign.add_argument("--checkpoint-interval-trials", required=False, type=int, default=0)
     run_campaign.add_argument("--checkpoint-output-dir", required=False)
+    run_campaign.add_argument("--attempts-root", required=False)
+    run_campaign.add_argument("--evidence-root", required=False)
 
     run_proof = subparsers.add_parser(
         "run-m1-proof",
@@ -376,6 +378,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                     dataset_version=args.dataset_version,
                     model_slot=mslot.value,
                     root=Path.cwd(),
+                    attempts_root=Path(args.attempts_root) if args.attempts_root else None,
+                    evidence_root=Path(args.evidence_root) if args.evidence_root else None,
                 )
                 
                 run_id = getattr(args, "run_id", None)
@@ -405,7 +409,9 @@ def main(argv: Sequence[str] | None = None) -> int:
                 batch_processor = RepositoryBatchExecutionAdapter(
                     queue_bundle=load_frozen_queue_bundle(),
                     pipeline=pipeline,
-                    lineage_store=AttemptLineageStore(Path("phase5_5/evidence/lineage.csv")),
+                    lineage_store=AttemptLineageStore(
+                        (Path(args.evidence_root) if args.evidence_root else Path("phase5_5/evidence")) / "lineage.csv"
+                    ),
                     session=temp_session,
                     dataset_version=args.dataset_version,
                     official_mode=is_official,
