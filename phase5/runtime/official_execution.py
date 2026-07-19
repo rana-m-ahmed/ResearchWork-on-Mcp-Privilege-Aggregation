@@ -95,6 +95,7 @@ class ExecutedTrialResult:
     acceptance_proof: TrialAcceptanceProof | None = None
     invalid_reason: str | None = None
     orphaned: bool = False
+    pretrial_mode: bool = False
 
     @property
     def qualification_accepted(self) -> bool:
@@ -108,7 +109,7 @@ class ExecutedTrialResult:
             raise OfficialDispatchBlockedError("planning metadata cannot produce an executed trial result")
         if self.official_trial or self.counts_for_phase5 or self.publication_evidence:
             raise OfficialDispatchBlockedError("I17E qualification output must remain non-official and non-publication")
-        if not self.synthetic_fixture:
+        if not self.synthetic_fixture and not self.pretrial_mode:
             raise OfficialDispatchBlockedError("I17E local qualification requires an explicit synthetic fixture")
         if self.elapsed_seconds < 0:
             raise SchemaInvariantError("executed trial elapsed_seconds must be non-negative")
