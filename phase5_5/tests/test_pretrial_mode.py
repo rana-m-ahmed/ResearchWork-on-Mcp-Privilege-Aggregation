@@ -45,3 +45,25 @@ def test_real_pretrial_result_passes_nonpublication_boundary(tmp_path: Path) -> 
         pretrial_mode=True,
     )
     result.validate_development_boundary()
+
+
+def test_pretrial_cli_accepts_isolated_attempt_and_evidence_roots() -> None:
+    parser = build_parser()
+    args = parser.parse_args([
+        "run-campaign",
+        "--pretrial",
+        "--model-slot",
+        "M1",
+        "--dataset-version",
+        "P5-DV-1.0.2-A7C91E42",
+        "--run-id",
+        "P5PRE-test",
+        "--seal-epoch",
+        "1",
+        "--attempts-root",
+        "/tmp/pretrial-attempts",
+        "--evidence-root",
+        "/tmp/pretrial-evidence",
+    ])
+    assert args.attempts_root == "/tmp/pretrial-attempts"
+    assert args.evidence_root == "/tmp/pretrial-evidence"
