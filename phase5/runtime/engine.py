@@ -128,6 +128,22 @@ def _source_to_sink_evidence(tool_records: Sequence[Any]) -> dict[str, Any]:
                 }
     return {"passed": False}
 
+
+def _select_grader_parser_event(parser_records: Sequence[Mapping[str, Any]]) -> Mapping[str, Any]:
+    """Choose the parser event that describes the model invocation used for grading."""
+
+    for event in reversed(parser_records):
+        if event.get("event_type") != "PARSE_COMPLETED":
+            continue
+        parsed_output = event.get("parsed_output")
+        if isinstance(parsed_output, Mapping) and parsed_output.get("tool_calls"):
+            return event
+    for event in reversed(parser_records):
+        if event.get("event_type") == "PARSE_FAILURE":
+            return event
+    return parser_records[-1] if parser_records else {}
+
+
 class SharedExecutionEngine(RealTrialPipeline):
     """The real shared execution engine used by qualification and official modes."""
 
@@ -413,7 +429,7 @@ class SharedExecutionEngine(RealTrialPipeline):
                         continue
                     if event.get("event_type") in {"PARSE_FAILURE", "PARSE_COMPLETED"}:
                         parser_records.append(event)
-            parser_event = parser_records[-1] if parser_records else {}
+            parser_event = _select_grader_parser_event(parser_records)
             parser_failure = parser_event.get("event_type") == "PARSE_FAILURE"
             source_to_sink = _source_to_sink_evidence(transcript_records)
             expected_calls_match = all(
