@@ -38,10 +38,15 @@ All four model branches now share:
 - a bounded, real-backend pretrial mode that cannot set official, publication,
   or Phase 5 counting flags.
 
-The pretrial executes one complete frozen 50-row batch per slot, streams model
-and heartbeat output, and writes a local hashed evidence archive. It does not
-publish to the official evidence branch. It is a qualification gate for the
-runtime and persistence path, not scientific evidence.
+The pretrial selects the first frozen batch but executes exactly three complete
+trials per slot, streams model and heartbeat output, and writes a local hashed
+evidence archive under isolated attempt/evidence roots. The resulting
+`resume_required: true` is expected because the bounded pretrial deliberately
+leaves the official campaign queue pending. It does not publish to the official
+evidence branch and is not scientific evidence.
+
+GPU diagnostics are optional: absence of `nvidia-smi` is recorded as an empty
+diagnostic rather than being allowed to abort a trial.
 
 ## Operational Boundary
 
