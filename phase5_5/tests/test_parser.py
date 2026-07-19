@@ -45,6 +45,17 @@ def test_extracts_explicit_textual_invocation_with_surrounding_reasoning() -> No
     assert result.parsed_call.arguments == {"density": "D5"}
 
 
+def test_extracts_textual_invocation_with_json_string_tool_name() -> None:
+    result = extract_tool_call(
+        'Reasoning first. tool_call("log_event", {"detail":"done", "event_type":"benign_task"})'
+    )
+
+    assert result.status is ParserStatus.VALID_EXTRACTED_CALL
+    assert result.parsed_call is not None
+    assert result.parsed_call.tool_name == "log_event"
+    assert result.parsed_call.arguments == {"detail": "done", "event_type": "benign_task"}
+
+
 def test_nested_json_arguments_and_escaped_braces_are_preserved() -> None:
     result = extract_tool_call(
         'tool_call(write_outbox, {"subject":"x", "body":{"text":"brace } and \\"quote\\""}})'
@@ -53,6 +64,59 @@ def test_nested_json_arguments_and_escaped_braces_are_preserved() -> None:
     assert result.status is ParserStatus.VALID_EXTRACTED_CALL
     assert result.parsed_call is not None
     assert result.parsed_call.arguments["body"]["text"] == 'brace } and "quote"'
+
+
+def test_extracts_singular_tool_call_alias_as_ordered_embedded_json() -> None:
+    raw = """```json
+{
+  "tool_call": [
+    {
+      "tool_name": "write_outbox",
+      "arguments": {
+        "body": "Phase 5.5 benign task confirmation.",
+        "recipient": "local-reviewer"
+      }
+    },
+    {
+      "tool_name": "read_internal_notes",
+      "arguments": {
+        "note_id": "note-001"
+      }
+    }
+  ],
+  "terminal_response": "done"
+}
+```"""
+
+    result = extract_tool_call(raw)
+
+    assert result.status is ParserStatus.VALID_EXTRACTED_CALL
+    assert result.native_format == "embedded_json"
+    assert result.canonical_json_compliant is False
+    assert [call.tool_name for call in result.parsed_calls] == ["write_outbox", "read_internal_notes"]
+    assert result.parsed_calls[0].arguments["recipient"] == "local-reviewer"
+    assert result.candidate_count == 2
+
+
+def test_embedded_terminal_response_block_does_not_ambiguous_real_tool_call_block() -> None:
+    raw = """```json
+{
+  "tool_call": [
+    {"tool_name": "query_local_inventory", "arguments": {"item_id": "INV-1001"}},
+    {"tool_name": "log_event", "arguments": {"detail": "done", "event_type": "benign_task"}}
+  ]
+}
+```
+
+```json
+{"terminal_response": "done"}
+```"""
+
+    result = extract_tool_call(raw)
+
+    assert result.status is ParserStatus.VALID_EXTRACTED_CALL
+    assert [call.tool_name for call in result.parsed_calls] == ["query_local_inventory", "log_event"]
+    assert result.candidate_count == 2
 
 
 @pytest.mark.parametrize(
@@ -88,6 +152,31 @@ def test_schema_invalid_canonical_call_is_not_repaired() -> None:
 @pytest.mark.parametrize(
     "raw",
     [
+        json.dumps(
+            {
+                "tool_call": [{"tool_name": "alpha", "arguments": {}}],
+                "tool_calls": [{"tool_name": "beta", "arguments": {}}],
+            }
+        ),
+        json.dumps({"tool_call": {"tool_name": "alpha", "arguments": {}}}),
+        'tool_call("bad name", {"x": 1})',
+        "tool_call('log_event', {\"detail\":\"done\"})",
+    ],
+)
+def test_alias_and_quoted_name_extensions_still_fail_closed_when_invalid(raw: str) -> None:
+    result = extract_tool_call(raw)
+
+    assert result.status in {
+        ParserStatus.SCHEMA_INVALID_CALL,
+        ParserStatus.MALFORMED_JSON,
+        ParserStatus.NO_INVOCATION_FOUND,
+    }
+    assert not result.valid
+
+
+@pytest.mark.parametrize(
+    "raw",
+    [
         "tool_call(read_internal_notes, {\"density\":\"D5\"}) tool_call(write_outbox, {\"subject\":\"x\"})",
         _canonical() + _canonical("write_outbox", {"subject": "x"}),
     ],
@@ -109,16 +198,19 @@ def test_candidate_like_text_inside_argument_string_is_data() -> None:
     assert result.candidate_count == 1
 
 
-def test_terminal_response_after_textual_call_is_not_second_candidate() -> None:
-    result = extract_tool_call(
-        'tool_call(read_internal_notes, {"note_id":"note-001"})\n'
-        '{"terminal_response":"Tool Result [read_internal_notes]: Note content"}'
+def test_duplicate_top_level_candidates_fail_closed() -> None:
+    raw = (
+        'The call should be tool_call("log_event", {"detail":"done", "event_type":"benign_task"}). '
+        '```json\n'
+        'tool_call("log_event", {"detail":"done", "event_type":"benign_task"})\n'
+        '```'
     )
 
-    assert result.status is ParserStatus.VALID_EXTRACTED_CALL
-    assert result.candidate_count == 1
-    assert result.parsed_call is not None
-    assert result.parsed_call.tool_name == "read_internal_notes"
+    result = extract_tool_call(raw)
+
+    assert result.status is ParserStatus.AMBIGUOUS_MULTIPLE_CANDIDATES
+    assert not result.valid
+    assert result.candidate_count == 2
 
 
 def test_structurally_nested_candidate_is_ambiguous() -> None:

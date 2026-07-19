@@ -22,10 +22,15 @@ reconciliation report.
 
 ## Parser Contract
 
-The implementation accepts one complete canonical JSON envelope or one
-explicit `tool_call(name, {JSON object})` invocation. It preserves raw output,
+The implementation accepts a complete canonical JSON envelope, ordered
+embedded JSON tool-call candidates, and explicit
+`tool_call(name, {JSON object})` textual invocations. The Phase 5.5 amendment
+also accepts the explicit JSON alias `{"tool_call": [...]}` and textual
+`tool_call("name", {JSON object})` where the quoted name is a valid JSON
+string matching the frozen tool-name grammar. It preserves raw output,
 rejects inference and repair, distinguishes budget truncation from unknown
-incompleteness, and treats quoted nested candidates as data.
+incompleteness, treats quoted nested candidates as data, and rejects mixed,
+invalid, nested, or duplicate candidates fail-closed.
 
 ## Verification
 
