@@ -676,7 +676,8 @@ def run_frozen_agent_loop(
             generation_evidence=generation_receipt,
         )
         terminal_from_parser = parser_result.metadata.get("terminal_response")
-        if not parser_result.valid and isinstance(terminal_from_parser, str):
+        parser_is_terminal = not parser_result.valid and isinstance(terminal_from_parser, str)
+        if parser_is_terminal:
             parsed_output = ParsedModelOutput(
                 raw_text=raw_output_text,
                 parser_version=controls.parser_version,
@@ -698,6 +699,9 @@ def run_frozen_agent_loop(
                     "details": exc,
                     "turn_index": turn_count,
                     "candidate_count": parser_result.candidate_count,
+                    "parser_version": parser_result.parser_version,
+                    "native_format": parser_result.native_format,
+                    "canonical_json_compliant": parser_result.canonical_json_compliant,
                 },
             )
             break
@@ -732,6 +736,10 @@ def run_frozen_agent_loop(
             {
                 "event_type": "PARSE_COMPLETED",
                 "turn_index": turn_count,
+                "parser_version": parser_result.parser_version,
+                "status": parser_result.status.value,
+                "native_format": parser_result.native_format,
+                "canonical_json_compliant": parser_result.canonical_json_compliant,
                 "parsed_output": json.loads(serialize_parsed_output(parsed_output)),
             },
         )
