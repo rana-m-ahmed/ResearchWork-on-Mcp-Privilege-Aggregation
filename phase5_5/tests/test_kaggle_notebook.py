@@ -22,7 +22,9 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
             compile("".join(cell["source"]), f"kaggle-cell-{index}", "exec")
     assert "phase5_5-model-" in source
     assert "phase5-model-" not in source
-    assert "P5-DV-1.0.2-A7C91E42" in source
+    assert "P5-DV-1.1.0-TREATMENT-V3" in source
+    assert "phase5_5_source_freeze_v3.json" in source
+    assert "kaggle_run_plan_v3_treatment.json" in source
     assert "PHASE5_GITHUB_TOKEN" in source
     assert 'get_secret("GITHUB_TOKEN")' not in source
     assert "phase5_5/evidence" in source

@@ -60,6 +60,20 @@ def main() -> int:
             "phase5_5/configs/treatment_and_analysis_contract_v3.json",
             "phase5_5/scripts/build_source_freeze.py",
             "phase5/implementation/reports/phase5_5/phase5_5_zero_acceptance_root_cause_audit.md",
+            "phase5/implementation/reports/phase5_5/phase5_5_treatment_accounting_amendment.md",
+            "phase5_5/scripts/build_treatment_manifests.py",
+            "phase5_5/scripts/build_kaggle_runner.py",
+            "phase5_5/scripts/build_official_runner.py",
+            "phase5_5/scripts/official_preflight.py",
+            "phase5_5/scripts/official_authorized_preflight.py",
+            "phase5_5/scripts/run_qualification_canary.py",
+            "phase5_5/authorization/official_execution_authorization.json",
+            "phase5_5/branch_config.json",
+            "phase5_5/configs/evidence_policy.json",
+            "phase5/manifests/batch_partition_manifest_v3_treatment.json",
+            "phase5/validation/kaggle_run_plan_v3_treatment.json",
+            "phase5_5/kaggle/phase5_5_runner.ipynb",
+            "phase5_5/kaggle/phase5_5_official_runner.ipynb",
         )
     files = {}
     for relative in paths:

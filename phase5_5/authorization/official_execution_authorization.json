@@ -1,23 +1,23 @@
 {
-  "artifact": "phase5_5_official_execution_authorization_v1",
-  "authorization_status": "AUTHORIZED_FOR_BOUNDED_EXECUTION",
-  "authorization_basis": "Explicit Phase 5.5 official-execution launch request",
-  "model_slot": "M2",
-  "branch": "phase5_5-model-2",
-  "exact_model_identifier": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
-  "dataset_version": "P5-DV-1.0.2-A7C91E42",
-  "common_source_commit": "b90158e6",
-  "parser_version": "phase5.5-parser-v2",
-  "multiple_tool_call_policy": "serial",
-  "official_trial": true,
-  "counts_for_phase5": true,
-  "publication_evidence": true,
-  "synthetic_fixture": false,
-  "base_branch_head": "50a8cba90ca9c50e630b893854947968c21763ce",
-  "allowed_evidence_prefixes": [
-    "phase5_5/attempts/",
-    "phase5_5/evidence/"
-  ],
-  "credential_environment_name": "PHASE5_GITHUB_TOKEN",
-  "huggingface_credential_environment_name": "HF_TOKEN"
+    "artifact":  "phase5_5_official_execution_authorization_v1",
+    "authorization_status":  "AUTHORIZED_FOR_BOUNDED_EXECUTION",
+    "authorization_basis":  "Explicit Phase 5.5 official-execution launch request",
+    "model_slot":  "M2",
+    "branch":  "phase5_5-model-2",
+    "exact_model_identifier":  "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+    "dataset_version":  "P5-DV-1.1.0-TREATMENT-V3",
+    "common_source_commit":  "5d3d108f9620e83098c414b6787cf03bffdcd9d7",
+    "parser_version":  "phase5.5-parser-v3-mcp-schema",
+    "multiple_tool_call_policy":  "serial",
+    "official_trial":  true,
+    "counts_for_phase5":  true,
+    "publication_evidence":  true,
+    "synthetic_fixture":  false,
+    "base_branch_head":  "c91ade98c6dc4dbb87c54dceef6bbc7dd6194a8f",
+    "allowed_evidence_prefixes":  [
+                                      "phase5_5/attempts/",
+                                      "phase5_5/evidence/"
+                                  ],
+    "credential_environment_name":  "PHASE5_GITHUB_TOKEN",
+    "huggingface_credential_environment_name":  "HF_TOKEN"
 }

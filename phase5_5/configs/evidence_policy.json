@@ -1,10 +1,10 @@
 {
-  "parser_version": "phase5.5-parser-v2",
-  "tool_result_serialization_version": "phase5.5-tool-result-v1",
-  "raw_output_preserved": true,
-  "append_only_evidence": true,
-  "historical_phase5_evidence_rewritten": false,
-  "invalid_attempts_count_toward_acceptance": false,
-  "synthetic_evidence_counts_toward_publication": false,
-  "official_dispatch_enabled": false
+    "parser_version":  "phase5.5-parser-v3-mcp-schema",
+    "tool_result_serialization_version":  "phase5.5-tool-result-v1",
+    "raw_output_preserved":  true,
+    "append_only_evidence":  true,
+    "historical_phase5_evidence_rewritten":  false,
+    "invalid_attempts_count_toward_acceptance":  false,
+    "synthetic_evidence_counts_toward_publication":  false,
+    "official_dispatch_enabled":  false
 }

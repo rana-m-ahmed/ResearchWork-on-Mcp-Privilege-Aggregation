@@ -32,6 +32,11 @@ def _sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def _treatment_manifest_digest(document: Mapping[str, Any]) -> str:
+    payload = {key: value for key, value in document.items() if key != "manifest_sha256"}
+    return _sha256_bytes(_canonical_json(payload).encode("utf-8"))
+
+
 def _canonical_json(data: Mapping[str, Any] | Sequence[Any]) -> str:
     return json.dumps(data, sort_keys=True, separators=(",", ":"))
 
@@ -514,6 +519,9 @@ def load_campaign_plan(
     batch_manifest_sha256 = _sha256_bytes(batch_manifest_path.read_bytes())
     if str(run_plan.get("batch_manifest_sha256")) != str(batch_manifest.get("manifest_sha256")):
         raise FrozenArtifactHashError("run plan batch manifest hash does not match the frozen batch manifest")
+    if str(run_plan.get("dataset_version", "")).startswith("P5-DV-1.1.0-TREATMENT-"):
+        if str(batch_manifest.get("manifest_sha256")) != _treatment_manifest_digest(batch_manifest):
+            raise FrozenArtifactHashError("treatment batch manifest self-digest is invalid")
     batches = _parse_batches(model_slot, str(run_plan["dataset_version"]), model_campaign)
     if int(model_campaign.get("batch_count", -1)) != len(batches):
         raise SchemaInvariantError("batch manifest batch_count does not reconcile with parsed batches")
