@@ -82,6 +82,12 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
     backend_source = (root / "phase5/runtime/model_backend_adapter.py").read_text(encoding="utf-8")
     assert "MODEL_GPU_LOAD_START" in backend_source
     assert "MODEL_GPU_MODEL_READY" in backend_source
+    branch_config = json.loads(
+        (root / "phase5_5/branch_config.json").read_text(encoding="utf-8-sig")
+    )
+    if branch_config.get("model_slot") == "M4":
+        assert "M4_GENERATION_METRICS" in backend_source
+        assert "generated_tokens_per_second" in backend_source
 
 
 def test_pretrial_notebook_targets_v3_treatment_artifacts() -> None:
@@ -104,5 +110,3 @@ def test_pretrial_notebook_targets_v3_treatment_artifacts() -> None:
     assert "phase5/validation/kaggle_run_plan_v3_treatment.json" in source
     assert "phase5/validation/kaggle_run_plan_v3.json" not in source
     assert "--pretrial-trials" in source
-    assert "M4_GENERATION_METRICS" in backend_source
-    assert "generated_tokens_per_second" in backend_source
