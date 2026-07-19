@@ -39,7 +39,7 @@
     "phase5_5/scripts/build_kaggle_runner.py": "fab17c67488b683541b9b524e1cbac4deeb8d711fe321e716378bd027ca6ffdb",
     "phase5_5/scripts/build_official_runner.py": "3c7a74e235c5cf99ca456ba74fe573a0ed39bd13a094dfd5dcb88f5f249d82b8",
     "phase5_5/scripts/build_pretrial_runner.py": "13504f67d9ce7581010dde78552db9ce796e2ae4c74dca8a932c014875ba7d80",
-    "phase5_5/scripts/build_source_freeze.py": "d3220854659dca3b9361a963f99e30d0649aef89c9621942cc2972d8eba3a27a",
+    "phase5_5/scripts/build_source_freeze.py": "dff1d200355311ba00afb06055cfca5729c972e37a0b330f5e663578320394e1",
     "phase5_5/scripts/build_treatment_manifests.py": "02a194eef2d64dcc0ae2bdc54a43bc4c41ba58b75b7646b70cfece31104e7e00",
     "phase5_5/scripts/official_authorized_preflight.py": "e79417f4db4fb976b49a5ff9f2d1a1dc4b9b8fe69bf6ad445310001bd2fdd407",
     "phase5_5/scripts/official_preflight.py": "68b437fb39ecd875db12aa0146344e022dbf56e7b87db1116d1de2d1ef8d9828",
@@ -58,5 +58,5 @@
   "publication_evidence": false,
   "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
   "scientific_inputs_regenerated": false,
-  "source_commit": "b409b1a16c642244ae7769a3680f89d7d9ce7354"
+  "source_commit": "8a9c0311a27bddfb0eb6343a70ffa4e7145a9432"
 }
