@@ -46,3 +46,16 @@ def test_v3_freeze_hashes_authoritative_git_blobs() -> None:
             ["git", "-C", str(root), "show", f"{source_commit}:{relative_path}"]
         )
         assert hashlib.sha256(blob).hexdigest() == expected_hash, relative_path
+
+
+def test_v3_schema_manifest_uses_line_ending_independent_schema_hashes() -> None:
+    root = Path(__file__).resolve().parents[2]
+    manifest = json.loads(
+        (root / "phase5_5/configs/schema_variant_manifest_v3.json").read_text(
+            encoding="utf-8-sig"
+        )
+    )
+    for variant_id, entry in manifest["variants"].items():
+        schema_bytes = (root / entry["path"]).read_bytes()
+        canonical_bytes = schema_bytes.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+        assert hashlib.sha256(canonical_bytes).hexdigest() == entry["sha256"], variant_id
