@@ -251,7 +251,7 @@ def _candidate_objects(text: str) -> list[tuple[int, int, Mapping[str, Any]]]:
         if not isinstance(payload, Mapping):
             continue
         keys = set(payload)
-        if keys.intersection({"tool", "tool_calls", "tool_call"}):
+        if keys.intersection({"tool", "tool_calls", "tool_call", "terminal_response"}):
             candidates.append((index, end, payload))
     return candidates
 
@@ -433,15 +433,25 @@ def extract_tool_call(
             count=max(2, candidate_count),
         )
     if text_calls and object_candidates:
-        return _result(
-            raw_text,
-            status=ParserStatus.AMBIGUOUS_MULTIPLE_CANDIDATES,
-            native_format="mixed_text",
-            canonical=False,
-            parser_version=parser_version,
-            diagnostic="textual and JSON invocation candidates overlap in the same output",
-            count=candidate_count,
+        # If object_candidates ONLY contains terminal responses, ignore them to maintain M1/M2 compatibility where text calls take precedence
+        has_tool_objects = any(
+            set(obj).intersection({"tool", "tool_calls", "tool_call"}) 
+            for _, _, obj in object_candidates
         )
+        if has_tool_objects:
+            return _result(
+                raw_text,
+                status=ParserStatus.AMBIGUOUS_MULTIPLE_CANDIDATES,
+                native_format="mixed_text",
+                canonical=False,
+                parser_version=parser_version,
+                diagnostic="textual and JSON invocation candidates overlap in the same output",
+                count=candidate_count,
+            )
+        else:
+            # We only have text_calls, pure terminal responses are ignored
+            object_candidates = []
+            candidate_count = len(text_calls)
     if len(text_calls) > 0:
         calls = tuple(
             ParsedToolCall(call_index=index, tool_name=tool_name, arguments=arguments)
@@ -540,7 +550,10 @@ def extract_tool_call(
             candidate_count=len(calls),
             candidate_spans=spans,
         )
-    if evidence.budget_exhausted and ("{" in raw_text or "tool_call" in raw_text):
+    if "Tool Result [" in raw_text:
+        status = ParserStatus.MALFORMED_JSON
+        diagnostic = "candidate generated simulated environment responses"
+    elif evidence.budget_exhausted and ("{" in raw_text or "tool_call" in raw_text):
         status = ParserStatus.MODEL_OUTPUT_TRUNCATED_BY_BUDGET
         diagnostic = "authoritative generation evidence reports budget or turn-limit exhaustion"
     elif ("{" in raw_text and raw_text.count("{") > raw_text.count("}")) or _has_unclosed_candidate(raw_text):
