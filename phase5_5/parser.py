@@ -348,6 +348,17 @@ def extract_tool_call(
     stripped = raw_text.strip()
     canonical_json = False
 
+    if "Tool Result [" in raw_text:
+        return _result(
+            raw_text,
+            status=ParserStatus.NO_INVOCATION_FOUND,
+            native_format="text",
+            canonical=False,
+            parser_version=parser_version,
+            diagnostic="candidate generated simulated environment responses",
+            count=0,
+        )
+
     try:
         payload = json.loads(stripped)
     except json.JSONDecodeError:
@@ -553,10 +564,7 @@ def extract_tool_call(
             candidate_count=len(calls),
             candidate_spans=spans,
         )
-    if "Tool Result [" in raw_text:
-        status = ParserStatus.NO_INVOCATION_FOUND
-        diagnostic = "candidate generated simulated environment responses"
-    elif evidence.budget_exhausted and ("{" in raw_text or "tool_call" in raw_text):
+    if evidence.budget_exhausted and ("{" in raw_text or "tool_call" in raw_text):
         status = ParserStatus.MODEL_OUTPUT_TRUNCATED_BY_BUDGET
         diagnostic = "authoritative generation evidence reports budget or turn-limit exhaustion"
     elif ("{" in raw_text and raw_text.count("{") > raw_text.count("}")) or _has_unclosed_candidate(raw_text):
