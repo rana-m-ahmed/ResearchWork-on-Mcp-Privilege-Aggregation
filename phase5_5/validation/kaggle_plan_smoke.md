@@ -1,0 +1,77 @@
+# P14 Campaign Run Report
+
+## Verdict
+
+- Run ID: `P5RUN-P5-DV-1.0.2-A7C91E42-M1-20260718-ABCDEF12`
+- Model slot: `M1`
+- Dataset version: `P5-DV-1.0.2-A7C91E42`
+- State: `SEALED`
+- Seal epoch: `1`
+- Finalized batches: `0`
+- Accepted finalized count: `0`
+- Stop reason: `interrupted`
+- Interrupted: `True`
+- Resume required: `True`
+- Safe session seconds: `27000.00`
+- Sync margin seconds: `42.84`
+
+## Batches
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-757D4E0F-08DF`
+
+## Remaining Batches
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-FD865593-9F86`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-3C1FD866-C936`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-FAD1C61B-3840`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-7133A92C-D422`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-E28A7F1C-1212`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-F6010D56-8A19`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-71928ABE-7C95`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-2E47D525-732D`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-BFBF2335-7698`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-1A44E1AF-5747`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-B9AC2182-7028`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-B32F2E01-A55A`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-EC639A90-715F`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-2EBE0B82-B6F5`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-2D050378-8DF9`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-CC0F1CCD-F380`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-7DE71C1E-FFAB`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-2D9DB455-9333`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-B1C82DE6-6B71`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-9609108F-9CDD`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-6276521A-88DE`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-B43079CF-D39F`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-D26B3EE9-54FF`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-8DD36EEA-90F8`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-45DEEC6C-1F44`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-90A22FD5-5E20`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-5385B241-BDBD`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-7466A01E-1EAE`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-7555CB5F-E3BB`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-702EC410-19AB`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-FBDD1B2F-1498`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-37AB561B-5B9D`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-5979E0F8-1E97`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-F8C765CB-8CF5`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-8A32F7FD-BCBF`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-B072807B-7B3E`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-57C96ECA-EEF8`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_defense-M1-MIX-MIX-IHR_SPCE-366BD069-F877`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-98EEFBF2-464B`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-6F22258D-DF77`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-8643DEC0-6790`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-7FB0A59E-AB8E`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-07AB8B8A-086E`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-61375404-FB8E`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-E73F2385-3765`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-EDA14A7D-5A5F`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-579F4FD8-3F8B`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-10022EAE-3822`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-4625ECA7-6EC8`
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_utility_preservation-M1-MIX-CLEAN-MIX-A2235D1E-1A14`
+
+## Seal Epoch Hashes
+- none
+
+## Batch Results
+- `P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-MIX-MIX-BASELINE-757D4E0F-08DF`: accepted=0, seconds=357.00, hash=0eac68f2ed74c5cccce03a7922da8b61218368bebd7db1521076b00527769f23
