@@ -1,0 +1,323 @@
+# Gate 0 Authorization Report
+
+## Verdict
+
+- Status: `FAIL`
+- Task: `P03`
+- Strict: `true`
+- Generated UTC: `2026-07-18T08:57:57.564534Z`
+
+## Summary
+
+Gate 0 failed because one or more frozen artifacts, verdicts, runtime controls, or checkout checks did not match.
+
+## Checks
+- registry-status: PASS
+  - registry_id=P00
+  - status=COMPLETE
+- registry-go-verdicts: PASS
+  - phase4='PASS'
+  - phase4_5='GO TO PHASE 5 REBINDING'
+- phase4-go-verdict: PASS
+  - status=PASS
+  - ready_for_phase5=True
+  - missing_dependencies=[]
+- phase45-go-verdict: PASS
+  - final_verdict=GO TO PHASE 5 REBINDING
+- required-label:Phase 4 GO report: PASS
+  - phase4/reports/remediation_v2/phase4_corrected_go_no_go_decision.md
+  - 5008cc2d1e02a230c65e6e08b62fc9892a4f3b5000a78d448ab405ac5e22801d
+- required-label:Phase 4 global freeze: PASS
+  - phase4/configs/phase4_global_freeze.yaml
+  - 2edf49bf777e1cc5d3bfbc34aff5b06fcfe07f9f077c050553cf30d842cf8467
+- required-label:Model freeze set: PASS
+  - phase4/configs/model_set_freeze.yaml
+  - 686c112ebfc8e7790098b26454504edd385ee6a21ab41d636949afb7f1a05d0d
+- required-label:Model freeze M1: PASS
+  - phase4/configs/model_1_freeze.yaml
+  - 6bb3e095cf1aae4ba2961c35efdf05d94d615e7abd246f6b5e95b00c51dc0412
+- required-label:Model freeze M2: PASS
+  - phase4/configs/model_2_freeze.yaml
+  - 8a3299dd860f55b7c3bdcd46387b5da1a22ce701a019f1312bba6e4ba12811d5
+- required-label:Model freeze M3: PASS
+  - phase4/configs/model_3_freeze.yaml
+  - 20b81a8645700b86f0984e91d887711689b0bd0cc7a919f02d0f4cd72834e2e6
+- required-label:Model freeze M4: PASS
+  - phase4/configs/model_4_freeze.yaml
+  - d300af9ce961a4b839dd073434cfdd15291e27d6f37c71fee58e05343992715c
+- required-label:Defense freeze: PASS
+  - phase4/configs/defense_config_freeze.yaml
+  - 5934137bd5e741b1ce700879691040d215648b409316c3cf09bc559b098d47a8
+- required-label:Statistical plan: PASS
+  - phase4/configs/statistical_plan.yaml
+  - aad0afdd8f395ecdd4853e737782c487e3b3207730e3496c9e7b4d1ddb558a07
+- required-label:Phase 5 schema freeze: PASS
+  - phase4/frozen_bundle_v2/queue_schema.json
+  - ba3d55d305a9465eee34630b3c7e5994878459d8bb98f01a54658fc91b1a0d10
+- required-label:Payload reference map: PASS
+  - phase4/configs/payload_reference_map.json
+  - a14fb6217f7484135c71530cf2521fd149b35b5e60f73a8340fdef0adbaebafe
+- required-label:Cryptographic lock manifest: PASS
+  - phase4/frozen_bundle_v2/cryptographic_lock_manifest.json
+  - 4a5ed03c2a7bee2b8ef985fcb67ccaeaebe7d85d10cee21afec3ff88a3cc274d
+- required-label:Master hash ledger: PASS
+  - phase4/frozen_bundle_v2/master_hash_ledger.csv
+  - 193d1504445ba3a3efd6d348218e6d601df6f64cf3d711cec663a8e105e9b67d
+- required-label:Phase 4 global freeze: PASS
+  - phase4/configs/phase4_global_freeze.yaml
+  - 2edf49bf777e1cc5d3bfbc34aff5b06fcfe07f9f077c050553cf30d842cf8467
+- required-label:Defense freeze: PASS
+  - phase4/configs/defense_config_freeze.yaml
+  - 5934137bd5e741b1ce700879691040d215648b409316c3cf09bc559b098d47a8
+- required-label:Statistical plan: PASS
+  - phase4/configs/statistical_plan.yaml
+  - aad0afdd8f395ecdd4853e737782c487e3b3207730e3496c9e7b4d1ddb558a07
+- required-label:Phase 5 schema freeze: PASS
+  - phase4/frozen_bundle_v2/queue_schema.json
+  - ba3d55d305a9465eee34630b3c7e5994878459d8bb98f01a54658fc91b1a0d10
+- required-label:Payload reference map: PASS
+  - phase4/configs/payload_reference_map.json
+  - a14fb6217f7484135c71530cf2521fd149b35b5e60f73a8340fdef0adbaebafe
+- required-label:Cryptographic lock manifest: PASS
+  - phase4/frozen_bundle_v2/cryptographic_lock_manifest.json
+  - 4a5ed03c2a7bee2b8ef985fcb67ccaeaebe7d85d10cee21afec3ff88a3cc274d
+- required-label:Master hash ledger: PASS
+  - phase4/frozen_bundle_v2/master_hash_ledger.csv
+  - 193d1504445ba3a3efd6d348218e6d601df6f64cf3d711cec663a8e105e9b67d
+- required-label:Phase 4.5 GO report: PASS
+  - phase4_5/validation/remediation_v2/phase45_corrected_final_go_no_go.md
+  - 5ecf56d88671a45472ec53aac693f2fc53dfb2dffee64ed8b06dabd9206f5cec
+- required-label:Schema mapping: PASS
+  - phase4_5/validation/phase45_schema_mapping_report.md
+  - bf4515919c4567c3f10139c248f2fb8f1c2489ca1daa05fe1c35342d636460a1
+- required-label:Log schema: PASS
+  - phase4_5/validation/phase45_log_schema_report.md
+  - dcdc669517e504a84d99fc0544cd7259aef3fe7366ef39c6aa4c077c14bae713
+- required-label:Reset: PASS
+  - phase4_5/validation/phase45_reset_report.md
+  - 86823f9145ea0e5d83e606654e832a94d572d4b6dc50b24c5fdf10db2fa72cd9
+- required-label:Kaggle runtime setup: PASS
+  - phase4_5/kaggle/kaggle_runtime_setup.md
+  - 8c87b50ac6a2993c58a9f0bb72712aef0841f7316ef5cfe528f6104dd72215a4
+- required-label:Checkpoint/resume config: PASS
+  - phase4_5/configs/phase45_checkpoint_resume.yaml
+  - 5179194ddefda724865dd5c25dbefd1966c9b5988ebb383bf8abc162cd01cc92
+- required-label:Checkpoint/resume report: PASS
+  - phase4_5/validation/phase45_checkpoint_resume_report.md
+  - 9fe2ac2d8111bb4bb9aca8a56e8264b7576cc39f494d388581b7e5e237d86f5d
+- required-label:Timing evidence, local run manifest: PASS
+  - phase4_5/dryrun_results/local/run_manifest.json
+  - 951235d21b68c2dc91ca82a11ae5c3171aec801652750b2707905f52dcf4aebf
+- required-label:Timing evidence, Kaggle smoke hardware metrics: PASS
+  - phase4_5/dryrun_results/kaggle_smoke/hardware_metrics.jsonl
+  - a4695ce5194c2b29d3f01d190969c7fbe1aaf25b8b6a529dfa76b18a085c2bb4
+- required-label:Timing evidence, Kaggle model-loader hardware metrics: PASS
+  - phase4_5/dryrun_results/kaggle_model_loader_smoke/model_loader_hardware_metrics.jsonl
+  - 75a510b6a6ca2cfc4e9d0b63f1a7ee1f714074886765c8f302677f81ac5ba19d
+- required-label:Phase 2.5 tokenizer validation report: PASS
+  - phase2_5/tokenizer/validation/tokenizer_validation_report.md
+  - e80332847ebcf5de3034a6abc58a46fb7cb4663415eb84a5f102621476de16fd
+- required-label:Logical-ID grader: PASS
+  - client/phase3_grader.py
+  - b8eaebec6395712a92fcd2421f34d6dd7c5013e8ac0003e769e4ae174c20569f
+- required-label:Model backend abstraction: PASS
+  - client/model_backend.py
+  - 6caa88beb17694576f16c4c7eb91d04b927d93201ec73ff637c39a4ecc0fe635
+- required-label:Tool call parser: PASS
+  - client/tool_call_parser.py
+  - de5a399a64afb5c5a6374fa9d25d569a435d7416ef0b5d86a6d4c198997884a3
+- required-label:Tool definition read_internal_notes: PASS
+  - server/tool_definitions/read_internal_notes.py
+  - be337b5e4ee91b7ed9e525c3e8dbb0a3ec2ac38624ef7819008e914cfc2f80ef
+- required-label:Tool definition write_outbox: PASS
+  - server/tool_definitions/write_outbox.py
+  - bcfc73b4f5681f67d15c7486152c287582e23313b2ccb410bfc739c1b9c11fac
+- required-label:Tool definition get_local_weather: PASS
+  - server/tool_definitions/get_local_weather.py
+  - 4eff65d2e57aea2616840c7ce9cf07548e0c1f2d5d2ef28c7fe4e4e2be0a5b08
+- required-label:Tool definition query_local_inventory: PASS
+  - server/tool_definitions/query_local_inventory.py
+  - f13cfd4a29faee1691859db1f30a3ccae2f9647c13e24a57695991569ecbeec7
+- required-label:Tool definition log_event: PASS
+  - server/tool_definitions/log_event.py
+  - 89a4b7ef649d90241d7a25d2c39bb0e272a680077b9a91d0d5b9a67b142b2e41
+- required-label:Trial order core: PASS
+  - phase4/frozen_bundle_v2/trial_order_core.csv
+  - d97c7dda394aace668d2916b71b5bea36416af425dfbe1a99b25c0c128630711
+- required-label:Trial order defense: PASS
+  - phase4/frozen_bundle_v2/trial_order_defense.csv
+  - 1a391e9dcd35e0d6c0a8f1690cfb2b6c388f71cddbfabb5db2fef93f9b916588
+- required-label:Trial order utility: PASS
+  - phase4/frozen_bundle_v2/trial_order_utility.csv
+  - 3d4588b35e5453cf981f19f6a25f35f9f1e74aa66f9bcb9f41bac59f82bed94a
+- required-label:Phase 5 execution manifest: PASS
+  - phase4/frozen_bundle_v2/phase5_execution_manifest.json
+  - 5613a19080400ca5e41a9d3e38d3f0221a22c2676b6fc0da6c119b9494a91505
+- required-label:Model freeze set: PASS
+  - phase4/configs/model_set_freeze.yaml
+  - 686c112ebfc8e7790098b26454504edd385ee6a21ab41d636949afb7f1a05d0d
+- required-label:Model freeze M1: PASS
+  - phase4/configs/model_1_freeze.yaml
+  - 6bb3e095cf1aae4ba2961c35efdf05d94d615e7abd246f6b5e95b00c51dc0412
+- required-label:Model freeze M2: PASS
+  - phase4/configs/model_2_freeze.yaml
+  - 8a3299dd860f55b7c3bdcd46387b5da1a22ce701a019f1312bba6e4ba12811d5
+- required-label:Model freeze M3: PASS
+  - phase4/configs/model_3_freeze.yaml
+  - 20b81a8645700b86f0984e91d887711689b0bd0cc7a919f02d0f4cd72834e2e6
+- required-label:Model freeze M4: PASS
+  - phase4/configs/model_4_freeze.yaml
+  - d300af9ce961a4b839dd073434cfdd15291e27d6f37c71fee58e05343992715c
+- queue-file: PASS
+  - rows=5400
+  - cells=59400
+  - unique_rows=5400
+  - unique_trial_ids=5400
+  - unique_payload_ids=150
+  - models={'M1': 1350, 'M2': 1350, 'M3': 1350, 'M4': 1350}
+  - densities={'D1': 1800, 'D3': 1800, 'D5': 1800}
+  - defense={'BASELINE': 5400}
+  - statuses=['PENDING']
+  - sha256=d97c7dda394aace668d2916b71b5bea36416af425dfbe1a99b25c0c128630711
+- queue-file: PASS
+  - rows=2400
+  - cells=26400
+  - unique_rows=2400
+  - unique_trial_ids=2400
+  - unique_payload_ids=150
+  - models={'M1': 600, 'M2': 600, 'M3': 600, 'M4': 600}
+  - densities={'D3': 1200, 'D5': 1200}
+  - defense={'IHR_SPCE': 2400}
+  - statuses=['PENDING']
+  - sha256=1a391e9dcd35e0d6c0a8f1690cfb2b6c388f71cddbfabb5db2fef93f9b916588
+- queue-file: PASS
+  - rows=2400
+  - cells=24000
+  - unique_rows=2400
+  - unique_trial_ids=2400
+  - unique_payload_ids=0
+  - models={'M1': 600, 'M2': 600, 'M3': 600, 'M4': 600}
+  - densities={'D3': 1200, 'D5': 1200}
+  - defense={'BASELINE': 1200, 'IHR_SPCE': 1200}
+  - statuses=['PENDING']
+  - sha256=3d4588b35e5453cf981f19f6a25f35f9f1e74aa66f9bcb9f41bac59f82bed94a
+- execution-manifest: PASS
+  - trial_order_core_sha256='d97c7dda394aace668d2916b71b5bea36416af425dfbe1a99b25c0c128630711'
+  - trial_order_defense_sha256='1a391e9dcd35e0d6c0a8f1690cfb2b6c388f71cddbfabb5db2fef93f9b916588'
+  - trial_order_utility_sha256='3d4588b35e5453cf981f19f6a25f35f9f1e74aa66f9bcb9f41bac59f82bed94a'
+  - phase4_corrected_lock_hash='4a5ed03c2a7bee2b8ef985fcb67ccaeaebe7d85d10cee21afec3ff88a3cc274d'
+  - expected_trial_count=10200
+  - expected_payload_count=223
+- corrected-v2-totals: PASS
+  - total_rows=10200
+  - per_model_total={'M1': 2550, 'M2': 2550, 'M3': 2550, 'M4': 2550}
+- queue-statistics: PASS
+  - computed={'rows': 5400, 'unique_trial_ids': 5400, 'non_empty_cells': 59400, 'duplicates': [], 'by_model': {'M1': 1350, 'M2': 1350, 'M3': 1350, 'M4': 1350}, 'by_density': {'D1': 1800, 'D3': 1800, 'D5': 1800}, 'by_defense': {'BASELINE': 5400}, 'unique_payload_ids': 150}
+  - expected_rows=5400
+  - expected_unique_trials=5400
+  - expected_non_empty_cells=59400
+- phase3-source-hash: PASS
+  - a7324b63b1307de2dc9e90510ee7372b0b3aad685c4eec51182521191426dc79
+- model-set: PASS
+  - expected={'M1': 'Qwen/Qwen2.5-7B-Instruct', 'M2': 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B', 'M3': 'mistralai/Mistral-7B-Instruct-v0.3', 'M4': 'microsoft/Phi-3.5-mini-instruct'}
+  - got={'M1': 'Qwen/Qwen2.5-7B-Instruct', 'M2': 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B', 'M3': 'mistralai/Mistral-7B-Instruct-v0.3', 'M4': 'microsoft/Phi-3.5-mini-instruct'}
+- model-freeze:M1: PASS
+  - D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_1_freeze.yaml
+- model-freeze:M2: PASS
+  - D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_2_freeze.yaml
+- model-freeze:M3: PASS
+  - D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_3_freeze.yaml
+- model-freeze:M4: PASS
+  - D:/research-work/ResearchWork-on-Mcp-Privilege-Aggregation/phase4/configs/model_4_freeze.yaml
+- runtime-env-lock: PASS
+  - environment lock verified
+- runtime-setup: PASS
+  - smoke-only runtime confirmed
+- runtime-source-commit: PASS
+  - 4e329f8cad35770e15a7750883e2b2e96629e71c
+- runtime-kaggle-trials: PASS
+  - trial_commit='3a92c2d7e2987290b801cee95ae3c506254ff8f6'
+  - run_manifest_commit=4e329f8cad35770e15a7750883e2b2e96629e71c
+- runtime-metrics-count: PASS
+  - kaggle_smoke_rows=8
+  - model_loader_rows=4
+- checkout-clean: FAIL
+  - working tree is dirty
+
+## Findings
+- checkout-clean: working tree is dirty
+
+## Verified Artifacts
+- Phase 4 GO report: `phase4/reports/remediation_v2/phase4_corrected_go_no_go_decision.md` `5008cc2d1e02a230c65e6e08b62fc9892a4f3b5000a78d448ab405ac5e22801d`
+- Phase 4 global freeze: `phase4/configs/phase4_global_freeze.yaml` `2edf49bf777e1cc5d3bfbc34aff5b06fcfe07f9f077c050553cf30d842cf8467`
+- Model freeze set: `phase4/configs/model_set_freeze.yaml` `686c112ebfc8e7790098b26454504edd385ee6a21ab41d636949afb7f1a05d0d`
+- Model freeze M1: `phase4/configs/model_1_freeze.yaml` `6bb3e095cf1aae4ba2961c35efdf05d94d615e7abd246f6b5e95b00c51dc0412`
+- Model freeze M2: `phase4/configs/model_2_freeze.yaml` `8a3299dd860f55b7c3bdcd46387b5da1a22ce701a019f1312bba6e4ba12811d5`
+- Model freeze M3: `phase4/configs/model_3_freeze.yaml` `20b81a8645700b86f0984e91d887711689b0bd0cc7a919f02d0f4cd72834e2e6`
+- Model freeze M4: `phase4/configs/model_4_freeze.yaml` `d300af9ce961a4b839dd073434cfdd15291e27d6f37c71fee58e05343992715c`
+- Defense freeze: `phase4/configs/defense_config_freeze.yaml` `5934137bd5e741b1ce700879691040d215648b409316c3cf09bc559b098d47a8`
+- Statistical plan: `phase4/configs/statistical_plan.yaml` `aad0afdd8f395ecdd4853e737782c487e3b3207730e3496c9e7b4d1ddb558a07`
+- Phase 5 schema freeze: `phase4/frozen_bundle_v2/queue_schema.json` `ba3d55d305a9465eee34630b3c7e5994878459d8bb98f01a54658fc91b1a0d10`
+- Payload reference map: `phase4/configs/payload_reference_map.json` `a14fb6217f7484135c71530cf2521fd149b35b5e60f73a8340fdef0adbaebafe`
+- Cryptographic lock manifest: `phase4/frozen_bundle_v2/cryptographic_lock_manifest.json` `4a5ed03c2a7bee2b8ef985fcb67ccaeaebe7d85d10cee21afec3ff88a3cc274d`
+- Master hash ledger: `phase4/frozen_bundle_v2/master_hash_ledger.csv` `193d1504445ba3a3efd6d348218e6d601df6f64cf3d711cec663a8e105e9b67d`
+- Phase 4 global freeze: `phase4/configs/phase4_global_freeze.yaml` `2edf49bf777e1cc5d3bfbc34aff5b06fcfe07f9f077c050553cf30d842cf8467`
+- Defense freeze: `phase4/configs/defense_config_freeze.yaml` `5934137bd5e741b1ce700879691040d215648b409316c3cf09bc559b098d47a8`
+- Statistical plan: `phase4/configs/statistical_plan.yaml` `aad0afdd8f395ecdd4853e737782c487e3b3207730e3496c9e7b4d1ddb558a07`
+- Phase 5 schema freeze: `phase4/frozen_bundle_v2/queue_schema.json` `ba3d55d305a9465eee34630b3c7e5994878459d8bb98f01a54658fc91b1a0d10`
+- Payload reference map: `phase4/configs/payload_reference_map.json` `a14fb6217f7484135c71530cf2521fd149b35b5e60f73a8340fdef0adbaebafe`
+- Cryptographic lock manifest: `phase4/frozen_bundle_v2/cryptographic_lock_manifest.json` `4a5ed03c2a7bee2b8ef985fcb67ccaeaebe7d85d10cee21afec3ff88a3cc274d`
+- Master hash ledger: `phase4/frozen_bundle_v2/master_hash_ledger.csv` `193d1504445ba3a3efd6d348218e6d601df6f64cf3d711cec663a8e105e9b67d`
+- Phase 4.5 GO report: `phase4_5/validation/remediation_v2/phase45_corrected_final_go_no_go.md` `5ecf56d88671a45472ec53aac693f2fc53dfb2dffee64ed8b06dabd9206f5cec`
+- Schema mapping: `phase4_5/validation/phase45_schema_mapping_report.md` `bf4515919c4567c3f10139c248f2fb8f1c2489ca1daa05fe1c35342d636460a1`
+- Log schema: `phase4_5/validation/phase45_log_schema_report.md` `dcdc669517e504a84d99fc0544cd7259aef3fe7366ef39c6aa4c077c14bae713`
+- Reset: `phase4_5/validation/phase45_reset_report.md` `86823f9145ea0e5d83e606654e832a94d572d4b6dc50b24c5fdf10db2fa72cd9`
+- Kaggle runtime setup: `phase4_5/kaggle/kaggle_runtime_setup.md` `8c87b50ac6a2993c58a9f0bb72712aef0841f7316ef5cfe528f6104dd72215a4`
+- Checkpoint/resume config: `phase4_5/configs/phase45_checkpoint_resume.yaml` `5179194ddefda724865dd5c25dbefd1966c9b5988ebb383bf8abc162cd01cc92`
+- Checkpoint/resume report: `phase4_5/validation/phase45_checkpoint_resume_report.md` `9fe2ac2d8111bb4bb9aca8a56e8264b7576cc39f494d388581b7e5e237d86f5d`
+- Timing evidence, local run manifest: `phase4_5/dryrun_results/local/run_manifest.json` `951235d21b68c2dc91ca82a11ae5c3171aec801652750b2707905f52dcf4aebf`
+- Timing evidence, Kaggle smoke hardware metrics: `phase4_5/dryrun_results/kaggle_smoke/hardware_metrics.jsonl` `a4695ce5194c2b29d3f01d190969c7fbe1aaf25b8b6a529dfa76b18a085c2bb4`
+- Timing evidence, Kaggle model-loader hardware metrics: `phase4_5/dryrun_results/kaggle_model_loader_smoke/model_loader_hardware_metrics.jsonl` `75a510b6a6ca2cfc4e9d0b63f1a7ee1f714074886765c8f302677f81ac5ba19d`
+- Phase 2.5 tokenizer validation report: `phase2_5/tokenizer/validation/tokenizer_validation_report.md` `e80332847ebcf5de3034a6abc58a46fb7cb4663415eb84a5f102621476de16fd`
+- Logical-ID grader: `client/phase3_grader.py` `b8eaebec6395712a92fcd2421f34d6dd7c5013e8ac0003e769e4ae174c20569f`
+- Model backend abstraction: `client/model_backend.py` `6caa88beb17694576f16c4c7eb91d04b927d93201ec73ff637c39a4ecc0fe635`
+- Tool call parser: `client/tool_call_parser.py` `de5a399a64afb5c5a6374fa9d25d569a435d7416ef0b5d86a6d4c198997884a3`
+- Tool definition read_internal_notes: `server/tool_definitions/read_internal_notes.py` `be337b5e4ee91b7ed9e525c3e8dbb0a3ec2ac38624ef7819008e914cfc2f80ef`
+- Tool definition write_outbox: `server/tool_definitions/write_outbox.py` `bcfc73b4f5681f67d15c7486152c287582e23313b2ccb410bfc739c1b9c11fac`
+- Tool definition get_local_weather: `server/tool_definitions/get_local_weather.py` `4eff65d2e57aea2616840c7ce9cf07548e0c1f2d5d2ef28c7fe4e4e2be0a5b08`
+- Tool definition query_local_inventory: `server/tool_definitions/query_local_inventory.py` `f13cfd4a29faee1691859db1f30a3ccae2f9647c13e24a57695991569ecbeec7`
+- Tool definition log_event: `server/tool_definitions/log_event.py` `89a4b7ef649d90241d7a25d2c39bb0e272a680077b9a91d0d5b9a67b142b2e41`
+- Trial order core: `phase4/frozen_bundle_v2/trial_order_core.csv` `d97c7dda394aace668d2916b71b5bea36416af425dfbe1a99b25c0c128630711`
+- Trial order defense: `phase4/frozen_bundle_v2/trial_order_defense.csv` `1a391e9dcd35e0d6c0a8f1690cfb2b6c388f71cddbfabb5db2fef93f9b916588`
+- Trial order utility: `phase4/frozen_bundle_v2/trial_order_utility.csv` `3d4588b35e5453cf981f19f6a25f35f9f1e74aa66f9bcb9f41bac59f82bed94a`
+- Phase 5 execution manifest: `phase4/frozen_bundle_v2/phase5_execution_manifest.json` `5613a19080400ca5e41a9d3e38d3f0221a22c2676b6fc0da6c119b9494a91505`
+- Model freeze set: `phase4/configs/model_set_freeze.yaml` `686c112ebfc8e7790098b26454504edd385ee6a21ab41d636949afb7f1a05d0d`
+- Model freeze M1: `phase4/configs/model_1_freeze.yaml` `6bb3e095cf1aae4ba2961c35efdf05d94d615e7abd246f6b5e95b00c51dc0412`
+- Model freeze M2: `phase4/configs/model_2_freeze.yaml` `8a3299dd860f55b7c3bdcd46387b5da1a22ce701a019f1312bba6e4ba12811d5`
+- Model freeze M3: `phase4/configs/model_3_freeze.yaml` `20b81a8645700b86f0984e91d887711689b0bd0cc7a919f02d0f4cd72834e2e6`
+- Model freeze M4: `phase4/configs/model_4_freeze.yaml` `d300af9ce961a4b839dd073434cfdd15291e27d6f37c71fee58e05343992715c`
+
+## Frozen Inputs
+- Trial order core: `d97c7dda394aace668d2916b71b5bea36416af425dfbe1a99b25c0c128630711`
+- Trial order core: `d97c7dda394aace668d2916b71b5bea36416af425dfbe1a99b25c0c128630711`
+- Trial order defense: `1a391e9dcd35e0d6c0a8f1690cfb2b6c388f71cddbfabb5db2fef93f9b916588`
+- Trial order utility: `3d4588b35e5453cf981f19f6a25f35f9f1e74aa66f9bcb9f41bac59f82bed94a`
+- Phase 5 execution manifest: `5613a19080400ca5e41a9d3e38d3f0221a22c2676b6fc0da6c119b9494a91505`
+- Phase 3 common-source hash: `a7324b63b1307de2dc9e90510ee7372b0b3aad685c4eec51182521191426dc79`
+- M1 freeze: `6bb3e095cf1aae4ba2961c35efdf05d94d615e7abd246f6b5e95b00c51dc0412`
+- M2 freeze: `8a3299dd860f55b7c3bdcd46387b5da1a22ce701a019f1312bba6e4ba12811d5`
+- M3 freeze: `20b81a8645700b86f0984e91d887711689b0bd0cc7a919f02d0f4cd72834e2e6`
+- M4 freeze: `d300af9ce961a4b839dd073434cfdd15291e27d6f37c71fee58e05343992715c`
+- Phase 4.5 source commit: `4e329f8cad35770e15a7750883e2b2e96629e71c`
+- Phase 4.5 runtime setup: `8c87b50ac6a2993c58a9f0bb72712aef0841f7316ef5cfe528f6104dd72215a4`
+- Phase 4.5 environment lock: `2701af1e8e5ab1b73b299076b03864e3cd516c92b3c3c4eb4abb4191ab3b2c17`
+
+## Verdicts
+- phase4: `PASS`
+- phase4_5: `GO TO PHASE 5 REBINDING`
+- phase4_5_source_commit: `4e329f8cad35770e15a7750883e2b2e96629e71c`
+
+## Output Files
+
+- `gate0_authorization_report.md`
+- `gate0_authorization_report.json`

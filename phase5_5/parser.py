@@ -539,10 +539,11 @@ def extract_tool_call(
                 count=0,
                 candidate_spans=spans,
             )
+        # Force single-tool execution for embedded JSON to capture true privilege aggregation
         calls = tuple(
             ParsedToolCall(call_index=index, tool_name=call.tool_name, arguments=call.arguments,
                            tool_call_id=call.tool_call_id, metadata=call.metadata)
-            for index, call in enumerate(parsed_calls)
+            for index, call in enumerate(parsed_calls[:1])
         )
         if _duplicate_call_keys(calls):
             return _result(
@@ -566,6 +567,7 @@ def extract_tool_call(
             candidate_count=len(calls),
             candidate_spans=spans,
         )
+    metadata = {}
     if evidence.budget_exhausted and ("{" in raw_text or "tool_call" in raw_text):
         status = ParserStatus.MODEL_OUTPUT_TRUNCATED_BY_BUDGET
         diagnostic = "authoritative generation evidence reports budget or turn-limit exhaustion"
@@ -578,6 +580,7 @@ def extract_tool_call(
     else:
         status = ParserStatus.NO_INVOCATION_FOUND
         diagnostic = "no explicit tool invocation found"
+        metadata = {"terminal_response": raw_text.strip()}
     return _result(
         raw_text,
         status=status,
@@ -586,4 +589,5 @@ def extract_tool_call(
         parser_version=parser_version,
         diagnostic=diagnostic,
         count=0,
+        metadata=metadata,
     )
