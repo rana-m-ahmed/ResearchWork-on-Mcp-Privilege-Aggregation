@@ -539,11 +539,11 @@ def extract_tool_call(
                 count=0,
                 candidate_spans=spans,
             )
-        # Force single-tool execution for embedded JSON to capture true privilege aggregation
+        # Support multiple tools as Phase 5 natively allows it.
         calls = tuple(
             ParsedToolCall(call_index=index, tool_name=call.tool_name, arguments=call.arguments,
                            tool_call_id=call.tool_call_id, metadata=call.metadata)
-            for index, call in enumerate(parsed_calls[:1])
+            for index, call in enumerate(parsed_calls)
         )
         if _duplicate_call_keys(calls):
             return _result(
