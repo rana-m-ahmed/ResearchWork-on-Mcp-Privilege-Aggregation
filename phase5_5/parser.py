@@ -251,7 +251,7 @@ def _candidate_objects(text: str) -> list[tuple[int, int, Mapping[str, Any]]]:
         if not isinstance(payload, Mapping):
             continue
         keys = set(payload)
-        if keys.intersection({"tool", "tool_calls", "tool_call"}):
+        if keys.intersection({"tool", "tool_calls", "tool_call", "terminal_response"}):
             candidates.append((index, end, payload))
     return candidates
 
@@ -330,6 +330,8 @@ def extract_tool_call(
     *,
     parser_version: str = "phase5.5-parser-v2",
     generation_evidence: Mapping[str, Any] | GenerationEvidence | None = None,
+    tool_schemas: Mapping[str, Any] | None = None,
+    forbidden_tool_names: frozenset[str] | set[str] | None = None,
 ) -> ExtractionResult:
     """Extract ordered, explicit, non-overlapping tool calls without repair."""
 
@@ -347,6 +349,17 @@ def extract_tool_call(
     evidence = generation_evidence if isinstance(generation_evidence, GenerationEvidence) else GenerationEvidence.from_mapping(generation_evidence)
     stripped = raw_text.strip()
     canonical_json = False
+
+    if "Tool Result [" in raw_text:
+        return _result(
+            raw_text,
+            status=ParserStatus.NO_INVOCATION_FOUND,
+            native_format="text",
+            canonical=False,
+            parser_version=parser_version,
+            diagnostic="candidate generated simulated environment responses",
+            count=0,
+        )
 
     try:
         payload = json.loads(stripped)
@@ -433,15 +446,25 @@ def extract_tool_call(
             count=max(2, candidate_count),
         )
     if text_calls and object_candidates:
-        return _result(
-            raw_text,
-            status=ParserStatus.AMBIGUOUS_MULTIPLE_CANDIDATES,
-            native_format="mixed_text",
-            canonical=False,
-            parser_version=parser_version,
-            diagnostic="textual and JSON invocation candidates overlap in the same output",
-            count=candidate_count,
+        # If object_candidates ONLY contains terminal responses, ignore them to maintain M1/M2 compatibility where text calls take precedence
+        has_tool_objects = any(
+            set(obj).intersection({"tool", "tool_calls", "tool_call"}) 
+            for _, _, obj in object_candidates
         )
+        if has_tool_objects:
+            return _result(
+                raw_text,
+                status=ParserStatus.AMBIGUOUS_MULTIPLE_CANDIDATES,
+                native_format="mixed_text",
+                canonical=False,
+                parser_version=parser_version,
+                diagnostic="textual and JSON invocation candidates overlap in the same output",
+                count=candidate_count,
+            )
+        else:
+            # We only have text_calls, pure terminal responses are ignored
+            object_candidates = []
+            candidate_count = len(text_calls)
     if len(text_calls) > 0:
         calls = tuple(
             ParsedToolCall(call_index=index, tool_name=tool_name, arguments=arguments)
@@ -502,17 +525,20 @@ def extract_tool_call(
                     candidate_spans=spans,
                 )
             if not parsed.tool_calls:
-                return _result(
-                    raw_text,
-                    status=ParserStatus.NO_INVOCATION_FOUND,
-                    native_format="embedded_json",
-                    canonical=False,
-                    parser_version=parser_version,
-                    diagnostic="embedded JSON contains no tool invocation",
-                    count=0,
-                    candidate_spans=spans,
-                )
+                continue
             parsed_calls.extend(parsed.tool_calls)
+            
+        if not parsed_calls:
+            return _result(
+                raw_text,
+                status=ParserStatus.NO_INVOCATION_FOUND,
+                native_format="embedded_json",
+                canonical=False,
+                parser_version=parser_version,
+                diagnostic="embedded JSON contains no tool invocation",
+                count=0,
+                candidate_spans=spans,
+            )
         calls = tuple(
             ParsedToolCall(call_index=index, tool_name=call.tool_name, arguments=call.arguments,
                            tool_call_id=call.tool_call_id, metadata=call.metadata)
