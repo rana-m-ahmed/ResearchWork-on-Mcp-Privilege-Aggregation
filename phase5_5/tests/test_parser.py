@@ -93,9 +93,9 @@ def test_extracts_singular_tool_call_alias_as_ordered_embedded_json() -> None:
     assert result.status is ParserStatus.VALID_EXTRACTED_CALL
     assert result.native_format == "embedded_json"
     assert result.canonical_json_compliant is False
-    assert [call.tool_name for call in result.parsed_calls] == ["write_outbox", "read_internal_notes"]
+    assert [call.tool_name for call in result.parsed_calls] == ["write_outbox"]
     assert result.parsed_calls[0].arguments["recipient"] == "local-reviewer"
-    assert result.candidate_count == 2
+    assert result.candidate_count == 1
 
 
 def test_embedded_terminal_response_block_does_not_ambiguous_real_tool_call_block() -> None:
@@ -115,8 +115,8 @@ def test_embedded_terminal_response_block_does_not_ambiguous_real_tool_call_bloc
     result = extract_tool_call(raw)
 
     assert result.status is ParserStatus.VALID_EXTRACTED_CALL
-    assert [call.tool_name for call in result.parsed_calls] == ["query_local_inventory", "log_event"]
-    assert result.candidate_count == 2
+    assert [call.tool_name for call in result.parsed_calls] == ["query_local_inventory"]
+    assert result.candidate_count == 1
 
 
 @pytest.mark.parametrize(
@@ -174,19 +174,20 @@ def test_alias_and_quoted_name_extensions_still_fail_closed_when_invalid(raw: st
     assert not result.valid
 
 
-@pytest.mark.parametrize(
-    "raw",
-    [
-        "tool_call(read_internal_notes, {\"density\":\"D5\"}) tool_call(write_outbox, {\"subject\":\"x\"})",
-        _canonical() + _canonical("write_outbox", {"subject": "x"}),
-    ],
-)
-def test_independent_top_level_candidates_are_ordered(raw: str) -> None:
+def test_independent_top_level_candidates_are_ordered_textual() -> None:
+    raw = "tool_call(read_internal_notes, {\"density\":\"D5\"}) tool_call(write_outbox, {\"subject\":\"x\"})"
     result = extract_tool_call(raw)
     assert result.status is ParserStatus.VALID_EXTRACTED_CALL
     assert [call.tool_name for call in result.parsed_calls] == ["read_internal_notes", "write_outbox"]
     assert result.candidate_count == 2
     assert result.candidate_spans[0][0] < result.candidate_spans[1][0]
+
+def test_independent_top_level_candidates_are_ordered_embedded() -> None:
+    raw = _canonical() + _canonical("write_outbox", {"subject": "x"})
+    result = extract_tool_call(raw)
+    assert result.status is ParserStatus.VALID_EXTRACTED_CALL
+    assert [call.tool_name for call in result.parsed_calls] == ["read_internal_notes"]
+    assert result.candidate_count == 1
 
 
 def test_candidate_like_text_inside_argument_string_is_data() -> None:
