@@ -330,6 +330,8 @@ def extract_tool_call(
     *,
     parser_version: str = "phase5.5-parser-v2",
     generation_evidence: Mapping[str, Any] | GenerationEvidence | None = None,
+    tool_schemas: Mapping[str, Any] | None = None,
+    forbidden_tool_names: frozenset[str] | set[str] | None = None,
 ) -> ExtractionResult:
     """Extract ordered, explicit, non-overlapping tool calls without repair."""
 
