@@ -5,8 +5,12 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import subprocess
 from pathlib import Path
+
+
+_FULL_GIT_SHA1 = re.compile(r"^[0-9a-f]{40}$")
 
 
 def sha256(data: bytes) -> str:
@@ -21,6 +25,22 @@ def committed_bytes(root: Path, source_commit: str, relative: str) -> bytes:
     )
 
 
+def resolve_source_commit(root: Path, source_ref: str) -> str:
+    """Resolve a symbolic or abbreviated ref to one canonical commit SHA-1."""
+
+    try:
+        resolved = subprocess.check_output(
+            ["git", "-C", str(root), "rev-parse", "--verify", f"{source_ref}^{{commit}}"],
+            text=True,
+            stderr=subprocess.PIPE,
+        ).strip().lower()
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit(f"source-freeze ref does not resolve to a commit: {source_ref}") from exc
+    if not _FULL_GIT_SHA1.fullmatch(resolved):
+        raise SystemExit(f"source-freeze ref did not resolve to a full Git SHA-1: {source_ref}")
+    return resolved
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, required=True)
@@ -28,6 +48,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--variant", choices=("legacy", "v3"), default="legacy")
     args = parser.parse_args()
+    source_commit = resolve_source_commit(args.root, args.source_commit)
     paths = (
         "phase5/manifests/batch_partition_manifest_v3.json",
         "phase5/manifests/model_runtime_authority_v2.json",
@@ -96,15 +117,15 @@ def main() -> int:
         if not path.is_file():
             raise SystemExit(f"missing source-freeze input: {relative}")
         try:
-            files[relative] = sha256(committed_bytes(args.root, args.source_commit, relative))
+            files[relative] = sha256(committed_bytes(args.root, source_commit, relative))
         except subprocess.CalledProcessError as exc:
-            raise SystemExit(f"source-freeze commit is missing bound file: {args.source_commit}:{relative}") from exc
+            raise SystemExit(f"source-freeze commit is missing bound file: {source_commit}:{relative}") from exc
     payload = {
         "artifact": "phase5_5_source_freeze" if args.variant == "legacy" else "phase5_5_source_freeze_v3",
         "official_dispatch": False,
         "publication_evidence": False,
         "scientific_inputs_regenerated": False,
-        "source_commit": args.source_commit,
+        "source_commit": source_commit,
         "bound_files": files,
         "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
         "model_authority": "phase5/manifests/model_runtime_authority_v2.json",
