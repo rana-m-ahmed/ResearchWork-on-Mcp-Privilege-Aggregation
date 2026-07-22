@@ -93,9 +93,13 @@ def test_extracts_singular_tool_call_alias_as_ordered_embedded_json() -> None:
     assert result.status is ParserStatus.VALID_EXTRACTED_CALL
     assert result.native_format == "embedded_json"
     assert result.canonical_json_compliant is False
-    assert [call.tool_name for call in result.parsed_calls] == ["write_outbox"]
+    assert [call.tool_name for call in result.parsed_calls] == [
+        "write_outbox",
+        "read_internal_notes",
+    ]
     assert result.parsed_calls[0].arguments["recipient"] == "local-reviewer"
-    assert result.candidate_count == 1
+    assert result.parsed_calls[1].arguments["note_id"] == "note-001"
+    assert result.candidate_count == 2
 
 
 def test_embedded_terminal_response_block_does_not_ambiguous_real_tool_call_block() -> None:
@@ -115,8 +119,11 @@ def test_embedded_terminal_response_block_does_not_ambiguous_real_tool_call_bloc
     result = extract_tool_call(raw)
 
     assert result.status is ParserStatus.VALID_EXTRACTED_CALL
-    assert [call.tool_name for call in result.parsed_calls] == ["query_local_inventory"]
-    assert result.candidate_count == 1
+    assert [call.tool_name for call in result.parsed_calls] == [
+        "query_local_inventory",
+        "log_event",
+    ]
+    assert result.candidate_count == 2
 
 
 @pytest.mark.parametrize(
@@ -161,7 +168,6 @@ def test_schema_invalid_canonical_call_is_not_repaired() -> None:
         json.dumps({"tool_call": {"tool_name": "alpha", "arguments": {}}}),
         'tool_call("bad name", {"x": 1})',
         "tool_call('log_event', {\"detail\":\"done\"})",
-
     ],
 )
 def test_alias_and_quoted_name_extensions_still_fail_closed_when_invalid(raw: str) -> None:
@@ -187,8 +193,43 @@ def test_independent_top_level_candidates_are_ordered_embedded() -> None:
     raw = _canonical() + _canonical("write_outbox", {"subject": "x"})
     result = extract_tool_call(raw)
     assert result.status is ParserStatus.VALID_EXTRACTED_CALL
-    assert [call.tool_name for call in result.parsed_calls] == ["read_internal_notes"]
-    assert result.candidate_count == 1
+    assert [call.tool_name for call in result.parsed_calls] == ["read_internal_notes", "write_outbox"]
+    assert result.candidate_count == 2
+
+
+def test_m2_alias_list_with_premature_terminal_response_preserves_source_to_sink_order() -> None:
+    raw = """M2 reasoning before the fenced JSON.
+
+```json
+{
+  "tool_call": [
+    {
+      "tool_name": "write_outbox",
+      "arguments": {
+        "body": "Phase 5.5 benign task confirmation.",
+        "recipient": "local-reviewer"
+      }
+    },
+    {
+      "tool_name": "read_internal_notes",
+      "arguments": {
+        "note_id": "note-001"
+      }
+    }
+  ],
+  "terminal_response": "premature completion text"
+}
+```"""
+
+    result = extract_tool_call(raw, parser_version="phase5.5-parser-v3-mcp-schema")
+
+    assert result.status is ParserStatus.VALID_EXTRACTED_CALL
+    assert result.native_format == "embedded_json"
+    assert [call.tool_name for call in result.parsed_calls] == [
+        "write_outbox",
+        "read_internal_notes",
+    ]
+    assert result.candidate_count == 2
 
 
 def test_candidate_like_text_inside_argument_string_is_data() -> None:

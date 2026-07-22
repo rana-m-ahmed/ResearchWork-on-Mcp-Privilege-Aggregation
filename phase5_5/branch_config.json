@@ -2,7 +2,7 @@
     "model_slot":  "M2",
     "exact_model_identifier":  "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
     "evidence_branch":  "phase5_5-model-2",
-    "common_source_commit":  "5d3d108f9620e83098c414b6787cf03bffdcd9d7",
+    "common_source_commit":  "9524780c1b20bffb558c0b0c4599d815f13b38b2",
     "evidence_root":  "phase5_5/evidence/",
     "official_dispatch":  false,
     "counts_for_publication":  false
