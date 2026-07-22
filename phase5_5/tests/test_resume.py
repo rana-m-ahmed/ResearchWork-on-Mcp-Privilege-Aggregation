@@ -23,21 +23,29 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _record(tmp_path: Path, *, status: str = "INVALID") -> AttemptLineageRecord:
+def _record(
+    tmp_path: Path,
+    *,
+    status: str = "INVALID",
+    dataset_version: str = DATASET,
+    attempt_id: str = "P5ATT-T00001-A000-ABCDEF12",
+    attempt_index: int = 0,
+    parent_attempt_id: str | None = None,
+) -> AttemptLineageRecord:
     record = AttemptLineageRecord(
-        dataset_version=DATASET,
+        dataset_version=dataset_version,
         frozen_row_id="core-00001-T00001",
         target_trial_id="T00001",
-        attempt_id="P5ATT-T00001-A000-ABCDEF12",
-        attempt_index=0,
-        parent_attempt_id=None,
-        run_id=RUN_ID,
+        attempt_id=attempt_id,
+        attempt_index=attempt_index,
+        parent_attempt_id=parent_attempt_id,
+        run_id=RUN_ID if dataset_version == DATASET else f"P5RUN-{dataset_version}-M1-20260718-HISTORIC",
         batch_id="batch-1",
         attempt_status=status,
         invalid_reason="model output" if status == "INVALID" else None,
         counts_toward_cell_n=False,
         accepted_attempt=False,
-        raw_attempt_directory=tmp_path / "phase5_5/evidence/attempts/P5ATT-T00001-A000-ABCDEF12",
+        raw_attempt_directory=tmp_path / f"phase5_5/evidence/attempts/{attempt_id}",
     )
     attempt_root = Path(record.raw_attempt_directory)
     attempt_root.mkdir(parents=True, exist_ok=True)
@@ -68,6 +76,9 @@ def _record(tmp_path: Path, *, status: str = "INVALID") -> AttemptLineageRecord:
 
 def _write_checkpoint(root: Path, *, artifact: str = "phase5_5_trial_checkpoint_v2") -> Path:
     lineage = root / "phase5_5/evidence/lineage.csv"
+    records = AttemptLineageStore(lineage).load_records()
+    current = tuple(record for record in records if record.dataset_version == DATASET and record.run_id == RUN_ID)
+    last = current[-1]
     path = root / f"phase5_5/evidence/checkpoints/{RUN_ID}/checkpoint-000001.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
@@ -77,15 +88,15 @@ def _write_checkpoint(root: Path, *, artifact: str = "phase5_5_trial_checkpoint_
                 "batch_id": "batch-1",
                 "batch_manifest_sha256": BATCH_SHA,
                 "checkpoint_sequence": 1,
-                "completed_lineage_count": 1,
+                "completed_lineage_count": len(records),
                 "dataset_version": DATASET,
-                "last_attempt_id": "P5ATT-T00001-A000-ABCDEF12",
-                "last_target_trial_id": "T00001",
+                "last_attempt_id": last.attempt_id,
+                "last_target_trial_id": last.target_trial_id,
                 "lineage_sha256": _sha256(lineage),
                 "model_slot": "M1",
                 "parent_head": "d" * 40,
                 "run_id": RUN_ID,
-                "run_lineage_count": 1,
+                "run_lineage_count": len(current),
                 "run_plan_sha256": PLAN_SHA,
                 "source_commit": SOURCE,
             },
@@ -158,6 +169,29 @@ def test_source_bound_checkpoint_resumes_same_run_and_sequence(tmp_path: Path) -
     assert result.mode is ResumeMode.RESUME
     assert result.run_id == RUN_ID
     assert result.checkpoint_sequence == 1
+    assert result.completed_target_count == 1
+
+
+def test_resume_accepts_explicit_dataset_epoch_boundary(tmp_path: Path) -> None:
+    store = AttemptLineageStore(tmp_path / "phase5_5/evidence/lineage.csv")
+    historical = _record(
+        tmp_path,
+        dataset_version="P5-DV-1.0.2-A7C91E42",
+        attempt_id="P5ATT-T00001-A000-HISTORIC",
+    )
+    current = _record(
+        tmp_path,
+        attempt_id="P5ATT-T00001-A001-ABCDEF12",
+        attempt_index=1,
+        parent_attempt_id=historical.attempt_id,
+    )
+    store.append(historical)
+    store.append(current)
+    _write_checkpoint(tmp_path)
+
+    result = _resolve(tmp_path)
+
+    assert result.mode is ResumeMode.RESUME
     assert result.completed_target_count == 1
 
 
