@@ -23,7 +23,7 @@
     "phase5/runtime/tool_dispatch.py": "b19f4da601c44dac4d3be6d46feef280195977312c62d3d2cd5fa82c82cde425",
     "phase5/validation/kaggle_run_plan_v3_treatment.json": "d596c1048488c12f27ff1d30b50e410ee67c9723e7b8dfde714c44e0c4f29c2d",
     "phase5_5/authorization/official_execution_authorization.json": "5a22898feb81bdc1069da65a0eeb72977c141ede3704e871e5528065dd8e87a8",
-    "phase5_5/branch_config.json": "130aae3298fb57a9ffbe747b292e86369f309d6e9f5f272c83e07b629791cbcb",
+    "phase5_5/branch_config.json": "4abcb28e2800b1047b96092ccb9d4d1483c77e846a320bed0086e00979a36f35",
     "phase5_5/checkpointing.py": "01d9012e9d9828b6c008cfdbd13e710445c9181cd659f293a740dca70184f326",
     "phase5_5/configs/branch_mapping.json": "9a20036c666cc07c5ae7e7f9fc163e06fddc386a0b4ad2f689b819694c54754c",
     "phase5_5/configs/evidence_policy.json": "813cc890ea22ba4bf6f791efb175a32ae4602f96291474ffd4ba6efc954b72e8",
@@ -32,14 +32,14 @@
     "phase5_5/configs/schema_variant_manifest_v3.json": "13e0689aafa1b6dd73a715e4979e7ea5318123f35d5ab83da1e131889c1e6951",
     "phase5_5/configs/task_argument_bindings_v1.json": "5645e6cf46f513f970a71aab44727cdd7398d8753cec8f3a4f9a77638808f02e",
     "phase5_5/configs/treatment_and_analysis_contract_v3.json": "caaafdb8b2607cfa325d7e1aabc6703582dc9cadb030563d752d970bdee9ad87",
-    "phase5_5/kaggle/phase5_5_official_runner.ipynb": "432ef1ebea02412de12986daf225e97dbfb971517b2bc9ff8b590fae31ea867f",
-    "phase5_5/kaggle/phase5_5_pretrial_runner.ipynb": "58c97c5dacbbd6578f0a03ff5e8882eab256165919fabad8845dea40c30d908d",
+    "phase5_5/kaggle/phase5_5_official_runner.ipynb": "4c5a4110198dd27fccaea2816b6bcd1d4df740b1ba9291ca04d5abb8bb94f761",
+    "phase5_5/kaggle/phase5_5_pretrial_runner.ipynb": "451af63bd8c2619ae50ab438652ff48b69eae028a7a7e2f57576200a48d04754",
     "phase5_5/kaggle/phase5_5_runner.ipynb": "f4b49a580a078cc7e254f2ac4173572e88d8113e336f327adb9106d0f22f9167",
     "phase5_5/parser.py": "e9024f926c0fa955a5bda990b6c2cecf2087c576b3eb93316d9bb6c7c18cbd9b",
     "phase5_5/runtime.py": "923274e72a61fb225ca219baba5881d9a543f4af730c2fcf9b74353aa1269222",
     "phase5_5/scripts/build_kaggle_runner.py": "fab17c67488b683541b9b524e1cbac4deeb8d711fe321e716378bd027ca6ffdb",
-    "phase5_5/scripts/build_official_runner.py": "b6c02ed7107e304f927c63fe5646e8e21eb2da1daf33eb3485d8959cc1bad801",
-    "phase5_5/scripts/build_pretrial_runner.py": "6f7ff371e79932202fdcbcd5f1850634e91082a0a5fd58695f9df1770d4d53d2",
+    "phase5_5/scripts/build_official_runner.py": "4b10d3e1dde8404d950b6c834612fad9f7ff01ac51d59e043b9b91a6a1f3a86d",
+    "phase5_5/scripts/build_pretrial_runner.py": "a3583038fdaa9dbb7195b22543733724f763f93789787e4250f665439a1e9f77",
     "phase5_5/scripts/build_source_freeze.py": "7c85b29e397cd1a444246fbab833acae05589ddf8bbdd48ee051e88a24236583",
     "phase5_5/scripts/build_treatment_manifests.py": "02a194eef2d64dcc0ae2bdc54a43bc4c41ba58b75b7646b70cfece31104e7e00",
     "phase5_5/scripts/official_authorized_preflight.py": "e79417f4db4fb976b49a5ff9f2d1a1dc4b9b8fe69bf6ad445310001bd2fdd407",
@@ -47,7 +47,7 @@
     "phase5_5/scripts/publish_checkpoint.py": "df2bd4384900f2295b7cc059557cd94202f75d04f394573a8049f9fa144d7a96",
     "phase5_5/scripts/publish_official_evidence.py": "18d72cae1c6142982b5945a7aecbb1c2526f9cfc1e3583ddb734bb7015c348c3",
     "phase5_5/scripts/rebuild_historical_closure.py": "95534078a91636c98c4a516f84e2a5cc8a1d0bbe861f8e172b8f5694a3ccbe76",
-    "phase5_5/scripts/run_m4_runtime_canary.py": "c587207aad8e3151e28d73624bf2849f59c437dd73e86f65434cf7e5f9b66270",
+    "phase5_5/scripts/run_m4_runtime_canary.py": "7c5cd2d7f0b3a92d2160e48c11dc170d20cc6d96b103353764b703c652d52ff3",
     "phase5_5/scripts/run_qualification_canary.py": "9ece92fd8a0cfac926535682150962f3eced3b9184a4225a71166830820fcb88"
   },
   "dataset_version": "P5-DV-1.1.0-TREATMENT-V3",
@@ -59,5 +59,5 @@
   "publication_evidence": false,
   "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
   "scientific_inputs_regenerated": false,
-  "source_commit": "66b5c0d01"
+  "source_commit": "6ab4def1d"
 }
