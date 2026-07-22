@@ -15,7 +15,8 @@ from phase5.domain.errors import MissingFrozenSettingError, SchemaInvariantError
 
 
 CHECKPOINT_ARTIFACT = "phase5_5_trial_checkpoint_v2"
-SUPERSESSION_ARTIFACT = "phase5_5_campaign_supersession_v1"
+LEGACY_SUPERSESSION_ARTIFACT = "phase5_5_campaign_supersession_v1"
+SOURCE_BOUND_SUPERSESSION_ARTIFACT = "phase5_5_campaign_supersession_v2"
 _TERMINAL_STATUSES = frozenset({"INVALID", "OFFICIAL_ACCEPTED", "ORPHAN"})
 
 
@@ -36,6 +37,20 @@ class OfficialResumeResolution:
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _require_lineage_sha256(payload: Mapping[str, Any], path: Path, label: str) -> None:
+    """Validate a lineage digest across Git's Windows newline materialization."""
+
+    raw = path.read_bytes()
+    accepted = {hashlib.sha256(raw).hexdigest()}
+    if b"\r\n" in raw:
+        accepted.add(hashlib.sha256(raw.replace(b"\r\n", b"\n")).hexdigest())
+    actual = payload.get("lineage_sha256")
+    if actual not in accepted:
+        raise SchemaInvariantError(
+            f"{label} lineage_sha256 mismatch: expected one of {sorted(accepted)!r}, got {actual!r}"
+        )
 
 
 def _load_object(path: Path, label: str) -> dict[str, Any]:
@@ -110,10 +125,17 @@ def _validated_superseded_runs(
     for path in sorted(supersession_root.glob("*.json")):
         payload = _load_object(path, "campaign supersession")
         label = f"campaign supersession {path.as_posix()}"
-        _require_equal(payload, "artifact", SUPERSESSION_ARTIFACT, label)
+        artifact = payload.get("artifact")
+        if artifact not in {LEGACY_SUPERSESSION_ARTIFACT, SOURCE_BOUND_SUPERSESSION_ARTIFACT}:
+            raise SchemaInvariantError(f"{label} has an unsupported artifact version")
         _require_equal(payload, "model_slot", model_slot, label)
         _require_equal(payload, "dataset_version", dataset_version, label)
-        _require_equal(payload, "authorization_basis", "explicit_user_authorization_2026-07-22", label)
+        authorization = (
+            "explicit_user_authorization_2026-07-22"
+            if artifact == LEGACY_SUPERSESSION_ARTIFACT
+            else "explicit_user_authorization_2026-07-23"
+        )
+        _require_equal(payload, "authorization_basis", authorization, label)
         run_id = payload.get("superseded_run_id")
         if not isinstance(run_id, str) or not run_id.startswith(_run_prefix(dataset_version, model_slot)):
             raise SchemaInvariantError(f"{label} has an invalid superseded_run_id")
@@ -131,8 +153,35 @@ def _validated_superseded_runs(
         _require_equal(payload, "status_counts", status_counts, label)
 
         checkpoint_entries = documents.get(run_id, [])
-        if any(document.get("artifact") == CHECKPOINT_ARTIFACT for _, document in checkpoint_entries):
+        source_bound = any(document.get("artifact") == CHECKPOINT_ARTIFACT for _, document in checkpoint_entries)
+        if artifact == LEGACY_SUPERSESSION_ARTIFACT and source_bound:
             raise SchemaInvariantError(f"{label} cannot supersede a source-bound v2 campaign")
+        if artifact == SOURCE_BOUND_SUPERSESSION_ARTIFACT:
+            if not checkpoint_entries or not all(
+                document.get("artifact") == CHECKPOINT_ARTIFACT for _, document in checkpoint_entries
+            ):
+                raise SchemaInvariantError(f"{label} must identify one source-bound v2 checkpoint chain")
+            _require_equal(payload, "reason", "canceled_partial_official_run_before_remediation", label)
+            _require_equal(payload, "replacement_run_required", True, label)
+            source_commit = payload.get("source_commit")
+            batch_sha = payload.get("batch_manifest_sha256")
+            plan_sha = payload.get("run_plan_sha256")
+            if not all(isinstance(value, str) for value in (source_commit, batch_sha, plan_sha)):
+                raise SchemaInvariantError(f"{label} lacks its frozen source binding")
+            latest = _validate_checkpoint_chain(
+                checkpoint_entries,
+                run_id=run_id,
+                model_slot=model_slot,
+                dataset_version=dataset_version,
+                source_commit=source_commit,
+                batch_manifest_sha256=batch_sha,
+                run_plan_sha256=plan_sha,
+            )
+            _require_equal(latest, "run_lineage_count", len(run_records), label)
+            _require_equal(latest, "last_attempt_id", run_records[-1].attempt_id, label)
+            _require_equal(latest, "last_target_trial_id", run_records[-1].target_trial_id, label)
+            if _is_complete(evidence_root, run_id):
+                raise SchemaInvariantError(f"{label} cannot supersede a completed campaign")
         checkpoint_hashes = {
             checkpoint_path.relative_to(evidence_root).as_posix(): _sha256(checkpoint_path)
             for checkpoint_path, _ in checkpoint_entries
@@ -355,7 +404,7 @@ def resolve_official_resume(
         run_plan_sha256=run_plan_sha256,
     )
     _require_equal(latest, "run_lineage_count", len(relevant), "latest checkpoint")
-    _require_equal(latest, "lineage_sha256", _sha256(lineage_path), "latest checkpoint")
+    _require_lineage_sha256(latest, lineage_path, "latest checkpoint")
     if relevant:
         _require_equal(latest, "last_attempt_id", relevant[-1].attempt_id, "latest checkpoint")
         _require_equal(latest, "last_target_trial_id", relevant[-1].target_trial_id, "latest checkpoint")

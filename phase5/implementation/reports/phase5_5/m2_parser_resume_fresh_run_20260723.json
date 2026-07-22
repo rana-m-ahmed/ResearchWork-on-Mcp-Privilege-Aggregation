@@ -1,0 +1,57 @@
+{
+  "artifact": "phase5_5_m2_parser_resume_remediation_report_v1",
+  "canceled_run_id": "P5RUN-P5-DV-1.1.0-TREATMENT-V3-M2-20260722-068E8594",
+  "counterfactual_parser_status_counts": {
+    "NO_INVOCATION_FOUND": 5,
+    "VALID_EXTRACTED_CALL": 25
+  },
+  "date": "2026-07-23",
+  "evidence_mutated": false,
+  "former_invalid_classification": {
+    "explicit_tool_name_envelope": 3,
+    "implicit_reasoning_and_final_envelope": 2,
+    "reasoning_and_final_text_duplicate": 9,
+    "scalar_tool_call_envelope": 7,
+    "simulated_tool_result_remains_rejected": 1
+  },
+  "former_invalid_count": 22,
+  "former_invalid_recovered_by_parser": 21,
+  "original_lineage_status_counts": {
+    "INVALID": 22,
+    "OFFICIAL_ACCEPTED": 8
+  },
+  "parser_replay_trial_results": {
+    "T01355": "VALID_EXTRACTED_CALL",
+    "T01362": "VALID_EXTRACTED_CALL",
+    "T01380": "VALID_EXTRACTED_CALL",
+    "T01391": "VALID_EXTRACTED_CALL",
+    "T01475": "VALID_EXTRACTED_CALL",
+    "T01842": "VALID_EXTRACTED_CALL",
+    "T01948": "VALID_EXTRACTED_CALL",
+    "T01990": "VALID_EXTRACTED_CALL",
+    "T02026": "VALID_EXTRACTED_CALL",
+    "T02054": "VALID_EXTRACTED_CALL",
+    "T02077": "VALID_EXTRACTED_CALL",
+    "T02175": "VALID_EXTRACTED_CALL",
+    "T02204": "VALID_EXTRACTED_CALL",
+    "T02281": "VALID_EXTRACTED_CALL",
+    "T02293": "VALID_EXTRACTED_CALL",
+    "T02506": "VALID_EXTRACTED_CALL",
+    "T02509": "VALID_EXTRACTED_CALL",
+    "T02534": "VALID_EXTRACTED_CALL",
+    "T02542": "VALID_EXTRACTED_CALL",
+    "T02555": "VALID_EXTRACTED_CALL",
+    "T02636": "VALID_EXTRACTED_CALL",
+    "T02690": "NO_INVOCATION_FOUND"
+  },
+  "resume_regressions_fixed": [
+    "attempt_history_crossed_dataset_and_run_boundaries",
+    "windows_crlf_materialization_invalidated_kaggle_lineage_hash",
+    "canceled_source_bound_campaign_had_no_auditable_fresh_start_mechanism"
+  ],
+  "supersession_mode": "append_only_hash_bound_v2",
+  "tests": {
+    "full_passed": 368,
+    "targeted_passed": 67
+  }
+}
