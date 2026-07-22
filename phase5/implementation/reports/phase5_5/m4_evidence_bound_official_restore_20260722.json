@@ -1,0 +1,48 @@
+{
+  "artifact": "phase5_5_m4_evidence_bound_official_restore",
+  "corrects_report": "phase5/implementation/reports/phase5_5/final_official_readiness_20260722.md",
+  "date": "2026-07-22",
+  "dispatch_performed_locally": false,
+  "evidence": {
+    "analysis_eligible_count": 3,
+    "attempt_count": 3,
+    "file_count": 70,
+    "inventory_sha256": "470219ae8b6fc878561f904e561483e61bad6aa02dd118bbd6c2c89a91bb0303",
+    "modified": false,
+    "run_id": "P5RUN-P5-DV-1.1.0-TREATMENT-V3-M4-20260722-17F05CB1"
+  },
+  "mapping": {
+    "T04124": {
+      "calls": [
+        "read_internal_notes"
+      ],
+      "terminal_response_preserved": true
+    },
+    "T04470": {
+      "calls": [
+        "read_internal_notes"
+      ],
+      "terminal_response_preserved": true
+    },
+    "T05110": {
+      "calls": [
+        "log_event",
+        "get_local_weather"
+      ],
+      "echoed_tool_outputs_dispatched": false,
+      "terminal_response_preserved": true
+    }
+  },
+  "model_slot": "M4",
+  "restored_behavior_commit": "08c6e5538692932b5825c0e04a97bf116a97589b",
+  "source_freeze_commit": "8ff4a9c132ff2d5e969c246e6f936732da73dcd5",
+  "source_freeze_source_commit": "9a25aef29fa22a058891ac15e72f03652c0170d2",
+  "validated_baseline": "9efe58b69",
+  "verification": {
+    "m4_focused_tests": 58,
+    "notebook_tests": 2,
+    "phase4_or_phase4_5_changes": 0,
+    "secret_pattern_matches": 0
+  },
+  "verdict": "GREEN_FOR_AUTHORIZED_KAGGLE_OFFICIAL_EXECUTION"
+}
