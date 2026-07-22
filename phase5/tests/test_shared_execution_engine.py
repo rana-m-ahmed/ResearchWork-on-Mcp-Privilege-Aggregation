@@ -78,8 +78,8 @@ def test_execute_row_builds_frozen_workspace_and_resolves_task(monkeypatch, tmp_
         lambda *args, **kwargs: "a" * 40 + "\n",
     )
     batch = SimpleNamespace(
-        run_token="ABCDEF12",
-        batch_id="P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-D3-POISON_TD-BASELINE-ABCDEF12-A1B2",
+        run_token="BATCH123",
+        batch_id="P5BAT-P5-DV-1.0.2-A7C91E42-phase5_adversarial_core-M1-D3-POISON_TD-BASELINE-BATCH123-A1B2",
     )
     result = engine.execute_row(
         row=row,
@@ -97,6 +97,7 @@ def test_execute_row_builds_frozen_workspace_and_resolves_task(monkeypatch, tmp_
     assert captured["frozen_row"].trial_id == row.trial_id
     assert workspace.metadata.dataset_version == engine.dataset_version
     assert result.raw_attempt_directory == workspace.workspace_root
+    assert result.attempt_id.endswith("-A000-ABCDEF12")
     assert workspace.workspace_root == (
         engine.evidence_root / "attempts" / "P5RUN-P5-DV-1.0.2-A7C91E42-M1-20260711-ABCDEF12"
         / result.attempt_id

@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from ..campaign import CampaignBatchPlan
-from ..domain.identifiers import AttemptId
+from ..domain.identifiers import AttemptId, RunId
 from ..evidence import AttemptEventLogWriter, AttemptEventType
 from ..evidence.workspace import AttemptWorkspaceMetadata
 from ..domain.errors import MissingFrozenSettingError, SchemaInvariantError
@@ -328,7 +328,10 @@ class SharedExecutionEngine(RealTrialPipeline):
         self._ensure_loaded()
         runtime_row = self._build_runtime_row(row, run_id=run_id)
         
-        attempt_id = AttemptId.build(row.trial_id, attempt_index, batch.run_token)
+        # Batch tokens are frozen partition identifiers and repeat across
+        # campaigns. The run session token is the unique execution namespace.
+        run_session_token = str(RunId.parse(run_id)).rsplit("-", 1)[1]
+        attempt_id = AttemptId.build(row.trial_id, attempt_index, run_session_token)
         metadata = AttemptWorkspaceMetadata.build(
             base_attempts_root=self.attempts_root,
             base_evidence_root=self.evidence_root,

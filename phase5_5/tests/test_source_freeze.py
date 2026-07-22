@@ -6,6 +6,24 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
+from phase5_5.scripts.build_source_freeze import resolve_source_commit
+
+
+def test_source_freeze_canonicalizes_symbolic_and_abbreviated_refs() -> None:
+    root = Path(__file__).resolve().parents[2]
+    full = subprocess.check_output(["git", "-C", str(root), "rev-parse", "HEAD"], text=True).strip()
+
+    assert resolve_source_commit(root, "HEAD") == full
+    assert resolve_source_commit(root, full[:10]) == full
+
+
+def test_source_freeze_rejects_unresolvable_ref() -> None:
+    root = Path(__file__).resolve().parents[2]
+    with pytest.raises(SystemExit, match="does not resolve to a commit"):
+        resolve_source_commit(root, "not-a-real-phase5-ref")
+
 
 def test_source_freeze_is_reproducible_from_authoritative_builder(tmp_path: Path) -> None:
     root = Path(__file__).resolve().parents[2]
