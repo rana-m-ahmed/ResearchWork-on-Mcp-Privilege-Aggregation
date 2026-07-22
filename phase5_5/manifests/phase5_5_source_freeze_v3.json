@@ -60,5 +60,5 @@
   "publication_evidence": false,
   "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
   "scientific_inputs_regenerated": false,
-  "source_commit": "HEAD"
+  "source_commit": "5553bc17e69ad596230688f4f7ee2c32b12306ed"
 }
