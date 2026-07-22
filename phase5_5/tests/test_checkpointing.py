@@ -18,7 +18,7 @@ def test_checkpoint_publisher_writes_hash_bound_receipt(monkeypatch, tmp_path: P
         lambda _: (
             SimpleNamespace(
                 dataset_version="P5-DV-1.1.0-TREATMENT-V3",
-                run_id="P5RUN-P5-DV-1.1.0-TREATMENT-V3-M4-20260718-ABCDEF12",
+                run_id="P5RUN-P5-DV-1.1.0-TREATMENT-V3-M2-20260718-ABCDEF12",
                 attempt_id="attempt-1",
             ),
         ),
