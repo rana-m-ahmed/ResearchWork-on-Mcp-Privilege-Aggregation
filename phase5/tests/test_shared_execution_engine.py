@@ -97,6 +97,10 @@ def test_execute_row_builds_frozen_workspace_and_resolves_task(monkeypatch, tmp_
     assert captured["frozen_row"].trial_id == row.trial_id
     assert workspace.metadata.dataset_version == engine.dataset_version
     assert result.raw_attempt_directory == workspace.workspace_root
+    assert workspace.workspace_root == (
+        engine.evidence_root / "attempts" / "P5RUN-P5-DV-1.0.2-A7C91E42-M1-20260711-ABCDEF12"
+        / result.attempt_id
+    )
     assert result.target_trial_id == str(row.trial_id)
     assert isinstance(result.target_trial_id, str)
     assert result.acceptance_proof.event_log_sha256 != "0" * 64

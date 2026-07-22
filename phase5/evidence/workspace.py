@@ -70,6 +70,7 @@ class AttemptWorkspaceMetadata:
         *,
         base_attempts_root: Path,
         base_evidence_root: Path,
+        attempts_namespace_root: Path | None = None,
         dataset_version: str,
         frozen_row_id: str,
         target_trial_id: str,
@@ -81,7 +82,8 @@ class AttemptWorkspaceMetadata:
         attempt_status: str,
         created_utc: str,
     ) -> "AttemptWorkspaceMetadata":
-        raw_attempt_directory = base_evidence_root / "attempts" / attempt_id
+        attempt_root = attempts_namespace_root or (base_evidence_root / "attempts")
+        raw_attempt_directory = attempt_root / attempt_id
         return cls(
             dataset_version=dataset_version,
             frozen_row_id=frozen_row_id,

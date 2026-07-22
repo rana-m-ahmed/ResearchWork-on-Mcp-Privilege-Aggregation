@@ -258,7 +258,32 @@ def _is_complete(evidence_root: Path, run_id: str) -> bool:
 
 def _validate_attempt_evidence(evidence_root: Path, record: AttemptLineageRecord) -> None:
     attempts_root = (evidence_root / "attempts").resolve()
-    attempt_root = (attempts_root / record.attempt_id).resolve()
+    # The lineage path is authoritative for the physical evidence location.
+    # Current campaigns use attempts/<run_id>/<attempt_id>; legacy evidence
+    # remains valid at attempts/<attempt_id>.
+    recorded_root = Path(record.raw_attempt_directory)
+    if not recorded_root.is_absolute():
+        attempt_root = (evidence_root.parent.parent / recorded_root).resolve()
+    else:
+        try:
+            attempt_root = recorded_root.resolve()
+            attempt_root.relative_to(attempts_root)
+        except ValueError:
+            parts = recorded_root.as_posix().split("/")
+            marker = ("phase5_5", "evidence", "attempts")
+            marker_start = next(
+                (index for index in range(len(parts) - len(marker) + 1)
+                 if tuple(parts[index:index + len(marker)]) == marker),
+                None,
+            )
+            if marker_start is None:
+                raise SchemaInvariantError(
+                    f"resume attempt directory is outside the evidence root: {record.attempt_id}"
+                )
+            suffix = parts[marker_start + len(marker):]
+            if not suffix or any(part in {"", ".", ".."} for part in suffix):
+                raise SchemaInvariantError(f"resume attempt directory is not canonical: {record.attempt_id}")
+            attempt_root = attempts_root.joinpath(*suffix).resolve()
     try:
         attempt_root.relative_to(attempts_root)
     except ValueError as exc:

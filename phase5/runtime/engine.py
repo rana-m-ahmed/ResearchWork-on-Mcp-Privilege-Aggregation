@@ -332,6 +332,11 @@ class SharedExecutionEngine(RealTrialPipeline):
         metadata = AttemptWorkspaceMetadata.build(
             base_attempts_root=self.attempts_root,
             base_evidence_root=self.evidence_root,
+            # Attempt IDs are intentionally stable within a run and restart at
+            # A000 for a fresh dataset/run. Keep immutable historical evidence
+            # addressable by placing each campaign's physical attempts under
+            # its run namespace.
+            attempts_namespace_root=self.evidence_root / "attempts" / run_id,
             dataset_version=self.dataset_version,
             frozen_row_id=frozen_row_key(row),
             target_trial_id=str(row.trial_id),
