@@ -148,7 +148,9 @@ def _write_source_bound_supersession(root: Path) -> Path:
     records = tuple(record for record in store.load_records() if record.run_id == RUN_ID)
     checkpoint_root = root / "phase5_5/evidence/checkpoints" / RUN_ID
     checkpoint_hashes = {
-        path.relative_to(root / "phase5_5/evidence").as_posix(): _sha256(path)
+        path.relative_to(root / "phase5_5/evidence").as_posix(): hashlib.sha256(
+            path.read_bytes().replace(b"\r\n", b"\n")
+        ).hexdigest()
         for path in sorted(checkpoint_root.glob("checkpoint-*.json"))
     }
     path = root / f"phase5_5/evidence/supersessions/{RUN_ID}.json"
