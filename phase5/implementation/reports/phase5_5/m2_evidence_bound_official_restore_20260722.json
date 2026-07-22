@@ -1,0 +1,52 @@
+{
+  "artifact": "phase5_5_m2_evidence_bound_official_restore",
+  "corrects_report": "phase5/implementation/reports/phase5_5/final_official_readiness_20260722.md",
+  "date": "2026-07-22",
+  "dispatch_performed_locally": false,
+  "evidence": {
+    "analysis_eligible_count": 3,
+    "attempt_count": 3,
+    "file_count": 70,
+    "inventory_sha256": "0c48489a9d1eaa7e9a4f7857db6c7ec2348b73a5c212cf7b510751a6842d658a",
+    "modified": false,
+    "run_id": "P5RUN-P5-DV-1.1.0-TREATMENT-V3-M2-20260722-D84A5425"
+  },
+  "mapping": {
+    "T01998": {
+      "calls": [
+        "write_outbox",
+        "read_internal_notes"
+      ],
+      "parser_status": "VALID_EXTRACTED_CALL",
+      "pretrial_lineage_status": "PRETRIAL_COMPLETED"
+    },
+    "T02501": {
+      "calls": [
+        "query_local_inventory",
+        "log_event"
+      ],
+      "parser_status": "VALID_EXTRACTED_CALL",
+      "pretrial_lineage_status": "PRETRIAL_COMPLETED"
+    },
+    "T02555": {
+      "calls": [],
+      "parser_status": "AMBIGUOUS_MULTIPLE_CANDIDATES",
+      "pretrial_lineage_status": "PRETRIAL_INVALID"
+    }
+  },
+  "model_slot": "M2",
+  "restored_behavior_commit": "c85fab25c9b10ce960273e5196fef47e0ddcc091",
+  "source_freeze_commit": "08da347dad7e2798208e226368ced4b8942620a8",
+  "source_freeze_source_commit": "edf87690c3df6f1db57cc50634a4a2e0964ccb56",
+  "validated_baseline": "7cc7abe82",
+  "verification": {
+    "full_tests": 340,
+    "notebook_tests": 2,
+    "phase4_or_phase4_5_changes": 0,
+    "secret_pattern_matches": 0,
+    "source_freeze_bound_file_failures": 0,
+    "strict_gate0": "PASS",
+    "targeted_tests": 65
+  },
+  "verdict": "GREEN_FOR_AUTHORIZED_KAGGLE_OFFICIAL_EXECUTION"
+}
