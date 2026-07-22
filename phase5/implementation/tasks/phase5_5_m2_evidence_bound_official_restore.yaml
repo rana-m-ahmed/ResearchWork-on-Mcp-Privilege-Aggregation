@@ -1,0 +1,50 @@
+task_id: PHASE5_5-M2-EVIDENCE-BOUND-OFFICIAL-RESTORE
+title: Restore evidence-validated M2 behavior for official execution
+scope:
+  - M2 parser and agent-loop behavior validated by the latest pretrial bundle
+  - M2 prompt and state-machine controls
+  - non-semantic official evidence lifecycle and notebook fixes
+  - tests, source freeze, notebooks, and append-only reports
+evidence_inputs:
+  - m2-new-ptrail-output/M2_pretrial_manifest (3).json
+  - m2-new-ptrail-output/M2_pretrial_behavior_summary (2).json
+  - m2-new-ptrail-output/M2_pretrial_evidence (3)/phase5_5_pretrial_evidence/
+validated_source_baseline: 7cc7abe82
+frozen_inputs:
+  - phase4/
+  - phase4_5/
+  - phase5/grading/frozen_grader.py
+  - phase5/manifests/model_runtime_authority_v2.json
+  - phase5_5/configs/treatment_and_analysis_contract_v3.json
+allowed_paths:
+  - phase5/runtime/agent_loop.py
+  - phase5/runtime/prompt_compiler.py
+  - phase5/tests/test_agent_loop.py
+  - phase5/tests/test_prompt_compiler_and_token_budget.py
+  - phase5_5/parser.py
+  - phase5_5/configs/frozen_state_machine_controls.json
+  - phase5_5/tests/test_parser.py
+  - phase5_5/kaggle/
+  - phase5_5/manifests/phase5_5_source_freeze_v3.json
+  - phase5/implementation/tasks/phase5_5_m2_evidence_bound_official_restore.yaml
+  - phase5/implementation/reports/phase5_5/m2_evidence_bound_official_restore_20260722.md
+  - phase5/implementation/reports/phase5_5/m2_evidence_bound_official_restore_20260722.json
+forbidden_actions:
+  - modify_phase4_or_phase4_5
+  - modify_historical_pretrial_evidence
+  - change_frozen_grader_labels
+  - infer_or_repair_missing_tool_calls
+  - remove_evidence_validated_m2_edge_handling
+  - dispatch_official_trials_locally
+acceptance:
+  - M2_combined_embedded_tool_calls_preserve_order
+  - M2_embedded_terminal_response_is_recognized
+  - M2_post_tool_contract_is_present_only_after_tool_results
+  - M2_duplicate_side_effects_are_blocked_before_dispatch
+  - M2_exact_expected_plan_completes_without_extra_generation
+  - M2_timeout_is_120_seconds
+  - malformed_duplicate_textual_candidates_still_fail_closed
+  - final_attempt_manifest_uses_final_status
+  - official_archive_and_authorization_fixes_remain
+  - latest_pretrial_evidence_is_not_modified
+  - full_phase5_and_phase5_5_tests_pass

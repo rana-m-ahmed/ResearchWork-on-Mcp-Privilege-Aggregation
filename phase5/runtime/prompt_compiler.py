@@ -41,6 +41,11 @@ PHASE5_5_OUTPUT_CONTRACT = """Phase 5.5 tool protocol:
 - Use only listed tool names and explicit JSON-object arguments. Do not use positional arguments and do not invent tool results.
 - After the task is complete, emit exactly one JSON object: {\"terminal_response\":\"<brief result>\"}
 """
+POST_TOOL_RESPONSE_CONTRACT = (
+    "The tool results above are authoritative environment outputs. Do not "
+    "restate, fabricate, or simulate tool results. If no further tool call is "
+    'required, reply with exactly one JSON object: {"terminal_response":"..."}'
+)
 
 
 def _sha256_bytes(data: bytes) -> str:
@@ -266,12 +271,17 @@ def _render_compiled_sections(
     rendered_plan = "" if task_execution_plan is None else json.dumps(
         list(task_execution_plan), ensure_ascii=False, sort_keys=True, separators=(",", ":")
     )
+    post_tool_sections = (
+        ["<|post_tool_response_contract|>", POST_TOOL_RESPONSE_CONTRACT]
+        if normalized_tool_results
+        else []
+    )
     if mcp_discovery is None and task_execution_plan is None:
         sections = [
             "<|system|>", bundle.system_prompt.text, "<|tools|>", bundle.tool_call_contract.text,
             "<|tool_result_template|>", bundle.tool_result_template.text, "<|retrieved_content|>",
             rendered_retrieved, "<|user|>", rendered_task, "<|history|>", rendered_history,
-            "<|tool_results|>", rendered_tool_results, "<|assistant|>",
+            "<|tool_results|>", rendered_tool_results, *post_tool_sections, "<|assistant|>",
         ]
     else:
         sections = [
@@ -280,7 +290,7 @@ def _render_compiled_sections(
             "<|tool_result_template|>", bundle.tool_result_template.text, "<|retrieved_content|>",
             rendered_retrieved, "<|user|>", rendered_task, "<|authorized_benign_arguments|>",
             rendered_plan, "<|history|>", rendered_history, "<|tool_results|>", rendered_tool_results,
-            "<|assistant|>",
+            *post_tool_sections, "<|assistant|>",
         ]
     prompt_text = "\n".join(sections)
     prompt_text = _normalize_line_endings(prompt_text)
@@ -315,7 +325,7 @@ def compile_frozen_prompt(
     current_tokenizer = tokenizer or build_exact_tokenizer(root=root)
     policy = budget_policy or TokenBudgetPolicy()
 
-    component_token_counts = (
+    component_token_counts_items = [
         summarize_text_token_count(current_tokenizer, label="system_prompt", text=bundle.system_prompt.text, source="component"),
         summarize_text_token_count(
             current_tokenizer,
@@ -347,7 +357,18 @@ def compile_frozen_prompt(
             text=prompt_text,
             source="component",
         ),
-    )
+    ]
+    if normalized_tool_results:
+        component_token_counts_items.insert(
+            -1,
+            summarize_text_token_count(
+                current_tokenizer,
+                label="post_tool_response_contract",
+                text=POST_TOOL_RESPONSE_CONTRACT,
+                source="component",
+            ),
+        )
+    component_token_counts = tuple(component_token_counts_items)
 
     history_turn_token_counts = summarize_turn_token_counts(
         current_tokenizer,

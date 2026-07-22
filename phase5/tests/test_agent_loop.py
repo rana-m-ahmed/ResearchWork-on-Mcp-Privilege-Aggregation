@@ -192,6 +192,7 @@ def _run(
     clock: FakeClock | None = None,
     reset_error: Exception | None = None,
     advance_seconds: float = 0.0,
+    task_execution_plan: list[dict[str, object]] | None = None,
 ) -> tuple[AgentLoopExecutionRecord, FakeBackend, FakeResetExecutor, AttemptWorkspaceIsolation]:
     metadata, workspace = _workspace(tmp_path, suffix)
     fake_clock = clock or FakeClock()
@@ -211,6 +212,7 @@ def _run(
         root=Path.cwd(),
         clock=fake_clock,
         allow_grading=False,
+        task_execution_plan=task_execution_plan,
     )
     return record, backend, reset_executor, workspace
 
@@ -268,9 +270,12 @@ def test_frozen_state_machine_control_loader_applies_only_selected_model_timeout
     registry_path = tmp_path / "controls.json"
     registry_path.write_text(json.dumps(controls_data), encoding="utf-8")
 
-    assert load_frozen_state_machine_controls(
+    m2_controls = load_frozen_state_machine_controls(
         tmp_path, registry_path=registry_path, model_slot="M2"
-    ).per_model_turn_timeout_seconds == 120.0
+    )
+    assert m2_controls.per_model_turn_timeout_seconds == 120.0
+    assert m2_controls.reject_repeated_executed_tool_calls is True
+    assert m2_controls.terminate_after_expected_tool_plan is True
     for model_slot in ("M1", "M3", "M4"):
         assert load_frozen_state_machine_controls(
             tmp_path, registry_path=registry_path, model_slot=model_slot
@@ -324,6 +329,40 @@ def test_agent_loop_handles_one_and_multiple_tool_calls_in_parser_order(tmp_path
     assert [call.tool_name for call in record.parsed_outputs[0].tool_calls] == ["echo", "pair"]
     assert backend.calls[0]["history_snapshot"] == ()
     assert (workspace.workspace_root / "tool_transcript.jsonl").is_file()
+
+
+def test_m2_repeated_executed_tool_call_is_rejected_before_dispatch(tmp_path: Path) -> None:
+    record, _, _, workspace = _run(
+        tmp_path=tmp_path,
+        suffix="repeat-guard",
+        controls=_controls(reject_repeated_executed_tool_calls=True),
+        backend_outputs=[
+            json.dumps({"tool_calls": [{"tool_name": "echo", "arguments": {"value": "A"}}]}),
+            json.dumps({"tool_calls": [{"tool_name": "echo", "arguments": {"value": "A"}}]}),
+        ],
+    )
+
+    assert record.termination_reason == "repeated-call limit reached"
+    assert len(record.tool_results) == 1
+    assert len((workspace.workspace_root / "tool_transcript.jsonl").read_text(encoding="utf-8").splitlines()) == 1
+
+
+def test_m2_completed_expected_plan_terminates_before_follow_up_turn(tmp_path: Path) -> None:
+    record, backend, _, workspace = _run(
+        tmp_path=tmp_path,
+        suffix="plan-boundary",
+        controls=_controls(terminate_after_expected_tool_plan=True),
+        backend_outputs=[
+            json.dumps({"tool_calls": [{"tool_name": "echo", "arguments": {"value": "A"}}]}),
+        ],
+        task_execution_plan=[{"tool_name": "echo", "arguments": {"value": "A"}}],
+    )
+
+    assert record.status == "PASS"
+    assert record.termination_reason == "success"
+    assert len(backend.calls) == 1
+    assert len(record.tool_results) == 1
+    assert len((workspace.workspace_root / "tool_transcript.jsonl").read_text(encoding="utf-8").splitlines()) == 1
 
 
 def test_agent_loop_rejects_malformed_hallucinated_and_missing_parameter_calls(tmp_path: Path) -> None:
