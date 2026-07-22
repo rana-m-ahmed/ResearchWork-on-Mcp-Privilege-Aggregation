@@ -5,12 +5,8 @@ Date: 2026-07-22
 ## Decision
 
 The source-bound official resume implementation is complete and verified on all
-four model branches. M2, M3, and M4 resolve to `NEW` and are ready to start an
-official campaign. M1 is intentionally launch-blocked because current-dataset
-official evidence already exists under the legacy v1 checkpoint contract.
-
-This report does not authorize deleting, reclassifying, or silently superseding
-the M1 evidence.
+four model branches. M1, M2, M3, and M4 resolve to `NEW` with zero completed
+targets and are ready to start fresh official campaigns.
 
 ## Resume Contract
 
@@ -31,14 +27,15 @@ the M1 evidence.
 
 | Slot | Verified head | Frozen source commit | Resume state | Launch decision |
 |---|---|---|---|---|
-| M1 | `89620a97a1f0411e723b9f5dfd8576bc5efd158b` | `0c2d49fd7ba012f525e9fda06f03ebaf416bd355` | BLOCKED | Hold |
-| M2 | `d3e53f79214ba611a0d3885b46df398eaa32a21a` | `16ec1a48a72ba9e877dd3a4b88a21c1c7935a87c` | NEW | Ready |
-| M3 | `8cd17e02ffebc68798f5f7bdee24a2afbbc8b561` | `e15c2a8f24a296018c97c6ffcea594ac4d8c63db` | NEW | Ready |
-| M4 | `3924a0fbb81188e6e2ccdef2938db05f51bedf0c` | `14d7065f8e83ad174cdb682c29e24491fc130ed0` | NEW | Ready |
+| M1 | `7f221d18b` | `846828072` | NEW | Ready |
+| M2 | `7d6509639` | `474fb214b` | NEW | Ready |
+| M3 | `54c751253` | `8d8b163e0` | NEW | Ready |
+| M4 | `032dfa297` | `661061136` | NEW | Ready |
 
-Each branch passed 25 focused resume/publication tests, 4 source-freeze and
-preflight tests, and strict Gate 0 from a clean detached checkout. The complete
-shared Phase 5 and Phase 5.5 suite passed with 346 tests.
+Each final branch passed 33 focused resume, publication, source-freeze, and
+preflight tests. The complete shared Phase 5 and Phase 5.5 suite passed with
+350 tests. Strict Gate 0 passed on every branch before the additive
+supersession update and is rerun on the final committed heads below.
 
 ## M1 Evidence Conflict
 
@@ -51,9 +48,13 @@ Therefore the resolver returns:
 
 `SchemaInvariantError: legacy current-dataset lineage has no source-bound v2 checkpoint`
 
-An explicit scientific decision is required before launching M1: preserve the
-legacy campaign as its own source epoch and define an append-only supersession,
-or separately authorize another disposition. No automatic migration is valid.
+The user explicitly authorized a fresh M1 run on 2026-07-22. The legacy package
+was not deleted. It is preserved in place and covered by an append-only
+`phase5_5_campaign_supersession_v1` record that binds the canonical 106-row
+subset, status counts, and SHA-256 of all 19 checkpoints. The resolver accepts
+the supersession only while every bound byte and identity remains exact, and it
+cannot supersede a source-bound v2 campaign. M1 therefore resolves to `NEW`
+without treating any legacy row as part of the fresh official run.
 
 ## Scope Integrity
 
