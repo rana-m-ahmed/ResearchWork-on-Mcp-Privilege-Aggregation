@@ -98,6 +98,86 @@ def test_extracts_singular_tool_call_alias_as_ordered_embedded_json() -> None:
     assert result.candidate_count == 2
 
 
+@pytest.mark.parametrize(
+    ("payload", "expected_tool"),
+    [
+        ({"tool_call": "read_internal_notes", "arguments": {"note_id": "note-001"}}, "read_internal_notes"),
+        ({"tool_name": "write_outbox", "arguments": {"body": "ok", "recipient": "local-reviewer"}}, "write_outbox"),
+    ],
+)
+def test_explicit_scalar_aliases_are_losslessly_normalised(payload: dict[str, object], expected_tool: str) -> None:
+    raw = "reasoning\n" + json.dumps(payload)
+
+    result = extract_tool_call(raw)
+
+    assert result.status is ParserStatus.VALID_EXTRACTED_CALL
+    assert result.parsed_call is not None
+    assert result.parsed_call.tool_name == expected_tool
+    assert result.parsed_call.arguments == payload["arguments"]
+
+
+def test_explicit_invocations_wrapper_preserves_order() -> None:
+    raw = json.dumps(
+        {
+            "tool_call": "tool_call",
+            "invocations": [
+                {"tool_name": "get_local_weather", "arguments": {"location": "default"}},
+                {"tool_name": "read_internal_notes", "arguments": {"note_id": "note-001"}},
+            ],
+        }
+    )
+
+    result = extract_tool_call(raw)
+
+    assert result.status is ParserStatus.VALID_EXTRACTED_CALL
+    assert [call.tool_name for call in result.parsed_calls] == ["get_local_weather", "read_internal_notes"]
+
+
+def test_complete_think_block_is_non_actionable_and_offsets_and_raw_text_are_preserved() -> None:
+    final_call = 'tool_call("log_event", {"detail":"done","event_type":"benign_task"})'
+    raw = f"<think>I may emit {final_call}.</think>\n{final_call}"
+
+    result = extract_tool_call(raw)
+
+    assert result.status is ParserStatus.VALID_EXTRACTED_CALL
+    assert result.candidate_count == 1
+    assert result.raw_text == raw
+    assert raw[result.candidate_spans[0][0] : result.candidate_spans[0][1]] == final_call
+    assert result.metadata["ignored_reasoning_spans"] == [[0, raw.index("\n")]]
+
+
+def test_call_only_inside_complete_think_block_is_not_dispatched() -> None:
+    raw = '<think>tool_call(read_internal_notes, {"note_id":"note-001"})</think>\nNo action.'
+
+    result = extract_tool_call(raw)
+
+    assert result.status is ParserStatus.NO_INVOCATION_FOUND
+    assert not result.valid
+
+
+def test_implicit_leading_think_prefix_is_non_actionable() -> None:
+    thought_call = 'tool_call(read_internal_notes, {"note_id":"thought"})'
+    final_call = 'tool_call(read_internal_notes, {"note_id":"final"})'
+    raw = f"Reasoning says {thought_call}.\n</think>\n{final_call}"
+
+    result = extract_tool_call(raw)
+
+    assert result.status is ParserStatus.VALID_EXTRACTED_CALL
+    assert result.candidate_count == 1
+    assert result.parsed_call is not None
+    assert result.parsed_call.arguments == {"note_id": "final"}
+
+
+def test_unclosed_think_block_is_not_silently_discarded() -> None:
+    raw = '<think>tool_call(read_internal_notes, {"note_id":"note-001"})'
+
+    result = extract_tool_call(raw)
+
+    assert result.status is ParserStatus.INCOMPLETE_UNKNOWN
+    assert not result.valid
+    assert "ignored_reasoning_spans" not in result.metadata
+
+
 def test_embedded_terminal_response_block_does_not_ambiguous_real_tool_call_block() -> None:
     raw = """```json
 {
@@ -187,6 +267,8 @@ def test_schema_invalid_canonical_call_is_not_repaired() -> None:
             }
         ),
         json.dumps({"tool_call": {"tool_name": "alpha", "arguments": {}}}),
+        json.dumps({"tool_call": "tool_call", "arguments": {}}),
+        json.dumps({"tool_name": "alpha", "arguments": {}, "unexpected": True}),
         'tool_call("bad name", {"x": 1})',
         "tool_call('log_event', {\"detail\":\"done\"})",
     ],

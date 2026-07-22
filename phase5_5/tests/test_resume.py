@@ -143,6 +143,46 @@ def _write_supersession(root: Path) -> Path:
     return path
 
 
+def _write_source_bound_supersession(root: Path) -> Path:
+    store = AttemptLineageStore(root / "phase5_5/evidence/lineage.csv")
+    records = tuple(record for record in store.load_records() if record.run_id == RUN_ID)
+    checkpoint_root = root / "phase5_5/evidence/checkpoints" / RUN_ID
+    checkpoint_hashes = {
+        path.relative_to(root / "phase5_5/evidence").as_posix(): _sha256(path)
+        for path in sorted(checkpoint_root.glob("checkpoint-*.json"))
+    }
+    path = root / f"phase5_5/evidence/supersessions/{RUN_ID}.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "artifact": "phase5_5_campaign_supersession_v2",
+                "authorization_basis": "explicit_user_authorization_2026-07-23",
+                "batch_manifest_sha256": BATCH_SHA,
+                "checkpoint_count": len(checkpoint_hashes),
+                "checkpoint_sha256": checkpoint_hashes,
+                "dataset_version": DATASET,
+                "model_slot": "M1",
+                "reason": "canceled_partial_official_run_before_remediation",
+                "replacement_run_required": True,
+                "run_plan_sha256": PLAN_SHA,
+                "source_commit": SOURCE,
+                "status_counts": {"INVALID": len(records)},
+                "superseded_lineage_count": len(records),
+                "superseded_lineage_sha256": hashlib.sha256(
+                    render_lineage_csv(records).encode("utf-8")
+                ).hexdigest(),
+                "superseded_run_id": RUN_ID,
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    return path
+
+
 def _resolve(root: Path):
     return resolve_official_resume(
         root=root,
@@ -265,6 +305,66 @@ def test_source_bound_v2_campaign_cannot_be_superseded(tmp_path: Path) -> None:
     _write_checkpoint(tmp_path)
     _write_supersession(tmp_path)
     with pytest.raises(SchemaInvariantError, match="cannot supersede a source-bound v2"):
+        _resolve(tmp_path)
+
+
+def test_checkpoint_lineage_hash_accepts_git_crlf_materialization(tmp_path: Path) -> None:
+    store = AttemptLineageStore(tmp_path / "phase5_5/evidence/lineage.csv")
+    store.append(_record(tmp_path))
+    _write_checkpoint(tmp_path)
+    lineage = tmp_path / "phase5_5/evidence/lineage.csv"
+    lineage.write_bytes(lineage.read_bytes().replace(b"\n", b"\r\n"))
+
+    result = _resolve(tmp_path)
+
+    assert result.mode is ResumeMode.RESUME
+
+
+def test_exact_canceled_source_bound_campaign_can_be_superseded(tmp_path: Path) -> None:
+    store = AttemptLineageStore(tmp_path / "phase5_5/evidence/lineage.csv")
+    store.append(_record(tmp_path))
+    _write_checkpoint(tmp_path)
+    lineage_before = (tmp_path / "phase5_5/evidence/lineage.csv").read_bytes()
+    checkpoint_before = (
+        tmp_path / f"phase5_5/evidence/checkpoints/{RUN_ID}/checkpoint-000001.json"
+    ).read_bytes()
+    _write_source_bound_supersession(tmp_path)
+
+    result = _resolve(tmp_path)
+
+    assert result.mode is ResumeMode.NEW
+    assert (tmp_path / "phase5_5/evidence/lineage.csv").read_bytes() == lineage_before
+    assert (
+        tmp_path / f"phase5_5/evidence/checkpoints/{RUN_ID}/checkpoint-000001.json"
+    ).read_bytes() == checkpoint_before
+
+
+def test_source_bound_supersession_fails_if_checkpoint_changes(tmp_path: Path) -> None:
+    store = AttemptLineageStore(tmp_path / "phase5_5/evidence/lineage.csv")
+    store.append(_record(tmp_path))
+    checkpoint = _write_checkpoint(tmp_path)
+    _write_source_bound_supersession(tmp_path)
+    checkpoint.write_text(checkpoint.read_text(encoding="utf-8") + " ", encoding="utf-8")
+
+    with pytest.raises(SchemaInvariantError, match="checkpoint_sha256 mismatch"):
+        _resolve(tmp_path)
+
+
+def test_completed_source_bound_campaign_cannot_be_superseded(tmp_path: Path) -> None:
+    store = AttemptLineageStore(tmp_path / "phase5_5/evidence/lineage.csv")
+    store.append(_record(tmp_path))
+    _write_checkpoint(tmp_path)
+    _write_source_bound_supersession(tmp_path)
+    publication = tmp_path / "phase5_5/evidence/publications" / RUN_ID
+    publication.mkdir(parents=True)
+    (publication / "official_publication_manifest.json").write_text(
+        json.dumps({"run_id": RUN_ID}), encoding="utf-8"
+    )
+    (publication / "official_publication_receipt.json").write_text(
+        json.dumps({"run_id": RUN_ID}), encoding="utf-8"
+    )
+
+    with pytest.raises(SchemaInvariantError, match="cannot supersede a completed campaign"):
         _resolve(tmp_path)
 
 
