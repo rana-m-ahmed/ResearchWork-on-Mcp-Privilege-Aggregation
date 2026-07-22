@@ -29,6 +29,8 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
     assert "PHASE5_GITHUB_TOKEN" in source
     assert 'get_secret("GITHUB_TOKEN")' not in source
     assert "phase5_5/evidence" in source
+    assert 'archive.add(manifest_path, arcname=f"phase5_5/{manifest_path.name}")' in source
+    assert 'phase5_5/{{manifest_path.name}}' not in source
     assert '"--basetemp"' in source
     assert 'str(OUTPUT_ROOT / "pytest-temp")' in source
     assert '"--output"' in source
@@ -82,6 +84,24 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
     if branch_config.get("model_slot") == "M4":
         assert "M4_GENERATION_METRICS" in backend_source
         assert "generated_tokens_per_second" in backend_source
+        assert "generated_token_count = int(generated_ids.numel())" in backend_source
+        assert "device_metrics = {}" in backend_source
+        assert "torch.cuda.memory_allocated(device_index)" in backend_source
+        official_source = "\n".join(
+            "".join(cell.get("source", []))
+            for cell in notebook["cells"]
+            if cell.get("cell_type") == "code"
+        )
+        assert 'os.environ["PHASE5_M4_ENABLE_KV_CACHE"] = "1"' in official_source
+        pretrial_source = "\n".join(
+            "".join(cell.get("source", []))
+            for cell in pretrial_notebook["cells"]
+            if cell.get("cell_type") == "code"
+        )
+        assert 'os.environ["PHASE5_M4_ENABLE_KV_CACHE"] = "1"' in pretrial_source
+        assert "M4_SEMANTIC_RUNTIME_READY" in pretrial_source
+        assert 'model_code_path") != "transformers_native"' in pretrial_source
+        assert 'semantic_output_validated") is not True' in pretrial_source
 
 
 def test_pretrial_notebook_targets_v3_treatment_artifacts() -> None:
