@@ -95,6 +95,7 @@ class FrozenStateMachineControls:
     max_tool_calls_by_density: Mapping[str, int] = field(default_factory=dict)
     timeout_subclasses: tuple[str, ...] = ()
     forbidden_tool_names: tuple[str, ...] = ()
+    reject_repeated_executed_tool_calls: bool = False
 
     def __post_init__(self) -> None:
         if self.max_model_turns <= 0:
@@ -105,6 +106,8 @@ class FrozenStateMachineControls:
             raise SchemaInvariantError("max_identical_consecutive_tool_calls must be positive")
         if self.max_identical_total_tool_calls <= 0:
             raise SchemaInvariantError("max_identical_total_tool_calls must be positive")
+        if not isinstance(self.reject_repeated_executed_tool_calls, bool):
+            raise SchemaInvariantError("reject_repeated_executed_tool_calls must be boolean")
         if self.per_model_turn_timeout_seconds <= 0:
             raise SchemaInvariantError("per_model_turn_timeout_seconds must be positive")
         if self.per_tool_call_timeout_seconds <= 0:
@@ -291,12 +294,16 @@ def load_frozen_state_machine_controls(
             raise SchemaInvariantError("per_model_turn_timeout_seconds_by_slot must be a mapping")
         if model_slot is not None and model_slot in timeout_overrides:
             per_model_turn_timeout = timeout_overrides[model_slot]
+    reject_repeated_calls = controls_data.get("reject_repeated_executed_tool_calls", False)
+    if not isinstance(reject_repeated_calls, bool):
+        raise SchemaInvariantError("reject_repeated_executed_tool_calls must be boolean")
     
     return FrozenStateMachineControls(
         max_model_turns=_load_int(controls_data.get("max_model_turns"), "max_model_turns"),
         max_total_tool_calls=_load_int(controls_data.get("max_total_tool_calls"), "max_total_tool_calls"),
         max_identical_consecutive_tool_calls=_load_int(controls_data.get("max_identical_consecutive_tool_calls"), "max_identical_consecutive_tool_calls"),
         max_identical_total_tool_calls=_load_int(controls_data.get("max_identical_total_tool_calls"), "max_identical_total_tool_calls"),
+        reject_repeated_executed_tool_calls=reject_repeated_calls,
         per_model_turn_timeout_seconds=_load_float(per_model_turn_timeout, "per_model_turn_timeout_seconds"),
         per_tool_call_timeout_seconds=_load_float(controls_data.get("per_tool_call_timeout_seconds"), "per_tool_call_timeout_seconds"),
         whole_trial_timeout_seconds=_load_float(controls_data.get("whole_trial_timeout_seconds"), "whole_trial_timeout_seconds"),
@@ -816,6 +823,18 @@ def run_frozen_agent_loop(
                 (call.tool_name, json.dumps(call.arguments, sort_keys=True, separators=(",", ":")))
                 for call in parsed_output.tool_calls
             )
+            if controls.reject_repeated_executed_tool_calls:
+                executed_signatures = {
+                    (tool_name, json.dumps(record.arguments, sort_keys=True, separators=(",", ":")))
+                    for record in tool_records
+                    for tool_name in {record.logical_tool_name, record.exposed_tool_name}
+                    if tool_name
+                }
+                if any(signature in executed_signatures for signature in call_signature):
+                    termination_reason = "repeated-call limit reached"
+                    termination_state = "S14"
+                    notes.append("model re-emitted an already executed tool call")
+                    break
             for signature in call_signature:
                 identical_total_calls[signature] = identical_total_calls.get(signature, 0) + 1
                 if identical_total_calls[signature] > controls.max_identical_total_tool_calls:

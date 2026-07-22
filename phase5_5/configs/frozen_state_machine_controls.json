@@ -19,6 +19,7 @@
   },
   "max_total_tool_calls": 100,
   "multiple_tool_call_policy": "serial",
+  "reject_repeated_executed_tool_calls": true,
   "parser_version": "phase5.5-parser-v3-mcp-schema",
   "per_model_turn_timeout_seconds": 60.0,
   "per_model_turn_timeout_seconds_by_slot": {

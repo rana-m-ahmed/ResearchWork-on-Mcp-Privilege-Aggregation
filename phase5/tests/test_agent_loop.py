@@ -304,6 +304,22 @@ def test_agent_loop_handles_one_and_multiple_tool_calls_in_parser_order(tmp_path
     assert [item.exposed_tool_name for item in record.tool_results] == ["echo", "pair"]
     assert [call.tool_name for call in record.parsed_outputs[0].tool_calls] == ["echo", "pair"]
     assert backend.calls[0]["history_snapshot"] == ()
+
+
+def test_m2_repeated_executed_tool_call_is_rejected_before_dispatch(tmp_path: Path) -> None:
+    record, _, _, workspace = _run(
+        tmp_path=tmp_path,
+        suffix="repeat-guard",
+        controls=_controls(reject_repeated_executed_tool_calls=True),
+        backend_outputs=[
+            json.dumps({"tool_calls": [{"tool_name": "echo", "arguments": {"value": "A"}}]}),
+            json.dumps({"tool_calls": [{"tool_name": "echo", "arguments": {"value": "A"}}]}),
+        ],
+    )
+
+    assert record.termination_reason == "repeated-call limit reached"
+    assert len(record.tool_results) == 1
+    assert len((workspace.workspace_root / "tool_transcript.jsonl").read_text(encoding="utf-8").splitlines()) == 1
     assert (workspace.workspace_root / "tool_transcript.jsonl").is_file()
 
 
