@@ -15,7 +15,7 @@
     "phase5/manifests/batch_partition_manifest_v3_treatment.json": "cff3c4b412de69347fc455efc6a5df3a9410e064783f5143e4d48e71283aa1d9",
     "phase5/manifests/model_runtime_authority_v2.json": "48d4cfa54b664b1abc30a4e36f879a50601c17d46135622ae8cc7d91b2af8734",
     "phase5/runtime/agent_loop.py": "6ea48a361897a437dca13cf9d2445d785552b76be66a98e4425dd9b885c65cf6",
-    "phase5/runtime/engine.py": "3b46a2ecc34769ccd8dd2c7ef5b8ada9b05d1afaf83fec904fe8eb364b88a078",
+    "phase5/runtime/engine.py": "181811de003dc581df981e211e709acf6fcd1cf060768f54c6258a448601a42a",
     "phase5/runtime/mcp_server_launcher.py": "799e90cd6082c5494751dd98ed0bf686e079f10fd268c35c2f784a2305e5604f",
     "phase5/runtime/model_backend_adapter.py": "9bf2fb39f38592070263ef97ee0b1d2b1bce09d7926a3aa62c68b48b74f7fbc5",
     "phase5/runtime/official_execution.py": "70a86091608405f1cd21e009615e97854e5fd03184784f7fe4a296ac39525423",
@@ -36,7 +36,7 @@
     "phase5_5/kaggle/phase5_5_pretrial_runner.ipynb": "082bc58ebe6bcf907e48c1c27efe7927be23c6c405b844796411cd3fe28b7022",
     "phase5_5/kaggle/phase5_5_runner.ipynb": "dddedd47fabe03ca4a3d14ac2a5fdbd90c3c9e4dc20c2c60331f988751367ec0",
     "phase5_5/parser.py": "1e0e46405fd053711bfc3be93e2f3599f4c4642dff7babd872219e1cddd70a43",
-    "phase5_5/resume.py": "9cb696c72d4057f7f9441192a528c486a14c9fa7d2558f1e55881965dcdbaee6",
+    "phase5_5/resume.py": "e6b83d9d3d2782dd6566f98e99f83b3974e783a4610d2b29c280e0c729bf8c02",
     "phase5_5/runtime.py": "923274e72a61fb225ca219baba5881d9a543f4af730c2fcf9b74353aa1269222",
     "phase5_5/scripts/build_kaggle_runner.py": "fab17c67488b683541b9b524e1cbac4deeb8d711fe321e716378bd027ca6ffdb",
     "phase5_5/scripts/build_official_runner.py": "697a8cddfe486f80fde54c3f803a25ad19a8783fbdded881c4741d42998605ee",
@@ -60,5 +60,5 @@
   "publication_evidence": false,
   "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
   "scientific_inputs_regenerated": false,
-  "source_commit": "ff933c42df8eab9ad2806ac8a08ed6bbd717ba63"
+  "source_commit": "HEAD"
 }
