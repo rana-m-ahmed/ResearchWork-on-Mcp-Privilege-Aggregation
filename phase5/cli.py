@@ -111,6 +111,7 @@ def build_parser() -> argparse.ArgumentParser:
     run_campaign.add_argument("--checkpoint-publish", action="store_true")
     run_campaign.add_argument("--checkpoint-interval-trials", required=False, type=int, default=0)
     run_campaign.add_argument("--checkpoint-output-dir", required=False)
+    run_campaign.add_argument("--checkpoint-start-sequence", required=False, type=int, default=0)
     run_campaign.add_argument("--attempts-root", required=False)
     run_campaign.add_argument("--evidence-root", required=False)
     run_campaign.add_argument("--pretrial-trials", required=False, type=int)
@@ -396,11 +397,31 @@ def main(argv: Sequence[str] | None = None) -> int:
                         raise MissingFrozenSettingError("checkpoint publication requires a positive interval")
                     from phase5_5.checkpointing import GitEvidenceCheckpointPublisher
 
+                    checkpoint_plan = load_campaign_plan(
+                        model_slot=mslot,
+                        run_plan_path=Path(args.run_plan),
+                        batch_manifest_path=Path(args.batch_manifest),
+                        root=Path.cwd(),
+                    )
+                    freeze_path = Path("phase5_5/manifests/phase5_5_source_freeze_v3.json")
+                    freeze = json.loads(freeze_path.read_text(encoding="utf-8-sig"))
+                    source_commit = freeze.get("source_commit")
+                    if not isinstance(source_commit, str) or not source_commit:
+                        raise MissingFrozenSettingError("checkpoint publication requires a frozen source commit")
+                    checkpoint_start_sequence = int(getattr(args, "checkpoint_start_sequence", 0) or 0)
+                    if checkpoint_start_sequence < 0:
+                        raise MissingFrozenSettingError("checkpoint start sequence must be non-negative")
+
                     checkpoint_publisher = GitEvidenceCheckpointPublisher(
                         root=Path.cwd(),
                         model_slot=mslot.value,
                         run_id=run_id,
                         output_dir=Path(args.checkpoint_output_dir or "phase5_5_checkpoint_receipts"),
+                        dataset_version=args.dataset_version,
+                        source_commit=source_commit,
+                        batch_manifest_sha256=checkpoint_plan.batch_manifest_sha256,
+                        run_plan_sha256=checkpoint_plan.run_plan_sha256,
+                        sequence=checkpoint_start_sequence,
                     )
                     checkpoint_callback = checkpoint_publisher.on_trial_completed
                 

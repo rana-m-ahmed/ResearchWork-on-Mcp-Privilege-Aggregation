@@ -74,6 +74,7 @@ def main() -> int:
             "phase5_5/scripts/publish_official_evidence.py",
             "phase5_5/scripts/run_m4_runtime_canary.py",
             "phase5_5/checkpointing.py",
+            "phase5_5/resume.py",
             "phase5_5/authorization/official_execution_authorization.json",
             "phase5_5/branch_config.json",
             "phase5_5/configs/evidence_policy.json",
