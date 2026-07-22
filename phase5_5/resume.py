@@ -307,15 +307,37 @@ def resolve_official_resume(
         )
     if any(record.attempt_status not in _TERMINAL_STATUSES for record in relevant):
         raise SchemaInvariantError("resume lineage contains a non-terminal attempt status")
+    by_attempt_id = {record.attempt_id: record for record in records}
     by_target: dict[str, list[AttemptLineageRecord]] = {}
     for record in relevant:
         by_target.setdefault(record.target_trial_id, []).append(record)
     for target, histories in by_target.items():
         ordered = sorted(histories, key=lambda record: record.attempt_index)
-        if [record.attempt_index for record in ordered] != list(range(len(ordered))):
+        start_index = ordered[0].attempt_index
+        if [record.attempt_index for record in ordered] != list(range(start_index, start_index + len(ordered))):
             raise SchemaInvariantError(f"resume lineage has a non-contiguous attempt chain for {target}")
+        first = ordered[0]
+        if start_index == 0:
+            if first.parent_attempt_id is not None:
+                raise SchemaInvariantError(f"resume lineage has an invalid root parent for {target}")
+        else:
+            boundary_parent = by_attempt_id.get(first.parent_attempt_id or "")
+            if (
+                boundary_parent is None
+                or boundary_parent.target_trial_id != target
+                or boundary_parent.dataset_version == dataset_version
+                or boundary_parent.attempt_index != start_index - 1
+                or boundary_parent.attempt_status not in _TERMINAL_STATUSES
+            ):
+                raise SchemaInvariantError(f"resume lineage has an invalid dataset-epoch boundary for {target}")
         for index, record in enumerate(ordered):
-            expected_parent = None if index == 0 else ordered[index - 1].attempt_id
+            expected_parent = (
+                first.parent_attempt_id
+                if index == 0 and start_index > 0
+                else None
+                if index == 0
+                else ordered[index - 1].attempt_id
+            )
             if record.parent_attempt_id != expected_parent:
                 raise SchemaInvariantError(f"resume lineage has an invalid parent chain for {target}")
             if index < len(ordered) - 1 and record.attempt_status != "ORPHAN":
