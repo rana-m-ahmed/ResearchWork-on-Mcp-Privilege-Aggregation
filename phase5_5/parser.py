@@ -510,6 +510,7 @@ def extract_tool_call(
                     candidate_spans=spans,
                 )
         parsed_calls: list[ParsedToolCall] = []
+        terminal_responses: list[str] = []
         for start, end, payload in object_candidates:
             try:
                 parsed = parse_model_output(_normalise_explicit_alias_payload(payload), parser_version=parser_version)
@@ -525,10 +526,35 @@ def extract_tool_call(
                     candidate_spans=spans,
                 )
             if not parsed.tool_calls:
+                if isinstance(parsed.terminal_response, str):
+                    terminal_responses.append(parsed.terminal_response)
                 continue
             parsed_calls.extend(parsed.tool_calls)
             
         if not parsed_calls:
+            if len(terminal_responses) == 1:
+                return _result(
+                    raw_text,
+                    status=ParserStatus.NO_INVOCATION_FOUND,
+                    native_format="embedded_json",
+                    canonical=False,
+                    parser_version=parser_version,
+                    diagnostic="embedded JSON terminal response contains no tool invocation",
+                    count=0,
+                    candidate_spans=spans,
+                    metadata={"terminal_response": terminal_responses[0]},
+                )
+            if len(terminal_responses) > 1:
+                return _result(
+                    raw_text,
+                    status=ParserStatus.AMBIGUOUS_MULTIPLE_CANDIDATES,
+                    native_format="embedded_json",
+                    canonical=False,
+                    parser_version=parser_version,
+                    diagnostic="multiple embedded terminal response candidates detected",
+                    count=len(terminal_responses),
+                    candidate_spans=spans,
+                )
             return _result(
                 raw_text,
                 status=ParserStatus.NO_INVOCATION_FOUND,
