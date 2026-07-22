@@ -23,6 +23,15 @@ def sha256_text(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
+def validate_semantic_output(output: str, expected: str = "READY") -> None:
+    """Reject deterministic but unusable generation before M4 dispatch."""
+    if output.strip() != expected:
+        raise RuntimeError(
+            f"M4 semantic canary output was not exactly {expected!r}: "
+            f"{output[:80]!r}"
+        )
+
+
 def validate_cached_determinism(
     first_output: str,
     first_receipt: dict[str, object],
@@ -84,11 +93,15 @@ def main() -> int:
     os.environ["PHASE5_M4_ENABLE_KV_CACHE"] = "1"
     repeated_receipt = adapter.last_generation_receipt or {}
     validate_cached_determinism(cached_output, cached_receipt, repeated_output, repeated_receipt)
+    validate_semantic_output(cached_output)
+    validate_semantic_output(repeated_output)
 
     payload = {
         "artifact": "phase5_5_m4_runtime_canary_v1",
         "cached_output_sha256": sha256_text(cached_output),
         "cached_seconds": cached_elapsed,
+        "semantic_output": "READY",
+        "semantic_output_validated": True,
         "cached_token_count": len(cached_receipt.get("generated_token_ids", [])),
         "cached_cuda_device_metrics": cached_receipt.get("cuda_device_metrics", {}),
         "exact_model_identifier": identity.exact_model_identifier,

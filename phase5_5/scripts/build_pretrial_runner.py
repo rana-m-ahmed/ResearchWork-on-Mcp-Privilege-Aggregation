@@ -47,7 +47,35 @@ def main() -> None:
     set_source(hardware, hardware_source)
 
     campaign = find_cell(notebook, "official_campaign")
-    set_source(campaign, '''
+    m4_canary = """
+m4_canary = OUTPUT_ROOT / "M4_runtime_canary.json"
+m4_canary_command = [
+    sys.executable,
+    "phase5_5/scripts/run_m4_runtime_canary.py",
+    "--root",
+    str(REPO_ROOT),
+    "--output",
+    str(m4_canary),
+]
+m4_canary_process = subprocess.run(
+    m4_canary_command,
+    cwd=REPO_ROOT,
+    capture_output=True,
+    text=True,
+    check=False,
+)
+if m4_canary_process.returncode != 0:
+    raise RuntimeError(f"M4 semantic runtime canary failed before pretrial: {m4_canary_process.stderr}")
+m4_canary_report = json.loads(m4_canary.read_text(encoding="utf-8"))
+if (
+    m4_canary_report.get("pass") is not True
+    or m4_canary_report.get("kv_cache_enabled") is not True
+    or m4_canary_report.get("semantic_output_validated") is not True
+):
+    raise RuntimeError("M4 semantic runtime canary did not pass before pretrial")
+print(f"M4_SEMANTIC_RUNTIME_READY: {m4_canary}", flush=True)
+""" if slot == "M4" else ""
+    set_source(campaign, m4_canary + '''
 from kaggle_secrets import UserSecretsClient
 import selectors
 import time

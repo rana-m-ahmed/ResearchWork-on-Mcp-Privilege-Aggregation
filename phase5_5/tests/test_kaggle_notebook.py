@@ -97,6 +97,8 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
             if cell.get("cell_type") == "code"
         )
         assert 'os.environ["PHASE5_M4_ENABLE_KV_CACHE"] = "1"' in pretrial_source
+        assert "M4_SEMANTIC_RUNTIME_READY" in pretrial_source
+        assert 'semantic_output_validated") is not True' in pretrial_source
 
 
 def test_pretrial_notebook_targets_v3_treatment_artifacts() -> None:
