@@ -23,7 +23,7 @@
     "phase5/runtime/tool_dispatch.py": "b19f4da601c44dac4d3be6d46feef280195977312c62d3d2cd5fa82c82cde425",
     "phase5/validation/kaggle_run_plan_v3_treatment.json": "d596c1048488c12f27ff1d30b50e410ee67c9723e7b8dfde714c44e0c4f29c2d",
     "phase5_5/authorization/official_execution_authorization.json": "5a22898feb81bdc1069da65a0eeb72977c141ede3704e871e5528065dd8e87a8",
-    "phase5_5/branch_config.json": "55df6fedeeeefb427e00e6c1c8f9e3b79d9afeb569e7e81ce1922ab47b42348c",
+    "phase5_5/branch_config.json": "60f61b0c37529456442a8dafdf5ee53af642192bbd46e153bb88fc716486cbd4",
     "phase5_5/checkpointing.py": "01d9012e9d9828b6c008cfdbd13e710445c9181cd659f293a740dca70184f326",
     "phase5_5/configs/branch_mapping.json": "9a20036c666cc07c5ae7e7f9fc163e06fddc386a0b4ad2f689b819694c54754c",
     "phase5_5/configs/evidence_policy.json": "813cc890ea22ba4bf6f791efb175a32ae4602f96291474ffd4ba6efc954b72e8",
@@ -59,5 +59,5 @@
   "publication_evidence": false,
   "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
   "scientific_inputs_regenerated": false,
-  "source_commit": "d9d178f4d"
+  "source_commit": "8f54db174"
 }

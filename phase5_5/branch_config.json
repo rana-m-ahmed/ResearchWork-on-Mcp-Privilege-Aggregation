@@ -2,7 +2,7 @@
     "model_slot":  "M4",
     "exact_model_identifier":  "microsoft/Phi-3.5-mini-instruct",
     "evidence_branch":  "phase5_5-model-4",
-    "common_source_commit":  "d9d178f4d",
+    "common_source_commit":  "8f54db174",
     "evidence_root":  "phase5_5/evidence/",
     "official_dispatch":  false,
     "counts_for_publication":  false
