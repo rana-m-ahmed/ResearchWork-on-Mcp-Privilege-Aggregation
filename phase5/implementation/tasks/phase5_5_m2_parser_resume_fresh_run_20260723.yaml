@@ -1,0 +1,44 @@
+task_id: PHASE5_5-M2-PARSER-RESUME-FRESH-RUN-20260723
+title: Remediate M2 explicit-call extraction and prepare canceled campaigns for fresh execution
+scope:
+  - forensic replay of the canceled M2 official evidence
+  - lossless extraction of explicit DeepSeek-R1 final-answer calls
+  - fail-closed campaign supersession and dataset-epoch resumption
+  - propagation of shared source changes to all Phase 5.5 model branches
+frozen_inputs:
+  - phase4/
+  - phase4_5/
+  - phase5/grading/frozen_grader.py
+  - phase5_5/evidence/attempts/
+  - phase5_5/evidence/lineage.csv
+allowed_paths:
+  - phase5/runtime/official_execution.py
+  - phase5/tests/test_official_execution_adapter.py
+  - phase5_5/parser.py
+  - phase5_5/resume.py
+  - phase5_5/tests/test_parser.py
+  - phase5_5/tests/test_resume.py
+  - phase5_5/evidence/supersessions/
+  - phase5_5/scripts/
+  - phase5_5/kaggle/
+  - phase5_5/manifests/phase5_5_source_freeze_v3.json
+  - phase5_5_source_freeze.json
+  - phase5/implementation/tasks/phase5_5_m2_parser_resume_fresh_run_20260723.yaml
+  - phase5/implementation/reports/phase5_5/m2_parser_resume_fresh_run_20260723.md
+  - phase5/implementation/reports/phase5_5/m2_parser_resume_fresh_run_20260723.json
+forbidden_actions:
+  - modify_phase4_or_phase4_5
+  - rewrite_or_delete_historical_evidence
+  - regrade_canceled_attempts
+  - infer_missing_tool_names_or_arguments
+  - accept_simulated_tool_results
+  - collapse_duplicate_final_answer_calls
+acceptance:
+  - complete_think_spans_are_non_actionable_and_raw_output_is_unchanged
+  - explicit_scalar_tool_call_and_tool_name_envelopes_are_losslessly_normalized
+  - explicit_ordered_invocations_are_preserved
+  - malformed_conflicting_nested_and_simulated_outputs_fail_closed
+  - every_canceled_M2_output_has_a_recorded_counterfactual_parser_result
+  - canceled_source_bound_campaigns_are_hash_bound_and_superseded_without_deletion
+  - fresh_run_resolution_is_NEW_on_all_four_model_branches
+  - full_phase5_and_phase5_5_tests_pass

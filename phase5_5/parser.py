@@ -109,6 +109,9 @@ class ExtractionResult:
 
 _TOOL_CALL_START = re.compile(r"\btool_call\s*\(", re.IGNORECASE)
 _TOOL_NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_.-]*")
+_COMPLETE_THINK_BLOCK = re.compile(r"<think\b[^>]*>.*?</think\s*>", re.IGNORECASE | re.DOTALL)
+_THINK_OPEN = re.compile(r"<think\b[^>]*>", re.IGNORECASE)
+_THINK_CLOSE = re.compile(r"</think\s*>", re.IGNORECASE)
 _BUDGET_KEYS = {
     "max_new_tokens_reached",
     "token_limit_reached",
@@ -197,22 +200,74 @@ def _parse_text_tool_name(text: str, cursor: int) -> tuple[str, int] | None:
 def _normalise_explicit_alias_payload(payload: Mapping[str, Any]) -> Mapping[str, Any]:
     """Map explicit Phase 5.5 alias envelopes onto the frozen adapter shape.
 
-    This is intentionally narrow: singular ``tool_call`` is accepted only as a
-    complete ordered sequence of call mappings and only when the canonical
-    ``tool``/``tool_calls`` fields are absent.
+    This is intentionally narrow. Values are only renamed when the model has
+    supplied a complete tool name and arguments; no missing value is inferred.
     """
+
+    canonical_keys = {"tool", "tool_calls"}
+    if canonical_keys.intersection(payload) and {"tool_call", "tool_name", "invocations"}.intersection(payload):
+        raise ModelOutputFailure("explicit aliases cannot be mixed with canonical tool envelopes")
+
+    if "tool_name" in payload:
+        allowed = {"arguments", "metadata", "terminal_response", "tool_call_id", "tool_name"}
+        if set(payload) - allowed:
+            raise ModelOutputFailure("tool_name alias contains unsupported fields")
+        normalised = dict(payload)
+        normalised["tool"] = normalised.pop("tool_name")
+        return normalised
 
     if "tool_call" not in payload:
         return payload
-    if "tool" in payload or "tool_calls" in payload:
-        raise ModelOutputFailure("tool_call alias cannot be mixed with canonical tool or tool_calls envelopes")
     tool_call_value = payload.get("tool_call")
-    if not isinstance(tool_call_value, Sequence) or isinstance(tool_call_value, (str, bytes, bytearray)):
-        raise ModelOutputFailure("tool_call alias must be an ordered sequence of tool-call mappings")
-    normalised: dict[str, Any] = dict(payload)
+    if isinstance(tool_call_value, str):
+        if tool_call_value == "tool_call":
+            if "invocations" not in payload:
+                raise ModelOutputFailure("tool_call invocation marker requires an ordered invocations sequence")
+            allowed = {"invocations", "metadata", "terminal_response", "tool_call"}
+            if set(payload) - allowed:
+                raise ModelOutputFailure("invocations alias contains unsupported fields")
+            normalised = dict(payload)
+            normalised["tool_calls"] = normalised.pop("invocations")
+            del normalised["tool_call"]
+            return normalised
+        allowed = {"arguments", "metadata", "terminal_response", "tool_call", "tool_call_id"}
+        if set(payload) - allowed:
+            raise ModelOutputFailure("scalar tool_call alias contains unsupported fields")
+        normalised = dict(payload)
+        normalised["tool"] = normalised.pop("tool_call")
+        return normalised
+    if not isinstance(tool_call_value, Sequence) or isinstance(tool_call_value, (bytes, bytearray)):
+        raise ModelOutputFailure("tool_call alias must be a tool name or ordered sequence of call mappings")
+    if "invocations" in payload:
+        raise ModelOutputFailure("sequence tool_call alias cannot be mixed with invocations")
+    normalised = dict(payload)
     normalised["tool_calls"] = tool_call_value
     del normalised["tool_call"]
     return normalised
+
+
+def _mask_complete_think_blocks(text: str) -> tuple[str, tuple[tuple[int, int], ...]]:
+    """Mask explicit private-reasoning spans without changing source offsets.
+
+    DeepSeek chat decoding may omit the opening tag inserted by its template,
+    while preserving the closing tag. A leading unmatched closing tag therefore
+    closes the implicit reasoning prefix. An unmatched opening tag is not masked.
+    """
+
+    spans = [(match.start(), match.end()) for match in _COMPLETE_THINK_BLOCK.finditer(text)]
+    first_close = _THINK_CLOSE.search(text)
+    first_open = _THINK_OPEN.search(text)
+    if first_close is not None and (first_open is None or first_close.start() < first_open.start()):
+        spans.append((0, first_close.end()))
+    spans = sorted(set(spans))
+    if not spans:
+        return text, ()
+    characters = list(text)
+    for start, end in spans:
+        for index in range(start, end):
+            if characters[index] not in {"\r", "\n"}:
+                characters[index] = " "
+    return "".join(characters), tuple(spans)
 
 
 def _duplicate_call_keys(calls: tuple[ParsedToolCall, ...]) -> set[str]:
@@ -251,9 +306,20 @@ def _candidate_objects(text: str) -> list[tuple[int, int, Mapping[str, Any]]]:
         if not isinstance(payload, Mapping):
             continue
         keys = set(payload)
-        if keys.intersection({"tool", "tool_calls", "tool_call", "terminal_response"}):
+        has_explicit_tool_name_call = "tool_name" in keys and "arguments" in keys
+        if keys.intersection({"tool", "tool_calls", "tool_call", "terminal_response"}) or has_explicit_tool_name_call:
             candidates.append((index, end, payload))
-    return candidates
+    return [
+        candidate
+        for candidate in candidates
+        if not any(
+            outer_start <= candidate[0]
+            and candidate[1] <= outer_end
+            and (outer_start, outer_end) != (candidate[0], candidate[1])
+            and set(outer_payload).intersection({"tool", "tool_calls", "tool_call", "invocations"})
+            for outer_start, outer_end, outer_payload in candidates
+        )
+    ]
 
 
 def _text_candidates(text: str) -> tuple[list[tuple[int, int, str, Mapping[str, Any]]], bool]:
@@ -347,10 +413,26 @@ def extract_tool_call(
         )
 
     evidence = generation_evidence if isinstance(generation_evidence, GenerationEvidence) else GenerationEvidence.from_mapping(generation_evidence)
+    actionable_text, think_spans = _mask_complete_think_blocks(raw_text)
+    extraction_metadata: dict[str, Any] = {}
+    if think_spans:
+        extraction_metadata["ignored_reasoning_spans"] = [list(span) for span in think_spans]
     stripped = raw_text.strip()
     canonical_json = False
 
-    if "Tool Result [" in raw_text:
+    if _THINK_OPEN.search(actionable_text):
+        return _result(
+            raw_text,
+            status=ParserStatus.INCOMPLETE_UNKNOWN,
+            native_format="text",
+            canonical=False,
+            parser_version=parser_version,
+            diagnostic="candidate contains an unclosed private-reasoning span",
+            count=0,
+            metadata=extraction_metadata,
+        )
+
+    if "Tool Result [" in actionable_text:
         return _result(
             raw_text,
             status=ParserStatus.NO_INVOCATION_FOUND,
@@ -359,6 +441,7 @@ def extract_tool_call(
             parser_version=parser_version,
             diagnostic="candidate generated simulated environment responses",
             count=0,
+            metadata=extraction_metadata,
         )
 
     try:
@@ -370,7 +453,7 @@ def extract_tool_call(
 
     alias_only_json = (
         isinstance(payload, Mapping)
-        and "tool_call" in payload
+        and bool({"tool_call", "tool_name"}.intersection(payload))
         and "tool" not in payload
         and "tool_calls" not in payload
     )
@@ -432,8 +515,8 @@ def extract_tool_call(
             metadata={"terminal_response": parsed.terminal_response},
         )
 
-    text_calls, nested = _text_candidates(raw_text)
-    object_candidates = _candidate_objects(raw_text)
+    text_calls, nested = _text_candidates(actionable_text)
+    object_candidates = _candidate_objects(actionable_text)
     candidate_count = len(text_calls) + len(object_candidates)
     if nested:
         return _result(
@@ -448,7 +531,7 @@ def extract_tool_call(
     if text_calls and object_candidates:
         # If object_candidates ONLY contains terminal responses, ignore them to maintain M1/M2 compatibility where text calls take precedence
         has_tool_objects = any(
-            set(obj).intersection({"tool", "tool_calls", "tool_call"}) 
+            set(obj).intersection({"tool", "tool_calls", "tool_call", "tool_name"})
             for _, _, obj in object_candidates
         )
         if has_tool_objects:
@@ -492,6 +575,7 @@ def extract_tool_call(
             parsed_calls=calls,
             candidate_count=len(calls),
             candidate_spans=tuple((start, end) for start, end, _, _ in text_calls),
+            metadata=extraction_metadata,
         )
     if object_candidates:
         spans = tuple((start, end) for start, end, _ in object_candidates)
@@ -592,14 +676,15 @@ def extract_tool_call(
             parsed_calls=calls,
             candidate_count=len(calls),
             candidate_spans=spans,
+            metadata=extraction_metadata,
         )
-    if evidence.budget_exhausted and ("{" in raw_text or "tool_call" in raw_text):
+    if evidence.budget_exhausted and ("{" in actionable_text or "tool_call" in actionable_text):
         status = ParserStatus.MODEL_OUTPUT_TRUNCATED_BY_BUDGET
         diagnostic = "authoritative generation evidence reports budget or turn-limit exhaustion"
-    elif ("{" in raw_text and raw_text.count("{") > raw_text.count("}")) or _has_unclosed_candidate(raw_text):
+    elif ("{" in actionable_text and actionable_text.count("{") > actionable_text.count("}")) or _has_unclosed_candidate(actionable_text):
         status = ParserStatus.INCOMPLETE_UNKNOWN
         diagnostic = "candidate appears incomplete without authoritative truncation evidence"
-    elif "{" in raw_text or "}" in raw_text or "tool_call" in raw_text:
+    elif "{" in actionable_text or "}" in actionable_text or "tool_call" in actionable_text:
         status = ParserStatus.MALFORMED_JSON
         diagnostic = "candidate syntax was present but no valid invocation could be parsed"
     else:
@@ -613,4 +698,5 @@ def extract_tool_call(
         parser_version=parser_version,
         diagnostic=diagnostic,
         count=0,
+        metadata=extraction_metadata,
     )
