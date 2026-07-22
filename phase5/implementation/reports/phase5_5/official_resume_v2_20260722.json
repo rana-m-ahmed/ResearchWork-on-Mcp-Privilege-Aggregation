@@ -1,0 +1,48 @@
+{
+  "artifact": "phase5_5_official_resume_v2_implementation_report",
+  "date": "2026-07-22",
+  "implementation_status": "COMPLETE",
+  "full_suite": {
+    "passed": 346,
+    "failed": 0
+  },
+  "branch_checks": {
+    "focused_tests_passed_per_branch": 25,
+    "source_freeze_tests_passed_per_branch": 4,
+    "strict_gate0": "PASS"
+  },
+  "branches": {
+    "M1": {
+      "verified_head": "89620a97a1f0411e723b9f5dfd8576bc5efd158b",
+      "frozen_source_commit": "0c2d49fd7ba012f525e9fda06f03ebaf416bd355",
+      "resume_state": "BLOCKED",
+      "launch_ready": false,
+      "reason": "legacy current-dataset lineage has no source-bound v2 checkpoint",
+      "existing_lineage_rows": 106,
+      "official_accepted": 89,
+      "invalid": 17,
+      "legacy_v1_checkpoints": 19
+    },
+    "M2": {
+      "verified_head": "d3e53f79214ba611a0d3885b46df398eaa32a21a",
+      "frozen_source_commit": "16ec1a48a72ba9e877dd3a4b88a21c1c7935a87c",
+      "resume_state": "NEW",
+      "launch_ready": true
+    },
+    "M3": {
+      "verified_head": "8cd17e02ffebc68798f5f7bdee24a2afbbc8b561",
+      "frozen_source_commit": "e15c2a8f24a296018c97c6ffcea594ac4d8c63db",
+      "resume_state": "NEW",
+      "launch_ready": true
+    },
+    "M4": {
+      "verified_head": "3924a0fbb81188e6e2ccdef2938db05f51bedf0c",
+      "frozen_source_commit": "14d7065f8e83ad174cdb682c29e24491fc130ed0",
+      "resume_state": "NEW",
+      "launch_ready": true
+    }
+  },
+  "evidence_mutated": false,
+  "phase4_or_phase4_5_mutated": false,
+  "model_specific_runtime_behavior_changed": false
+}
