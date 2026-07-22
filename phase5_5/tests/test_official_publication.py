@@ -73,7 +73,7 @@ def test_official_publication_hashes_evidence_and_records_purge(tmp_path: Path) 
     assert completed.returncode == 0, completed.stderr
     receipt = json.loads(output.read_text(encoding="utf-8"))
     manifest = json.loads(
-        (root / "phase5_5/evidence/official_publication_manifest.json").read_text(encoding="utf-8")
+        (root / "phase5_5/evidence/publications/TEST-RUN/official_publication_manifest.json").read_text(encoding="utf-8")
     )
     assert receipt["credential_purged"] is True
     assert {item["path"] for item in manifest["files"]} == {

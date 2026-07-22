@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from pathlib import Path
 
 import pytest
@@ -90,6 +91,16 @@ class OfficialRealPipeline:
         attempt_root = self.root / attempt_id
         attempt_root.mkdir(parents=True, exist_ok=False)
         orphaned = self.orphan_first and attempt_index == 0
+        (attempt_root / "grader_evidence.json").write_text(
+            json.dumps(
+                {
+                    "analysis_eligible_trial": True,
+                    "official_trial": True,
+                }
+            )
+            + "\n",
+            encoding="utf-8",
+        )
         return ExecutedTrialResult(
             frozen_row_id=frozen_row_key(row),
             target_trial_id=str(row.trial_id),
@@ -242,8 +253,8 @@ def test_official_invalid_batch_is_not_labeled_synthetic(tmp_path: Path) -> None
 
 def test_resume_skips_already_completed_invalid_targets(tmp_path: Path) -> None:
     plan = load_campaign_plan(model_slot="M1")
-    store = AttemptLineageStore(tmp_path / "lineage.csv")
-    first_pipeline = OfficialRealPipeline(tmp_path / "first", invalid_reason="parser failure")
+    store = AttemptLineageStore(tmp_path / "evidence/lineage.csv")
+    first_pipeline = OfficialRealPipeline(tmp_path / "evidence/attempts", invalid_reason="parser failure")
     first_adapter = RepositoryBatchExecutionAdapter(
         queue_bundle=load_frozen_queue_bundle(),
         pipeline=first_pipeline,
@@ -267,6 +278,8 @@ def test_resume_skips_already_completed_invalid_targets(tmp_path: Path) -> None:
 
     assert resumed_pipeline.calls == []
     assert result.accepted_count == 0
+    assert result.finalized is True
+    assert result.analysis_eligible_count == plan.batches[0].row_count
     assert len(store.load_records()) == plan.batches[0].row_count
 
 
