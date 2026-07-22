@@ -10,10 +10,12 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from phase5.attempts import AttemptLineageRecord, AttemptLineageStore
+from phase5.attempts.lineage import render_lineage_csv
 from phase5.domain.errors import MissingFrozenSettingError, SchemaInvariantError
 
 
 CHECKPOINT_ARTIFACT = "phase5_5_trial_checkpoint_v2"
+SUPERSESSION_ARTIFACT = "phase5_5_campaign_supersession_v1"
 _TERMINAL_STATUSES = frozenset({"INVALID", "OFFICIAL_ACCEPTED", "ORPHAN"})
 
 
@@ -84,6 +86,61 @@ def _checkpoint_documents(checkpoint_root: Path) -> dict[str, list[tuple[Path, d
             raise SchemaInvariantError(f"official checkpoint has no run_id: {path.as_posix()}")
         documents.setdefault(run_id, []).append((path, payload))
     return documents
+
+
+def _records_sha256(records: tuple[AttemptLineageRecord, ...]) -> str:
+    return hashlib.sha256(render_lineage_csv(records).encode("utf-8")).hexdigest()
+
+
+def _validated_superseded_runs(
+    *,
+    evidence_root: Path,
+    relevant: tuple[AttemptLineageRecord, ...],
+    documents: Mapping[str, list[tuple[Path, dict[str, Any]]]],
+    model_slot: str,
+    dataset_version: str,
+) -> frozenset[str]:
+    supersession_root = evidence_root / "supersessions"
+    if not supersession_root.exists():
+        return frozenset()
+    records_by_run: dict[str, tuple[AttemptLineageRecord, ...]] = {}
+    for run_id in sorted({record.run_id for record in relevant}):
+        records_by_run[run_id] = tuple(record for record in relevant if record.run_id == run_id)
+    superseded: set[str] = set()
+    for path in sorted(supersession_root.glob("*.json")):
+        payload = _load_object(path, "campaign supersession")
+        label = f"campaign supersession {path.as_posix()}"
+        _require_equal(payload, "artifact", SUPERSESSION_ARTIFACT, label)
+        _require_equal(payload, "model_slot", model_slot, label)
+        _require_equal(payload, "dataset_version", dataset_version, label)
+        _require_equal(payload, "authorization_basis", "explicit_user_authorization_2026-07-22", label)
+        run_id = payload.get("superseded_run_id")
+        if not isinstance(run_id, str) or not run_id.startswith(_run_prefix(dataset_version, model_slot)):
+            raise SchemaInvariantError(f"{label} has an invalid superseded_run_id")
+        if run_id in superseded:
+            raise SchemaInvariantError(f"multiple campaign supersessions exist for {run_id}")
+        run_records = records_by_run.get(run_id)
+        if not run_records:
+            raise SchemaInvariantError(f"{label} does not identify existing current-dataset lineage")
+        _require_equal(payload, "superseded_lineage_count", len(run_records), label)
+        _require_equal(payload, "superseded_lineage_sha256", _records_sha256(run_records), label)
+        status_counts = {
+            status: sum(record.attempt_status == status for record in run_records)
+            for status in sorted({record.attempt_status for record in run_records})
+        }
+        _require_equal(payload, "status_counts", status_counts, label)
+
+        checkpoint_entries = documents.get(run_id, [])
+        if any(document.get("artifact") == CHECKPOINT_ARTIFACT for _, document in checkpoint_entries):
+            raise SchemaInvariantError(f"{label} cannot supersede a source-bound v2 campaign")
+        checkpoint_hashes = {
+            checkpoint_path.relative_to(evidence_root).as_posix(): _sha256(checkpoint_path)
+            for checkpoint_path, _ in checkpoint_entries
+        }
+        _require_equal(payload, "checkpoint_sha256", checkpoint_hashes, label)
+        _require_equal(payload, "checkpoint_count", len(checkpoint_hashes), label)
+        superseded.add(run_id)
+    return frozenset(superseded)
 
 
 def _validate_checkpoint_chain(
@@ -214,11 +271,20 @@ def resolve_official_resume(
     records = AttemptLineageStore(lineage_path).load_records()
     relevant = _current_records(records, dataset_version=dataset_version, model_slot=slot)
     documents = _checkpoint_documents(evidence_root / "checkpoints")
+    superseded_runs = _validated_superseded_runs(
+        evidence_root=evidence_root,
+        relevant=relevant,
+        documents=documents,
+        model_slot=slot,
+        dataset_version=dataset_version,
+    )
+    relevant = tuple(record for record in relevant if record.run_id not in superseded_runs)
     v2_runs = {
         run_id: entries
         for run_id, entries in documents.items()
         if any(payload.get("artifact") == CHECKPOINT_ARTIFACT for _, payload in entries)
         and run_id.startswith(_run_prefix(dataset_version, slot))
+        and run_id not in superseded_runs
     }
 
     if not relevant and not v2_runs:

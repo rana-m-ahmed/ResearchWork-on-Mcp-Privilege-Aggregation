@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from phase5.attempts import AttemptLineageRecord, AttemptLineageStore
+from phase5.attempts.lineage import render_lineage_csv
 from phase5.domain.errors import SchemaInvariantError
 from phase5_5.resume import ResumeMode, resolve_official_resume
 
@@ -96,6 +97,41 @@ def _write_checkpoint(root: Path, *, artifact: str = "phase5_5_trial_checkpoint_
     return path
 
 
+def _write_supersession(root: Path) -> Path:
+    store = AttemptLineageStore(root / "phase5_5/evidence/lineage.csv")
+    records = tuple(record for record in store.load_records() if record.run_id == RUN_ID)
+    checkpoint_root = root / "phase5_5/evidence/checkpoints" / RUN_ID
+    checkpoint_hashes = {
+        path.relative_to(root / "phase5_5/evidence").as_posix(): _sha256(path)
+        for path in sorted(checkpoint_root.glob("checkpoint-*.json"))
+    }
+    path = root / f"phase5_5/evidence/supersessions/{RUN_ID}.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "artifact": "phase5_5_campaign_supersession_v1",
+                "authorization_basis": "explicit_user_authorization_2026-07-22",
+                "checkpoint_count": len(checkpoint_hashes),
+                "checkpoint_sha256": checkpoint_hashes,
+                "dataset_version": DATASET,
+                "model_slot": "M1",
+                "status_counts": {"INVALID": len(records)},
+                "superseded_lineage_count": len(records),
+                "superseded_lineage_sha256": hashlib.sha256(
+                    render_lineage_csv(records).encode("utf-8")
+                ).hexdigest(),
+                "superseded_run_id": RUN_ID,
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    return path
+
+
 def _resolve(root: Path):
     return resolve_official_resume(
         root=root,
@@ -143,6 +179,58 @@ def test_legacy_current_dataset_evidence_cannot_be_mixed(tmp_path: Path) -> None
     store.append(_record(tmp_path))
     _write_checkpoint(tmp_path, artifact="phase5_5_trial_checkpoint_v1")
     with pytest.raises(SchemaInvariantError, match="legacy current-dataset"):
+        _resolve(tmp_path)
+
+
+def test_exact_legacy_campaign_can_be_superseded_without_deleting_evidence(tmp_path: Path) -> None:
+    store = AttemptLineageStore(tmp_path / "phase5_5/evidence/lineage.csv")
+    store.append(_record(tmp_path))
+    _write_checkpoint(tmp_path, artifact="phase5_5_trial_checkpoint_v1")
+    lineage_before = (tmp_path / "phase5_5/evidence/lineage.csv").read_bytes()
+    checkpoint_before = (
+        tmp_path / f"phase5_5/evidence/checkpoints/{RUN_ID}/checkpoint-000001.json"
+    ).read_bytes()
+    _write_supersession(tmp_path)
+
+    result = _resolve(tmp_path)
+
+    assert result.mode is ResumeMode.NEW
+    assert (tmp_path / "phase5_5/evidence/lineage.csv").read_bytes() == lineage_before
+    assert (
+        tmp_path / f"phase5_5/evidence/checkpoints/{RUN_ID}/checkpoint-000001.json"
+    ).read_bytes() == checkpoint_before
+
+
+def test_supersession_fails_if_legacy_lineage_changes(tmp_path: Path) -> None:
+    store = AttemptLineageStore(tmp_path / "phase5_5/evidence/lineage.csv")
+    store.append(_record(tmp_path))
+    _write_checkpoint(tmp_path, artifact="phase5_5_trial_checkpoint_v1")
+    _write_supersession(tmp_path)
+    lineage = tmp_path / "phase5_5/evidence/lineage.csv"
+    lineage.write_text(
+        lineage.read_text(encoding="utf-8").replace("model output", "changed"),
+        encoding="utf-8",
+    )
+    with pytest.raises(SchemaInvariantError, match="superseded_lineage_sha256 mismatch"):
+        _resolve(tmp_path)
+
+
+def test_supersession_fails_if_legacy_checkpoint_changes(tmp_path: Path) -> None:
+    store = AttemptLineageStore(tmp_path / "phase5_5/evidence/lineage.csv")
+    store.append(_record(tmp_path))
+    checkpoint = _write_checkpoint(tmp_path, artifact="phase5_5_trial_checkpoint_v1")
+    _write_supersession(tmp_path)
+    checkpoint.write_text(checkpoint.read_text(encoding="utf-8") + " ", encoding="utf-8")
+    with pytest.raises(SchemaInvariantError, match="checkpoint_sha256 mismatch"):
+        _resolve(tmp_path)
+
+
+def test_source_bound_v2_campaign_cannot_be_superseded(tmp_path: Path) -> None:
+    store = AttemptLineageStore(tmp_path / "phase5_5/evidence/lineage.csv")
+    store.append(_record(tmp_path))
+    _write_checkpoint(tmp_path)
+    _write_supersession(tmp_path)
+    with pytest.raises(SchemaInvariantError, match="cannot supersede a source-bound v2"):
         _resolve(tmp_path)
 
 
