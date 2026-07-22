@@ -18,7 +18,7 @@
     "phase5/runtime/engine.py": "3b46a2ecc34769ccd8dd2c7ef5b8ada9b05d1afaf83fec904fe8eb364b88a078",
     "phase5/runtime/mcp_server_launcher.py": "799e90cd6082c5494751dd98ed0bf686e079f10fd268c35c2f784a2305e5604f",
     "phase5/runtime/model_backend_adapter.py": "9bf2fb39f38592070263ef97ee0b1d2b1bce09d7926a3aa62c68b48b74f7fbc5",
-    "phase5/runtime/official_execution.py": "3b38904e5f1d9b2bf3ad4108a64d8747a212710273de52b3937d56a94f5df706",
+    "phase5/runtime/official_execution.py": "70a86091608405f1cd21e009615e97854e5fd03184784f7fe4a296ac39525423",
     "phase5/runtime/prompt_compiler.py": "514b34a7d0093dd4f9af4742b280244ec3760feea32b9e5384e1c242443cda84",
     "phase5/runtime/tool_dispatch.py": "b19f4da601c44dac4d3be6d46feef280195977312c62d3d2cd5fa82c82cde425",
     "phase5/validation/kaggle_run_plan_v3_treatment.json": "d596c1048488c12f27ff1d30b50e410ee67c9723e7b8dfde714c44e0c4f29c2d",
@@ -32,11 +32,11 @@
     "phase5_5/configs/schema_variant_manifest_v3.json": "13e0689aafa1b6dd73a715e4979e7ea5318123f35d5ab83da1e131889c1e6951",
     "phase5_5/configs/task_argument_bindings_v1.json": "5645e6cf46f513f970a71aab44727cdd7398d8753cec8f3a4f9a77638808f02e",
     "phase5_5/configs/treatment_and_analysis_contract_v3.json": "caaafdb8b2607cfa325d7e1aabc6703582dc9cadb030563d752d970bdee9ad87",
-    "phase5_5/kaggle/phase5_5_official_runner.ipynb": "189a317ad57dfeb41746b3354659a7e0e825dbe5e47eae550197fdfeb80fcd4b",
+    "phase5_5/kaggle/phase5_5_official_runner.ipynb": "6a5802af0c5f1a0fe6e23468138da88040a8e0bfa34153b72c330c79f667fbc2",
     "phase5_5/kaggle/phase5_5_pretrial_runner.ipynb": "082bc58ebe6bcf907e48c1c27efe7927be23c6c405b844796411cd3fe28b7022",
     "phase5_5/kaggle/phase5_5_runner.ipynb": "dddedd47fabe03ca4a3d14ac2a5fdbd90c3c9e4dc20c2c60331f988751367ec0",
-    "phase5_5/parser.py": "e9024f926c0fa955a5bda990b6c2cecf2087c576b3eb93316d9bb6c7c18cbd9b",
-    "phase5_5/resume.py": "5b018b97db7c4513e72ccad695a1788c176a289175193a2cc972b5f5ddb7b0c5",
+    "phase5_5/parser.py": "1e0e46405fd053711bfc3be93e2f3599f4c4642dff7babd872219e1cddd70a43",
+    "phase5_5/resume.py": "cdccec3467d40528b6550ddbd8a20b041b51b45ceb15243f21c20ea31193c6aa",
     "phase5_5/runtime.py": "923274e72a61fb225ca219baba5881d9a543f4af730c2fcf9b74353aa1269222",
     "phase5_5/scripts/build_kaggle_runner.py": "fab17c67488b683541b9b524e1cbac4deeb8d711fe321e716378bd027ca6ffdb",
     "phase5_5/scripts/build_official_runner.py": "697a8cddfe486f80fde54c3f803a25ad19a8783fbdded881c4741d42998605ee",
@@ -60,5 +60,5 @@
   "publication_evidence": false,
   "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
   "scientific_inputs_regenerated": false,
-  "source_commit": "8468280726f63618601505c5d4c415e32e065a3e"
+  "source_commit": "fe6209b4ead9a764bbdf2001d9f5397c65f21663"
 }
