@@ -192,6 +192,7 @@ def _run(
     clock: FakeClock | None = None,
     reset_error: Exception | None = None,
     advance_seconds: float = 0.0,
+    task_execution_plan: list[dict[str, object]] | None = None,
 ) -> tuple[AgentLoopExecutionRecord, FakeBackend, FakeResetExecutor, AttemptWorkspaceIsolation]:
     metadata, workspace = _workspace(tmp_path, suffix)
     fake_clock = clock or FakeClock()
@@ -211,6 +212,7 @@ def _run(
         root=Path.cwd(),
         clock=fake_clock,
         allow_grading=False,
+        task_execution_plan=task_execution_plan,
     )
     return record, backend, reset_executor, workspace
 
@@ -318,6 +320,24 @@ def test_m2_repeated_executed_tool_call_is_rejected_before_dispatch(tmp_path: Pa
     )
 
     assert record.termination_reason == "repeated-call limit reached"
+    assert len(record.tool_results) == 1
+    assert len((workspace.workspace_root / "tool_transcript.jsonl").read_text(encoding="utf-8").splitlines()) == 1
+
+
+def test_m2_completed_expected_plan_terminates_before_follow_up_turn(tmp_path: Path) -> None:
+    record, backend, _, workspace = _run(
+        tmp_path=tmp_path,
+        suffix="plan-boundary",
+        controls=_controls(terminate_after_expected_tool_plan=True),
+        backend_outputs=[
+            json.dumps({"tool_calls": [{"tool_name": "echo", "arguments": {"value": "A"}}]}),
+        ],
+        task_execution_plan=[{"tool_name": "echo", "arguments": {"value": "A"}}],
+    )
+
+    assert record.status == "PASS"
+    assert record.termination_reason == "success"
+    assert len(backend.calls) == 1
     assert len(record.tool_results) == 1
     assert len((workspace.workspace_root / "tool_transcript.jsonl").read_text(encoding="utf-8").splitlines()) == 1
     assert (workspace.workspace_root / "tool_transcript.jsonl").is_file()
