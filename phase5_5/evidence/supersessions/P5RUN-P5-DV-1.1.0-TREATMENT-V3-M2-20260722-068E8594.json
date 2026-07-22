@@ -4,11 +4,11 @@
   "batch_manifest_sha256": "cff3c4b412de69347fc455efc6a5df3a9410e064783f5143e4d48e71283aa1d9",
   "checkpoint_count": 5,
   "checkpoint_sha256": {
-    "checkpoints/P5RUN-P5-DV-1.1.0-TREATMENT-V3-M2-20260722-068E8594/checkpoint-000001.json": "40d5f1e989e6eaacbdcba618cb3238946706346235a44d82dc05d895e968ecfc",
-    "checkpoints/P5RUN-P5-DV-1.1.0-TREATMENT-V3-M2-20260722-068E8594/checkpoint-000002.json": "32148ecec108f14cfd76582bbb59adb5d30d9f013d0cc5c1432aa3ef02c86948",
-    "checkpoints/P5RUN-P5-DV-1.1.0-TREATMENT-V3-M2-20260722-068E8594/checkpoint-000003.json": "cfe5c35e2e880343c9e3b1f66a3bcbd9d50596bbcf69128bd20f4be9532dd918",
-    "checkpoints/P5RUN-P5-DV-1.1.0-TREATMENT-V3-M2-20260722-068E8594/checkpoint-000004.json": "f543c2bc2bf635308b2e5dfeea59a9b87df078ca346e8cbf19b6cb09aeeeb3f0",
-    "checkpoints/P5RUN-P5-DV-1.1.0-TREATMENT-V3-M2-20260722-068E8594/checkpoint-000005.json": "c6b55a1679bca39adfb87b469aabbe7bff14c4b31d0b895ad608c4b03a65a513"
+    "checkpoints/P5RUN-P5-DV-1.1.0-TREATMENT-V3-M2-20260722-068E8594/checkpoint-000001.json": "c6d7c4650fb3f254507bc8ae9b1ebeb11691ef275f718ccdfbdd57e5aadd4605",
+    "checkpoints/P5RUN-P5-DV-1.1.0-TREATMENT-V3-M2-20260722-068E8594/checkpoint-000002.json": "476baeda224c4f5095c0a64cb41be0ef538cb1624808cd0b133f7e29bb62ce0c",
+    "checkpoints/P5RUN-P5-DV-1.1.0-TREATMENT-V3-M2-20260722-068E8594/checkpoint-000003.json": "a639edaad7ffb06d0e2503e06e15287bb7c50b9304efa1c63fade26ef382bf0e",
+    "checkpoints/P5RUN-P5-DV-1.1.0-TREATMENT-V3-M2-20260722-068E8594/checkpoint-000004.json": "087ee0839f8f69ad6374db79da2315d45dd546044ed6d745fb44047ad2319732",
+    "checkpoints/P5RUN-P5-DV-1.1.0-TREATMENT-V3-M2-20260722-068E8594/checkpoint-000005.json": "05997c360a2235fe320005bc49ef3979f59d2c9b389dcb1a4124e363a39e79c3"
   },
   "dataset_version": "P5-DV-1.1.0-TREATMENT-V3",
   "model_slot": "M2",
