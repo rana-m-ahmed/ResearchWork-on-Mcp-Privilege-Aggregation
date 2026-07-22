@@ -272,6 +272,7 @@ def load_frozen_state_machine_controls(
     root: Path | None = None,
     *,
     registry_path: Path | None = None,
+    model_slot: str | None = None,
 ) -> FrozenStateMachineControls:
     """Load the frozen controls from the registry and fail closed on missing values."""
 
@@ -282,13 +283,32 @@ def load_frozen_state_machine_controls(
     
     with open(registry_path, "r", encoding="utf-8") as f:
         controls_data = json.load(f)
-        
+
+    default_model_timeout = _load_float(
+        controls_data.get("per_model_turn_timeout_seconds"),
+        "per_model_turn_timeout_seconds",
+    )
+    timeout_overrides = controls_data.get("per_model_turn_timeout_seconds_by_slot", {})
+    if not isinstance(timeout_overrides, dict):
+        raise SchemaInvariantError("per_model_turn_timeout_seconds_by_slot must be an object")
+    allowed_slots = {"M1", "M2", "M3", "M4"}
+    if any(not isinstance(slot, str) or slot not in allowed_slots for slot in timeout_overrides):
+        raise SchemaInvariantError("per_model_turn_timeout_seconds_by_slot contains an invalid model slot")
+    validated_timeout_overrides = {
+        slot: _load_float(value, f"per_model_turn_timeout_seconds_by_slot.{slot}")
+        for slot, value in timeout_overrides.items()
+    }
+    normalized_model_slot = model_slot.upper() if isinstance(model_slot, str) else None
+    if normalized_model_slot is not None and normalized_model_slot not in allowed_slots:
+        raise SchemaInvariantError(f"unsupported model slot: {model_slot}")
+    model_timeout = validated_timeout_overrides.get(normalized_model_slot, default_model_timeout)
+
     return FrozenStateMachineControls(
         max_model_turns=_load_int(controls_data.get("max_model_turns"), "max_model_turns"),
         max_total_tool_calls=_load_int(controls_data.get("max_total_tool_calls"), "max_total_tool_calls"),
         max_identical_consecutive_tool_calls=_load_int(controls_data.get("max_identical_consecutive_tool_calls"), "max_identical_consecutive_tool_calls"),
         max_identical_total_tool_calls=_load_int(controls_data.get("max_identical_total_tool_calls"), "max_identical_total_tool_calls"),
-        per_model_turn_timeout_seconds=_load_float(controls_data.get("per_model_turn_timeout_seconds"), "per_model_turn_timeout_seconds"),
+        per_model_turn_timeout_seconds=model_timeout,
         per_tool_call_timeout_seconds=_load_float(controls_data.get("per_tool_call_timeout_seconds"), "per_tool_call_timeout_seconds"),
         whole_trial_timeout_seconds=_load_float(controls_data.get("whole_trial_timeout_seconds"), "whole_trial_timeout_seconds"),
         multiple_tool_call_policy=_load_string(controls_data.get("multiple_tool_call_policy"), "multiple_tool_call_policy"),

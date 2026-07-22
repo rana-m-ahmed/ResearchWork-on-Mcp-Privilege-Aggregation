@@ -29,6 +29,8 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
     assert "PHASE5_GITHUB_TOKEN" in source
     assert 'get_secret("GITHUB_TOKEN")' not in source
     assert "phase5_5/evidence" in source
+    assert 'archive.add(manifest_path, arcname=f"phase5_5/{manifest_path.name}")' in source
+    assert 'phase5_5/{{manifest_path.name}}' not in source
     assert '"--basetemp"' in source
     assert 'str(OUTPUT_ROOT / "pytest-temp")' in source
     assert '"--output"' in source

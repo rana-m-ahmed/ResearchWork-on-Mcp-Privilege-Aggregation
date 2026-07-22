@@ -1,0 +1,45 @@
+task_id: PHASE5_5-FINAL-OFFICIAL-READINESS
+title: Phase 5.5 four-model official execution readiness
+scope:
+  - common Phase 5.5 runtime, parser, evidence, and notebook infrastructure
+  - M2 bounded model-turn timeout override
+  - M4 conditional Phi runtime and semantic canary
+  - four-branch source-freeze and launch-readiness verification
+frozen_inputs:
+  - phase4/
+  - phase4_5/
+  - phase5/grading/frozen_grader.py
+  - phase5/manifests/model_runtime_authority_v2.json
+  - phase5_5/configs/treatment_and_analysis_contract_v3.json
+allowed_paths:
+  - phase5/runtime/
+  - phase5/tests/
+  - phase5_5/parser.py
+  - phase5_5/configs/frozen_state_machine_controls.json
+  - phase5_5/scripts/
+  - phase5_5/tests/
+  - phase5_5/kaggle/
+  - phase5_5/manifests/phase5_5_source_freeze_v3.json
+  - phase5/implementation/tasks/phase5_5_final_official_readiness.yaml
+  - phase5/implementation/reports/phase5_5/final_official_readiness_20260722.md
+  - phase5/implementation/reports/phase5_5/final_official_readiness_20260722.json
+forbidden_actions:
+  - modify_phase4_or_phase4_5
+  - modify_historical_evidence
+  - change_frozen_grader_labels
+  - infer_or_repair_model_tool_calls
+  - manufacture_privilege_aggregation
+  - dispatch_official_trials_outside_authorized_kaggle_execution
+acceptance:
+  - common_infrastructure_is_identical_across_all_model_branches
+  - embedded_terminal_text_is_not_promoted_to_success
+  - ordered_multi_call_outputs_are_preserved
+  - parser_schema_and_forbidden_tool_validation_apply_to_every_model
+  - M2_timeout_override_does_not_change_other_models
+  - M2_early_success_and_duplicate_call_shortcuts_are_absent
+  - M4_phi_runtime_handling_is_model_conditional
+  - final_attempt_manifest_is_written_once_with_final_status
+  - official_notebooks_compile_and_preserve_branch_binding
+  - source_freezes_validate
+  - phase5_and_phase5_5_tests_pass_on_every_branch
+  - no_secret_or_frozen_artifact_changes

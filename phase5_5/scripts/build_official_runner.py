@@ -331,7 +331,7 @@ manifest_path.write_text(json.dumps(evidence_manifest, indent=2, sort_keys=True)
 archive_path = OUTPUT_ROOT / f"{MODEL_SLOT}_evidence.tar.gz"
 with tarfile.open(archive_path, "w:gz") as archive:
     archive.add(evidence_root, arcname="phase5_5/evidence")
-    archive.add(manifest_path, arcname=f"phase5_5/{{manifest_path.name}}")
+    archive.add(manifest_path, arcname=f"phase5_5/{manifest_path.name}")
 
 if not os.environ.get("PHASE5_GITHUB_TOKEN"):
     raise RuntimeError("official publication credential was not retained from authorization preflight")
