@@ -39,10 +39,16 @@
   "source_freeze_source_commit": "9a25aef29fa22a058891ac15e72f03652c0170d2",
   "validated_baseline": "9efe58b69",
   "verification": {
+    "local_preflight_expected_failures": [
+      "cuda-unavailable",
+      "official-dispatch-disabled"
+    ],
     "m4_focused_tests": 58,
     "notebook_tests": 2,
     "phase4_or_phase4_5_changes": 0,
-    "secret_pattern_matches": 0
+    "secret_pattern_matches": 0,
+    "source_freeze_bound_file_failures": 0,
+    "strict_gate0": "PASS"
   },
   "verdict": "GREEN_FOR_AUTHORIZED_KAGGLE_OFFICIAL_EXECUTION"
 }

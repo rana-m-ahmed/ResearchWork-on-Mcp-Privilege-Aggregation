@@ -48,7 +48,9 @@ The only remaining differences from the validated M4 baseline in the common loop
 - Parser, M4 runtime-canary, backend, and evidence-lifecycle suite: `58 passed`
 - Notebook compilation tests: `2 passed`
 - Full `phase5/tests` and `phase5_5/tests`: passed after restoration
-- Strict Gate 0 and source-freeze verification: to be run from the final report commit before launch
+- Strict Gate 0: `PASS`
+- Source-freeze bound-file failures: `0`
+- Local frozen preflight failures: only `cuda-unavailable` and `official-dispatch-disabled`, as expected outside Kaggle
 - Phase 4 and Phase 4.5 changes: `0`
 - Secret-pattern matches: `0`
 
