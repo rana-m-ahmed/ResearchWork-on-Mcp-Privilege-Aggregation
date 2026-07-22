@@ -14,7 +14,7 @@
     "phase5/manifests/batch_partition_manifest_v3.json": "e7bf12dc9a2706f0ed23f29aaedfdfd1e3db34d3db1f34525d649bd46b7d3e5c",
     "phase5/manifests/batch_partition_manifest_v3_treatment.json": "cff3c4b412de69347fc455efc6a5df3a9410e064783f5143e4d48e71283aa1d9",
     "phase5/manifests/model_runtime_authority_v2.json": "48d4cfa54b664b1abc30a4e36f879a50601c17d46135622ae8cc7d91b2af8734",
-    "phase5/runtime/agent_loop.py": "c016b82936a981a4a10c0d98d15427bcf94060b03994f9210536b897be7a5c25",
+    "phase5/runtime/agent_loop.py": "70941434d868b84cde164a0ee98e00bdb860fc4ca2ad5ad0ba1a8196bff02378",
     "phase5/runtime/engine.py": "d9b3df8f1364257e236bb7c890ca98585183ffd5d1136c77408aded15424c6c7",
     "phase5/runtime/mcp_server_launcher.py": "799e90cd6082c5494751dd98ed0bf686e079f10fd268c35c2f784a2305e5604f",
     "phase5/runtime/model_backend_adapter.py": "577a410313c4635d9ee90ab6a12fdb403b101119a2c01851fc5efd3ddbaaf9e9",
@@ -23,11 +23,11 @@
     "phase5/runtime/tool_dispatch.py": "b19f4da601c44dac4d3be6d46feef280195977312c62d3d2cd5fa82c82cde425",
     "phase5/validation/kaggle_run_plan_v3_treatment.json": "d596c1048488c12f27ff1d30b50e410ee67c9723e7b8dfde714c44e0c4f29c2d",
     "phase5_5/authorization/official_execution_authorization.json": "4c06a4b961e4ad5758b6b7e7359af27ad9e3eb3e23aaaa7ae04ac6503e87c4b0",
-    "phase5_5/branch_config.json": "d26bde65b5053f307470592c5c61fe53ce7475cfccbc9c345c255c066fdd5fea",
+    "phase5_5/branch_config.json": "ce29409e06bc3d71725e8636d931b531432d52228d1a8ca69b8fb7422b725842",
     "phase5_5/checkpointing.py": "01d9012e9d9828b6c008cfdbd13e710445c9181cd659f293a740dca70184f326",
     "phase5_5/configs/branch_mapping.json": "9a20036c666cc07c5ae7e7f9fc163e06fddc386a0b4ad2f689b819694c54754c",
     "phase5_5/configs/evidence_policy.json": "813cc890ea22ba4bf6f791efb175a32ae4602f96291474ffd4ba6efc954b72e8",
-    "phase5_5/configs/frozen_state_machine_controls.json": "a2c158c3a97fd44725266bb2be02ca55c16560e9250a9d157f102b769233cc5c",
+    "phase5_5/configs/frozen_state_machine_controls.json": "9ac9bb1d51dd7b21c8c06a9348a7c786f8a13b629fbe966fab2dcbeb7d09a5e7",
     "phase5_5/configs/model_roster.json": "913ad2c8f120b4252b4a46ce596f03d2821d26df5ed4476871578dd6a4927412",
     "phase5_5/configs/schema_variant_manifest_v3.json": "13e0689aafa1b6dd73a715e4979e7ea5318123f35d5ab83da1e131889c1e6951",
     "phase5_5/configs/task_argument_bindings_v1.json": "5645e6cf46f513f970a71aab44727cdd7398d8753cec8f3a4f9a77638808f02e",
@@ -58,5 +58,5 @@
   "publication_evidence": false,
   "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
   "scientific_inputs_regenerated": false,
-  "source_commit": "aaa49b89b9f4954d2a769c1b4e82a139eda13e7d"
+  "source_commit": "6b43efce24da2dc9d763535f7b973cabbe30a6a5"
 }
