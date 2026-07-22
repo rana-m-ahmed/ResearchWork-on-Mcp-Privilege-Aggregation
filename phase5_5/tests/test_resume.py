@@ -301,6 +301,20 @@ def test_supersession_fails_if_legacy_checkpoint_changes(tmp_path: Path) -> None
         _resolve(tmp_path)
 
 
+def test_legacy_supersession_accepts_opposite_checkpoint_newline_materialization(tmp_path: Path) -> None:
+    store = AttemptLineageStore(tmp_path / "phase5_5/evidence/lineage.csv")
+    store.append(_record(tmp_path))
+    checkpoint = _write_checkpoint(tmp_path, artifact="phase5_5_trial_checkpoint_v1")
+    _write_supersession(tmp_path)
+    raw = checkpoint.read_bytes()
+    canonical_lf = raw.replace(b"\r\n", b"\n")
+    checkpoint.write_bytes(canonical_lf if raw != canonical_lf else raw.replace(b"\n", b"\r\n"))
+
+    result = _resolve(tmp_path)
+
+    assert result.mode is ResumeMode.NEW
+
+
 def test_source_bound_v2_campaign_cannot_be_superseded(tmp_path: Path) -> None:
     store = AttemptLineageStore(tmp_path / "phase5_5/evidence/lineage.csv")
     store.append(_record(tmp_path))

@@ -44,6 +44,15 @@ def _portable_text_sha256(path: Path) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def _text_sha256_variants(path: Path) -> frozenset[str]:
+    """Return hashes for the same text under LF and CRLF materialization."""
+
+    raw = path.read_bytes()
+    lf = raw.replace(b"\r\n", b"\n")
+    crlf = lf.replace(b"\n", b"\r\n")
+    return frozenset(hashlib.sha256(data).hexdigest() for data in (raw, lf, crlf))
+
+
 def _require_lineage_sha256(payload: Mapping[str, Any], path: Path, label: str) -> None:
     """Validate a lineage digest across Git's Windows newline materialization."""
 
@@ -187,13 +196,21 @@ def _validated_superseded_runs(
             _require_equal(latest, "last_target_trial_id", run_records[-1].target_trial_id, label)
             if _is_complete(evidence_root, run_id):
                 raise SchemaInvariantError(f"{label} cannot supersede a completed campaign")
-        checkpoint_hash = _portable_text_sha256 if artifact == SOURCE_BOUND_SUPERSESSION_ARTIFACT else _sha256
         checkpoint_hashes = {
-            checkpoint_path.relative_to(evidence_root).as_posix(): checkpoint_hash(checkpoint_path)
+            checkpoint_path.relative_to(evidence_root).as_posix(): _portable_text_sha256(checkpoint_path)
             for checkpoint_path, _ in checkpoint_entries
         }
-        _require_equal(payload, "checkpoint_sha256", checkpoint_hashes, label)
-        _require_equal(payload, "checkpoint_count", len(checkpoint_hashes), label)
+        expected_hashes = payload.get("checkpoint_sha256")
+        if artifact == LEGACY_SUPERSESSION_ARTIFACT:
+            if not isinstance(expected_hashes, Mapping) or set(expected_hashes) != set(checkpoint_hashes):
+                raise SchemaInvariantError(f"{label} checkpoint_sha256 mismatch")
+            for checkpoint_path, _ in checkpoint_entries:
+                relative = checkpoint_path.relative_to(evidence_root).as_posix()
+                if expected_hashes[relative] not in _text_sha256_variants(checkpoint_path):
+                    raise SchemaInvariantError(f"{label} checkpoint_sha256 mismatch")
+        else:
+            _require_equal(payload, "checkpoint_sha256", checkpoint_hashes, label)
+        _require_equal(payload, "checkpoint_count", len(checkpoint_entries), label)
         superseded.add(run_id)
     return frozenset(superseded)
 
