@@ -63,4 +63,5 @@ which is a scientific model outcome rather than an infrastructure failure.
 
 The earlier `482837828` / `b3682c3e6` binding is superseded because the first
 manifest remediation still left a provisional S2 write in the real agent
-loop. The corrected lifecycle is pending a fresh source-freeze binding.
+loop. The corrected lifecycle is frozen at source commit `22e5bff79` and bound
+to the M4 branch by commit `5ebf83c33`.
