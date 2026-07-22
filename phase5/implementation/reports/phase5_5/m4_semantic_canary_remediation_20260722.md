@@ -22,6 +22,11 @@ and stops with an explicit runtime error. The official M4 runner already uses
 the same canary script, so the strengthened semantic condition propagates to
 official authorization as well.
 
+When the cached path fails the semantic check, the canary releases that model
+instance and validates a fresh uncached instance. If the uncached path passes,
+the receipt records `runtime_mode=uncached` and the runner propagates that mode
+to the campaign subprocess. If both paths fail, execution remains blocked.
+
 M1-M3 notebook generation and runtime behavior are unchanged.
 
 ## Verification
@@ -29,8 +34,8 @@ M1-M3 notebook generation and runtime behavior are unchanged.
 - Semantic canary tests reject empty output and the observed `EPEPEPEPE` and
   `laitlaitlait` degeneracy patterns.
 - Full Phase 5 and Phase 5.5 test suite: `323 passed`.
-- The generated M4 pretrial notebook contains the semantic gate and records
-  `semantic_output_validated=true` in the canary receipt.
+- The generated M4 pretrial and official notebooks contain the semantic gate
+  and propagate the canary-selected cache mode.
 
 ## Release Decision
 

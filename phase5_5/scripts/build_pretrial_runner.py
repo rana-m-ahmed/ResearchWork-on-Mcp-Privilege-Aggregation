@@ -41,7 +41,7 @@ def main() -> None:
     hardware_source = "".join(hardware["source"])
     if slot == "M4":
         hardware_source += (
-            '\n# M4 uses the validated Phi-3.5 cached generation path; other slots keep their default.\n'
+            '\n# M4 starts on the cached Phi-3.5 path; the semantic canary may select uncached fallback.\n'
             'os.environ["PHASE5_M4_ENABLE_KV_CACHE"] = "1"\n'
         )
     set_source(hardware, hardware_source)
@@ -69,13 +69,14 @@ if m4_canary_process.returncode != 0:
 m4_canary_report = json.loads(m4_canary.read_text(encoding="utf-8"))
 if (
     m4_canary_report.get("pass") is not True
-    or m4_canary_report.get("kv_cache_enabled") is not True
+    or m4_canary_report.get("runtime_mode") not in {"cached", "uncached"}
     or m4_canary_report.get("semantic_output_validated") is not True
 ):
     raise RuntimeError("M4 semantic runtime canary did not pass before pretrial")
+os.environ["PHASE5_M4_ENABLE_KV_CACHE"] = "1" if m4_canary_report["runtime_mode"] == "cached" else "0"
 print(f"M4_SEMANTIC_RUNTIME_READY: {m4_canary}", flush=True)
 """ if slot == "M4" else ""
-    set_source(campaign, m4_canary + '''
+    set_source(campaign, '''
 from kaggle_secrets import UserSecretsClient
 import selectors
 import time
@@ -84,6 +85,7 @@ hf_token = (UserSecretsClient().get_secret("HF_TOKEN") or "").strip()
 if not hf_token:
     raise RuntimeError("HF_TOKEN is required for the real-backend pretrial")
 os.environ["HF_TOKEN"] = hf_token
+''' + m4_canary + '''
 pretrial_attempts_root = Path("/kaggle/working/phase5_5_pretrial_attempts")
 pretrial_evidence_root = Path("/kaggle/working/phase5_5_pretrial_evidence")
 if pretrial_attempts_root.exists() or pretrial_evidence_root.exists():

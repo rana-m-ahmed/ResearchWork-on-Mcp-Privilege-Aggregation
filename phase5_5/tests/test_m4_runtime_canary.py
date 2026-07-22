@@ -29,6 +29,16 @@ def test_m4_runtime_canary_rejects_token_sequence_divergence() -> None:
         )
 
 
+def test_m4_runtime_canary_can_validate_the_uncached_fallback() -> None:
+    validate_cached_determinism(
+        "READY",
+        {"generated_token_ids": [1], "kv_cache_enabled": False},
+        "READY",
+        {"generated_token_ids": [1], "kv_cache_enabled": False},
+        expected_cache=False,
+    )
+
+
 def test_m4_runtime_canary_accepts_only_the_expected_semantic_answer() -> None:
     validate_semantic_output("  READY\n")
 
