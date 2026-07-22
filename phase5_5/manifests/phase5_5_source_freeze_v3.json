@@ -14,8 +14,8 @@
     "phase5/manifests/batch_partition_manifest_v3.json": "e7bf12dc9a2706f0ed23f29aaedfdfd1e3db34d3db1f34525d649bd46b7d3e5c",
     "phase5/manifests/batch_partition_manifest_v3_treatment.json": "cff3c4b412de69347fc455efc6a5df3a9410e064783f5143e4d48e71283aa1d9",
     "phase5/manifests/model_runtime_authority_v2.json": "48d4cfa54b664b1abc30a4e36f879a50601c17d46135622ae8cc7d91b2af8734",
-    "phase5/runtime/agent_loop.py": "6fc2110f3358ed28d56c9eefe17bebe63d945e787aebe1d6e6e5ff0cdfe0c0c2",
-    "phase5/runtime/engine.py": "bded1fa2ce562c353c8427b729ed8f5153cd9aed514595e569af0b23ebd46a66",
+    "phase5/runtime/agent_loop.py": "212b3351a42efe532fe59329f3e1d20fb0042b5b1758ccbecf2e64c21821b5af",
+    "phase5/runtime/engine.py": "61b5ce214dabd69f51f8dc89b324bbf72cdc5b7c80c06172258fc757e8636157",
     "phase5/runtime/mcp_server_launcher.py": "799e90cd6082c5494751dd98ed0bf686e079f10fd268c35c2f784a2305e5604f",
     "phase5/runtime/model_backend_adapter.py": "9bf2fb39f38592070263ef97ee0b1d2b1bce09d7926a3aa62c68b48b74f7fbc5",
     "phase5/runtime/official_execution.py": "ed9c84f2f5a30078441343d404265d34efc20177f3ca6aeead85092c39242623",
@@ -23,7 +23,7 @@
     "phase5/runtime/tool_dispatch.py": "b19f4da601c44dac4d3be6d46feef280195977312c62d3d2cd5fa82c82cde425",
     "phase5/validation/kaggle_run_plan_v3_treatment.json": "d596c1048488c12f27ff1d30b50e410ee67c9723e7b8dfde714c44e0c4f29c2d",
     "phase5_5/authorization/official_execution_authorization.json": "5a22898feb81bdc1069da65a0eeb72977c141ede3704e871e5528065dd8e87a8",
-    "phase5_5/branch_config.json": "b340b9a0e083d9879caea05f9de1dd23be18f1e5195d8a12acc3ec2f6f1fda19",
+    "phase5_5/branch_config.json": "44edfb94224c0754fc0b462476278865cfb2bcc1e4bd0df412fe92cb967d6746",
     "phase5_5/checkpointing.py": "01d9012e9d9828b6c008cfdbd13e710445c9181cd659f293a740dca70184f326",
     "phase5_5/configs/branch_mapping.json": "9a20036c666cc07c5ae7e7f9fc163e06fddc386a0b4ad2f689b819694c54754c",
     "phase5_5/configs/evidence_policy.json": "813cc890ea22ba4bf6f791efb175a32ae4602f96291474ffd4ba6efc954b72e8",
@@ -59,5 +59,5 @@
   "publication_evidence": false,
   "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
   "scientific_inputs_regenerated": false,
-  "source_commit": "482837828"
+  "source_commit": "22e5bff79"
 }
