@@ -1,0 +1,26 @@
+{
+  "artifact": "phase5_5_campaign_supersession_v2",
+  "authorization_basis": "explicit_user_authorization_2026-07-23",
+  "batch_manifest_sha256": "cff3c4b412de69347fc455efc6a5df3a9410e064783f5143e4d48e71283aa1d9",
+  "checkpoint_count": 5,
+  "checkpoint_sha256": {
+    "checkpoints/P5RUN-P5-DV-1.1.0-TREATMENT-V3-M2-20260722-068E8594/checkpoint-000001.json": "40d5f1e989e6eaacbdcba618cb3238946706346235a44d82dc05d895e968ecfc",
+    "checkpoints/P5RUN-P5-DV-1.1.0-TREATMENT-V3-M2-20260722-068E8594/checkpoint-000002.json": "32148ecec108f14cfd76582bbb59adb5d30d9f013d0cc5c1432aa3ef02c86948",
+    "checkpoints/P5RUN-P5-DV-1.1.0-TREATMENT-V3-M2-20260722-068E8594/checkpoint-000003.json": "cfe5c35e2e880343c9e3b1f66a3bcbd9d50596bbcf69128bd20f4be9532dd918",
+    "checkpoints/P5RUN-P5-DV-1.1.0-TREATMENT-V3-M2-20260722-068E8594/checkpoint-000004.json": "f543c2bc2bf635308b2e5dfeea59a9b87df078ca346e8cbf19b6cb09aeeeb3f0",
+    "checkpoints/P5RUN-P5-DV-1.1.0-TREATMENT-V3-M2-20260722-068E8594/checkpoint-000005.json": "c6b55a1679bca39adfb87b469aabbe7bff14c4b31d0b895ad608c4b03a65a513"
+  },
+  "dataset_version": "P5-DV-1.1.0-TREATMENT-V3",
+  "model_slot": "M2",
+  "reason": "canceled_partial_official_run_before_remediation",
+  "replacement_run_required": true,
+  "run_plan_sha256": "d596c1048488c12f27ff1d30b50e410ee67c9723e7b8dfde714c44e0c4f29c2d",
+  "source_commit": "474fb214b06acbbff7920924ebbca3b59b943123",
+  "status_counts": {
+    "INVALID": 22,
+    "OFFICIAL_ACCEPTED": 8
+  },
+  "superseded_lineage_count": 30,
+  "superseded_lineage_sha256": "7913b421187a936ec99ab1972a63146cbfc1ef153143704e33e86937c4e08580",
+  "superseded_run_id": "P5RUN-P5-DV-1.1.0-TREATMENT-V3-M2-20260722-068E8594"
+}
