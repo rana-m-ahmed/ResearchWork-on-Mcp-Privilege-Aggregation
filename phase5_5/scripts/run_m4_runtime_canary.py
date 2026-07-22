@@ -18,18 +18,31 @@ from phase5.runtime.model_backend_adapter import (  # noqa: E402
     load_frozen_model_backend_identity,
 )
 from phase5.runtime.token_budget import build_exact_tokenizer  # noqa: E402
+from phase5_5.parser import ParserStatus, extract_tool_call  # noqa: E402
+
+
+_CANARY_TOOL = "read_internal_notes"
+_CANARY_ARGUMENTS = {"note_id": "CANARY-001"}
+_CANARY_PARSER_VERSION = "phase5.5-parser-v3-mcp-schema"
 
 
 def sha256_text(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
-def validate_semantic_output(output: str, expected: str = "READY") -> None:
-    """Reject deterministic but unusable generation before M4 dispatch."""
-    if output.strip() != expected:
+def validate_semantic_output(output: str) -> None:
+    """Require a parser-valid canonical invocation before M4 dispatch."""
+    result = extract_tool_call(output, parser_version=_CANARY_PARSER_VERSION)
+    calls = result.parsed_calls
+    if (
+        result.status is not ParserStatus.VALID_EXTRACTED_CALL
+        or len(calls) != 1
+        or calls[0].tool_name != _CANARY_TOOL
+        or dict(calls[0].arguments) != _CANARY_ARGUMENTS
+    ):
         raise RuntimeError(
-            f"M4 semantic canary output was not exactly {expected!r}: "
-            f"{output[:80]!r}"
+            "M4 semantic canary did not emit the required parser-valid tool call: "
+            f"status={result.status.value}; output={output[:80]!r}"
         )
 
 
@@ -92,6 +105,10 @@ def run_canary_path(root: Path, tokenizer: object, prompt: str, enable_cache: bo
         "exact_model_identifier": "microsoft/Phi-3.5-mini-instruct",
         "hf_device_map": load_plan.get("hf_device_map", {}),
         "kv_cache_enabled": enable_cache,
+        "model_class_module": load_plan.get("model_class_module"),
+        "model_code_path": load_plan.get("model_code_path"),
+        "output_sha256": sha256_text(first_output),
+        "repeated_output_sha256": sha256_text(second_output),
         "repeated_cached_token_count": len(second_receipt.get("generated_token_ids", [])),
     }
     del adapter
@@ -109,7 +126,10 @@ def main() -> int:
     if identity.exact_model_identifier != "microsoft/Phi-3.5-mini-instruct":
         raise RuntimeError("M4 runtime canary resolved an unexpected model")
 
-    prompt = "Return exactly the single word READY and no other text."
+    prompt = (
+        "Return exactly one JSON object and no prose. Use this exact tool invocation: "
+        '{"tool":"read_internal_notes","arguments":{"note_id":"CANARY-001"}}'
+    )
     tokenizer = build_exact_tokenizer(
         root=root,
         revision=identity.huggingface_commit_sha,
@@ -122,14 +142,35 @@ def main() -> int:
     except RuntimeError as exc:
         cached_failure = str(exc)
         gc.collect()
-        runtime = run_canary_path(root, tokenizer, prompt, enable_cache=False)
-        runtime_mode = "uncached"
+        try:
+            runtime = run_canary_path(root, tokenizer, prompt, enable_cache=False)
+            runtime_mode = "uncached"
+        except RuntimeError as uncached_exc:
+            failure_payload = {
+                "artifact": "phase5_5_m4_runtime_canary_v2",
+                "cached_path_failure": cached_failure,
+                "exact_model_identifier": identity.exact_model_identifier,
+                "huggingface_commit_sha": identity.huggingface_commit_sha,
+                "model_slot": "M4",
+                "pass": False,
+                "prompt_sha256": sha256_text(prompt),
+                "required_model_code_path": "transformers_native",
+                "uncached_path_failure": str(uncached_exc),
+            }
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_text(
+                json.dumps(failure_payload, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+            raise RuntimeError(
+                f"M4 native runtime failed cached and uncached semantic canaries; report={args.output}"
+            ) from uncached_exc
 
     payload = {
-        "artifact": "phase5_5_m4_runtime_canary_v1",
-        "cached_output_sha256": sha256_text("READY"),
+        "artifact": "phase5_5_m4_runtime_canary_v2",
+        "cached_output_sha256": runtime["output_sha256"],
         "cached_seconds": runtime["cached_seconds"],
-        "semantic_output": "READY",
+        "semantic_output": {"tool": _CANARY_TOOL, "arguments": _CANARY_ARGUMENTS},
         "semantic_output_validated": True,
         "cached_token_count": runtime["cached_token_count"],
         "cached_cuda_device_metrics": runtime["cached_cuda_device_metrics"],
@@ -137,9 +178,11 @@ def main() -> int:
         "hf_device_map": runtime["hf_device_map"],
         "huggingface_commit_sha": identity.huggingface_commit_sha,
         "kv_cache_enabled": runtime["kv_cache_enabled"],
+        "model_class_module": runtime["model_class_module"],
+        "model_code_path": runtime["model_code_path"],
         "model_slot": "M4",
         "prompt_sha256": sha256_text(prompt),
-        "repeated_cached_output_sha256": sha256_text("READY"),
+        "repeated_cached_output_sha256": runtime["repeated_output_sha256"],
         "repeated_cached_token_count": runtime["repeated_cached_token_count"],
         "runtime_mode": runtime_mode,
         "cached_path_failure": cached_failure,

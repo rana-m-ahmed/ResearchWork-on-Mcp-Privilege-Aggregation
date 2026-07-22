@@ -36,6 +36,22 @@ def _phi35_kv_cache_enabled() -> bool:
     return os.environ.get("PHASE5_M4_ENABLE_KV_CACHE", "0") == "1"
 
 
+def _phi35_model_code_path() -> str:
+    """Use the backend-native Phi implementation under frozen Transformers 5."""
+
+    return "transformers_native"
+
+
+def _validate_phi35_native_model(model: Any) -> str:
+    module_name = type(model).__module__
+    if not module_name.startswith("transformers.models.phi3."):
+        raise RuntimeMismatchError(
+            "M4 did not load the required Transformers-native Phi3 implementation: "
+            f"{module_name!r}"
+        )
+    return module_name
+
+
 def _synchronize_cuda(torch_module: Any) -> None:
     if not torch_module.cuda.is_available():
         return
@@ -61,6 +77,10 @@ def _build_model_load_kwargs(
         "trust_remote_code": True,
     }
     if _is_phi35_identifier(identity.exact_model_identifier):
+        # The repository remote code targets Transformers 4.43.3. The frozen
+        # backend is Transformers 5.0.0, whose native Phi3 implementation owns
+        # the compatible cache and RoPE interfaces.
+        kwargs["trust_remote_code"] = False
         kwargs["attn_implementation"] = "eager"
         kwargs["use_cache"] = _phi35_kv_cache_enabled()
     return kwargs
@@ -560,7 +580,7 @@ class FrozenModelBackendAdapter:
                 revision=self.identity.huggingface_commit_sha,
                 trust_remote_code=True,
             )
-        if _is_phi35_identifier(self.exact_model_identifier):
+        if _is_phi35_identifier(self.exact_model_identifier) and _phi35_model_code_path() != "transformers_native":
             _install_phi3_dynamic_cache_compatibility_shim()
         max_memory, offload_folder = build_model_load_memory_plan(torch)
         self._load_memory_plan = {
@@ -569,6 +589,9 @@ class FrozenModelBackendAdapter:
             "kv_cache_enabled": _phi35_kv_cache_enabled()
             if _is_phi35_identifier(self.exact_model_identifier)
             else None,
+            "model_code_path": _phi35_model_code_path()
+            if _is_phi35_identifier(self.exact_model_identifier)
+            else "repository_default",
         }
         try:
             self._model = AutoModelForCausalLM.from_pretrained(
@@ -582,6 +605,7 @@ class FrozenModelBackendAdapter:
             )
             self._model.eval()
             if _is_phi35_identifier(self.exact_model_identifier):
+                self._load_memory_plan["model_class_module"] = _validate_phi35_native_model(self._model)
                 setattr(self._model.config, "use_cache", _phi35_kv_cache_enabled())
             self._model.generation_config.do_sample = False
             self._model.generation_config.temperature = None
@@ -692,6 +716,12 @@ class FrozenModelBackendAdapter:
             "cuda_device_metrics": device_metrics,
             "kv_cache_enabled": _phi35_kv_cache_enabled()
             if _is_phi35_identifier(self.exact_model_identifier)
+            else None,
+            "model_code_path": self._load_memory_plan.get("model_code_path")
+            if self._load_memory_plan is not None
+            else None,
+            "model_class_module": self._load_memory_plan.get("model_class_module")
+            if self._load_memory_plan is not None
             else None,
         }
         if _is_phi35_identifier(self.exact_model_identifier):

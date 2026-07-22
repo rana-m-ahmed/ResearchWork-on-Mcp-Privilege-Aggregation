@@ -1,0 +1,13 @@
+{
+  "artifact": "phase5_5_m4_native_runtime_remediation",
+  "backend_version": "transformers==5.0.0",
+  "exact_model_identifier": "microsoft/Phi-3.5-mini-instruct",
+  "huggingface_commit_sha": "2fe192450127e6a83f7441aef6e3ca586c338b77",
+  "model_code_path": "transformers_native",
+  "model_slot": "M4",
+  "official_dispatch": false,
+  "parser_changed": false,
+  "phase4_or_phase4_5_changed": false,
+  "status": "LOCAL_VERIFIED_KAGGLE_PRETRIAL_REQUIRED",
+  "test_result": "327 passed"
+}

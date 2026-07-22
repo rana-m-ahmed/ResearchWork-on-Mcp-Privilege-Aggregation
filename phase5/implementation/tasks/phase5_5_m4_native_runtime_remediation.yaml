@@ -1,0 +1,28 @@
+task_id: PHASE5_5-M4-NATIVE-RUNTIME-REMEDIATION
+title: M4 Transformers-native Phi runtime and semantic tool-call qualification
+scope:
+  - phase5 runtime M4-only model loading
+  - phase5_5 M4 runtime canary
+  - phase5_5 M4 pretrial and official notebook generation
+  - M4-specific tests and append-only implementation reports
+frozen_inputs:
+  - phase4/
+  - phase4_5/
+  - phase5/manifests/model_runtime_authority_v2.json
+  - phase5/manifests/batch_partition_manifest_v3_treatment.json
+  - phase5/validation/kaggle_run_plan_v3_treatment.json
+forbidden_actions:
+  - modify_phase4_or_phase4_5
+  - change_model_identity_or_revision
+  - change_dtype_or_backend_version
+  - change_parser_rules
+  - repair_model_output
+  - dispatch_official_trials
+acceptance:
+  - m4_uses_transformers_native_phi3_model_code
+  - runtime_receipt_proves_native_model_class
+  - semantic_canary_emits_parser_valid_tool_call
+  - cached_failure_can_fall_back_to_validated_uncached_mode
+  - both_mode_failure_remains_fail_closed
+  - m1_m2_m3_behavior_unchanged
+  - phase5_and_phase5_5_tests_pass

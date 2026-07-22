@@ -70,6 +70,7 @@ m4_canary_report = json.loads(m4_canary.read_text(encoding="utf-8"))
 if (
     m4_canary_report.get("pass") is not True
     or m4_canary_report.get("runtime_mode") not in {"cached", "uncached"}
+    or m4_canary_report.get("model_code_path") != "transformers_native"
     or m4_canary_report.get("semantic_output_validated") is not True
 ):
     raise RuntimeError("M4 semantic runtime canary did not pass before pretrial")

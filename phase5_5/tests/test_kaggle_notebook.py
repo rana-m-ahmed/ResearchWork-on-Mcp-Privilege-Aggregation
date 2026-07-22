@@ -98,6 +98,7 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
         )
         assert 'os.environ["PHASE5_M4_ENABLE_KV_CACHE"] = "1"' in pretrial_source
         assert "M4_SEMANTIC_RUNTIME_READY" in pretrial_source
+        assert 'model_code_path") != "transformers_native"' in pretrial_source
         assert 'semantic_output_validated") is not True' in pretrial_source
 
 

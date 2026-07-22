@@ -144,7 +144,12 @@ if MODEL_SLOT == "M4":
         raise RuntimeError(f"M4 optimized runtime canary failed: {canary_process.stderr}")
     print(canary_process.stdout, flush=True)
     canary = json.loads(m4_canary.read_text(encoding="utf-8"))
-    if canary.get("pass") is not True or canary.get("runtime_mode") not in {"cached", "uncached"}:
+    if (
+        canary.get("pass") is not True
+        or canary.get("runtime_mode") not in {"cached", "uncached"}
+        or canary.get("model_code_path") != "transformers_native"
+        or canary.get("semantic_output_validated") is not True
+    ):
         raise RuntimeError("M4 semantic runtime canary did not pass")
     os.environ["PHASE5_M4_ENABLE_KV_CACHE"] = "1" if canary["runtime_mode"] == "cached" else "0"
     print(f"M4_OPTIMIZED_RUNTIME_READY: {m4_canary}", flush=True)

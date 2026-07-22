@@ -13,6 +13,8 @@ from phase5.runtime.model_backend_adapter import (
     _build_generation_kwargs,
     _build_model_load_kwargs,
     _phi35_kv_cache_enabled,
+    _phi35_model_code_path,
+    _validate_phi35_native_model,
     build_model_load_memory_plan,
     serialize_frozen_prompt_for_model,
 )
@@ -96,7 +98,9 @@ def test_phi3_runtime_kwargs_force_eager_attention_and_disable_cache(
     )
     assert load_kwargs["attn_implementation"] == "eager"
     assert load_kwargs["use_cache"] is False
+    assert load_kwargs["trust_remote_code"] is False
     assert generation_kwargs["use_cache"] is False
+    assert _phi35_model_code_path() == "transformers_native"
 
 
 def test_phi3_runtime_cache_is_explicitly_opt_in(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -124,6 +128,20 @@ def test_non_phi_runtime_kwargs_preserve_default_cache_path(tmp_path: Path) -> N
     assert "attn_implementation" not in load_kwargs
     assert "use_cache" not in load_kwargs
     assert "use_cache" not in generation_kwargs
+    assert load_kwargs["trust_remote_code"] is True
+
+
+def test_phi3_native_model_validation_accepts_only_transformers_phi3() -> None:
+    NativePhi = type("Phi3ForCausalLM", (), {})
+    NativePhi.__module__ = "transformers.models.phi3.modeling_phi3"
+    assert _validate_phi35_native_model(NativePhi()) == "transformers.models.phi3.modeling_phi3"
+
+
+def test_phi3_native_model_validation_rejects_repository_remote_code() -> None:
+    RemotePhi = type("Phi3ForCausalLM", (), {})
+    RemotePhi.__module__ = "transformers_modules.microsoft.Phi_3_5.modeling_phi3"
+    with pytest.raises(RuntimeMismatchError, match="Transformers-native Phi3"):
+        _validate_phi35_native_model(RemotePhi())
 
 
 def test_phi3_dynamic_cache_shim_allows_omitted_layer_index(monkeypatch) -> None:

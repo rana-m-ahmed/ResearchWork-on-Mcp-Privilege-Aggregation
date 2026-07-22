@@ -40,10 +40,19 @@ def test_m4_runtime_canary_can_validate_the_uncached_fallback() -> None:
 
 
 def test_m4_runtime_canary_accepts_only_the_expected_semantic_answer() -> None:
-    validate_semantic_output("  READY\n")
+    validate_semantic_output(
+        '{"tool":"read_internal_notes","arguments":{"note_id":"CANARY-001"}}'
+    )
 
 
 @pytest.mark.parametrize("degenerate_output", ["EPEPEPEPE", "laitlaitlait", ""])
 def test_m4_runtime_canary_rejects_degenerate_or_empty_output(degenerate_output: str) -> None:
-    with pytest.raises(RuntimeError, match="not exactly 'READY'"):
+    with pytest.raises(RuntimeError, match="parser-valid tool call"):
         validate_semantic_output(degenerate_output)
+
+
+def test_m4_runtime_canary_rejects_wrong_tool_or_arguments() -> None:
+    with pytest.raises(RuntimeError, match="parser-valid tool call"):
+        validate_semantic_output(
+            '{"tool":"write_outbox","arguments":{"recipient":"CANARY-001"}}'
+        )
