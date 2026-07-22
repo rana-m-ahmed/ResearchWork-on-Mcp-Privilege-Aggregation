@@ -256,6 +256,32 @@ def test_frozen_state_machine_control_loader_fails_closed(tmp_path: Path) -> Non
         load_frozen_state_machine_controls(tmp_path)
 
 
+def test_frozen_controls_apply_only_declared_model_timeout_override(tmp_path: Path) -> None:
+    registry = tmp_path / "controls.json"
+    registry.write_text(
+        json.dumps(
+            {
+                "max_model_turns": 30,
+                "max_total_tool_calls": 100,
+                "max_identical_consecutive_tool_calls": 10,
+                "max_identical_total_tool_calls": 20,
+                "per_model_turn_timeout_seconds": 60.0,
+                "per_model_turn_timeout_seconds_by_slot": {"M2": 120.0},
+                "per_tool_call_timeout_seconds": 60.0,
+                "whole_trial_timeout_seconds": 1200.0,
+                "multiple_tool_call_policy": "serial",
+                "tool_error_reinsertion_policy": "reinsert_as_user",
+                "malformed_output_policy": "reject",
+                "terminal_response_policy": "accept",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    assert load_frozen_state_machine_controls(registry_path=registry, model_slot="M1").per_model_turn_timeout_seconds == 60.0
+    assert load_frozen_state_machine_controls(registry_path=registry, model_slot="M2").per_model_turn_timeout_seconds == 120.0
+
+
 def test_agent_loop_handles_one_and_multiple_tool_calls_in_parser_order(tmp_path: Path) -> None:
     record, backend, _, workspace = _run(
         tmp_path=tmp_path,

@@ -189,6 +189,7 @@ class SharedExecutionEngine(RealTrialPipeline):
         self.controls = load_frozen_state_machine_controls(
             self.root,
             registry_path=phase5_5_controls if phase5_5_controls.is_file() else None,
+            model_slot=model_slot,
         )
         self.model_identity = load_frozen_model_backend_identity(self.root, model_slot=model_slot)
         
