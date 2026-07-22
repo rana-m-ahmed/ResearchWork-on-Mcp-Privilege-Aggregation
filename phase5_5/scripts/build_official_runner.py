@@ -144,8 +144,14 @@ if MODEL_SLOT == "M4":
         raise RuntimeError(f"M4 optimized runtime canary failed: {canary_process.stderr}")
     print(canary_process.stdout, flush=True)
     canary = json.loads(m4_canary.read_text(encoding="utf-8"))
-    if canary.get("pass") is not True or canary.get("kv_cache_enabled") is not True:
-        raise RuntimeError("M4 optimized runtime canary did not pass")
+    if (
+        canary.get("pass") is not True
+        or canary.get("runtime_mode") not in {"cached", "uncached"}
+        or canary.get("model_code_path") != "transformers_native"
+        or canary.get("semantic_output_validated") is not True
+    ):
+        raise RuntimeError("M4 semantic runtime canary did not pass")
+    os.environ["PHASE5_M4_ENABLE_KV_CACHE"] = "1" if canary["runtime_mode"] == "cached" else "0"
     print(f"M4_OPTIMIZED_RUNTIME_READY: {m4_canary}", flush=True)
 print("OFFICIAL_AUTHORIZED_PREFLIGHT_PASS")
 ''')
@@ -267,6 +273,8 @@ os.environ["PHASE5_MODEL_OFFLOAD_DIR"] = "/kaggle/working/phase5_5_model_offload
 if MODEL_SLOT == "M4":
     # The repaired Phi execution was validated on Kaggle's dual-T4 profile.
     os.environ["PHASE5_REQUIRE_CUDA_DEVICE_COUNT"] = "2"
+    # Start with cache enabled; preflight may select the validated uncached fallback.
+    os.environ["PHASE5_M4_ENABLE_KV_CACHE"] = "1"
 Path(os.environ["HF_HOME"]).mkdir(parents=True, exist_ok=True)
 Path(os.environ["PHASE5_MODEL_OFFLOAD_DIR"]).mkdir(parents=True, exist_ok=True)
 
@@ -323,7 +331,7 @@ manifest_path.write_text(json.dumps(evidence_manifest, indent=2, sort_keys=True)
 archive_path = OUTPUT_ROOT / f"{MODEL_SLOT}_evidence.tar.gz"
 with tarfile.open(archive_path, "w:gz") as archive:
     archive.add(evidence_root, arcname="phase5_5/evidence")
-    archive.add(manifest_path, arcname=f"phase5_5/{{manifest_path.name}}")
+    archive.add(manifest_path, arcname=f"phase5_5/{manifest_path.name}")
 
 if not os.environ.get("PHASE5_GITHUB_TOKEN"):
     raise RuntimeError("official publication credential was not retained from authorization preflight")

@@ -241,6 +241,7 @@ class RepositoryBatchExecutionAdapter:
         elapsed_seconds = 0.0
         result_digests: list[str] = []
         since_checkpoint = 0
+
         for row in rows:
             target_trial_id = str(row.trial_id)
             histories = [record for record in existing if record.target_trial_id == target_trial_id]

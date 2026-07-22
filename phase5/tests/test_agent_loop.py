@@ -256,6 +256,51 @@ def test_frozen_state_machine_control_loader_fails_closed(tmp_path: Path) -> Non
         load_frozen_state_machine_controls(tmp_path)
 
 
+def test_frozen_state_machine_control_loader_applies_only_selected_model_timeout(
+    tmp_path: Path,
+) -> None:
+    root = Path(__file__).resolve().parents[2]
+    controls_data = json.loads(
+        (root / "phase5_5/configs/frozen_state_machine_controls.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    registry_path = tmp_path / "controls.json"
+    registry_path.write_text(json.dumps(controls_data), encoding="utf-8")
+
+    assert load_frozen_state_machine_controls(
+        tmp_path, registry_path=registry_path, model_slot="M2"
+    ).per_model_turn_timeout_seconds == 120.0
+    for model_slot in ("M1", "M3", "M4"):
+        assert load_frozen_state_machine_controls(
+            tmp_path, registry_path=registry_path, model_slot=model_slot
+        ).per_model_turn_timeout_seconds == 60.0
+
+
+@pytest.mark.parametrize(
+    "invalid_overrides",
+    [[], {"M5": 120.0}, {"M2": 0}, {"M2": "120"}],
+)
+def test_frozen_state_machine_control_loader_rejects_invalid_timeout_overrides(
+    tmp_path: Path,
+    invalid_overrides: object,
+) -> None:
+    root = Path(__file__).resolve().parents[2]
+    controls_data = json.loads(
+        (root / "phase5_5/configs/frozen_state_machine_controls.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    controls_data["per_model_turn_timeout_seconds_by_slot"] = invalid_overrides
+    registry_path = tmp_path / "controls.json"
+    registry_path.write_text(json.dumps(controls_data), encoding="utf-8")
+
+    with pytest.raises(SchemaInvariantError):
+        load_frozen_state_machine_controls(
+            tmp_path, registry_path=registry_path, model_slot="M2"
+        )
+
+
 def test_agent_loop_handles_one_and_multiple_tool_calls_in_parser_order(tmp_path: Path) -> None:
     record, backend, _, workspace = _run(
         tmp_path=tmp_path,

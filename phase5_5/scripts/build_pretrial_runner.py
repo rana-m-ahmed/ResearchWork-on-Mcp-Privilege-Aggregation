@@ -37,7 +37,46 @@ def main() -> None:
         raise RuntimeError("base runner lost frozen P5RUN run-id grammar")
     set_source(config, source)
 
+    hardware = find_cell(notebook, "hardware_and_dependencies")
+    hardware_source = "".join(hardware["source"])
+    if slot == "M4":
+        hardware_source += (
+            '\n# M4 starts on the cached Phi-3.5 path; the semantic canary may select uncached fallback.\n'
+            'os.environ["PHASE5_M4_ENABLE_KV_CACHE"] = "1"\n'
+        )
+    set_source(hardware, hardware_source)
+
     campaign = find_cell(notebook, "official_campaign")
+    m4_canary = """
+m4_canary = OUTPUT_ROOT / "M4_runtime_canary.json"
+m4_canary_command = [
+    sys.executable,
+    "phase5_5/scripts/run_m4_runtime_canary.py",
+    "--root",
+    str(REPO_ROOT),
+    "--output",
+    str(m4_canary),
+]
+m4_canary_process = subprocess.run(
+    m4_canary_command,
+    cwd=REPO_ROOT,
+    capture_output=True,
+    text=True,
+    check=False,
+)
+if m4_canary_process.returncode != 0:
+    raise RuntimeError(f"M4 semantic runtime canary failed before pretrial: {m4_canary_process.stderr}")
+m4_canary_report = json.loads(m4_canary.read_text(encoding="utf-8"))
+if (
+    m4_canary_report.get("pass") is not True
+    or m4_canary_report.get("runtime_mode") not in {"cached", "uncached"}
+    or m4_canary_report.get("model_code_path") != "transformers_native"
+    or m4_canary_report.get("semantic_output_validated") is not True
+):
+    raise RuntimeError("M4 semantic runtime canary did not pass before pretrial")
+os.environ["PHASE5_M4_ENABLE_KV_CACHE"] = "1" if m4_canary_report["runtime_mode"] == "cached" else "0"
+print(f"M4_SEMANTIC_RUNTIME_READY: {m4_canary}", flush=True)
+""" if slot == "M4" else ""
     set_source(campaign, '''
 from kaggle_secrets import UserSecretsClient
 import selectors
@@ -47,6 +86,7 @@ hf_token = (UserSecretsClient().get_secret("HF_TOKEN") or "").strip()
 if not hf_token:
     raise RuntimeError("HF_TOKEN is required for the real-backend pretrial")
 os.environ["HF_TOKEN"] = hf_token
+''' + m4_canary + '''
 pretrial_attempts_root = Path("/kaggle/working/phase5_5_pretrial_attempts")
 pretrial_evidence_root = Path("/kaggle/working/phase5_5_pretrial_evidence")
 if pretrial_attempts_root.exists() or pretrial_evidence_root.exists():
