@@ -9,6 +9,7 @@ frozen_inputs:
   - phase5/manifests/batch_partition_manifest_v3_treatment.json
   - phase5/validation/kaggle_run_plan_v3_treatment.json
   - phase5_5/manifests/phase5_5_source_freeze_v3.json
+  - phase5_5/evidence/supersessions/*.json
 allowed_paths:
   - phase5/cli.py
   - phase5/runtime/official_execution.py
@@ -35,6 +36,7 @@ acceptance:
   - never publish a completion marker while resume_required is true
   - store completion markers under an append-only run-specific path
   - reject legacy, ambiguous, source-mismatched, or tampered current-dataset state
+  - permit an explicitly authorized legacy run supersession only when all preserved evidence hashes match
   - preserve Phase 4, Phase 4.5, scientific inputs, and model-specific runtime behavior
 verification:
   - targeted positive, negative, invariant, and fault-path tests
