@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from phase5.attempts import AttemptLineageStore
+from phase5.attempts import AttemptLineageRecord, AttemptLineageStore
 from phase5.campaign import load_campaign_plan, run_campaign
 from phase5.domain import AttemptId, ModelSlot
 from phase5.domain.errors import OfficialDispatchBlockedError, SchemaInvariantError
@@ -228,6 +228,40 @@ def test_repository_adapter_in_official_mode_creates_accepted_counts(tmp_path: P
     records = store.load_records()
     assert len(records) == plan.batches[0].row_count
     assert all(record.accepted_attempt and record.counts_toward_cell_n for record in records)
+
+
+def test_new_dataset_attempt_does_not_inherit_historical_parent(tmp_path: Path) -> None:
+    plan = load_campaign_plan(model_slot="M1")
+    store = AttemptLineageStore(tmp_path / "lineage.csv")
+    historical = AttemptLineageRecord(
+        dataset_version="P5-DV-1.0.2-A7C91E42",
+        frozen_row_id="core-00001-T04470",
+        target_trial_id="T04470",
+        attempt_id="P5ATT-T04470-A000-HISTORIC",
+        attempt_index=0,
+        parent_attempt_id=None,
+        run_id="P5RUN-P5-DV-1.0.2-A7C91E42-M1-20260718-HISTORIC",
+        batch_id="historical-batch",
+        attempt_status="INVALID",
+        invalid_reason="historical",
+        counts_toward_cell_n=False,
+        accepted_attempt=False,
+        raw_attempt_directory=tmp_path / "historical",
+    )
+    store.append(historical)
+    pipeline = OfficialRealPipeline(tmp_path / "attempts")
+    adapter = RepositoryBatchExecutionAdapter(
+        queue_bundle=load_frozen_queue_bundle(),
+        pipeline=pipeline,
+        lineage_store=store,
+        session=_sealed_session(),
+        dataset_version=plan.dataset_version,
+        official_mode=True,
+    )
+
+    adapter(plan.batches[0], plan.p95_trial_seconds)
+
+    assert pipeline.calls[0][1:] == (0, None)
 
 
 def test_official_invalid_batch_is_not_labeled_synthetic(tmp_path: Path) -> None:
