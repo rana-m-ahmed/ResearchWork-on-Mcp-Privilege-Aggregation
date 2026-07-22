@@ -214,6 +214,42 @@ def test_source_bound_checkpoint_resumes_same_run_and_sequence(tmp_path: Path) -
     assert result.completed_target_count == 1
 
 
+def test_resume_validates_run_scoped_attempt_directory(tmp_path: Path) -> None:
+    run_scoped = tmp_path / f"phase5_5/evidence/attempts/{RUN_ID}/P5ATT-T00001-A000-ABCDEF12"
+    record = _record(tmp_path)
+    record = record.__class__(
+        **{**record.__dict__, "raw_attempt_directory": run_scoped}
+    ) if hasattr(record, "__dict__") else record
+    # slots dataclasses have no __dict__; construct the equivalent record
+    # explicitly so this test exercises the physical run namespace.
+    if record.raw_attempt_directory != run_scoped:
+        record = AttemptLineageRecord(
+            dataset_version=record.dataset_version,
+            frozen_row_id=record.frozen_row_id,
+            target_trial_id=record.target_trial_id,
+            attempt_id=record.attempt_id,
+            attempt_index=record.attempt_index,
+            parent_attempt_id=record.parent_attempt_id,
+            run_id=record.run_id,
+            batch_id=record.batch_id,
+            attempt_status=record.attempt_status,
+            invalid_reason=record.invalid_reason,
+            counts_toward_cell_n=record.counts_toward_cell_n,
+            accepted_attempt=record.accepted_attempt,
+            raw_attempt_directory=run_scoped,
+        )
+        original = tmp_path / f"phase5_5/evidence/attempts/{record.attempt_id}"
+        run_scoped.mkdir(parents=True, exist_ok=True)
+        for path in original.iterdir():
+            path.replace(run_scoped / path.name)
+        original.rmdir()
+    store = AttemptLineageStore(tmp_path / "phase5_5/evidence/lineage.csv")
+    store.append(record)
+    _write_checkpoint(tmp_path)
+    result = _resolve(tmp_path)
+    assert result.mode is ResumeMode.RESUME
+
+
 def test_resume_accepts_explicit_dataset_epoch_boundary(tmp_path: Path) -> None:
     store = AttemptLineageStore(tmp_path / "phase5_5/evidence/lineage.csv")
     historical = _record(
