@@ -8,7 +8,7 @@ import hashlib
 import platform
 import shutil
 import subprocess
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -539,38 +539,38 @@ class SharedExecutionEngine(RealTrialPipeline):
             )
             
         def lineage_callable() -> None:
-            workspace.metadata.write_manifest()
+            # The final status is known only after the loop returns. The
+            # write-once manifest is materialized immediately afterward.
+            return None
 
-        record = run_frozen_agent_loop(
-            workspace=workspace,
-            frozen_row=runtime_row,
-            task_description=str(task_content["description"]),
-            controls=self.controls,
-            backend=self.backend,
-            tokenizer=self.tokenizer,
-            budget_policy=TokenBudgetPolicy(),
-            tool_catalog=tool_catalog,
-            mcp_discovery=model_facing_discovery,
-            task_execution_plan=task_execution_plan,
-            reset_executor=reset_executor,
-            retrieved_content=None,
-            root=self.root,
-            allow_grading=True,
-            grade_callable=grade_callable,
-            tid_callable=tid_callable,
-            materialize_callable=materialize_callable,
-            validate_callable=validate_callable,
-            finalize_callable=finalize_callable,
-            lineage_callable=lineage_callable,
-        )
+        try:
+            record = run_frozen_agent_loop(
+                workspace=workspace,
+                frozen_row=runtime_row,
+                task_description=str(task_content["description"]),
+                controls=self.controls,
+                backend=self.backend,
+                tokenizer=self.tokenizer,
+                budget_policy=TokenBudgetPolicy(),
+                tool_catalog=tool_catalog,
+                mcp_discovery=model_facing_discovery,
+                task_execution_plan=task_execution_plan,
+                reset_executor=reset_executor,
+                retrieved_content=None,
+                root=self.root,
+                allow_grading=True,
+                grade_callable=grade_callable,
+                tid_callable=tid_callable,
+                materialize_callable=materialize_callable,
+                validate_callable=validate_callable,
+                finalize_callable=finalize_callable,
+                lineage_callable=lineage_callable,
+            )
+        except Exception:
+            orphan_status = "PRETRIAL_ORPHAN" if getattr(self, "pretrial_mode", False) else "ORPHAN"
+            replace(workspace.metadata, attempt_status=orphan_status).write_manifest()
+            raise
 
-        # Seal the write-once index after the loop has finalized every artifact.
-        seal_evidence_index()
-        event_log_sha256 = hashlib.sha256(workspace.metadata.event_log_path.read_bytes()).hexdigest()
-        materialized_row_path = workspace.workspace_root / "materialized_trial_row.json"
-        materialized_row_sha256 = hashlib.sha256(materialized_row_path.read_bytes()).hexdigest()
-        evidence_index_sha256 = hashlib.sha256(workspace.metadata.artifact_index_path.read_bytes()).hexdigest()
-        
         analysis_eligible = (
             getattr(record, "evidence_ready", record.status == "PASS")
             and grade_state.get("analysis_eligible") is True
@@ -582,6 +582,22 @@ class SharedExecutionEngine(RealTrialPipeline):
             }
         )
         qualified = analysis_eligible and record.status == "PASS"
+
+        if self.official_trial:
+            final_attempt_status = "OFFICIAL_ACCEPTED" if qualified else "INVALID"
+        elif getattr(self, "pretrial_mode", False):
+            final_attempt_status = "PRETRIAL_COMPLETED" if qualified else "PRETRIAL_INVALID"
+        else:
+            final_attempt_status = "SYNTHETIC_QUALIFIED" if qualified else "INVALID"
+        replace(workspace.metadata, attempt_status=final_attempt_status).write_manifest()
+
+        # Seal the write-once index only after the final manifest status is durable.
+        seal_evidence_index()
+        event_log_sha256 = hashlib.sha256(workspace.metadata.event_log_path.read_bytes()).hexdigest()
+        materialized_row_path = workspace.workspace_root / "materialized_trial_row.json"
+        materialized_row_sha256 = hashlib.sha256(materialized_row_path.read_bytes()).hexdigest()
+        evidence_index_sha256 = hashlib.sha256(workspace.metadata.artifact_index_path.read_bytes()).hexdigest()
+
         proof = (
             TrialAcceptanceProof(
                 infrastructure_valid=True,

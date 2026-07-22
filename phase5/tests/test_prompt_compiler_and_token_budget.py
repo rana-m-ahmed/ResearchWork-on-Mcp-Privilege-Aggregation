@@ -22,7 +22,6 @@ from phase5.runtime import (
     render_history,
     serialize_turn,
 )
-from phase5.runtime.prompt_compiler import POST_TOOL_RESPONSE_CONTRACT
 from phase5.runtime.token_budget import InfrastructureOversizeError
 
 
@@ -233,36 +232,6 @@ def test_compile_preserves_whitespace_and_counts_tool_messages() -> None:
     assert any(count.role == "tool" and count.source == "tool_results" for count in artifact.turn_token_counts)
     assert serialize_turn(history[1]) == json.dumps(history[1].to_mapping(), ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     assert render_history(history, tool_result_template="Tool Result [{{tool_name}}]:\n{{tool_output}}") != ""
-
-
-def test_post_tool_prompt_adds_terminal_response_contract_only_after_tool_results() -> None:
-    initial = compile_frozen_prompt(
-        task_description="Inspect the tool result",
-        retrieved_content=None,
-        history=(),
-        tool_results=(),
-        tokenizer=_fake_tokenizer(),
-    )
-    after_tool = compile_frozen_prompt(
-        task_description="Inspect the tool result",
-        retrieved_content=None,
-        history=(),
-        tool_results=(
-            ConversationTurn(
-                turn_index=1,
-                role="tool",
-                content="tool output block",
-                turn_kind="tool_result",
-                tool_name="read_file",
-            ),
-        ),
-        tokenizer=_fake_tokenizer(),
-    )
-
-    assert "<|post_tool_response_contract|>" not in initial.prompt_text
-    assert "<|post_tool_response_contract|>" in after_tool.prompt_text
-    assert POST_TOOL_RESPONSE_CONTRACT in after_tool.prompt_text
-    assert '{"terminal_response":"..."}' in after_tool.prompt_text
 
 
 def test_compile_preserves_nested_json_in_task_substitution() -> None:

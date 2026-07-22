@@ -95,8 +95,6 @@ class FrozenStateMachineControls:
     max_tool_calls_by_density: Mapping[str, int] = field(default_factory=dict)
     timeout_subclasses: tuple[str, ...] = ()
     forbidden_tool_names: tuple[str, ...] = ()
-    reject_repeated_executed_tool_calls: bool = False
-    terminate_after_expected_tool_plan: bool = False
 
     def __post_init__(self) -> None:
         if self.max_model_turns <= 0:
@@ -107,10 +105,6 @@ class FrozenStateMachineControls:
             raise SchemaInvariantError("max_identical_consecutive_tool_calls must be positive")
         if self.max_identical_total_tool_calls <= 0:
             raise SchemaInvariantError("max_identical_total_tool_calls must be positive")
-        if not isinstance(self.reject_repeated_executed_tool_calls, bool):
-            raise SchemaInvariantError("reject_repeated_executed_tool_calls must be boolean")
-        if not isinstance(self.terminate_after_expected_tool_plan, bool):
-            raise SchemaInvariantError("terminate_after_expected_tool_plan must be boolean")
         if self.per_model_turn_timeout_seconds <= 0:
             raise SchemaInvariantError("per_model_turn_timeout_seconds must be positive")
         if self.per_tool_call_timeout_seconds <= 0:
@@ -290,27 +284,31 @@ def load_frozen_state_machine_controls(
     with open(registry_path, "r", encoding="utf-8") as f:
         controls_data = json.load(f)
 
-    per_model_turn_timeout = controls_data.get("per_model_turn_timeout_seconds")
+    default_model_timeout = _load_float(
+        controls_data.get("per_model_turn_timeout_seconds"),
+        "per_model_turn_timeout_seconds",
+    )
     timeout_overrides = controls_data.get("per_model_turn_timeout_seconds_by_slot", {})
-    if timeout_overrides:
-        if not isinstance(timeout_overrides, Mapping):
-            raise SchemaInvariantError("per_model_turn_timeout_seconds_by_slot must be a mapping")
-        if model_slot is not None and model_slot in timeout_overrides:
-            per_model_turn_timeout = timeout_overrides[model_slot]
-    reject_repeated_calls = controls_data.get("reject_repeated_executed_tool_calls", False)
-    if not isinstance(reject_repeated_calls, bool):
-        raise SchemaInvariantError("reject_repeated_executed_tool_calls must be boolean")
-    terminate_after_plan = controls_data.get("terminate_after_expected_tool_plan", False)
-    if not isinstance(terminate_after_plan, bool):
-        raise SchemaInvariantError("terminate_after_expected_tool_plan must be boolean")
-    
+    if not isinstance(timeout_overrides, dict):
+        raise SchemaInvariantError("per_model_turn_timeout_seconds_by_slot must be an object")
+    allowed_slots = {"M1", "M2", "M3", "M4"}
+    if any(not isinstance(slot, str) or slot not in allowed_slots for slot in timeout_overrides):
+        raise SchemaInvariantError("per_model_turn_timeout_seconds_by_slot contains an invalid model slot")
+    validated_timeout_overrides = {
+        slot: _load_float(value, f"per_model_turn_timeout_seconds_by_slot.{slot}")
+        for slot, value in timeout_overrides.items()
+    }
+    normalized_model_slot = model_slot.upper() if isinstance(model_slot, str) else None
+    if normalized_model_slot is not None and normalized_model_slot not in allowed_slots:
+        raise SchemaInvariantError(f"unsupported model slot: {model_slot}")
+    model_timeout = validated_timeout_overrides.get(normalized_model_slot, default_model_timeout)
+
     return FrozenStateMachineControls(
         max_model_turns=_load_int(controls_data.get("max_model_turns"), "max_model_turns"),
         max_total_tool_calls=_load_int(controls_data.get("max_total_tool_calls"), "max_total_tool_calls"),
         max_identical_consecutive_tool_calls=_load_int(controls_data.get("max_identical_consecutive_tool_calls"), "max_identical_consecutive_tool_calls"),
         max_identical_total_tool_calls=_load_int(controls_data.get("max_identical_total_tool_calls"), "max_identical_total_tool_calls"),
-        reject_repeated_executed_tool_calls=reject_repeated_calls,
-        per_model_turn_timeout_seconds=_load_float(per_model_turn_timeout, "per_model_turn_timeout_seconds"),
+        per_model_turn_timeout_seconds=model_timeout,
         per_tool_call_timeout_seconds=_load_float(controls_data.get("per_tool_call_timeout_seconds"), "per_tool_call_timeout_seconds"),
         whole_trial_timeout_seconds=_load_float(controls_data.get("whole_trial_timeout_seconds"), "whole_trial_timeout_seconds"),
         multiple_tool_call_policy=_load_string(controls_data.get("multiple_tool_call_policy"), "multiple_tool_call_policy"),
@@ -323,8 +321,7 @@ def load_frozen_state_machine_controls(
         trial_stop_conditions=tuple(controls_data.get("trial_stop_conditions", ())),
         max_tool_calls_by_density=controls_data.get("max_tool_calls_by_density", {}),
         timeout_subclasses=tuple(controls_data.get("timeout_subclasses", ())),
-        forbidden_tool_names=tuple(controls_data.get("forbidden_tool_names", ())),
-        terminate_after_expected_tool_plan=terminate_after_plan,
+        forbidden_tool_names=tuple(controls_data.get("forbidden_tool_names", ()))
     )
 
 
@@ -510,7 +507,6 @@ def run_frozen_agent_loop(
     )
 
     _state_transition(state_transitions, parser_events_path, state_index=2, state_code="S2", description="CREATE_ATTEMPT_WORKSPACE")
-    workspace.metadata.write_manifest()
     _state_transition(
         state_transitions,
         parser_events_path,
@@ -830,18 +826,6 @@ def run_frozen_agent_loop(
                 (call.tool_name, json.dumps(call.arguments, sort_keys=True, separators=(",", ":")))
                 for call in parsed_output.tool_calls
             )
-            if controls.reject_repeated_executed_tool_calls:
-                executed_signatures = {
-                    (tool_name, json.dumps(record.arguments, sort_keys=True, separators=(",", ":")))
-                    for record in tool_records
-                    for tool_name in {record.logical_tool_name, record.exposed_tool_name}
-                    if tool_name
-                }
-                if any(signature in executed_signatures for signature in call_signature):
-                    termination_reason = "repeated-call limit reached"
-                    termination_state = "S14"
-                    notes.append("model re-emitted an already executed tool call")
-                    break
             for signature in call_signature:
                 identical_total_calls[signature] = identical_total_calls.get(signature, 0) + 1
                 if identical_total_calls[signature] > controls.max_identical_total_tool_calls:
@@ -936,26 +920,6 @@ def run_frozen_agent_loop(
         )
         for record in tool_results_batch:
             tool_results.append(record.to_conversation_turn(tool_result_serialization_version=controls.tool_result_serialization_version))
-
-        if controls.terminate_after_expected_tool_plan and task_execution_plan:
-            expected_plan = tuple(task_execution_plan)
-            executed_plan = tuple(
-                {
-                    "tool_name": record.logical_tool_name or record.exposed_tool_name,
-                    "arguments": dict(record.arguments),
-                }
-                for record in tool_records
-            )
-            plan_completed = len(executed_plan) == len(expected_plan) and all(
-                plan_item["tool_name"] in {record.logical_tool_name, record.exposed_tool_name}
-                and dict(plan_item["arguments"]) == record.arguments
-                for record, plan_item in zip(tool_records, expected_plan)
-            )
-            if plan_completed:
-                termination_reason = controls.terminal_response_policy
-                termination_state = "S17"
-                notes.append("frozen expected tool plan completed")
-                break
 
         _state_transition(
             state_transitions,
