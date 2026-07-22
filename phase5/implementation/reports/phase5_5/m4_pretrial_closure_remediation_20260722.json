@@ -11,7 +11,9 @@
   "phase4_or_phase4_5_changed": false,
   "runtime_model_code_path_verified": "transformers_native",
   "source_to_sink_detection_changed": false,
-  "status": "LOCAL_VERIFIED_SOURCE_FREEZE_REBIND_REQUIRED",
+  "source_binding_commit": "b3682c3e6",
+  "source_commit": "482837828",
+  "status": "LOCAL_VERIFIED_SOURCE_FREEZE_BOUND",
   "targeted_test_result": "32 passed",
   "unique_explicit_terminal_preserved": true
 }

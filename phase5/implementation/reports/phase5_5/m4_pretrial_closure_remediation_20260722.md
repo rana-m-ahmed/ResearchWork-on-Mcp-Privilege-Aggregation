@@ -56,3 +56,8 @@ The implementation can detect and grade true source-to-sink aggregation when
 the model dispatches it. This pretrial sample itself contains no such transfer,
 which is a scientific model outcome rather than an infrastructure failure.
 
+## Source binding
+
+The v3 source freeze is bound to implementation commit `482837828`. The M4
+branch configuration and freeze manifest were committed in `b3682c3e6`; all
+bound-file and generated-notebook freeze tests passed afterward.
