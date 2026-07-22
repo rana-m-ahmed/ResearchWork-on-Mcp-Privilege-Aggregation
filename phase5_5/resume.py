@@ -39,6 +39,11 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _portable_text_sha256(path: Path) -> str:
+    data = path.read_bytes().replace(b"\r\n", b"\n")
+    return hashlib.sha256(data).hexdigest()
+
+
 def _require_lineage_sha256(payload: Mapping[str, Any], path: Path, label: str) -> None:
     """Validate a lineage digest across Git's Windows newline materialization."""
 
@@ -182,8 +187,9 @@ def _validated_superseded_runs(
             _require_equal(latest, "last_target_trial_id", run_records[-1].target_trial_id, label)
             if _is_complete(evidence_root, run_id):
                 raise SchemaInvariantError(f"{label} cannot supersede a completed campaign")
+        checkpoint_hash = _portable_text_sha256 if artifact == SOURCE_BOUND_SUPERSESSION_ARTIFACT else _sha256
         checkpoint_hashes = {
-            checkpoint_path.relative_to(evidence_root).as_posix(): _sha256(checkpoint_path)
+            checkpoint_path.relative_to(evidence_root).as_posix(): checkpoint_hash(checkpoint_path)
             for checkpoint_path, _ in checkpoint_entries
         }
         _require_equal(payload, "checkpoint_sha256", checkpoint_hashes, label)
