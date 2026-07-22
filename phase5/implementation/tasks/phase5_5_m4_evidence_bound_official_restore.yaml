@@ -1,0 +1,41 @@
+task_id: PHASE5_5-M4-EVIDENCE-BOUND-OFFICIAL-RESTORE
+title: Restore evidence-validated M4 terminal parsing for official execution
+scope:
+  - M4 embedded terminal-response parser behavior
+  - parser regression tests tied to the M4 pretrial bundle
+  - M4 source freeze, official notebook binding, and append-only reports
+evidence_inputs:
+  - m4-pretrail-output/M4_pretrial_manifest (2).json
+  - m4-pretrail-output/M4_pretrial_behavior_summary (2).json
+  - m4-pretrail-output/M4_pretrial_evidence (2)/phase5_5_pretrial_evidence/
+validated_source_baseline: 9efe58b69
+frozen_inputs:
+  - phase4/
+  - phase4_5/
+  - phase5/grading/frozen_grader.py
+  - phase5/manifests/model_runtime_authority_v2.json
+  - phase5_5/configs/treatment_and_analysis_contract_v3.json
+allowed_paths:
+  - phase5_5/parser.py
+  - phase5_5/tests/test_parser.py
+  - phase5_5/kaggle/phase5_5_official_runner.ipynb
+  - phase5_5/manifests/phase5_5_source_freeze_v3.json
+  - phase5/implementation/tasks/phase5_5_m4_evidence_bound_official_restore.yaml
+  - phase5/implementation/reports/phase5_5/m4_evidence_bound_official_restore_20260722.md
+  - phase5/implementation/reports/phase5_5/m4_evidence_bound_official_restore_20260722.json
+forbidden_actions:
+  - modify_phase4_or_phase4_5
+  - modify_historical_pretrial_evidence
+  - change_frozen_grader_labels
+  - infer_or_repair_missing_tool_calls
+  - alter_M4_native_Phi_runtime_behavior
+  - dispatch_official_trials_locally
+acceptance:
+  - one_explicit_embedded_terminal_response_is_preserved
+  - multiple_embedded_terminal_responses_fail_closed
+  - echoed_tool_output_JSON_is_not_dispatched
+  - ordered_tool_calls_remain_preserved
+  - M4_native_runtime_and_canary_remain_unchanged
+  - final_manifest_lifecycle_and_archive_fix_remain
+  - M4_pretrial_evidence_is_unchanged
+  - full_phase5_and_phase5_5_tests_pass
