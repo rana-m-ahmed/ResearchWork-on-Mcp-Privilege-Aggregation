@@ -1,0 +1,43 @@
+task_id: phase5_5_official_resume_v2
+date: 2026-07-22
+scope: phase5_5_official_execution_only
+objective: >-
+  Make M1-M4 official campaigns durably resumable across Kaggle sessions without
+  duplicating completed targets, changing model-specific behavior, or mixing
+  incompatible source epochs.
+frozen_inputs:
+  - phase5/manifests/batch_partition_manifest_v3_treatment.json
+  - phase5/validation/kaggle_run_plan_v3_treatment.json
+  - phase5_5/manifests/phase5_5_source_freeze_v3.json
+allowed_paths:
+  - phase5/cli.py
+  - phase5/runtime/official_execution.py
+  - phase5/tests/test_official_execution_adapter.py
+  - phase5/implementation/tasks/phase5_5_official_resume_v2.yaml
+  - phase5/implementation/reports/phase5_5/official_resume_v2_20260722.md
+  - phase5/implementation/reports/phase5_5/official_resume_v2_20260722.json
+  - phase5_5/checkpointing.py
+  - phase5_5/resume.py
+  - phase5_5/scripts/build_official_runner.py
+  - phase5_5/scripts/build_source_freeze.py
+  - phase5_5/scripts/publish_official_evidence.py
+  - phase5_5/kaggle/phase5_5_official_runner.ipynb
+  - phase5_5/manifests/phase5_5_source_freeze_v3.json
+  - phase5_5/tests/test_checkpointing.py
+  - phase5_5/tests/test_kaggle_notebook.py
+  - phase5_5/tests/test_official_publication.py
+  - phase5_5/tests/test_resume.py
+acceptance:
+  - retain the original run ID and continue checkpoint numbering after restart
+  - validate slot, dataset, source commit, frozen plan hashes, lineage hash, and attempt evidence
+  - skip only terminal targets from the same source-bound run
+  - retry only orphan attempts with a valid parent chain
+  - never publish a completion marker while resume_required is true
+  - store completion markers under an append-only run-specific path
+  - reject legacy, ambiguous, source-mismatched, or tampered current-dataset state
+  - preserve Phase 4, Phase 4.5, scientific inputs, and model-specific runtime behavior
+verification:
+  - targeted positive, negative, invariant, and fault-path tests
+  - full phase5 and phase5_5 test suites
+  - strict Gate 0 from clean committed checkouts
+  - source-freeze bound-file verification on every model branch
