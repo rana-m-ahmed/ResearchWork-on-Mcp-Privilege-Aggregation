@@ -542,28 +542,33 @@ class SharedExecutionEngine(RealTrialPipeline):
             # write-once manifest is materialized immediately afterward.
             return None
 
-        record = run_frozen_agent_loop(
-            workspace=workspace,
-            frozen_row=runtime_row,
-            task_description=str(task_content["description"]),
-            controls=self.controls,
-            backend=self.backend,
-            tokenizer=self.tokenizer,
-            budget_policy=TokenBudgetPolicy(),
-            tool_catalog=tool_catalog,
-            mcp_discovery=model_facing_discovery,
-            task_execution_plan=task_execution_plan,
-            reset_executor=reset_executor,
-            retrieved_content=None,
-            root=self.root,
-            allow_grading=True,
-            grade_callable=grade_callable,
-            tid_callable=tid_callable,
-            materialize_callable=materialize_callable,
-            validate_callable=validate_callable,
-            finalize_callable=finalize_callable,
-            lineage_callable=lineage_callable,
-        )
+        try:
+            record = run_frozen_agent_loop(
+                workspace=workspace,
+                frozen_row=runtime_row,
+                task_description=str(task_content["description"]),
+                controls=self.controls,
+                backend=self.backend,
+                tokenizer=self.tokenizer,
+                budget_policy=TokenBudgetPolicy(),
+                tool_catalog=tool_catalog,
+                mcp_discovery=model_facing_discovery,
+                task_execution_plan=task_execution_plan,
+                reset_executor=reset_executor,
+                retrieved_content=None,
+                root=self.root,
+                allow_grading=True,
+                grade_callable=grade_callable,
+                tid_callable=tid_callable,
+                materialize_callable=materialize_callable,
+                validate_callable=validate_callable,
+                finalize_callable=finalize_callable,
+                lineage_callable=lineage_callable,
+            )
+        except Exception:
+            orphan_status = "PRETRIAL_ORPHAN" if getattr(self, "pretrial_mode", False) else "ORPHAN"
+            replace(workspace.metadata, attempt_status=orphan_status).write_manifest()
+            raise
 
         analysis_eligible = (
             getattr(record, "evidence_ready", record.status == "PASS")

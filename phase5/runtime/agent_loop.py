@@ -487,7 +487,6 @@ def run_frozen_agent_loop(
     )
 
     _state_transition(state_transitions, parser_events_path, state_index=2, state_code="S2", description="CREATE_ATTEMPT_WORKSPACE")
-    workspace.metadata.write_manifest()
     _state_transition(
         state_transitions,
         parser_events_path,

@@ -29,6 +29,9 @@ until the loop outcome is known and is sealed into the hash index afterward.
 - Future attempt manifests are written once with `OFFICIAL_ACCEPTED`,
   `PRETRIAL_COMPLETED`, `PRETRIAL_INVALID`, `SYNTHETIC_QUALIFIED`, or `INVALID`
   as appropriate, before the evidence hash index is sealed.
+- The agent loop no longer writes a provisional `DISPATCHED` manifest. A loop
+  crash writes one `ORPHAN` or `PRETRIAL_ORPHAN` manifest and re-raises the
+  original failure, preserving both append-only semantics and diagnostics.
 
 ## Contract clarifications
 
@@ -47,8 +50,8 @@ Three observations from the bundle are intentional and were not changed:
 
 ## Verification
 
-- Focused parser, parser-event-selection, and shared-engine suite: `32 passed`.
-- Complete `phase5/tests` and `phase5_5/tests` suite: `330 passed`.
+- Focused parser, agent-loop, and shared-engine lifecycle suite: `40 passed`.
+- Complete `phase5/tests` and `phase5_5/tests` suite: `331 passed`.
 - Phase 4, Phase 4.5, frozen grader semantics, model identity, prompts,
   datasets, and historical evidence were not modified.
 
@@ -58,6 +61,6 @@ which is a scientific model outcome rather than an infrastructure failure.
 
 ## Source binding
 
-The v3 source freeze is bound to implementation commit `482837828`. The M4
-branch configuration and freeze manifest were committed in `b3682c3e6`; all
-bound-file and generated-notebook freeze tests passed afterward.
+The earlier `482837828` / `b3682c3e6` binding is superseded because the first
+manifest remediation still left a provisional S2 write in the real agent
+loop. The corrected lifecycle is pending a fresh source-freeze binding.
