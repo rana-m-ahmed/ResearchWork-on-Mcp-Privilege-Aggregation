@@ -1,0 +1,27 @@
+task_id: PHASE5_5-LEGACY-SUPERSESSION-PORTABILITY-20260723
+title: Make legacy campaign supersessions portable across Windows and Kaggle
+scope:
+  - M1 legacy v1 supersession validation
+  - shared official resume behavior used by all Phase 5.5 branches
+  - M1 and M3 official notebook and source-freeze regeneration
+frozen_inputs:
+  - phase4/
+  - phase4_5/
+  - phase5_5/evidence/
+allowed_paths:
+  - phase5_5/resume.py
+  - phase5_5/tests/test_resume.py
+  - phase5_5/kaggle/phase5_5_official_runner.ipynb
+  - phase5_5/manifests/phase5_5_source_freeze_v3.json
+  - phase5_5_source_freeze.json
+  - phase5/implementation/tasks/phase5_5_legacy_supersession_portability_20260723.yaml
+  - phase5/implementation/reports/phase5_5/legacy_supersession_portability_20260723.md
+forbidden_actions:
+  - modify_phase4_or_phase4_5
+  - rewrite_legacy_supersession_evidence
+  - change scientific labels or grader behavior
+acceptance:
+  - legacy v1 hashes remain immutable and validate under LF or CRLF materialization
+  - tampered legacy checkpoint content still fails closed
+  - M1 and M3 authorized preflight no longer fail on the stale v1 record
+  - M2 and M4 v2 supersession behavior remains unchanged
