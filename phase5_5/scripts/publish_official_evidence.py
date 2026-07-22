@@ -132,6 +132,8 @@ def main() -> int:
     args = parser.parse_args()
     root = args.root.resolve()
     slot = args.model_slot.upper()
+    if Path(args.run_id).name != args.run_id or any(separator in args.run_id for separator in ("/", "\\")):
+        raise RuntimeError("run ID is not safe for an evidence publication path")
     branch = f"phase5_5-model-{slot.removeprefix('M')}"
     token_name = "PHASE5_GITHUB_TOKEN"
     token = os.environ.get(token_name)
@@ -154,14 +156,17 @@ def main() -> int:
         "published_utc": datetime.now(timezone.utc).isoformat(),
         "files": [{"path": path, "sha256": sha256(root / path), "bytes": (root / path).stat().st_size} for path in files],
     }
-    manifest_path = root / "phase5_5/evidence/official_publication_manifest.json"
+    publication_root = root / "phase5_5/evidence/publications" / args.run_id
+    publication_root.mkdir(parents=True, exist_ok=True)
+    manifest_path = publication_root / "official_publication_manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    manifest_relative = manifest_path.relative_to(root).as_posix()
 
     env = git_auth_environment(token, env)
     try:
         # NUL-delimited pathspec input keeps argv bounded and prevents unrelated
         # evidence from being staged when checkpointed runs share a checkout.
-        stage_paths = [*files, "phase5_5/evidence/official_publication_manifest.json"]
+        stage_paths = [*files, manifest_relative]
         run_git(root, ["add", "--pathspec-from-file=-", "--pathspec-file-nul"], env=env, input_text="\0".join(stage_paths) + "\0")
         run_git(root, ["-c", "user.name=phase5.5-sync", "-c", "user.email=phase5.5-sync@example.invalid", "commit", "-m", f"phase5.5 official evidence {slot} {args.run_id}"], env=env)
         first_commit = run_git(root, ["rev-parse", "HEAD"], env=env)
@@ -170,9 +175,10 @@ def main() -> int:
             raise RuntimeError(f"remote branch diverged: expected {args.expected_parent}, got {remote_before}")
         run_git(root, ["push", "origin", f"HEAD:{branch}"], env=env)
         receipt = {"artifact": "phase5_5_official_evidence_publication_receipt_v1", "model_slot": slot, "branch": branch, "run_id": args.run_id, "expected_parent": args.expected_parent, "publication_commit": first_commit, "remote_head_after_push": first_commit, "published_utc": datetime.now(timezone.utc).isoformat(), "credential_purged": False}
-        receipt_path = root / "phase5_5/evidence/official_publication_receipt.json"
+        receipt_path = publication_root / "official_publication_receipt.json"
         receipt_path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        run_git(root, ["add", "--", "phase5_5/evidence/official_publication_receipt.json"], env=env)
+        receipt_relative = receipt_path.relative_to(root).as_posix()
+        run_git(root, ["add", "--", receipt_relative], env=env)
         run_git(root, ["-c", "user.name=phase5.5-sync", "-c", "user.email=phase5.5-sync@example.invalid", "commit", "-m", f"phase5.5 publication receipt {slot} {args.run_id}"], env=env)
         receipt_commit = run_git(root, ["rev-parse", "HEAD"], env=env)
         run_git(root, ["push", "origin", f"HEAD:{branch}"], env=env)

@@ -31,6 +31,12 @@ def main() -> None:
     source = "".join(config["source"])
     source = source.replace('MODEL_SLOT = os.environ.get("PHASE5_MODEL_SLOT", "M1").upper()', f'MODEL_SLOT = "{SLOT}"')
     source = source.replace('EXECUTE_OFFICIAL = os.environ.get("PHASE5_EXECUTE_OFFICIAL", "0") == "1"', "EXECUTE_OFFICIAL = True")
+    source = source.replace(
+        'RUN_ID = f"P5RUN-{DATASET_VERSION}-{MODEL_SLOT}-{UTC_DATE}-{RUN_TOKEN}"',
+        'PROPOSED_RUN_ID = f"P5RUN-{DATASET_VERSION}-{MODEL_SLOT}-{UTC_DATE}-{RUN_TOKEN}"\n'
+        'RUN_ID = PROPOSED_RUN_ID\n'
+        'CHECKPOINT_START_SEQUENCE = 0',
+    )
     head_start = source.find("EXPECTED_BRANCH_HEADS = {")
     if head_start >= 0:
         head_end = source.find("BRANCHES =", head_start)
@@ -52,7 +58,39 @@ if freeze.get("artifact") != "phase5_5_source_freeze_v3" or freeze.get("dataset_
 branch_config = json.loads((REPO_ROOT / "phase5_5/branch_config.json").read_text(encoding="utf-8-sig"))
 if branch_config["model_slot"] != MODEL_SLOT or branch_config["exact_model_identifier"] != MODEL_IDS[MODEL_SLOT]:
     raise RuntimeError("selected branch does not match its approved model slot")
-print(json.dumps({{"branch_head": actual_branch_head, "source_commit": freeze["source_commit"], "model_id": MODEL_IDS[MODEL_SLOT]}}, indent=2))
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+from phase5.campaign import load_campaign_plan
+from phase5_5.resume import ResumeMode, resolve_official_resume
+
+resume_plan = load_campaign_plan(
+    model_slot=MODEL_SLOT,
+    batch_manifest_path=REPO_ROOT / "phase5/manifests/batch_partition_manifest_v3_treatment.json",
+    run_plan_path=REPO_ROOT / "phase5/validation/kaggle_run_plan_v3_treatment.json",
+    root=REPO_ROOT,
+)
+resume_resolution = resolve_official_resume(
+    root=REPO_ROOT,
+    model_slot=MODEL_SLOT,
+    dataset_version=DATASET_VERSION,
+    source_commit=freeze["source_commit"],
+    batch_manifest_sha256=resume_plan.batch_manifest_sha256,
+    run_plan_sha256=resume_plan.run_plan_sha256,
+    proposed_run_id=PROPOSED_RUN_ID,
+)
+if resume_resolution.mode is ResumeMode.COMPLETE:
+    raise RuntimeError(f"official campaign already completed and published: {{resume_resolution.run_id}}")
+RUN_ID = resume_resolution.run_id
+CHECKPOINT_START_SEQUENCE = resume_resolution.checkpoint_sequence
+print(json.dumps({{
+    "branch_head": actual_branch_head,
+    "source_commit": freeze["source_commit"],
+    "model_id": MODEL_IDS[MODEL_SLOT],
+    "resume_mode": resume_resolution.mode.value,
+    "run_id": RUN_ID,
+    "checkpoint_start_sequence": CHECKPOINT_START_SEQUENCE,
+    "completed_target_count": resume_resolution.completed_target_count,
+}}, indent=2))
 ''')
 
     preflight = cell(notebook, "official_preflight")
@@ -158,6 +196,7 @@ print("OFFICIAL_AUTHORIZED_PREFLIGHT_PASS")
 
     campaign = cell(notebook, "official_campaign")
     set_source(campaign, '''campaign_error: dict[str, object] | None = None
+campaign_resume_required = False
 if not EXECUTE_OFFICIAL:
     print("No official rows dispatched.")
 elif preflight.get("pass") is not True:
@@ -191,6 +230,8 @@ else:
         "6",
         "--checkpoint-output-dir",
         str(OUTPUT_ROOT / "checkpoints"),
+        "--checkpoint-start-sequence",
+        str(CHECKPOINT_START_SEQUENCE),
         "--output",
         str(campaign_report),
     ]
@@ -248,6 +289,15 @@ else:
             )
             print(f"OFFICIAL_CAMPAIGN_FAILED; publishable evidence will be synced if lineage exists: {returncode}", flush=True)
         else:
+            if not campaign_report.is_file():
+                raise RuntimeError("official campaign returned success without a campaign report")
+            campaign_payload = json.loads(campaign_report.read_text(encoding="utf-8"))
+            campaign_resume_required = campaign_payload.get("resume_required") is True
+            if campaign_resume_required:
+                print(
+                    f"OFFICIAL_CAMPAIGN_CHECKPOINTED_RESUME_REQUIRED: remaining_batches={len(campaign_payload.get('remaining_batch_ids', []))}",
+                    flush=True,
+                )
             print(f"OFFICIAL_CAMPAIGN_COMPLETE: {campaign_report}", flush=True)
     except Exception as exc:
         campaign_error = {"artifact": "phase5_5_official_campaign_failure", "error": str(exc)}
@@ -315,6 +365,11 @@ if not lineage_path.is_file():
     if campaign_error is not None:
         raise RuntimeError(f"official campaign failed before lineage evidence; nothing publishable: {campaign_error}")
     raise RuntimeError("official campaign did not produce phase5_5/evidence/lineage.csv")
+if campaign_error is not None or campaign_resume_required:
+    os.environ.pop("PHASE5_GITHUB_TOKEN", None)
+    os.environ.pop("HF_TOKEN", None)
+    reason = campaign_error if campaign_error is not None else "safety horizon reached with remaining batches"
+    raise RuntimeError(f"official campaign requires resume from its latest published checkpoint: {reason}")
 evidence_files = sorted(path for path in evidence_root.rglob("*") if path.is_file())
 evidence_manifest = {
     "artifact": "phase5_5_kaggle_evidence_package",

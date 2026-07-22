@@ -221,25 +221,30 @@ class RepositoryBatchExecutionAdapter:
         if batch.model_slot != self.session.model_slot.value:
             raise SchemaInvariantError("batch model slot does not match the sealed campaign session")
         existing = list(self.lineage_store.load_records())
-        completed_targets = {
-            record.target_trial_id
+        active_records = [
+            record
             for record in existing
-            if record.accepted_attempt
-            or record.attempt_status in {
-                "INVALID",
-                "OFFICIAL_ACCEPTED",
-                "PRETRIAL_COMPLETED",
-                "PRETRIAL_INVALID",
-                "PRETRIAL_ORPHAN",
-            }
+            if record.dataset_version == self.dataset_version and record.run_id == self.session.run_id
+        ]
+        latest_by_target = {
+            target: max(records, key=lambda record: record.attempt_index)
+            for target in {record.target_trial_id for record in active_records}
+            if (records := [record for record in active_records if record.target_trial_id == target])
         }
-        rows = tuple(row for row in self._rows_for_batch(batch) if str(row.trial_id) not in completed_targets)
+        completed_targets = {
+            target
+            for target, record in latest_by_target.items()
+            if record.accepted_attempt or record.attempt_status in {"INVALID", "OFFICIAL_ACCEPTED", "PRETRIAL_COMPLETED", "PRETRIAL_INVALID"}
+        }
+        batch_rows = self._rows_for_batch(batch)
+        rows = tuple(row for row in batch_rows if str(row.trial_id) not in completed_targets)
         if self.pretrial_trial_limit is not None:
             rows = rows[: self.pretrial_trial_limit]
         qualification_accepted = 0
         analysis_eligible_count = 0
         elapsed_seconds = 0.0
         result_digests: list[str] = []
+        current_analysis: dict[str, bool] = {}
         since_checkpoint = 0
 
         for row in rows:
@@ -269,6 +274,7 @@ class RepositoryBatchExecutionAdapter:
             # invalid model behavior may also be eligible when its evidence is
             # complete. Count either form toward scientific eligibility.
             analysis_eligible_count += int(result.analysis_eligible or qualified)
+            current_analysis[result.attempt_id] = bool(result.analysis_eligible or qualified)
             elapsed_seconds += result.elapsed_seconds
 
             if self.official_mode:
@@ -299,6 +305,7 @@ class RepositoryBatchExecutionAdapter:
             )
             self.lineage_store.append(lineage)
             existing = (*existing, lineage)
+            active_records.append(lineage)
             since_checkpoint += 1
             if self.checkpoint_callback is not None and since_checkpoint >= self.checkpoint_interval_trials:
                 self.checkpoint_callback(batch, lineage, len(existing))
@@ -317,10 +324,53 @@ class RepositoryBatchExecutionAdapter:
         if self.checkpoint_callback is not None and since_checkpoint:
             self.checkpoint_callback(batch, existing[-1], len(existing))
 
+        if self.official_mode:
+            latest_by_target = {
+                target: max(records, key=lambda record: record.attempt_index)
+                for target in {record.target_trial_id for record in active_records}
+                if (records := [record for record in active_records if record.target_trial_id == target])
+            }
+            batch_target_ids = {str(row.trial_id) for row in batch_rows}
+            batch_records = [latest_by_target[target] for target in batch_target_ids if target in latest_by_target]
+            qualification_accepted = sum(int(record.accepted_attempt) for record in batch_records)
+            analysis_eligible_count = 0
+            result_digests = []
+            for record in sorted(batch_records, key=lambda item: item.target_trial_id):
+                eligible = current_analysis.get(record.attempt_id)
+                if eligible is None:
+                    grader_path = self.lineage_store.path.parent / "attempts" / record.attempt_id / "grader_evidence.json"
+                    try:
+                        grader = json.loads(grader_path.read_text(encoding="utf-8"))
+                    except (OSError, json.JSONDecodeError) as exc:
+                        raise SchemaInvariantError(
+                            f"resumed attempt grader evidence is unreadable: {grader_path.as_posix()}"
+                        ) from exc
+                    if not isinstance(grader, dict) or not isinstance(grader.get("analysis_eligible_trial"), bool):
+                        raise SchemaInvariantError(
+                            f"resumed attempt grader evidence lacks analysis_eligible_trial: {grader_path.as_posix()}"
+                        )
+                    if grader.get("official_trial") is not True:
+                        raise SchemaInvariantError(
+                            f"resumed attempt grader evidence is not official: {grader_path.as_posix()}"
+                        )
+                    eligible = bool(grader["analysis_eligible_trial"] or record.accepted_attempt)
+                analysis_eligible_count += int(eligible)
+                result_digests.append(
+                    _sha256_payload(
+                        {
+                            "attempt_id": record.attempt_id,
+                            "qualification_accepted": record.accepted_attempt,
+                            "analysis_eligible": eligible,
+                            "target_trial_id": record.target_trial_id,
+                        }
+                    )
+                )
+
         official_accepted = qualification_accepted if self.official_mode else 0
         # Evidence finalization is independent of model behavior. A complete,
         # hash-valid batch with zero accepted calls is a valid scientific result.
-        all_rows_analysis_eligible = bool(rows) and analysis_eligible_count == len(rows)
+        expected_row_count = len(batch_rows) if self.official_mode else len(rows)
+        all_rows_analysis_eligible = expected_row_count > 0 and analysis_eligible_count == expected_row_count
         if self.official_mode:
             batch_status = (
                 "OFFICIAL_FINALIZED"
@@ -335,7 +385,7 @@ class RepositoryBatchExecutionAdapter:
             batch_id=batch.batch_id,
             accepted_count=official_accepted,
             finalized=self.official_mode and all_rows_analysis_eligible,
-            estimated_seconds=elapsed_seconds or float(batch.row_count * p95_trial_seconds),
+            estimated_seconds=(elapsed_seconds if self.official_mode else elapsed_seconds or float(batch.row_count * p95_trial_seconds)),
             batch_hash=_sha256_payload(
                 {
                     "batch_id": batch.batch_id,

@@ -48,6 +48,12 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
     assert '"--checkpoint-publish"' in source
     assert '"--checkpoint-interval-trials"' in source
     assert '"6"' in source
+    assert '"--checkpoint-start-sequence"' in source
+    assert "resolve_official_resume" in source
+    assert "PROPOSED_RUN_ID" in source
+    assert "ResumeMode.COMPLETE" in source
+    assert "OFFICIAL_CAMPAIGN_CHECKPOINTED_RESUME_REQUIRED" in source
+    assert "official campaign requires resume from its latest published checkpoint" in source
     assert "publish_checkpoint.py" in source or "checkpoint-publish" in source
     pretrial_path = root / "phase5_5/kaggle/phase5_5_pretrial_runner.ipynb"
     assert pretrial_path.is_file()
