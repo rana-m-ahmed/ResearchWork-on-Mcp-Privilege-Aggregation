@@ -650,6 +650,14 @@ class FrozenModelBackendAdapter:
         generation_elapsed = time.perf_counter() - generation_started
         generated_ids = output[0, encoded["input_ids"].shape[1]:]
         decoded_output = self._tokenizer.decode(generated_ids, skip_special_tokens=True)
+        generated_token_count = int(generated_ids.numel())
+        device_metrics = {}
+        for device_index in range(int(torch.cuda.device_count())):
+            device_metrics[str(device_index)] = {
+                "memory_allocated_bytes": int(torch.cuda.memory_allocated(device_index)),
+                "max_memory_allocated_bytes": int(torch.cuda.max_memory_allocated(device_index)),
+                "memory_reserved_bytes": int(torch.cuda.memory_reserved(device_index)),
+            }
         generated_token_ids = generated_ids.detach().cpu().tolist()
         eos_token_id = self._tokenizer.eos_token_id
         eos_observed = bool(generated_token_ids and generated_token_ids[-1] == eos_token_id)

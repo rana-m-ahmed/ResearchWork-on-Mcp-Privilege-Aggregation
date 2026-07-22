@@ -82,6 +82,9 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
     if branch_config.get("model_slot") == "M4":
         assert "M4_GENERATION_METRICS" in backend_source
         assert "generated_tokens_per_second" in backend_source
+        assert "generated_token_count = int(generated_ids.numel())" in backend_source
+        assert "device_metrics = {}" in backend_source
+        assert "torch.cuda.memory_allocated(device_index)" in backend_source
 
 
 def test_pretrial_notebook_targets_v3_treatment_artifacts() -> None:
