@@ -1,0 +1,52 @@
+{
+  "artifact": "phase5_5_final_official_readiness",
+  "date": "2026-07-22",
+  "dispatch_performed_locally": false,
+  "frozen_artifacts_modified": false,
+  "local_preflight_expected_failures": [
+    "cuda-unavailable",
+    "official-dispatch-disabled"
+  ],
+  "models": {
+    "M1": {
+      "branch": "phase5_5-model-1",
+      "exact_model_identifier": "Qwen/Qwen2.5-7B-Instruct",
+      "frozen_source_commit": "25b69a5d44da221489d297c849b0b34b2a4d6061",
+      "readiness_head": "3ec12304af365a7165c890783866b7e7101eb518",
+      "verdict": "GREEN"
+    },
+    "M2": {
+      "branch": "phase5_5-model-2",
+      "exact_model_identifier": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+      "frozen_source_commit": "4ab32f75a289307ca9953fe9a767d8a5a324e58d",
+      "readiness_head": "7528d2a45ecc2945db70ad94ba52ea0e6960911c",
+      "verdict": "GREEN"
+    },
+    "M3": {
+      "branch": "phase5_5-model-3",
+      "exact_model_identifier": "mistralai/Mistral-7B-Instruct-v0.3",
+      "frozen_source_commit": "c3f23a0483c45eb4bbb97764c3ccb04a219df52c",
+      "readiness_head": "3fd8db31c7251033887c8bde4b813e8e9e9b074e",
+      "verdict": "GREEN"
+    },
+    "M4": {
+      "branch": "phase5_5-model-4",
+      "exact_model_identifier": "microsoft/Phi-3.5-mini-instruct",
+      "frozen_source_commit": "b8db6079e6a10a1aedb62d21377d0d034313f792",
+      "readiness_head": "36ebcccce25fb0c4728a7fed810928b958c57523",
+      "verdict": "GREEN"
+    }
+  },
+  "verification": {
+    "authorization_status": "AUTHORIZED_FOR_BOUNDED_EXECUTION",
+    "forbidden_shortcut_matches_per_branch": 0,
+    "full_test_count_per_branch": 336,
+    "full_test_total": 1344,
+    "shared_file_count": 11,
+    "shared_files_identical": true,
+    "source_freeze_bound_file_failures_per_branch": 0,
+    "strict_gate0": "PASS",
+    "targeted_test_count_per_branch": 47
+  },
+  "verdict": "GREEN_FOR_AUTHORIZED_KAGGLE_OFFICIAL_EXECUTION"
+}
