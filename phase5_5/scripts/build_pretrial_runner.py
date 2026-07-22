@@ -37,6 +37,15 @@ def main() -> None:
         raise RuntimeError("base runner lost frozen P5RUN run-id grammar")
     set_source(config, source)
 
+    hardware = find_cell(notebook, "hardware_and_dependencies")
+    hardware_source = "".join(hardware["source"])
+    if slot == "M4":
+        hardware_source += (
+            '\n# M4 uses the validated Phi-3.5 cached generation path; other slots keep their default.\n'
+            'os.environ["PHASE5_M4_ENABLE_KV_CACHE"] = "1"\n'
+        )
+    set_source(hardware, hardware_source)
+
     campaign = find_cell(notebook, "official_campaign")
     set_source(campaign, '''
 from kaggle_secrets import UserSecretsClient

@@ -85,6 +85,18 @@ def test_kaggle_runner_notebook_is_valid_and_targets_phase5_5_refs() -> None:
         assert "generated_token_count = int(generated_ids.numel())" in backend_source
         assert "device_metrics = {}" in backend_source
         assert "torch.cuda.memory_allocated(device_index)" in backend_source
+        official_source = "\n".join(
+            "".join(cell.get("source", []))
+            for cell in notebook["cells"]
+            if cell.get("cell_type") == "code"
+        )
+        assert 'os.environ["PHASE5_M4_ENABLE_KV_CACHE"] = "1"' in official_source
+        pretrial_source = "\n".join(
+            "".join(cell.get("source", []))
+            for cell in pretrial_notebook["cells"]
+            if cell.get("cell_type") == "code"
+        )
+        assert 'os.environ["PHASE5_M4_ENABLE_KV_CACHE"] = "1"' in pretrial_source
 
 
 def test_pretrial_notebook_targets_v3_treatment_artifacts() -> None:

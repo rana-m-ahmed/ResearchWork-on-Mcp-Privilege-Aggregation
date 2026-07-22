@@ -267,6 +267,8 @@ os.environ["PHASE5_MODEL_OFFLOAD_DIR"] = "/kaggle/working/phase5_5_model_offload
 if MODEL_SLOT == "M4":
     # The repaired Phi execution was validated on Kaggle's dual-T4 profile.
     os.environ["PHASE5_REQUIRE_CUDA_DEVICE_COUNT"] = "2"
+    # Propagate the validated cached generation path to the campaign subprocess.
+    os.environ["PHASE5_M4_ENABLE_KV_CACHE"] = "1"
 Path(os.environ["HF_HOME"]).mkdir(parents=True, exist_ok=True)
 Path(os.environ["PHASE5_MODEL_OFFLOAD_DIR"]).mkdir(parents=True, exist_ok=True)
 
