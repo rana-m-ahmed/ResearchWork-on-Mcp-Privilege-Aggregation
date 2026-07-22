@@ -119,6 +119,34 @@ def test_embedded_terminal_response_block_does_not_ambiguous_real_tool_call_bloc
     assert result.candidate_count == 2
 
 
+def test_unique_embedded_terminal_response_is_preserved_without_output_repair() -> None:
+    raw = """{"terminal_response":"Log event and local weather data retrieved successfully."}
+```json
+[
+  {"tool_name":"log_event","tool_output":{"status":"logged"}},
+  {"tool_name":"get_local_weather","tool_output":{"temperature_c":22}}
+]
+```"""
+
+    result = extract_tool_call(raw)
+
+    assert result.status is ParserStatus.NO_INVOCATION_FOUND
+    assert result.native_format == "embedded_json"
+    assert result.canonical_json_compliant is False
+    assert result.metadata["terminal_response"] == "Log event and local weather data retrieved successfully."
+    assert result.parsed_calls == ()
+
+
+def test_multiple_embedded_terminal_responses_fail_closed() -> None:
+    result = extract_tool_call(
+        '{"terminal_response":"first"}\n{"terminal_response":"second"}'
+    )
+
+    assert result.status is ParserStatus.AMBIGUOUS_MULTIPLE_CANDIDATES
+    assert result.metadata == {}
+    assert result.candidate_count == 2
+
+
 @pytest.mark.parametrize(
     "raw",
     [

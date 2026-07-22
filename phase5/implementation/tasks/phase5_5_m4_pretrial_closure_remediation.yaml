@@ -1,0 +1,37 @@
+task_id: PHASE5_5-M4-PRETRIAL-CLOSURE-REMEDIATION
+title: M4 explicit terminal parsing and final attempt-manifest reconciliation
+scope:
+  - phase5_5 explicit embedded terminal-response extraction
+  - phase5 final attempt-manifest status persistence
+  - regression tests and append-only implementation reports
+frozen_inputs:
+  - phase4/
+  - phase4_5/
+  - phase5/grading/frozen_grader.py
+  - phase5_5/configs/treatment_and_analysis_contract_v3.json
+  - phase5/manifests/model_runtime_authority_v2.json
+allowed_paths:
+  - phase5/runtime/engine.py
+  - phase5/tests/test_shared_execution_engine.py
+  - phase5_5/parser.py
+  - phase5_5/tests/test_parser.py
+  - phase5/implementation/tasks/phase5_5_m4_pretrial_closure_remediation.yaml
+  - phase5/implementation/reports/phase5_5/m4_pretrial_closure_remediation_20260722.md
+  - phase5/implementation/reports/phase5_5/m4_pretrial_closure_remediation_20260722.json
+  - phase5_5/manifests/phase5_5_source_freeze_v3.json
+forbidden_actions:
+  - modify_historical_evidence
+  - modify_phase4_or_phase4_5
+  - change_frozen_grader_labels
+  - infer_or_repair_tool_calls
+  - manufacture_privilege_aggregation
+  - dispatch_official_trials
+acceptance:
+  - unique_explicit_embedded_terminal_response_is_preserved
+  - conflicting_terminal_responses_fail_closed
+  - surrounding_non_invocation_json_is_never_dispatched
+  - final_manifest_status_matches_execution_outcome
+  - manifest_hash_is_computed_after_final_status_write
+  - historical_evidence_remains_unchanged
+  - phase5_and_phase5_5_tests_pass
+
