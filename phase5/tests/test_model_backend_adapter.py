@@ -74,7 +74,12 @@ def test_model_load_memory_plan_fails_closed_on_insufficient_gpu(monkeypatch) ->
         build_model_load_memory_plan(_FakeTorch())
 
 
-def test_phi3_runtime_kwargs_force_eager_attention_and_disable_cache(tmp_path: Path) -> None:
+def test_phi3_runtime_kwargs_force_eager_attention_and_disable_cache(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The Kaggle M4 runner enables the optimized path process-wide. Keep this
+    # unit test pinned to the adapter's default behavior explicitly.
+    monkeypatch.delenv("PHASE5_M4_ENABLE_KV_CACHE", raising=False)
     identity = SimpleNamespace(
         exact_model_identifier="microsoft/Phi-3.5-mini-instruct",
         huggingface_commit_sha="2fe192450127e6a83f7441aef6e3ca586c338b77",
