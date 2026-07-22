@@ -249,7 +249,13 @@ class RepositoryBatchExecutionAdapter:
 
         for row in rows:
             target_trial_id = str(row.trial_id)
-            histories = [record for record in existing if record.target_trial_id == target_trial_id]
+            histories = [
+                record
+                for record in existing
+                if record.target_trial_id == target_trial_id
+                and record.dataset_version == self.dataset_version
+                and record.run_id == self.session.run_id
+            ]
             attempt_index = max((record.attempt_index for record in histories), default=-1) + 1
             parent_attempt_id = max(histories, key=lambda item: item.attempt_index).attempt_id if histories else None
             result = self.pipeline.execute_row(
