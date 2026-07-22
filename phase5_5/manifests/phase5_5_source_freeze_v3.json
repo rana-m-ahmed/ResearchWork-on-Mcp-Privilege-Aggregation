@@ -15,7 +15,7 @@
     "phase5/manifests/batch_partition_manifest_v3_treatment.json": "cff3c4b412de69347fc455efc6a5df3a9410e064783f5143e4d48e71283aa1d9",
     "phase5/manifests/model_runtime_authority_v2.json": "48d4cfa54b664b1abc30a4e36f879a50601c17d46135622ae8cc7d91b2af8734",
     "phase5/runtime/agent_loop.py": "e0ef8a4b7abe1073ee6b5ac6b84306e50d535d77b2e6e767377e73000a82c54d",
-    "phase5/runtime/engine.py": "181811de003dc581df981e211e709acf6fcd1cf060768f54c6258a448601a42a",
+    "phase5/runtime/engine.py": "912b03745428ee4d993dbbde6e911c1aeccecb8f7688d785f1569640b5b5ec7e",
     "phase5/runtime/mcp_server_launcher.py": "799e90cd6082c5494751dd98ed0bf686e079f10fd268c35c2f784a2305e5604f",
     "phase5/runtime/model_backend_adapter.py": "9bf2fb39f38592070263ef97ee0b1d2b1bce09d7926a3aa62c68b48b74f7fbc5",
     "phase5/runtime/official_execution.py": "70a86091608405f1cd21e009615e97854e5fd03184784f7fe4a296ac39525423",
@@ -41,7 +41,7 @@
     "phase5_5/scripts/build_kaggle_runner.py": "fab17c67488b683541b9b524e1cbac4deeb8d711fe321e716378bd027ca6ffdb",
     "phase5_5/scripts/build_official_runner.py": "697a8cddfe486f80fde54c3f803a25ad19a8783fbdded881c4741d42998605ee",
     "phase5_5/scripts/build_pretrial_runner.py": "4a05cbda5abb74bff2d3d5ac943a7107637d158eacc590f53874ccca72d5c937",
-    "phase5_5/scripts/build_source_freeze.py": "caf26c58de1ad4bf1b3385e5f61fc3b32fbdd61d43102c2fd0b12422404782a3",
+    "phase5_5/scripts/build_source_freeze.py": "66ef76c2086a2953c2095b778ea130779c0da21b8e625e25ba2d6eccc44eb8df",
     "phase5_5/scripts/build_treatment_manifests.py": "02a194eef2d64dcc0ae2bdc54a43bc4c41ba58b75b7646b70cfece31104e7e00",
     "phase5_5/scripts/official_authorized_preflight.py": "e79417f4db4fb976b49a5ff9f2d1a1dc4b9b8fe69bf6ad445310001bd2fdd407",
     "phase5_5/scripts/official_preflight.py": "68b437fb39ecd875db12aa0146344e022dbf56e7b87db1116d1de2d1ef8d9828",
@@ -60,5 +60,5 @@
   "publication_evidence": false,
   "queue_authority": "phase5/manifests/batch_partition_manifest_v3.json",
   "scientific_inputs_regenerated": false,
-  "source_commit": "6979b52f2776de3dbf281c2adfe886324bda3494"
+  "source_commit": "c20a4a381540c8fb9bcdae0098d65f4ac08aca1f"
 }
