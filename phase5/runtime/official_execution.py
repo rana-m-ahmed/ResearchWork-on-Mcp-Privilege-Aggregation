@@ -224,7 +224,7 @@ class RepositoryBatchExecutionAdapter:
         active_records = [
             record
             for record in existing
-            if record.dataset_version == self.dataset_version and record.run_id == self.session.run_id
+            if record.dataset_version == self.dataset_version
         ]
         latest_by_target = {
             target: max(records, key=lambda record: record.attempt_index)
