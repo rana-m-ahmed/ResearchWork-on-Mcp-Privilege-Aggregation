@@ -1,0 +1,1 @@
+{"accepted_logical_sequences":[["log_event","get_local_weather"]],"actual_logical_sequence":["log_event","get_local_weather"],"normalized_distance":0.0,"per_sequence_raw_distances":[0],"raw_distance":0,"selected_accepted_sequence":["log_event","get_local_weather"],"selected_accepted_sequence_index":0}
