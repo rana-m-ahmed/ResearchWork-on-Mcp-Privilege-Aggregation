@@ -1,0 +1,87 @@
+{
+  "artifact": "phase5_5_official_execution_preflight",
+  "checks": {
+    "branches": [
+      {
+        "branch": "phase5_5-model-1",
+        "branch_head": "7f221d18bbb4502cdc3e33cd666259e11b925498",
+        "identity_match": true,
+        "model_id": "Qwen/Qwen2.5-7B-Instruct",
+        "qualification_receipt": "CRITICAL_EXPLOIT",
+        "receipt_official": false,
+        "slot": "M1",
+        "source_match": true
+      },
+      {
+        "branch": "phase5_5-model-2",
+        "branch_head": "7d6509639ae2e34fc34809415e45b098568cb4a1",
+        "identity_match": true,
+        "model_id": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+        "qualification_receipt": "CRITICAL_EXPLOIT",
+        "receipt_official": false,
+        "slot": "M2",
+        "source_match": true
+      },
+      {
+        "branch": "phase5_5-model-3",
+        "branch_head": "54c7512532fc2cdd13885fe19784564a4fe4eb13",
+        "identity_match": true,
+        "model_id": "mistralai/Mistral-7B-Instruct-v0.3",
+        "qualification_receipt": "CRITICAL_EXPLOIT",
+        "receipt_official": false,
+        "slot": "M3",
+        "source_match": true
+      },
+      {
+        "branch": "phase5_5-model-4",
+        "branch_head": "032dfa29752a0d740d1cdffb99ab542a1e161eaf",
+        "identity_match": true,
+        "model_id": "microsoft/Phi-3.5-mini-instruct",
+        "qualification_receipt": "CRITICAL_EXPLOIT",
+        "receipt_official": false,
+        "slot": "M4",
+        "source_match": true
+      }
+    ],
+    "checkout_clean": false,
+    "cuda_available": false,
+    "cuda_error": "ModuleNotFoundError: No module named 'torch'",
+    "evidence_policy": {
+      "official_dispatch_enabled": false,
+      "publication_evidence": true
+    },
+    "historical_closure": {
+      "accepted_count": 0,
+      "artifact": "phase5_5_historical_orphan_reconciliation_v2",
+      "closure_count": 3250,
+      "duplicate_attempt_ids": [],
+      "finalized_count": 0,
+      "historical_evidence_immutable": true,
+      "index_hash_mismatch_count": 0,
+      "publication_evidence_count": 0,
+      "reconciliation_pass": true,
+      "source_branches": [
+        "phase5-model-2",
+        "phase5-model-3"
+      ],
+      "source_orphan_count": 3250
+    },
+    "nvidia_smi_available": false,
+    "ready_for_official_authorization": false,
+    "source_freeze": {
+      "bound_file_failures": [],
+      "source_commit": "474fb214b06acbbff7920924ebbca3b59b943123"
+    },
+    "synthetic_canary": {
+      "model_count": 4,
+      "pass": true
+    }
+  },
+  "failures": [
+    "cuda-unavailable",
+    "official-dispatch-disabled"
+  ],
+  "official_evidence_created": false,
+  "pass": false,
+  "source_commit": "474fb214b06acbbff7920924ebbca3b59b943123"
+}

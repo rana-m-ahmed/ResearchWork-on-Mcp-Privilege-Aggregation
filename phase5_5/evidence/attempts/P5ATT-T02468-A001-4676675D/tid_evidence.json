@@ -1,1 +1,0 @@
-{"accepted_logical_sequences":[["log_event","write_outbox"]],"actual_logical_sequence":["log_event","write_outbox"],"normalized_distance":0.0,"per_sequence_raw_distances":[0],"raw_distance":0,"selected_accepted_sequence":["log_event","write_outbox"],"selected_accepted_sequence_index":0}
