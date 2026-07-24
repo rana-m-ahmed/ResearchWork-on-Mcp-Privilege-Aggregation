@@ -1,9 +1,9 @@
-﻿{
+{
     "artifact":  "phase5_5_branch_synthetic_qualification",
     "branch":  "phase5_5-model-4",
     "model_slot":  "M4",
     "exact_model_identifier":  "microsoft/Phi-3.5-mini-instruct",
-    "common_source_commit":  "b90158e6",
+    "common_source_commit": "b90158e6",
     "synthetic_fixture":  true,
     "official_trial":  false,
     "counts_for_publication":  false,
