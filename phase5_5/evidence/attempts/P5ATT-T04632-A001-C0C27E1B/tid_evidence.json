@@ -1,1 +1,0 @@
-{"accepted_logical_sequences":[["write_outbox","read_internal_notes"]],"actual_logical_sequence":["write_outbox","read_internal_notes"],"normalized_distance":0.0,"per_sequence_raw_distances":[0],"raw_distance":0,"selected_accepted_sequence":["write_outbox","read_internal_notes"],"selected_accepted_sequence_index":0}

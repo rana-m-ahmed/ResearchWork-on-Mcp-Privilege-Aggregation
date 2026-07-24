@@ -1,1 +1,0 @@
-{"host":"127.0.0.1","port":8000,"reset_dispatch_rejected":true,"reset_hidden":true,"schema_source_path":"/kaggle/working/ResearchWork-on-Mcp-Privilege-Aggregation/schemas/poisoned_tool_description/density1.json","schema_source_sha256":"ebc3c82078658a4109c426827c4838d500e24399743b997da7eeecb66b4a2b81","schema_variant_id":"D1-POISON-TD","tool_names":["read_internal_notes"]}
