@@ -1,0 +1,2 @@
+dataset_version,frozen_row_id,target_trial_id,attempt_id,attempt_index,parent_attempt_id,run_id,batch_id,attempt_status,invalid_reason,counts_toward_cell_n,accepted_attempt,raw_attempt_directory
+P5-DV-1.1.0-TREATMENT-V3,core-00001-T00001,T00001,P5ATT-T00001-A000-ABCDEF12,0,,P5RUN-P5-DV-1.1.0-TREATMENT-V3-M1-20260722-ABCDEF12,batch-1,INVALID,model output,False,False,D:/research-work/phase5_5-remediation-worktrees/model-1/.verify-final-M1/test_exact_legacy_campaign_can0/phase5_5/evidence/attempts/P5ATT-T00001-A000-ABCDEF12

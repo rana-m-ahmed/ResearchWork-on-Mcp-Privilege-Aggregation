@@ -1,0 +1,16 @@
+{
+  "artifact": "phase5_5_campaign_supersession_v1",
+  "authorization_basis": "explicit_user_authorization_2026-07-22",
+  "checkpoint_count": 1,
+  "checkpoint_sha256": {
+    "checkpoints/P5RUN-P5-DV-1.1.0-TREATMENT-V3-M1-20260722-ABCDEF12/checkpoint-000001.json": "60675aa04c95f98fa40da921de3744467fdfa0fdfb5da16a34fa6618cffc2a69"
+  },
+  "dataset_version": "P5-DV-1.1.0-TREATMENT-V3",
+  "model_slot": "M1",
+  "status_counts": {
+    "INVALID": 1
+  },
+  "superseded_lineage_count": 1,
+  "superseded_lineage_sha256": "76a40903046beee62fb9c2282af8c0ac5671ab2ff3cdd400b5bdad2bc1188fc1",
+  "superseded_run_id": "P5RUN-P5-DV-1.1.0-TREATMENT-V3-M1-20260722-ABCDEF12"
+}

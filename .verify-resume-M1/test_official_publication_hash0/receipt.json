@@ -1,0 +1,12 @@
+{
+  "artifact": "phase5_5_official_evidence_publication_receipt_v1",
+  "branch": "phase5_5-model-1",
+  "credential_purged": true,
+  "expected_parent": "97af72f3335e3f183950fedde055e4c0eed190ff",
+  "model_slot": "M1",
+  "publication_commit": "27c5f44da9f987cea727de200edfc0af6f1e4854",
+  "published_utc": "2026-07-22T17:57:37.939182+00:00",
+  "receipt_commit": "a2b8a318219953e518e0cd24524d6c3ff6bd4a47",
+  "remote_head_after_push": "27c5f44da9f987cea727de200edfc0af6f1e4854",
+  "run_id": "TEST-RUN"
+}

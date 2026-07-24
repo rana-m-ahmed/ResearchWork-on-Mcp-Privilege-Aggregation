@@ -1,0 +1,18 @@
+{
+  "artifact": "phase5_5_trial_checkpoint_v2",
+  "batch_id": "batch-1",
+  "batch_manifest_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "checkpoint_sequence": 8,
+  "completed_lineage_count": 7,
+  "dataset_version": "P5-DV-1.1.0-TREATMENT-V3",
+  "last_attempt_id": "attempt-7",
+  "last_target_trial_id": "trial-7",
+  "lineage_sha256": "920e1881147dda1da2078325ed06a1d35c11f97d18bc8b6347a2e5bd6c79c1a1",
+  "model_slot": "M1",
+  "parent_head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "run_id": "P5RUN-P5-DV-1.1.0-TREATMENT-V3-M1-20260718-ABCDEF12",
+  "run_lineage_count": 1,
+  "run_plan_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "source_commit": "cccccccccccccccccccccccccccccccccccccccc",
+  "written_utc": "2026-07-22T18:05:27.635122+00:00"
+}
